@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "dotenv": "^16.1.2",
+    "hardhat": "^2.14.0"
+  },
+  "dependencies": {
+    "@aragon/osx": "^1.2.0"
+  }
+}
