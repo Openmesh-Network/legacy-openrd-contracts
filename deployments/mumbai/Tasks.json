@@ -1,0 +1,870 @@
+{
+  "address": "0xa63d6B9A570CBB6e98023b2e7527f6383136e062",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "ApplicationNotAccepted",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "DeadlineDidNotPass",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotExecutor",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotProposer",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotYourApplication",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "RewardAboveBudget",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SubmissionAlreadyJudged",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TaskDoesNotExist",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TaskNotClosed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TaskNotOpen",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TaskNotTaken",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_taskId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint16[]",
+          "name": "_applications",
+          "type": "uint16[]"
+        }
+      ],
+      "name": "acceptApplications",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_taskId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_metadata",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint96[]",
+          "name": "_reward",
+          "type": "uint96[]"
+        }
+      ],
+      "name": "applyForTask",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_taskId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_metadata",
+          "type": "bytes32"
+        }
+      ],
+      "name": "createSubmission",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_metadata",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_deadline",
+          "type": "uint64"
+        },
+        {
+          "components": [
+            {
+              "internalType": "contract IERC20",
+              "name": "tokenContract",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "amount",
+              "type": "uint96"
+            }
+          ],
+          "internalType": "struct ITasks.ERC20Transfer[]",
+          "name": "_budget",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "createTask",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "taskId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_taskId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTask",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "metadata",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "deadline",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "creationTimestamp",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "executorConfirmationTimestamp",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint16",
+              "name": "executorApplication",
+              "type": "uint16"
+            },
+            {
+              "internalType": "address",
+              "name": "proposer",
+              "type": "address"
+            },
+            {
+              "internalType": "enum ITasks.TaskState",
+              "name": "state",
+              "type": "uint8"
+            },
+            {
+              "internalType": "contract Escrow",
+              "name": "escrow",
+              "type": "address"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "contract IERC20",
+                  "name": "tokenContract",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint96",
+                  "name": "amount",
+                  "type": "uint96"
+                }
+              ],
+              "internalType": "struct ITasks.ERC20Transfer[]",
+              "name": "budget",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "metadata",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "timestamp",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "address",
+                  "name": "applicant",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "accepted",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint96[]",
+                  "name": "reward",
+                  "type": "uint96[]"
+                }
+              ],
+              "internalType": "struct ITasks.OffChainApplication[]",
+              "name": "applications",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "metadata",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "timestamp",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "enum ITasks.SubmissionJudgement",
+                  "name": "judgement",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "judgementTimestamp",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "feedback",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct ITasks.Submission[]",
+              "name": "submissions",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct ITasks.OffChainTask",
+          "name": "task",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_taskId",
+          "type": "uint256"
+        }
+      ],
+      "name": "refundTask",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_taskId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_submission",
+          "type": "uint8"
+        },
+        {
+          "internalType": "enum ITasks.SubmissionJudgement",
+          "name": "_judgement",
+          "type": "uint8"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_feedback",
+          "type": "bytes32"
+        }
+      ],
+      "name": "reviewSubmission",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_taskId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint16",
+          "name": "_application",
+          "type": "uint16"
+        }
+      ],
+      "name": "takeTask",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "taskCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x8165271230cc2c8d4fc0cb4f1c4ebcc65d910af219d7f6ac78f5783ce57885b0",
+  "receipt": {
+    "to": null,
+    "from": "0x6568322A7d8212236eA784bA0c7C2dEa1e6EAB0F",
+    "contractAddress": "0xa63d6B9A570CBB6e98023b2e7527f6383136e062",
+    "transactionIndex": 3,
+    "gasUsed": "2303652",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000008000000000000000000000008000000000000000000000000000000000800000000000000000000102000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000010000080000000000000000000000000000000000000000004000000000000000000001000000000100000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000100000",
+    "blockHash": "0xf9786ca41048dc39217759846d76e417b04bc8c75f1b4a7886eb9d3af70f9ee3",
+    "transactionHash": "0x8165271230cc2c8d4fc0cb4f1c4ebcc65d910af219d7f6ac78f5783ce57885b0",
+    "logs": [
+      {
+        "transactionIndex": 3,
+        "blockNumber": 37599821,
+        "transactionHash": "0x8165271230cc2c8d4fc0cb4f1c4ebcc65d910af219d7f6ac78f5783ce57885b0",
+        "address": "0x0000000000000000000000000000000000001010",
+        "topics": [
+          "0x4dfe1bbbcf077ddc3e01291eea2d5c70c2b422b415d95645b9adcfd678cb1d63",
+          "0x0000000000000000000000000000000000000000000000000000000000001010",
+          "0x0000000000000000000000006568322a7d8212236ea784ba0c7c2dea1e6eab0f",
+          "0x0000000000000000000000003a22c8bc68e98b0faf40f349dd2b2890fae01484"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000000d10ce9f644df80000000000000000000000000000000000000000000000001057f06661a7390c000000000000000000000000000000000000000000000c81259903a56148542f000000000000000000000000000000000000000000000000104adf97c242eb14000000000000000000000000000000000000000000000c8125a6147400aca227",
+        "logIndex": 28,
+        "blockHash": "0xf9786ca41048dc39217759846d76e417b04bc8c75f1b4a7886eb9d3af70f9ee3"
+      }
+    ],
+    "blockNumber": 37599821,
+    "cumulativeGasUsed": "3213647",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "659ee8faabfa0b47803cd2a887424110",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"ApplicationNotAccepted\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"DeadlineDidNotPass\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotExecutor\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotProposer\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotYourApplication\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"RewardAboveBudget\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SubmissionAlreadyJudged\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TaskDoesNotExist\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TaskNotClosed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TaskNotOpen\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TaskNotTaken\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_taskId\",\"type\":\"uint256\"},{\"internalType\":\"uint16[]\",\"name\":\"_applications\",\"type\":\"uint16[]\"}],\"name\":\"acceptApplications\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_taskId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_metadata\",\"type\":\"bytes32\"},{\"internalType\":\"uint96[]\",\"name\":\"_reward\",\"type\":\"uint96[]\"}],\"name\":\"applyForTask\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_taskId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_metadata\",\"type\":\"bytes32\"}],\"name\":\"createSubmission\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_metadata\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_deadline\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"contract IERC20\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"amount\",\"type\":\"uint96\"}],\"internalType\":\"struct ITasks.ERC20Transfer[]\",\"name\":\"_budget\",\"type\":\"tuple[]\"}],\"name\":\"createTask\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"taskId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_taskId\",\"type\":\"uint256\"}],\"name\":\"getTask\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"metadata\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"deadline\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"creationTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"executorConfirmationTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"uint16\",\"name\":\"executorApplication\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proposer\",\"type\":\"address\"},{\"internalType\":\"enum ITasks.TaskState\",\"name\":\"state\",\"type\":\"uint8\"},{\"internalType\":\"contract Escrow\",\"name\":\"escrow\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"contract IERC20\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"amount\",\"type\":\"uint96\"}],\"internalType\":\"struct ITasks.ERC20Transfer[]\",\"name\":\"budget\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"metadata\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"internalType\":\"address\",\"name\":\"applicant\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"accepted\",\"type\":\"bool\"},{\"internalType\":\"uint96[]\",\"name\":\"reward\",\"type\":\"uint96[]\"}],\"internalType\":\"struct ITasks.OffChainApplication[]\",\"name\":\"applications\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"metadata\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"internalType\":\"enum ITasks.SubmissionJudgement\",\"name\":\"judgement\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"judgementTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"feedback\",\"type\":\"bytes32\"}],\"internalType\":\"struct ITasks.Submission[]\",\"name\":\"submissions\",\"type\":\"tuple[]\"}],\"internalType\":\"struct ITasks.OffChainTask\",\"name\":\"task\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_taskId\",\"type\":\"uint256\"}],\"name\":\"refundTask\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_taskId\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"_submission\",\"type\":\"uint8\"},{\"internalType\":\"enum ITasks.SubmissionJudgement\",\"name\":\"_judgement\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"_feedback\",\"type\":\"bytes32\"}],\"name\":\"reviewSubmission\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_taskId\",\"type\":\"uint256\"},{\"internalType\":\"uint16\",\"name\":\"_application\",\"type\":\"uint16\"}],\"name\":\"takeTask\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"taskCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"acceptApplications(uint256,uint16[])\":{\"params\":{\"_applications\":\"Indexes of the applications to accept.\",\"_taskId\":\"Id of the task.\"}},\"applyForTask(uint256,bytes32,uint96[])\":{\"params\":{\"_metadata\":\"Metadata of your application.\",\"_reward\":\"Wanted rewards for completing the task.\",\"_taskId\":\"Id of the task.\"}},\"createSubmission(uint256,bytes32)\":{\"params\":{\"_metadata\":\"Metadata of the submission. (IPFS hash)\",\"_taskId\":\"Id of the task.\"}},\"createTask(bytes32,uint64,(address,uint96)[])\":{\"params\":{\"_budget\":\"Maximum ERC20 rewards that can be earned by completing the task.\",\"_deadline\":\"Block timestamp at which the task expires if not completed.\",\"_metadata\":\"Metadata of the task. (IPFS hash)\"},\"returns\":{\"taskId\":\"Id of the newly created task.\"}},\"getTask(uint256)\":{\"params\":{\"_taskId\":\"Id of the task.\"}},\"refundTask(uint256)\":{\"params\":{\"_taskId\":\"Id of the task.\"}},\"reviewSubmission(uint256,uint8,uint8,bytes32)\":{\"params\":{\"_feedback\":\"Reasoning of the reviewer. (IPFS hash)\",\"_judgement\":\"Outcome of the review.\",\"_submission\":\"Index of the submission that is reviewed.\",\"_taskId\":\"Id of the task.\"}},\"takeTask(uint256,uint16)\":{\"params\":{\"_application\":\"Index of application you made that has been accepted.\",\"_taskId\":\"Id of the task.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"acceptApplications(uint256,uint16[])\":{\"notice\":\"Accept application to allow them to take the task.\"},\"applyForTask(uint256,bytes32,uint96[])\":{\"notice\":\"Apply to take the task.\"},\"createSubmission(uint256,bytes32)\":{\"notice\":\"Create a submission.\"},\"createTask(bytes32,uint64,(address,uint96)[])\":{\"notice\":\"Create a new task.\"},\"getTask(uint256)\":{\"notice\":\"Retrieves all task information by id.\"},\"refundTask(uint256)\":{\"notice\":\"Refund a task. This can be used to close a task and receive back the budget.\"},\"reviewSubmission(uint256,uint8,uint8,bytes32)\":{\"notice\":\"Review a submission.\"},\"takeTask(uint256,uint16)\":{\"notice\":\"Take the task after your application has been accepted.\"},\"taskCount()\":{\"notice\":\"Retrieves the current amount of created tasks.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Tasks/Tasks.sol\":\"Tasks\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1000000},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/proxy/Clones.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (proxy/Clones.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev https://eips.ethereum.org/EIPS/eip-1167[EIP 1167] is a standard for\\n * deploying minimal proxy contracts, also known as \\\"clones\\\".\\n *\\n * > To simply and cheaply clone contract functionality in an immutable way, this standard specifies\\n * > a minimal bytecode implementation that delegates all calls to a known, fixed address.\\n *\\n * The library includes functions to deploy a proxy using either `create` (traditional deployment) or `create2`\\n * (salted deterministic deployment). It also includes functions to predict the addresses of clones deployed using the\\n * deterministic method.\\n *\\n * _Available since v3.4._\\n */\\nlibrary Clones {\\n    /**\\n     * @dev Deploys and returns the address of a clone that mimics the behaviour of `implementation`.\\n     *\\n     * This function uses the create opcode, which should never revert.\\n     */\\n    function clone(address implementation) internal returns (address instance) {\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            // Cleans the upper 96 bits of the `implementation` word, then packs the first 3 bytes\\n            // of the `implementation` address with the bytecode before the address.\\n            mstore(0x00, or(shr(0xe8, shl(0x60, implementation)), 0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000))\\n            // Packs the remaining 17 bytes of `implementation` with the bytecode after the address.\\n            mstore(0x20, or(shl(0x78, implementation), 0x5af43d82803e903d91602b57fd5bf3))\\n            instance := create(0, 0x09, 0x37)\\n        }\\n        require(instance != address(0), \\\"ERC1167: create failed\\\");\\n    }\\n\\n    /**\\n     * @dev Deploys and returns the address of a clone that mimics the behaviour of `implementation`.\\n     *\\n     * This function uses the create2 opcode and a `salt` to deterministically deploy\\n     * the clone. Using the same `implementation` and `salt` multiple time will revert, since\\n     * the clones cannot be deployed twice at the same address.\\n     */\\n    function cloneDeterministic(address implementation, bytes32 salt) internal returns (address instance) {\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            // Cleans the upper 96 bits of the `implementation` word, then packs the first 3 bytes\\n            // of the `implementation` address with the bytecode before the address.\\n            mstore(0x00, or(shr(0xe8, shl(0x60, implementation)), 0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000))\\n            // Packs the remaining 17 bytes of `implementation` with the bytecode after the address.\\n            mstore(0x20, or(shl(0x78, implementation), 0x5af43d82803e903d91602b57fd5bf3))\\n            instance := create2(0, 0x09, 0x37, salt)\\n        }\\n        require(instance != address(0), \\\"ERC1167: create2 failed\\\");\\n    }\\n\\n    /**\\n     * @dev Computes the address of a clone deployed using {Clones-cloneDeterministic}.\\n     */\\n    function predictDeterministicAddress(\\n        address implementation,\\n        bytes32 salt,\\n        address deployer\\n    ) internal pure returns (address predicted) {\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            let ptr := mload(0x40)\\n            mstore(add(ptr, 0x38), deployer)\\n            mstore(add(ptr, 0x24), 0x5af43d82803e903d91602b57fd5bf3ff)\\n            mstore(add(ptr, 0x14), implementation)\\n            mstore(ptr, 0x3d602d80600a3d3981f3363d3d373d3d3d363d73)\\n            mstore(add(ptr, 0x58), salt)\\n            mstore(add(ptr, 0x78), keccak256(add(ptr, 0x0c), 0x37))\\n            predicted := keccak256(add(ptr, 0x43), 0x55)\\n        }\\n    }\\n\\n    /**\\n     * @dev Computes the address of a clone deployed using {Clones-cloneDeterministic}.\\n     */\\n    function predictDeterministicAddress(\\n        address implementation,\\n        bytes32 salt\\n    ) internal view returns (address predicted) {\\n        return predictDeterministicAddress(implementation, salt, address(this));\\n    }\\n}\\n\",\"keccak256\":\"0x01f055f5c26ba25d7f83e9aa9ba877fbea4d0bf22227de046ea67494bc932999\",\"license\":\"MIT\"},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n\\n    /**\\n     * @dev Returns the amount of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves `amount` tokens from the caller's account to `to`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address to, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Moves `amount` tokens from `from` to `to` using the\\n     * allowance mechanism. `amount` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(address from, address to, uint256 amount) external returns (bool);\\n}\\n\",\"keccak256\":\"0x287b55befed2961a7eabd7d7b1b2839cbca8a5b80ef8dcbb25ed3d4c2002c305\",\"license\":\"MIT\"},\"contracts/Tasks/Escrow.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSED\\r\\npragma solidity ^0.8.0;\\r\\n\\r\\nimport { IERC20 } from \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\r\\n\\r\\ncontract Escrow {\\r\\n    error AlreadyInitialized();\\r\\n    error NotOwner();\\r\\n\\r\\n    address private owner;\\r\\n\\r\\n    function __Escrow_init() external {\\r\\n        if (owner != address(0)) {\\r\\n            revert AlreadyInitialized();\\r\\n        }\\r\\n        \\r\\n        owner = msg.sender;\\r\\n    }\\r\\n\\r\\n    function transfer(IERC20 token, address to, uint256 amount) external {\\r\\n        if (msg.sender != owner) {\\r\\n            revert NotOwner();\\r\\n        }\\r\\n\\r\\n        token.transfer(to, amount);\\r\\n    }\\r\\n}\",\"keccak256\":\"0xbb063bd120ec52c90c612d4cef86ca5da1c4d2d8ae8e3983d431b7cf611eb42a\",\"license\":\"UNLICENSED\"},\"contracts/Tasks/ITasks.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSED\\r\\npragma solidity ^0.8.0;\\r\\n\\r\\nimport { IERC20 } from \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\r\\nimport { Escrow } from \\\"./Escrow.sol\\\";\\r\\n\\r\\ninterface ITasks {\\r\\n    error TaskDoesNotExist();\\r\\n    error TaskNotOpen();\\r\\n    error TaskNotTaken();\\r\\n    error TaskNotClosed();\\r\\n\\r\\n    error NotProposer();\\r\\n    error NotExecutor();\\r\\n\\r\\n    error RewardAboveBudget();\\r\\n    error NotYourApplication();\\r\\n    error ApplicationNotAccepted();\\r\\n    error SubmissionAlreadyJudged();\\r\\n    error DeadlineDidNotPass();\\r\\n\\r\\n    /// @notice A container for ERC20 transfer information.\\r\\n    /// @param tokenContract ERC20 token to transfer.\\r\\n    /// @param amount How much of this token should be transfered.\\r\\n    struct ERC20Transfer {\\r\\n        IERC20 tokenContract;\\r\\n        uint96 amount;\\r\\n    }\\r\\n\\r\\n    /// @notice A container for a task application.\\r\\n    /// @param metadata Metadata of the application. (IPFS hash)\\r\\n    /// @param timestamp When the application has been made.\\r\\n    /// @param applicant Who has submitted this application.\\r\\n    /// @param accepted If the application has been accepted by the proposer.\\r\\n    /// @param reward How much rewards the applicant want for completion. (just the amount, in the same order as budget)\\r\\n    struct Application {\\r\\n        bytes32 metadata;\\r\\n        uint64 timestamp;\\r\\n        address applicant;\\r\\n        bool accepted;\\r\\n        mapping(uint8 => uint96) reward;\\r\\n    }\\r\\n\\r\\n    struct OffChainApplication {\\r\\n        bytes32 metadata;\\r\\n        uint64 timestamp;\\r\\n        address applicant;\\r\\n        bool accepted;\\r\\n        uint96[] reward;\\r\\n    }\\r\\n\\r\\n    enum SubmissionJudgement { None, Accepted, Rejected }\\r\\n    /// @notice A container for a task submission.\\r\\n    /// @param metadata Metadata of the submission. (IPFS hash)\\r\\n    /// @param timestamp When the submission has been made.\\r\\n    /// @param judgement Judgement cast on the submission.\\r\\n    /// @param judgementTimestamp When the judgement has been made.\\r\\n    /// @param feedback A response from the proposer. (IPFS hash)\\r\\n    struct Submission {\\r\\n        bytes32 metadata;\\r\\n        uint64 timestamp;\\r\\n        SubmissionJudgement judgement;\\r\\n        uint64 judgementTimestamp;\\r\\n        bytes32 feedback;\\r\\n    }\\r\\n\\r\\n    enum TaskState { Open, Taken, Closed }\\r\\n    /// @notice A container for task-related information.\\r\\n    /// @param metadata Metadata of the task. (IPFS hash)\\r\\n    /// @param deadline Block timestamp at which the task expires if not completed.\\r\\n    /// @param budget Maximum ERC20 rewards that can be earned by completing the task.\\r\\n    /// @param proposer Who has created the task.\\r\\n    /// @param creationTimestamp When the task has been created.\\r\\n    /// @param state Current state the task is in.\\r\\n    /// @param applications Applications to take the job.\\r\\n    /// @param executorApplication Index of the application that will execture the task.\\r\\n    /// @param executorConfirmationTimestamp When the executor has confirmed to take the task.\\r\\n    /// @param submissions Submission made to finish the task.\\r\\n    struct Task {\\r\\n        bytes32 metadata;\\r\\n\\r\\n        uint64 creationTimestamp;\\r\\n        uint64 executorConfirmationTimestamp;\\r\\n        uint64 deadline;\\r\\n\\r\\n        Escrow escrow;\\r\\n\\r\\n        address proposer;\\r\\n        TaskState state;\\r\\n        uint16 executorApplication;\\r\\n        uint8 budgetCount;\\r\\n        uint16 applicationCount;\\r\\n        uint8 submissionCount;\\r\\n\\r\\n        mapping(uint8 => ERC20Transfer) budget;\\r\\n        mapping(uint16 => Application) applications;\\r\\n        mapping(uint8 => Submission) submissions;\\r\\n    }\\r\\n\\r\\n    struct OffChainTask {\\r\\n        bytes32 metadata;\\r\\n        uint64 deadline;\\r\\n        uint64 creationTimestamp;\\r\\n        uint64 executorConfirmationTimestamp;\\r\\n        uint16 executorApplication;\\r\\n        address proposer;\\r\\n        TaskState state;\\r\\n        Escrow escrow;\\r\\n        ERC20Transfer[] budget;\\r\\n        OffChainApplication[] applications;\\r\\n        Submission[] submissions;\\r\\n    }\\r\\n\\r\\n    /// @notice Retrieves the current amount of created tasks.\\r\\n    function taskCount() external view returns (uint256);\\r\\n\\r\\n    /// @notice Retrieves all task information by id.\\r\\n    /// @param _taskId Id of the task.\\r\\n    function getTask(\\r\\n        uint256 _taskId\\r\\n    ) external view returns (OffChainTask memory);\\r\\n\\r\\n    /// @notice Create a new task.\\r\\n    /// @param _metadata Metadata of the task. (IPFS hash)\\r\\n    /// @param _deadline Block timestamp at which the task expires if not completed.\\r\\n    /// @param _budget Maximum ERC20 rewards that can be earned by completing the task.\\r\\n    /// @return taskId Id of the newly created task.\\r\\n    function createTask(\\r\\n        bytes32 _metadata,\\r\\n        uint64 _deadline,\\r\\n        ERC20Transfer[] calldata _budget\\r\\n    ) external returns (uint256 taskId);\\r\\n    \\r\\n    /// @notice Apply to take the task.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _metadata Metadata of your application.\\r\\n    /// @param _reward Wanted rewards for completing the task.\\r\\n    function applyForTask(\\r\\n        uint256 _taskId,\\r\\n        bytes32 _metadata,\\r\\n        uint96[] calldata _reward\\r\\n    ) external;\\r\\n    \\r\\n    /// @notice Accept application to allow them to take the task.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _applications Indexes of the applications to accept.\\r\\n    function acceptApplications(\\r\\n        uint256 _taskId,\\r\\n        uint16[] calldata _applications\\r\\n    ) external;\\r\\n    \\r\\n    /// @notice Take the task after your application has been accepted.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _application Index of application you made that has been accepted.\\r\\n    function takeTask(\\r\\n        uint256 _taskId,\\r\\n        uint16 _application\\r\\n    ) external;\\r\\n    \\r\\n    /// @notice Create a submission.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _metadata Metadata of the submission. (IPFS hash)\\r\\n    function createSubmission(\\r\\n        uint256 _taskId,\\r\\n        bytes32 _metadata\\r\\n    ) external;\\r\\n    \\r\\n    /// @notice Review a submission.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _submission Index of the submission that is reviewed.\\r\\n    /// @param _judgement Outcome of the review.\\r\\n    /// @param _feedback Reasoning of the reviewer. (IPFS hash)\\r\\n    function reviewSubmission(\\r\\n        uint256 _taskId,\\r\\n        uint8 _submission,\\r\\n        SubmissionJudgement _judgement,\\r\\n        bytes32 _feedback\\r\\n    ) external;\\r\\n\\r\\n    /// @notice Refund a task. This can be used to close a task and receive back the budget.\\r\\n    /// @param _taskId Id of the task.\\r\\n    function refundTask(\\r\\n        uint256 _taskId\\r\\n    ) external;\\r\\n}\",\"keccak256\":\"0xc9c1bceb1090de97a569490488a87c258c62870c8e569f26ec9f8b08899c149c\",\"license\":\"UNLICENSED\"},\"contracts/Tasks/Tasks.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSED\\r\\npragma solidity ^0.8.0;\\r\\n\\r\\nimport { ITasks, IERC20, Escrow } from \\\"./ITasks.sol\\\";\\r\\nimport { Clones } from \\\"@openzeppelin/contracts/proxy/Clones.sol\\\";\\r\\n\\r\\ncontract Tasks is ITasks {\\r\\n    /// @notice The incremental ID for tasks.\\r\\n    uint256 private taskCounter;\\r\\n\\r\\n    /// @notice A mapping between task IDs and task information.\\r\\n    mapping(uint256 => Task) internal tasks;\\r\\n\\r\\n    address private escrowImplementation;\\r\\n\\r\\n    constructor() {\\r\\n        escrowImplementation = address(new Escrow());\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ITasks\\r\\n    function taskCount() external view returns (uint256) {\\r\\n        return taskCounter;\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ITasks\\r\\n    function getTask(\\r\\n        uint256 _taskId\\r\\n    ) external view returns (OffChainTask memory task) {\\r\\n        if (_taskId >= taskCounter) {\\r\\n            revert TaskDoesNotExist();\\r\\n        }\\r\\n\\r\\n        Task storage task_ = tasks[_taskId];\\r\\n        task.metadata = task_.metadata;\\r\\n        task.deadline = task_.deadline;\\r\\n        task.creationTimestamp = task_.creationTimestamp;\\r\\n        task.executorConfirmationTimestamp = task_.executorConfirmationTimestamp;\\r\\n        task.executorApplication = task_.executorApplication;\\r\\n        task.proposer = task_.proposer;\\r\\n        task.state = task_.state;\\r\\n        task.escrow = task_.escrow;\\r\\n\\r\\n        task.budget = new ERC20Transfer[](task_.budgetCount);\\r\\n        for (uint8 i; i < task.budget.length; ) {\\r\\n            task.budget[i] = task_.budget[i];\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n        \\r\\n        task.applications = new OffChainApplication[](task_.applicationCount);\\r\\n        for (uint8 i; i < task.applications.length; ) {\\r\\n            Application storage application = task_.applications[i];\\r\\n            task.applications[i].metadata = application.metadata;\\r\\n            task.applications[i].timestamp = application.timestamp;\\r\\n            task.applications[i].applicant = application.applicant;\\r\\n            task.applications[i].accepted = application.accepted;\\r\\n            task.applications[i].reward = new uint96[](task_.budgetCount);\\r\\n            for (uint8 j; j < task.applications[i].reward.length; ) {\\r\\n                task.applications[i].reward[j] = application.reward[j];\\r\\n                unchecked {\\r\\n                    ++j;\\r\\n                }\\r\\n            }\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n\\r\\n        task.submissions = new Submission[](task_.submissionCount);\\r\\n        for (uint8 i; i < task.submissions.length; ) {\\r\\n            task.submissions[i] = task_.submissions[i];\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n        \\r\\n        return task;\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ITasks\\r\\n    function createTask(\\r\\n        bytes32 _metadata,\\r\\n        uint64 _deadline,\\r\\n        ERC20Transfer[] calldata _budget\\r\\n    ) external returns (uint256 taskId) {\\r\\n        unchecked {\\r\\n            taskId = taskCounter++;\\r\\n        }\\r\\n\\r\\n        Task storage task_ = tasks[taskId];\\r\\n        task_.metadata = _metadata;\\r\\n        task_.deadline = _deadline;\\r\\n        task_.budgetCount = uint8(_budget.length);\\r\\n        Escrow escrow = Escrow(Clones.clone(escrowImplementation));\\r\\n        escrow.__Escrow_init();\\r\\n        task_.escrow = escrow;\\r\\n        for (uint8 i; i < _budget.length; ) {\\r\\n            _budget[i].tokenContract.transferFrom(msg.sender, address(escrow), _budget[i].amount);\\r\\n            task_.budget[i] = _budget[i];\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n        \\r\\n        task_.creationTimestamp = uint64(block.timestamp);\\r\\n        task_.proposer = msg.sender;\\r\\n\\r\\n        // Default values are already correct (save gas)\\r\\n        // task_.state = TaskState.Open;\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ITasks\\r\\n    function applyForTask(\\r\\n        uint256 _taskId,\\r\\n        bytes32 _metadata,\\r\\n        uint96[] calldata _reward\\r\\n    ) external {\\r\\n        if (_taskId >= taskCounter) {\\r\\n            revert TaskDoesNotExist();\\r\\n        }\\r\\n\\r\\n        Task storage task_ = tasks[_taskId];\\r\\n        if (task_.state != TaskState.Open) {\\r\\n            revert TaskNotOpen();\\r\\n        }\\r\\n\\r\\n        Application storage application = task_.applications[task_.applicationCount];\\r\\n        unchecked {\\r\\n            ++task_.applicationCount;\\r\\n        }\\r\\n        application.metadata = _metadata;\\r\\n        application.timestamp = uint64(block.timestamp);\\r\\n        application.applicant = msg.sender;\\r\\n\\r\\n        uint8 budgetCount = task_.budgetCount;\\r\\n        for (uint8 i; i < budgetCount; ) {\\r\\n            if (_reward[i] > task_.budget[i].amount) {\\r\\n                revert RewardAboveBudget();\\r\\n            }\\r\\n            application.reward[i] = _reward[i];\\r\\n\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n\\r\\n    }\\r\\n    \\r\\n    /// @inheritdoc ITasks\\r\\n    function acceptApplications(\\r\\n        uint256 _taskId,\\r\\n        uint16[] calldata _applications\\r\\n    ) external {\\r\\n        if (_taskId >= taskCounter) {\\r\\n            revert TaskDoesNotExist();\\r\\n        }\\r\\n        \\r\\n        Task storage task_ = tasks[_taskId];\\r\\n        if (task_.state != TaskState.Open) {\\r\\n            revert TaskNotOpen();\\r\\n        }\\r\\n        if (task_.proposer != msg.sender) {\\r\\n            revert NotProposer();\\r\\n        }\\r\\n\\r\\n        for (uint i; i < _applications.length; ) {\\r\\n            task_.applications[_applications[i]].accepted = true;\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n    }\\r\\n    \\r\\n    /// @inheritdoc ITasks\\r\\n    function takeTask(\\r\\n        uint256 _taskId,\\r\\n        uint16 _application\\r\\n    ) external {\\r\\n        if (_taskId >= taskCounter) {\\r\\n            revert TaskDoesNotExist();\\r\\n        }\\r\\n        \\r\\n        Task storage task_ = tasks[_taskId];\\r\\n        if (task_.state != TaskState.Open) {\\r\\n            revert TaskNotOpen();\\r\\n        }\\r\\n        Application storage application_ = task_.applications[_application];\\r\\n        if (application_.applicant != msg.sender) {\\r\\n            revert NotYourApplication();\\r\\n        }\\r\\n        if (!application_.accepted) {\\r\\n            revert ApplicationNotAccepted();\\r\\n        }\\r\\n\\r\\n        task_.state = TaskState.Taken;\\r\\n        task_.executorApplication = _application;\\r\\n        task_.executorConfirmationTimestamp = uint64(block.timestamp);\\r\\n    }\\r\\n    \\r\\n    /// @inheritdoc ITasks\\r\\n    function createSubmission(\\r\\n        uint256 _taskId,\\r\\n        bytes32 _metadata\\r\\n    ) external {\\r\\n        if (_taskId >= taskCounter) {\\r\\n            revert TaskDoesNotExist();\\r\\n        }\\r\\n        \\r\\n        Task storage task_ = tasks[_taskId];\\r\\n        if (task_.state != TaskState.Taken) {\\r\\n            revert TaskNotTaken();\\r\\n        }\\r\\n        if (task_.applications[task_.executorApplication].applicant != msg.sender) {\\r\\n            revert NotExecutor();\\r\\n        }\\r\\n\\r\\n        unchecked { \\r\\n            Submission storage submission = task_.submissions[task_.submissionCount++];\\r\\n            submission.metadata = _metadata;\\r\\n            submission.timestamp = uint64(block.timestamp);\\r\\n        }\\r\\n    }\\r\\n    \\r\\n    /// @inheritdoc ITasks\\r\\n    function reviewSubmission(\\r\\n        uint256 _taskId,\\r\\n        uint8 _submission,\\r\\n        SubmissionJudgement _judgement,\\r\\n        bytes32 _feedback\\r\\n    ) external {\\r\\n        if (_taskId >= taskCounter) {\\r\\n            revert TaskDoesNotExist();\\r\\n        }\\r\\n        \\r\\n        Task storage task_ = tasks[_taskId];\\r\\n        if (task_.state != TaskState.Taken) {\\r\\n            revert TaskNotTaken();\\r\\n        }\\r\\n        if (task_.proposer != msg.sender) {\\r\\n            revert NotProposer();\\r\\n        }\\r\\n\\r\\n        Submission storage submission_ = task_.submissions[_submission];\\r\\n        if (submission_.judgement != SubmissionJudgement.None) {\\r\\n            revert SubmissionAlreadyJudged();\\r\\n        }\\r\\n        // You can judge with judgement None, to give feedback without any judgement yet\\r\\n        // You can then call this function again to overwrite the feedback (kinda like a draft)\\r\\n        submission_.judgement = _judgement;\\r\\n        submission_.judgementTimestamp = uint64(block.timestamp);\\r\\n        submission_.feedback = _feedback;\\r\\n\\r\\n        if (_judgement == SubmissionJudgement.Accepted) {\\r\\n            uint8 budgetCount = task_.budgetCount;\\r\\n            Application storage executor = task_.applications[task_.executorApplication];\\r\\n            address proposer = task_.proposer;\\r\\n            Escrow escrow = task_.escrow;\\r\\n            for (uint8 i; i < budgetCount; ) {\\r\\n                ERC20Transfer memory erc20Transfer = task_.budget[i];\\r\\n                uint256 reward = executor.reward[i];\\r\\n                escrow.transfer(erc20Transfer.tokenContract, executor.applicant, reward);\\r\\n                uint256 refund = erc20Transfer.amount - reward;\\r\\n                if (refund != 0) {\\r\\n                    escrow.transfer(erc20Transfer.tokenContract, proposer, refund);\\r\\n                }\\r\\n\\r\\n                unchecked {\\r\\n                    ++i;\\r\\n                }\\r\\n            }\\r\\n            task_.state = TaskState.Closed;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ITasks\\r\\n    function refundTask(\\r\\n        uint256 _taskId\\r\\n    ) external {\\r\\n        if (_taskId >= taskCounter) {\\r\\n            revert TaskDoesNotExist();\\r\\n        }\\r\\n\\r\\n        Task storage task_ = tasks[_taskId];\\r\\n        if (task_.state == TaskState.Taken) {\\r\\n            if (task_.deadline < uint64(block.timestamp)) {\\r\\n                revert DeadlineDidNotPass();\\r\\n            }\\r\\n        }\\r\\n        else if (task_.state != TaskState.Open) {\\r\\n            revert TaskNotOpen();\\r\\n        }\\r\\n\\r\\n        uint8 budgetCount = task_.budgetCount;\\r\\n        address proposer = task_.proposer;\\r\\n        Escrow escrow = task_.escrow;\\r\\n        for (uint8 i; i < budgetCount; ) {\\r\\n            ERC20Transfer memory erc20Transfer = task_.budget[i];\\r\\n            escrow.transfer(erc20Transfer.tokenContract, proposer, erc20Transfer.amount);\\r\\n\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n        task_.state = TaskState.Closed;\\r\\n    }\\r\\n}\",\"keccak256\":\"0x8fe72d051aaca6ee2e9d1309d084e5e768d54956bd18d1a08690c11ee3bda2fc\",\"license\":\"UNLICENSED\"}},\"version\":1}",
+  "bytecode": "0x60806040523480156200001157600080fd5b50604051620000209062000064565b604051809103906000f0801580156200003d573d6000803e3d6000fd5b50600280546001600160a01b0319166001600160a01b039290921691909117905562000072565b6102a9806200261583390190565b61259380620000826000396000f3fe608060405234801561001057600080fd5b50600436106100a35760003560e01c8063b685504b11610076578063bd8daec91161005b578063bd8daec914610131578063bfcdfb0814610144578063e2ee2dd11461015757600080fd5b8063b685504b1461010c578063b6cb58a51461011f57600080fd5b80631d65e77e146100a857806328677436146100d15780633f561a40146100e65780639c3abd24146100f9575b600080fd5b6100bb6100b6366004611dd6565b61016a565b6040516100c89190612028565b60405180910390f35b6100e46100df366004611dd6565b61096c565b005b6100e46100f43660046121bc565b610c46565b6100e4610107366004612208565b610dfa565b6100e461011a36600461223c565b610fea565b6000545b6040519081526020016100c8565b6100e461013f366004612268565b61121a565b6100e46101523660046122ba565b6116e5565b61012361016536600461230d565b6119b1565b6101dd6040805161016081018252600080825260208201819052918101829052606081018290526080810182905260a081018290529060c08201908152602001600073ffffffffffffffffffffffffffffffffffffffff1681526020016060815260200160608152602001606081525090565b6000548210610218576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600082815260016020818152604092839020805485529182015467ffffffffffffffff700100000000000000000000000000000000820481169286019290925281811693850193909352680100000000000000009092049091166060830152600381015461ffff7501000000000000000000000000000000000000000000820416608084015273ffffffffffffffffffffffffffffffffffffffff811660a084015260c083019060ff740100000000000000000000000000000000000000009091041660028111156102ec576102ec611def565b908160028111156102ff576102ff611def565b905250600281015473ffffffffffffffffffffffffffffffffffffffff1660e0830152600381015477010000000000000000000000000000000000000000000000900460ff1667ffffffffffffffff81111561035d5761035d6123a0565b6040519080825280602002602001820160405280156103a257816020015b604080518082019091526000808252602082015281526020019060019003908161037b5790505b5061010083015260005b826101000151518160ff16101561044e5760ff8116600081815260048401602090815260409182902082518084019093525473ffffffffffffffffffffffffffffffffffffffff811683527401000000000000000000000000000000000000000090046bffffffffffffffffffffffff1690820152610100850151805191929091811061043b5761043b6123cf565b60209081029190910101526001016103ac565b5060038101547801000000000000000000000000000000000000000000000000900461ffff1667ffffffffffffffff81111561048c5761048c6123a0565b60405190808252806020026020018201604052801561050557816020015b6040805160a08101825260008082526020808301829052928201819052606080830191909152608082015282527fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff9092019101816104aa5790505b5061012083015260005b826101200151518160ff1610156107c65760ff81166000818152600584016020526040902080546101208601518051929391929091908110610553576105536123cf565b6020908102919091010151526001810154610120850151805167ffffffffffffffff9092169160ff851690811061058c5761058c6123cf565b60200260200101516020019067ffffffffffffffff16908167ffffffffffffffff16815250508060010160089054906101000a900473ffffffffffffffffffffffffffffffffffffffff168461012001518360ff16815181106105f1576105f16123cf565b602090810291909101015173ffffffffffffffffffffffffffffffffffffffff9091166040909101526001810154610120850151805160ff7c0100000000000000000000000000000000000000000000000000000000909304831692851690811061065e5761065e6123cf565b6020908102919091010151901515606090910152600383015477010000000000000000000000000000000000000000000000900460ff1667ffffffffffffffff8111156106ad576106ad6123a0565b6040519080825280602002602001820160405280156106d6578160200160208202803683370190505b508461012001518360ff16815181106106f1576106f16123cf565b60200260200101516080018190525060005b8461012001518360ff168151811061071d5761071d6123cf565b602002602001015160800151518160ff1610156107bc5760ff808216600090815260028401602052604090205461012087015180516bffffffffffffffffffffffff909216929091908616908110610777576107776123cf565b6020026020010151608001518260ff1681518110610797576107976123cf565b6bffffffffffffffffffffffff90921660209283029190910190910152600101610703565b505060010161050f565b5060038101547a010000000000000000000000000000000000000000000000000000900460ff1667ffffffffffffffff811115610805576108056123a0565b60405190808252806020026020018201604052801561087c57816020015b6040805160a0810182526000808252602080830182905292820181905260608201819052608082015282527fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff9092019101816108235790505b5061014083015260005b826101400151518160ff1610156109655760ff8082166000908152600684016020908152604091829020825160a08101845281548152600182015467ffffffffffffffff8116938201939093529390928401916801000000000000000090041660028111156108f7576108f7611def565b600281111561090857610908611def565b815260018201546901000000000000000000900467ffffffffffffffff166020820152600290910154604090910152610140840151805160ff8416908110610952576109526123cf565b6020908102919091010152600101610886565b5050919050565b60005481106109a7576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600081815260016020819052604090912090600382015474010000000000000000000000000000000000000000900460ff1660028111156109ea576109ea611def565b03610a5357600181015467ffffffffffffffff428116700100000000000000000000000000000000909204161015610a4e576040517fb70a4d5900000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b610abd565b6000600382015474010000000000000000000000000000000000000000900460ff166002811115610a8657610a86611def565b14610abd576040517ffe89421700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6003810154600282015460ff770100000000000000000000000000000000000000000000008304169173ffffffffffffffffffffffffffffffffffffffff908116911660005b8360ff168160ff161015610bff5760ff811660009081526004868101602090815260409283902083518085018552905473ffffffffffffffffffffffffffffffffffffffff808216808452740100000000000000000000000000000000000000009092046bffffffffffffffffffffffff1693830184905294517fbeabacc800000000000000000000000000000000000000000000000000000000815293840152868416602484015260448301919091529184169063beabacc890606401600060405180830381600087803b158015610bdb57600080fd5b505af1158015610bef573d6000803e3d6000fd5b5050505081600101915050610b03565b5050505060030180547fffffffffffffffffffffff00ffffffffffffffffffffffffffffffffffffffff167402000000000000000000000000000000000000000017905550565b6000548310610c81576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600083815260016020526040812090600382015474010000000000000000000000000000000000000000900460ff166002811115610cc157610cc1611def565b14610cf8576040517ffe89421700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600381015473ffffffffffffffffffffffffffffffffffffffff163314610d4b576040517f7d1b73b900000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60005b82811015610df3576001826005016000868685818110610d7057610d706123cf565b9050602002016020810190610d8591906123fe565b61ffff1681526020810191909152604001600020600190810180549215157c0100000000000000000000000000000000000000000000000000000000027fffffff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff9093169290921790915501610d4e565b5050505050565b6000548210610e35576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600082815260016020819052604090912090600382015474010000000000000000000000000000000000000000900460ff166002811115610e7857610e78611def565b14610eaf576040517f24a6478900000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600381015461ffff750100000000000000000000000000000000000000000090910416600090815260058201602052604090206001015468010000000000000000900473ffffffffffffffffffffffffffffffffffffffff163314610f40576040517fc32d1d7600000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600381018054600160ff7a0100000000000000000000000000000000000000000000000000008084048216838101909216027fffffffffff00ffffffffffffffffffffffffffffffffffffffffffffffffffff9093169290921790925560009081526006909201602052604090912091825501805467ffffffffffffffff42167fffffffffffffffffffffffffffffffffffffffffffffffff000000000000000090911617905550565b6000548210611025576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600082815260016020526040812090600382015474010000000000000000000000000000000000000000900460ff16600281111561106557611065611def565b1461109c576040517ffe89421700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b61ffff821660009081526005820160205260409020600181015468010000000000000000900473ffffffffffffffffffffffffffffffffffffffff163314611110576040517fb7ec028400000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60018101547c0100000000000000000000000000000000000000000000000000000000900460ff1661116e576040517fbcffbdde00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b506003810180547fffffffffffffffffff000000ffffffffffffffffffffffffffffffffffffffff16750100000000000000000000000000000000000000000061ffff949094169390930292909217740100000000000000000000000000000000000000001790915560010180547fffffffffffffffffffffffffffffffff0000000000000000ffffffffffffffff16680100000000000000004267ffffffffffffffff160217905550565b6000548410611255576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600084815260016020819052604090912090600382015474010000000000000000000000000000000000000000900460ff16600281111561129857611298611def565b146112cf576040517f24a6478900000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600381015473ffffffffffffffffffffffffffffffffffffffff163314611322576040517f7d1b73b900000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60ff84166000908152600682016020526040812090600182015468010000000000000000900460ff16600281111561135c5761135c611def565b14611393576040517fc144afcc00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6001810180548591907fffffffffffffffffffffffffffffffffffffffffffffff00ffffffffffffffff16680100000000000000008360028111156113da576113da611def565b0217905550600181810180547fffffffffffffffffffffffffffffff0000000000000000ffffffffffffffffff1669010000000000000000004267ffffffffffffffff16021790556002820184905584600281111561143b5761143b611def565b036116dd5760038201547501000000000000000000000000000000000000000000810461ffff1660009081526005840160205260408120600285015477010000000000000000000000000000000000000000000000840460ff1693919273ffffffffffffffffffffffffffffffffffffffff92831692909116905b8460ff168160ff1610156116965760ff8116600081815260048981016020908152604080842081518083018352905473ffffffffffffffffffffffffffffffffffffffff80821683526bffffffffffffffffffffffff7401000000000000000000000000000000000000000090920482168386015296865260028b019093529381902054845160018b015492517fbeabacc80000000000000000000000000000000000000000000000000000000081529087169481019490945268010000000000000000909104851660248401521660448201819052919285169063beabacc890606401600060405180830381600087803b1580156115b457600080fd5b505af11580156115c8573d6000803e3d6000fd5b5050505060008183602001516bffffffffffffffffffffffff166115ec9190612420565b905080156116885782516040517fbeabacc800000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff91821660048201528782166024820152604481018390529086169063beabacc890606401600060405180830381600087803b15801561166f57600080fd5b505af1158015611683573d6000803e3d6000fd5b505050505b8360010193505050506114b6565b505050506003830180547fffffffffffffffffffffff00ffffffffffffffffffffffffffffffffffffffff1674020000000000000000000000000000000000000000179055505b505050505050565b6000548410611720576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600084815260016020526040812090600382015474010000000000000000000000000000000000000000900460ff16600281111561176057611760611def565b14611797576040517ffe89421700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60038101805461ffff780100000000000000000000000000000000000000000000000080830482166000818152600587016020526040812060019283019094169092027fffffffffffff0000ffffffffffffffffffffffffffffffffffffffffffffffff90941693909317845587825591810180546801000000000000000033027fffffffff0000000000000000000000000000000000000000000000000000000090911667ffffffffffffffff421617179055915460ff7701000000000000000000000000000000000000000000000090910416905b8160ff168160ff1610156119a75760ff811660008181526004860160205260409020547401000000000000000000000000000000000000000090046bffffffffffffffffffffffff1690879087908181106118cb576118cb6123cf565b90506020020160208101906118e0919061247a565b6bffffffffffffffffffffffff161115611926576040517fb8f6ba5300000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b85858260ff1681811061193b5761193b6123cf565b9050602002016020810190611950919061247a565b60ff82166000908152600285016020526040902080547fffffffffffffffffffffffffffffffffffffffff000000000000000000000000166bffffffffffffffffffffffff9290921691909117905560010161186e565b5050505050505050565b600080546001808201835581835260208190526040832087815590810180547fffffffffffffffff0000000000000000ffffffffffffffffffffffffffffffff1670010000000000000000000000000000000067ffffffffffffffff8916021790556003810180547fffffffffffffffff00ffffffffffffffffffffffffffffffffffffffffffffff167701000000000000000000000000000000000000000000000060ff87160217905560025491929091611a829073ffffffffffffffffffffffffffffffffffffffff16611d0a565b90508073ffffffffffffffffffffffffffffffffffffffff166365b145fb6040518163ffffffff1660e01b8152600401600060405180830381600087803b158015611acc57600080fd5b505af1158015611ae0573d6000803e3d6000fd5b505050506002820180547fffffffffffffffffffffffff00000000000000000000000000000000000000001673ffffffffffffffffffffffffffffffffffffffff831617905560005b60ff8116851115611c9d5785858260ff16818110611b4957611b496123cf565b611b5f92602060409092020190810191506124b9565b73ffffffffffffffffffffffffffffffffffffffff166323b872dd338489898660ff16818110611b9157611b916123cf565b9050604002016020016020810190611ba9919061247a565b6040517fffffffff0000000000000000000000000000000000000000000000000000000060e086901b16815273ffffffffffffffffffffffffffffffffffffffff93841660048201529290911660248301526bffffffffffffffffffffffff1660448201526064016020604051808303816000875af1158015611c30573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611c5491906124d6565b5085858260ff16818110611c6a57611c6a6123cf565b60ff8416600090815260048701602052604090819020910292909201919050611c9382826124f8565b5050600101611b29565b505060018101805467ffffffffffffffff42167fffffffffffffffffffffffffffffffffffffffffffffffff000000000000000090911617905560030180547fffffffffffffffffffffffff00000000000000000000000000000000000000001633179055949350505050565b6000763d602d80600a3d3981f3363d3d373d3d3d363d730000008260601b60e81c176000526e5af43d82803e903d91602b57fd5bf38260781b17602052603760096000f0905073ffffffffffffffffffffffffffffffffffffffff8116611dd1576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601660248201527f455243313136373a20637265617465206661696c656400000000000000000000604482015260640160405180910390fd5b919050565b600060208284031215611de857600080fd5b5035919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602160045260246000fd5b60038110611e55577f4e487b7100000000000000000000000000000000000000000000000000000000600052602160045260246000fd5b50565b611e6181611e1e565b9052565b600081518084526020808501945080840160005b83811015611ec4578151805173ffffffffffffffffffffffffffffffffffffffff1688528301516bffffffffffffffffffffffff168388015260409096019590820190600101611e79565b509495945050505050565b600081518084526020808501808196508360051b810191508286016000805b86811015611fa3578385038a528251805186528681015167ffffffffffffffff168787015260408082015173ffffffffffffffffffffffffffffffffffffffff169087015260608082015115159087015260809081015160a0918701829052805191870182905287019060c087019084905b80821015611f8e5783516bffffffffffffffffffffffff168352928901929189019160019190910190611f60565b50509a87019a95505091850191600101611eee565b509298975050505050505050565b600081518084526020808501945080840160005b83811015611ec4578151805188528381015167ffffffffffffffff808216868b01526040915081830151611ff881611e1e565b918a0191909152606082810151909116908901526080908101519088015260a09096019590820190600101611fc5565b602081528151602082015260006020830151612050604084018267ffffffffffffffff169052565b50604083015167ffffffffffffffff8116606084015250606083015167ffffffffffffffff8116608084015250608083015161ffff811660a08401525060a083015173ffffffffffffffffffffffffffffffffffffffff811660c08401525060c08301516120c160e0840182611e58565b5060e08301516101006120eb8185018373ffffffffffffffffffffffffffffffffffffffff169052565b80850151915050610160610120818186015261210b610180860184611e65565b92508086015190507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe061014081878603018188015261214a8584611ecf565b9088015187820390920184880152935090506121668382611fb1565b9695505050505050565b60008083601f84011261218257600080fd5b50813567ffffffffffffffff81111561219a57600080fd5b6020830191508360208260051b85010111156121b557600080fd5b9250929050565b6000806000604084860312156121d157600080fd5b83359250602084013567ffffffffffffffff8111156121ef57600080fd5b6121fb86828701612170565b9497909650939450505050565b6000806040838503121561221b57600080fd5b50508035926020909101359150565b803561ffff81168114611dd157600080fd5b6000806040838503121561224f57600080fd5b8235915061225f6020840161222a565b90509250929050565b6000806000806080858703121561227e57600080fd5b84359350602085013560ff8116811461229657600080fd5b92506040850135600381106122aa57600080fd5b9396929550929360600135925050565b600080600080606085870312156122d057600080fd5b8435935060208501359250604085013567ffffffffffffffff8111156122f557600080fd5b61230187828801612170565b95989497509550505050565b6000806000806060858703121561232357600080fd5b84359350602085013567ffffffffffffffff808216821461234357600080fd5b9093506040860135908082111561235957600080fd5b818701915087601f83011261236d57600080fd5b81358181111561237c57600080fd5b8860208260061b850101111561239157600080fd5b95989497505060200194505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b60006020828403121561241057600080fd5b6124198261222a565b9392505050565b8181038181111561245a577f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b92915050565b6bffffffffffffffffffffffff81168114611e5557600080fd5b60006020828403121561248c57600080fd5b813561241981612460565b73ffffffffffffffffffffffffffffffffffffffff81168114611e5557600080fd5b6000602082840312156124cb57600080fd5b813561241981612497565b6000602082840312156124e857600080fd5b8151801515811461241957600080fd5b813561250381612497565b73ffffffffffffffffffffffffffffffffffffffff811690507fffffffffffffffffffffffff00000000000000000000000000000000000000008181845416178355602084013561255381612460565b60a01b161790555056fea26469706673582212205b5a1efecd53b639306c5505dab720235cdaa78e93601d7a5fa9ebd07793498864736f6c63430008130033608060405234801561001057600080fd5b50610289806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806365b145fb1461003b578063beabacc814610045575b600080fd5b610043610058565b005b6100436100533660046101e9565b6100d4565b60005473ffffffffffffffffffffffffffffffffffffffff16156100a8576040517f0dc149f000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600080547fffffffffffffffffffffffff00000000000000000000000000000000000000001633179055565b60005473ffffffffffffffffffffffffffffffffffffffff163314610125576040517f30cd747100000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6040517fa9059cbb00000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff83811660048301526024820183905284169063a9059cbb906044016020604051808303816000875af115801561019a573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101be919061022a565b50505050565b73ffffffffffffffffffffffffffffffffffffffff811681146101e657600080fd5b50565b6000806000606084860312156101fe57600080fd5b8335610209816101c4565b92506020840135610219816101c4565b929592945050506040919091013590565b60006020828403121561023c57600080fd5b8151801515811461024c57600080fd5b939250505056fea26469706673582212206d3351ed27548c154005a99d47c1795088871f992cc349acfd0cb41eebf58de464736f6c63430008130033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100a35760003560e01c8063b685504b11610076578063bd8daec91161005b578063bd8daec914610131578063bfcdfb0814610144578063e2ee2dd11461015757600080fd5b8063b685504b1461010c578063b6cb58a51461011f57600080fd5b80631d65e77e146100a857806328677436146100d15780633f561a40146100e65780639c3abd24146100f9575b600080fd5b6100bb6100b6366004611dd6565b61016a565b6040516100c89190612028565b60405180910390f35b6100e46100df366004611dd6565b61096c565b005b6100e46100f43660046121bc565b610c46565b6100e4610107366004612208565b610dfa565b6100e461011a36600461223c565b610fea565b6000545b6040519081526020016100c8565b6100e461013f366004612268565b61121a565b6100e46101523660046122ba565b6116e5565b61012361016536600461230d565b6119b1565b6101dd6040805161016081018252600080825260208201819052918101829052606081018290526080810182905260a081018290529060c08201908152602001600073ffffffffffffffffffffffffffffffffffffffff1681526020016060815260200160608152602001606081525090565b6000548210610218576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600082815260016020818152604092839020805485529182015467ffffffffffffffff700100000000000000000000000000000000820481169286019290925281811693850193909352680100000000000000009092049091166060830152600381015461ffff7501000000000000000000000000000000000000000000820416608084015273ffffffffffffffffffffffffffffffffffffffff811660a084015260c083019060ff740100000000000000000000000000000000000000009091041660028111156102ec576102ec611def565b908160028111156102ff576102ff611def565b905250600281015473ffffffffffffffffffffffffffffffffffffffff1660e0830152600381015477010000000000000000000000000000000000000000000000900460ff1667ffffffffffffffff81111561035d5761035d6123a0565b6040519080825280602002602001820160405280156103a257816020015b604080518082019091526000808252602082015281526020019060019003908161037b5790505b5061010083015260005b826101000151518160ff16101561044e5760ff8116600081815260048401602090815260409182902082518084019093525473ffffffffffffffffffffffffffffffffffffffff811683527401000000000000000000000000000000000000000090046bffffffffffffffffffffffff1690820152610100850151805191929091811061043b5761043b6123cf565b60209081029190910101526001016103ac565b5060038101547801000000000000000000000000000000000000000000000000900461ffff1667ffffffffffffffff81111561048c5761048c6123a0565b60405190808252806020026020018201604052801561050557816020015b6040805160a08101825260008082526020808301829052928201819052606080830191909152608082015282527fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff9092019101816104aa5790505b5061012083015260005b826101200151518160ff1610156107c65760ff81166000818152600584016020526040902080546101208601518051929391929091908110610553576105536123cf565b6020908102919091010151526001810154610120850151805167ffffffffffffffff9092169160ff851690811061058c5761058c6123cf565b60200260200101516020019067ffffffffffffffff16908167ffffffffffffffff16815250508060010160089054906101000a900473ffffffffffffffffffffffffffffffffffffffff168461012001518360ff16815181106105f1576105f16123cf565b602090810291909101015173ffffffffffffffffffffffffffffffffffffffff9091166040909101526001810154610120850151805160ff7c0100000000000000000000000000000000000000000000000000000000909304831692851690811061065e5761065e6123cf565b6020908102919091010151901515606090910152600383015477010000000000000000000000000000000000000000000000900460ff1667ffffffffffffffff8111156106ad576106ad6123a0565b6040519080825280602002602001820160405280156106d6578160200160208202803683370190505b508461012001518360ff16815181106106f1576106f16123cf565b60200260200101516080018190525060005b8461012001518360ff168151811061071d5761071d6123cf565b602002602001015160800151518160ff1610156107bc5760ff808216600090815260028401602052604090205461012087015180516bffffffffffffffffffffffff909216929091908616908110610777576107776123cf565b6020026020010151608001518260ff1681518110610797576107976123cf565b6bffffffffffffffffffffffff90921660209283029190910190910152600101610703565b505060010161050f565b5060038101547a010000000000000000000000000000000000000000000000000000900460ff1667ffffffffffffffff811115610805576108056123a0565b60405190808252806020026020018201604052801561087c57816020015b6040805160a0810182526000808252602080830182905292820181905260608201819052608082015282527fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff9092019101816108235790505b5061014083015260005b826101400151518160ff1610156109655760ff8082166000908152600684016020908152604091829020825160a08101845281548152600182015467ffffffffffffffff8116938201939093529390928401916801000000000000000090041660028111156108f7576108f7611def565b600281111561090857610908611def565b815260018201546901000000000000000000900467ffffffffffffffff166020820152600290910154604090910152610140840151805160ff8416908110610952576109526123cf565b6020908102919091010152600101610886565b5050919050565b60005481106109a7576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600081815260016020819052604090912090600382015474010000000000000000000000000000000000000000900460ff1660028111156109ea576109ea611def565b03610a5357600181015467ffffffffffffffff428116700100000000000000000000000000000000909204161015610a4e576040517fb70a4d5900000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b610abd565b6000600382015474010000000000000000000000000000000000000000900460ff166002811115610a8657610a86611def565b14610abd576040517ffe89421700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6003810154600282015460ff770100000000000000000000000000000000000000000000008304169173ffffffffffffffffffffffffffffffffffffffff908116911660005b8360ff168160ff161015610bff5760ff811660009081526004868101602090815260409283902083518085018552905473ffffffffffffffffffffffffffffffffffffffff808216808452740100000000000000000000000000000000000000009092046bffffffffffffffffffffffff1693830184905294517fbeabacc800000000000000000000000000000000000000000000000000000000815293840152868416602484015260448301919091529184169063beabacc890606401600060405180830381600087803b158015610bdb57600080fd5b505af1158015610bef573d6000803e3d6000fd5b5050505081600101915050610b03565b5050505060030180547fffffffffffffffffffffff00ffffffffffffffffffffffffffffffffffffffff167402000000000000000000000000000000000000000017905550565b6000548310610c81576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600083815260016020526040812090600382015474010000000000000000000000000000000000000000900460ff166002811115610cc157610cc1611def565b14610cf8576040517ffe89421700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600381015473ffffffffffffffffffffffffffffffffffffffff163314610d4b576040517f7d1b73b900000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60005b82811015610df3576001826005016000868685818110610d7057610d706123cf565b9050602002016020810190610d8591906123fe565b61ffff1681526020810191909152604001600020600190810180549215157c0100000000000000000000000000000000000000000000000000000000027fffffff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff9093169290921790915501610d4e565b5050505050565b6000548210610e35576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600082815260016020819052604090912090600382015474010000000000000000000000000000000000000000900460ff166002811115610e7857610e78611def565b14610eaf576040517f24a6478900000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600381015461ffff750100000000000000000000000000000000000000000090910416600090815260058201602052604090206001015468010000000000000000900473ffffffffffffffffffffffffffffffffffffffff163314610f40576040517fc32d1d7600000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600381018054600160ff7a0100000000000000000000000000000000000000000000000000008084048216838101909216027fffffffffff00ffffffffffffffffffffffffffffffffffffffffffffffffffff9093169290921790925560009081526006909201602052604090912091825501805467ffffffffffffffff42167fffffffffffffffffffffffffffffffffffffffffffffffff000000000000000090911617905550565b6000548210611025576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600082815260016020526040812090600382015474010000000000000000000000000000000000000000900460ff16600281111561106557611065611def565b1461109c576040517ffe89421700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b61ffff821660009081526005820160205260409020600181015468010000000000000000900473ffffffffffffffffffffffffffffffffffffffff163314611110576040517fb7ec028400000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60018101547c0100000000000000000000000000000000000000000000000000000000900460ff1661116e576040517fbcffbdde00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b506003810180547fffffffffffffffffff000000ffffffffffffffffffffffffffffffffffffffff16750100000000000000000000000000000000000000000061ffff949094169390930292909217740100000000000000000000000000000000000000001790915560010180547fffffffffffffffffffffffffffffffff0000000000000000ffffffffffffffff16680100000000000000004267ffffffffffffffff160217905550565b6000548410611255576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600084815260016020819052604090912090600382015474010000000000000000000000000000000000000000900460ff16600281111561129857611298611def565b146112cf576040517f24a6478900000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600381015473ffffffffffffffffffffffffffffffffffffffff163314611322576040517f7d1b73b900000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60ff84166000908152600682016020526040812090600182015468010000000000000000900460ff16600281111561135c5761135c611def565b14611393576040517fc144afcc00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6001810180548591907fffffffffffffffffffffffffffffffffffffffffffffff00ffffffffffffffff16680100000000000000008360028111156113da576113da611def565b0217905550600181810180547fffffffffffffffffffffffffffffff0000000000000000ffffffffffffffffff1669010000000000000000004267ffffffffffffffff16021790556002820184905584600281111561143b5761143b611def565b036116dd5760038201547501000000000000000000000000000000000000000000810461ffff1660009081526005840160205260408120600285015477010000000000000000000000000000000000000000000000840460ff1693919273ffffffffffffffffffffffffffffffffffffffff92831692909116905b8460ff168160ff1610156116965760ff8116600081815260048981016020908152604080842081518083018352905473ffffffffffffffffffffffffffffffffffffffff80821683526bffffffffffffffffffffffff7401000000000000000000000000000000000000000090920482168386015296865260028b019093529381902054845160018b015492517fbeabacc80000000000000000000000000000000000000000000000000000000081529087169481019490945268010000000000000000909104851660248401521660448201819052919285169063beabacc890606401600060405180830381600087803b1580156115b457600080fd5b505af11580156115c8573d6000803e3d6000fd5b5050505060008183602001516bffffffffffffffffffffffff166115ec9190612420565b905080156116885782516040517fbeabacc800000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff91821660048201528782166024820152604481018390529086169063beabacc890606401600060405180830381600087803b15801561166f57600080fd5b505af1158015611683573d6000803e3d6000fd5b505050505b8360010193505050506114b6565b505050506003830180547fffffffffffffffffffffff00ffffffffffffffffffffffffffffffffffffffff1674020000000000000000000000000000000000000000179055505b505050505050565b6000548410611720576040517fda319dff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600084815260016020526040812090600382015474010000000000000000000000000000000000000000900460ff16600281111561176057611760611def565b14611797576040517ffe89421700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60038101805461ffff780100000000000000000000000000000000000000000000000080830482166000818152600587016020526040812060019283019094169092027fffffffffffff0000ffffffffffffffffffffffffffffffffffffffffffffffff90941693909317845587825591810180546801000000000000000033027fffffffff0000000000000000000000000000000000000000000000000000000090911667ffffffffffffffff421617179055915460ff7701000000000000000000000000000000000000000000000090910416905b8160ff168160ff1610156119a75760ff811660008181526004860160205260409020547401000000000000000000000000000000000000000090046bffffffffffffffffffffffff1690879087908181106118cb576118cb6123cf565b90506020020160208101906118e0919061247a565b6bffffffffffffffffffffffff161115611926576040517fb8f6ba5300000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b85858260ff1681811061193b5761193b6123cf565b9050602002016020810190611950919061247a565b60ff82166000908152600285016020526040902080547fffffffffffffffffffffffffffffffffffffffff000000000000000000000000166bffffffffffffffffffffffff9290921691909117905560010161186e565b5050505050505050565b600080546001808201835581835260208190526040832087815590810180547fffffffffffffffff0000000000000000ffffffffffffffffffffffffffffffff1670010000000000000000000000000000000067ffffffffffffffff8916021790556003810180547fffffffffffffffff00ffffffffffffffffffffffffffffffffffffffffffffff167701000000000000000000000000000000000000000000000060ff87160217905560025491929091611a829073ffffffffffffffffffffffffffffffffffffffff16611d0a565b90508073ffffffffffffffffffffffffffffffffffffffff166365b145fb6040518163ffffffff1660e01b8152600401600060405180830381600087803b158015611acc57600080fd5b505af1158015611ae0573d6000803e3d6000fd5b505050506002820180547fffffffffffffffffffffffff00000000000000000000000000000000000000001673ffffffffffffffffffffffffffffffffffffffff831617905560005b60ff8116851115611c9d5785858260ff16818110611b4957611b496123cf565b611b5f92602060409092020190810191506124b9565b73ffffffffffffffffffffffffffffffffffffffff166323b872dd338489898660ff16818110611b9157611b916123cf565b9050604002016020016020810190611ba9919061247a565b6040517fffffffff0000000000000000000000000000000000000000000000000000000060e086901b16815273ffffffffffffffffffffffffffffffffffffffff93841660048201529290911660248301526bffffffffffffffffffffffff1660448201526064016020604051808303816000875af1158015611c30573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611c5491906124d6565b5085858260ff16818110611c6a57611c6a6123cf565b60ff8416600090815260048701602052604090819020910292909201919050611c9382826124f8565b5050600101611b29565b505060018101805467ffffffffffffffff42167fffffffffffffffffffffffffffffffffffffffffffffffff000000000000000090911617905560030180547fffffffffffffffffffffffff00000000000000000000000000000000000000001633179055949350505050565b6000763d602d80600a3d3981f3363d3d373d3d3d363d730000008260601b60e81c176000526e5af43d82803e903d91602b57fd5bf38260781b17602052603760096000f0905073ffffffffffffffffffffffffffffffffffffffff8116611dd1576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601660248201527f455243313136373a20637265617465206661696c656400000000000000000000604482015260640160405180910390fd5b919050565b600060208284031215611de857600080fd5b5035919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602160045260246000fd5b60038110611e55577f4e487b7100000000000000000000000000000000000000000000000000000000600052602160045260246000fd5b50565b611e6181611e1e565b9052565b600081518084526020808501945080840160005b83811015611ec4578151805173ffffffffffffffffffffffffffffffffffffffff1688528301516bffffffffffffffffffffffff168388015260409096019590820190600101611e79565b509495945050505050565b600081518084526020808501808196508360051b810191508286016000805b86811015611fa3578385038a528251805186528681015167ffffffffffffffff168787015260408082015173ffffffffffffffffffffffffffffffffffffffff169087015260608082015115159087015260809081015160a0918701829052805191870182905287019060c087019084905b80821015611f8e5783516bffffffffffffffffffffffff168352928901929189019160019190910190611f60565b50509a87019a95505091850191600101611eee565b509298975050505050505050565b600081518084526020808501945080840160005b83811015611ec4578151805188528381015167ffffffffffffffff808216868b01526040915081830151611ff881611e1e565b918a0191909152606082810151909116908901526080908101519088015260a09096019590820190600101611fc5565b602081528151602082015260006020830151612050604084018267ffffffffffffffff169052565b50604083015167ffffffffffffffff8116606084015250606083015167ffffffffffffffff8116608084015250608083015161ffff811660a08401525060a083015173ffffffffffffffffffffffffffffffffffffffff811660c08401525060c08301516120c160e0840182611e58565b5060e08301516101006120eb8185018373ffffffffffffffffffffffffffffffffffffffff169052565b80850151915050610160610120818186015261210b610180860184611e65565b92508086015190507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe061014081878603018188015261214a8584611ecf565b9088015187820390920184880152935090506121668382611fb1565b9695505050505050565b60008083601f84011261218257600080fd5b50813567ffffffffffffffff81111561219a57600080fd5b6020830191508360208260051b85010111156121b557600080fd5b9250929050565b6000806000604084860312156121d157600080fd5b83359250602084013567ffffffffffffffff8111156121ef57600080fd5b6121fb86828701612170565b9497909650939450505050565b6000806040838503121561221b57600080fd5b50508035926020909101359150565b803561ffff81168114611dd157600080fd5b6000806040838503121561224f57600080fd5b8235915061225f6020840161222a565b90509250929050565b6000806000806080858703121561227e57600080fd5b84359350602085013560ff8116811461229657600080fd5b92506040850135600381106122aa57600080fd5b9396929550929360600135925050565b600080600080606085870312156122d057600080fd5b8435935060208501359250604085013567ffffffffffffffff8111156122f557600080fd5b61230187828801612170565b95989497509550505050565b6000806000806060858703121561232357600080fd5b84359350602085013567ffffffffffffffff808216821461234357600080fd5b9093506040860135908082111561235957600080fd5b818701915087601f83011261236d57600080fd5b81358181111561237c57600080fd5b8860208260061b850101111561239157600080fd5b95989497505060200194505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b60006020828403121561241057600080fd5b6124198261222a565b9392505050565b8181038181111561245a577f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b92915050565b6bffffffffffffffffffffffff81168114611e5557600080fd5b60006020828403121561248c57600080fd5b813561241981612460565b73ffffffffffffffffffffffffffffffffffffffff81168114611e5557600080fd5b6000602082840312156124cb57600080fd5b813561241981612497565b6000602082840312156124e857600080fd5b8151801515811461241957600080fd5b813561250381612497565b73ffffffffffffffffffffffffffffffffffffffff811690507fffffffffffffffffffffffff00000000000000000000000000000000000000008181845416178355602084013561255381612460565b60a01b161790555056fea26469706673582212205b5a1efecd53b639306c5505dab720235cdaa78e93601d7a5fa9ebd07793498864736f6c63430008130033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "acceptApplications(uint256,uint16[])": {
+        "params": {
+          "_applications": "Indexes of the applications to accept.",
+          "_taskId": "Id of the task."
+        }
+      },
+      "applyForTask(uint256,bytes32,uint96[])": {
+        "params": {
+          "_metadata": "Metadata of your application.",
+          "_reward": "Wanted rewards for completing the task.",
+          "_taskId": "Id of the task."
+        }
+      },
+      "createSubmission(uint256,bytes32)": {
+        "params": {
+          "_metadata": "Metadata of the submission. (IPFS hash)",
+          "_taskId": "Id of the task."
+        }
+      },
+      "createTask(bytes32,uint64,(address,uint96)[])": {
+        "params": {
+          "_budget": "Maximum ERC20 rewards that can be earned by completing the task.",
+          "_deadline": "Block timestamp at which the task expires if not completed.",
+          "_metadata": "Metadata of the task. (IPFS hash)"
+        },
+        "returns": {
+          "taskId": "Id of the newly created task."
+        }
+      },
+      "getTask(uint256)": {
+        "params": {
+          "_taskId": "Id of the task."
+        }
+      },
+      "refundTask(uint256)": {
+        "params": {
+          "_taskId": "Id of the task."
+        }
+      },
+      "reviewSubmission(uint256,uint8,uint8,bytes32)": {
+        "params": {
+          "_feedback": "Reasoning of the reviewer. (IPFS hash)",
+          "_judgement": "Outcome of the review.",
+          "_submission": "Index of the submission that is reviewed.",
+          "_taskId": "Id of the task."
+        }
+      },
+      "takeTask(uint256,uint16)": {
+        "params": {
+          "_application": "Index of application you made that has been accepted.",
+          "_taskId": "Id of the task."
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "acceptApplications(uint256,uint16[])": {
+        "notice": "Accept application to allow them to take the task."
+      },
+      "applyForTask(uint256,bytes32,uint96[])": {
+        "notice": "Apply to take the task."
+      },
+      "createSubmission(uint256,bytes32)": {
+        "notice": "Create a submission."
+      },
+      "createTask(bytes32,uint64,(address,uint96)[])": {
+        "notice": "Create a new task."
+      },
+      "getTask(uint256)": {
+        "notice": "Retrieves all task information by id."
+      },
+      "refundTask(uint256)": {
+        "notice": "Refund a task. This can be used to close a task and receive back the budget."
+      },
+      "reviewSubmission(uint256,uint8,uint8,bytes32)": {
+        "notice": "Review a submission."
+      },
+      "takeTask(uint256,uint16)": {
+        "notice": "Take the task after your application has been accepted."
+      },
+      "taskCount()": {
+        "notice": "Retrieves the current amount of created tasks."
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 1097,
+        "contract": "contracts/Tasks/Tasks.sol:Tasks",
+        "label": "taskCounter",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 1103,
+        "contract": "contracts/Tasks/Tasks.sol:Tasks",
+        "label": "tasks",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_uint256,t_struct(Task)968_storage)"
+      },
+      {
+        "astId": 1105,
+        "contract": "contracts/Tasks/Tasks.sol:Tasks",
+        "label": "escrowImplementation",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_address"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_contract(Escrow)849": {
+        "encoding": "inplace",
+        "label": "contract Escrow",
+        "numberOfBytes": "20"
+      },
+      "t_contract(IERC20)744": {
+        "encoding": "inplace",
+        "label": "contract IERC20",
+        "numberOfBytes": "20"
+      },
+      "t_enum(SubmissionJudgement)912": {
+        "encoding": "inplace",
+        "label": "enum ITasks.SubmissionJudgement",
+        "numberOfBytes": "1"
+      },
+      "t_enum(TaskState)928": {
+        "encoding": "inplace",
+        "label": "enum ITasks.TaskState",
+        "numberOfBytes": "1"
+      },
+      "t_mapping(t_uint16,t_struct(Application)896_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint16",
+        "label": "mapping(uint16 => struct ITasks.Application)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Application)896_storage"
+      },
+      "t_mapping(t_uint256,t_struct(Task)968_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => struct ITasks.Task)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Task)968_storage"
+      },
+      "t_mapping(t_uint8,t_struct(ERC20Transfer)883_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint8",
+        "label": "mapping(uint8 => struct ITasks.ERC20Transfer)",
+        "numberOfBytes": "32",
+        "value": "t_struct(ERC20Transfer)883_storage"
+      },
+      "t_mapping(t_uint8,t_struct(Submission)924_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint8",
+        "label": "mapping(uint8 => struct ITasks.Submission)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Submission)924_storage"
+      },
+      "t_mapping(t_uint8,t_uint96)": {
+        "encoding": "mapping",
+        "key": "t_uint8",
+        "label": "mapping(uint8 => uint96)",
+        "numberOfBytes": "32",
+        "value": "t_uint96"
+      },
+      "t_struct(Application)896_storage": {
+        "encoding": "inplace",
+        "label": "struct ITasks.Application",
+        "members": [
+          {
+            "astId": 885,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "metadata",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bytes32"
+          },
+          {
+            "astId": 887,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "timestamp",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint64"
+          },
+          {
+            "astId": 889,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "applicant",
+            "offset": 8,
+            "slot": "1",
+            "type": "t_address"
+          },
+          {
+            "astId": 891,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "accepted",
+            "offset": 28,
+            "slot": "1",
+            "type": "t_bool"
+          },
+          {
+            "astId": 895,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "reward",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint8,t_uint96)"
+          }
+        ],
+        "numberOfBytes": "96"
+      },
+      "t_struct(ERC20Transfer)883_storage": {
+        "encoding": "inplace",
+        "label": "struct ITasks.ERC20Transfer",
+        "members": [
+          {
+            "astId": 880,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "tokenContract",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(IERC20)744"
+          },
+          {
+            "astId": 882,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "amount",
+            "offset": 20,
+            "slot": "0",
+            "type": "t_uint96"
+          }
+        ],
+        "numberOfBytes": "32"
+      },
+      "t_struct(Submission)924_storage": {
+        "encoding": "inplace",
+        "label": "struct ITasks.Submission",
+        "members": [
+          {
+            "astId": 914,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "metadata",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bytes32"
+          },
+          {
+            "astId": 916,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "timestamp",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint64"
+          },
+          {
+            "astId": 919,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "judgement",
+            "offset": 8,
+            "slot": "1",
+            "type": "t_enum(SubmissionJudgement)912"
+          },
+          {
+            "astId": 921,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "judgementTimestamp",
+            "offset": 9,
+            "slot": "1",
+            "type": "t_uint64"
+          },
+          {
+            "astId": 923,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "feedback",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bytes32"
+          }
+        ],
+        "numberOfBytes": "96"
+      },
+      "t_struct(Task)968_storage": {
+        "encoding": "inplace",
+        "label": "struct ITasks.Task",
+        "members": [
+          {
+            "astId": 930,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "metadata",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bytes32"
+          },
+          {
+            "astId": 932,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "creationTimestamp",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint64"
+          },
+          {
+            "astId": 934,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "executorConfirmationTimestamp",
+            "offset": 8,
+            "slot": "1",
+            "type": "t_uint64"
+          },
+          {
+            "astId": 936,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "deadline",
+            "offset": 16,
+            "slot": "1",
+            "type": "t_uint64"
+          },
+          {
+            "astId": 939,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "escrow",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_contract(Escrow)849"
+          },
+          {
+            "astId": 941,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "proposer",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address"
+          },
+          {
+            "astId": 944,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "state",
+            "offset": 20,
+            "slot": "3",
+            "type": "t_enum(TaskState)928"
+          },
+          {
+            "astId": 946,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "executorApplication",
+            "offset": 21,
+            "slot": "3",
+            "type": "t_uint16"
+          },
+          {
+            "astId": 948,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "budgetCount",
+            "offset": 23,
+            "slot": "3",
+            "type": "t_uint8"
+          },
+          {
+            "astId": 950,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "applicationCount",
+            "offset": 24,
+            "slot": "3",
+            "type": "t_uint16"
+          },
+          {
+            "astId": 952,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "submissionCount",
+            "offset": 26,
+            "slot": "3",
+            "type": "t_uint8"
+          },
+          {
+            "astId": 957,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "budget",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint8,t_struct(ERC20Transfer)883_storage)"
+          },
+          {
+            "astId": 962,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "applications",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_uint16,t_struct(Application)896_storage)"
+          },
+          {
+            "astId": 967,
+            "contract": "contracts/Tasks/Tasks.sol:Tasks",
+            "label": "submissions",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_uint8,t_struct(Submission)924_storage)"
+          }
+        ],
+        "numberOfBytes": "224"
+      },
+      "t_uint16": {
+        "encoding": "inplace",
+        "label": "uint16",
+        "numberOfBytes": "2"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      },
+      "t_uint64": {
+        "encoding": "inplace",
+        "label": "uint64",
+        "numberOfBytes": "8"
+      },
+      "t_uint8": {
+        "encoding": "inplace",
+        "label": "uint8",
+        "numberOfBytes": "1"
+      },
+      "t_uint96": {
+        "encoding": "inplace",
+        "label": "uint96",
+        "numberOfBytes": "12"
+      }
+    }
+  }
+}

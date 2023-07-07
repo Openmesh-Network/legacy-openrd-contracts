@@ -1,10 +1,19 @@
 {
+  "scripts": {
+    "test": "npx hardhat test --typecheck"
+  },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
-    "dotenv": "^16.1.2",
-    "hardhat": "^2.14.0"
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "dotenv": "^16.3.1",
+    "hardhat": "^2.16.1",
+    "hardhat-deploy": "^0.11.34",
+    "hardhat-deploy-ethers": "^0.4.1",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.3"
   },
   "dependencies": {
-    "@aragon/osx": "^1.2.0"
+    "@openzeppelin/contracts": "^4.9.2",
+    "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "axios": "^1.4.0"
   }
 }
