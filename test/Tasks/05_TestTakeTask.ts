@@ -206,4 +206,16 @@ describe("Take Task", function () {
     });
     await expect(tx).to.be.revertedWithCustomError(confirmer, "NotYourApplication");
   });
+  
+
+  it("should not be allowed on a non-existing application", async function () {
+    const task = await loadFixture(createApprovedApplicationsTaskFixture);
+    const application = BigInt(task.applicants.length);
+    const tx = takeTask({
+      tasks: task.TasksExecutor,
+      taskId: task.taskId,
+      application: application,
+    });
+    await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "ApplicationDoesNotExist");
+  });
 });

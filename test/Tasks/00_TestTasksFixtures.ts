@@ -1,5 +1,4 @@
-import { expect } from "chai";
-import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { deployments, ethers, getNamedAccounts } from "hardhat";
 import { Tasks } from "../../typechain-types";
 import { acceptApplications, applyForTask, createSubmission, createTask, reviewSubmission, takeTask } from "../../utils/taskHelper";
@@ -111,7 +110,7 @@ export async function createApprovedApplicationsTaskFixture() {
 
 export async function createBudgetTaskWithExecutorAndSubmissionFixture() {
   const task = await loadFixture(createBudgetTaskFixture);
-  const reward = task.budget.map((b, i) => BigInt(i));
+  const reward = task.budget.map((_, i) => { return { nextToken: true, to: task.executor, amount: BigInt(i) }; });
   await applyForTask({
     tasks: task.TasksExecutor,
     taskId: task.taskId,
@@ -139,7 +138,7 @@ export async function createBudgetTaskWithExecutorAndSubmissionFullRewardFixture
   await applyForTask({
     tasks: task.TasksExecutor,
     taskId: task.taskId,
-    reward: task.budget.map(b => b.amount),
+    reward: task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; }),
   });
   await acceptApplications({
     tasks: task.TasksProposer,
@@ -158,12 +157,34 @@ export async function createBudgetTaskWithExecutorAndSubmissionFullRewardFixture
   return task;
 }
 
+export async function createBudgetTaskWithExecutorAndSubmissionIncompleteRewardFixture() {
+  const task = await loadFixture(createBudgetTaskFixture);
+  const reward = task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; });
+  reward.pop();
+  await applyForTask({
+    tasks: task.TasksExecutor,
+    taskId: task.taskId,
+    reward: reward,
+  });
+  await acceptApplications({
+    tasks: task.TasksProposer,
+    taskId: task.taskId,
+    applications: [BigInt(0)]
+  });
+  await takeTask({
+    tasks: task.TasksExecutor,
+    taskId: task.taskId,
+    application: BigInt(0),
+  });
+  await createSubmission({
+    tasks: task.TasksExecutor,
+    taskId: task.taskId,
+  });
+  return { ...task, reward };
+}
+
 describe("Tasks Fixtures", function () {
-  describe("Base", function () {
-    it("deploy", async function () {
-      await deployments.fixture(["Tasks"]);
-    });
-  
+  describe("Base", function () {  
     it("create task", async function () {
       await loadFixture(createTaskFixture);
     });
@@ -208,6 +229,10 @@ describe("Tasks Fixtures", function () {
     
     it("create budget task with executor and submission full reward", async function () {
       await loadFixture(createBudgetTaskWithExecutorAndSubmissionFullRewardFixture);
+    });
+
+    it("create budget task with executor and submission incomplete reward", async function () {
+      await loadFixture(createBudgetTaskWithExecutorAndSubmissionIncompleteRewardFixture);
     });
   });
 });

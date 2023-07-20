@@ -1,9 +1,8 @@
-import { ethers } from "hardhat";
 import { FromBlockchainDate, ToBlockchainDate, days, now } from "./timeUnits";
 import { ITasks, Tasks } from "../typechain-types";
 import { ContractTransactionReceipt, ContractTransactionResponse } from "ethers";
-import { Application, ApplicationMetadata, BudgetItem, Submission, SubmissionJudgement, SubmissionJudgementMetadata, SubmissionMetadata, Task, TaskMetadata, TaskState } from "./taskTypes";
-import { asyncMap } from "./utils";
+import { Application, ApplicationMetadata, BudgetItem, CancelTaskRequest, CancelTaskRequestMetadata, ChangeScopeRequest, DropExecutorRequest, DropExecutorRequestMetadata, RequestType, Reward, Submission, SubmissionJudgement, SubmissionJudgementMetadata, SubmissionMetadata, Task, TaskMetadata, TaskState } from "./taskTypes";
+import { asyncMap, getEventsFromReceipt } from "./utils";
 import { addToIpfs, getFromIpfs } from "./ipfsHelper";
 
 // Helper to interact with the tasks contract
@@ -36,7 +35,9 @@ export async function createTask(settings : CreateTaskSettings) : Promise<Create
     if (!receipt) {
         throw new Error();
     }
-    return { taskId: await settings.tasks.taskCount() - BigInt(1), receipt: receipt };
+    const taskCreationEvent = getEventsFromReceipt(receipt, settings.tasks.interface, "TaskCreated");
+    const taskId = taskCreationEvent[0].args.taskId;
+    return { taskId: taskId, receipt: receipt };
 }
 
 
@@ -58,6 +59,9 @@ export async function getTask(settings: GetTaskSettings) : Promise<Task> {
         executorApplication: Number(rawTask.executorApplication),
         executorConfirmationTimestamp: FromBlockchainDate(rawTask.executorConfirmationTimestamp),
         submissions: await asyncMap(rawTask.submissions, toSubmission),
+        changeScopeRequests: await asyncMap(rawTask.changeScopeRequests, toChangeScopeRequest),
+        dropExecutorRequests: await asyncMap(rawTask.dropExecutorRequests, toDropExecutorRequest),
+        cancelTaskRequests: await asyncMap(rawTask.cancelTaskRequests, toCancelTaskRequest),
     };
 }
 
@@ -81,11 +85,37 @@ export async function toSubmission(submission : ITasks.SubmissionStructOutput) :
     };
 }
 
+export async function toChangeScopeRequest(request : ITasks.OffChainChangeScopeRequestStructOutput) : Promise<ChangeScopeRequest> {
+    return {
+        metadata: await getFromIpfs(request.metadata),
+        timestamp: FromBlockchainDate(request.timestamp),
+        accepted: request.accepted == BigInt(0) ? null : FromBlockchainDate(request.accepted),
+        deadline: FromBlockchainDate(request.deadline),
+        reward: request.reward,
+    };
+}
+
+export async function toDropExecutorRequest(request : ITasks.DropExecutorRequestStructOutput) : Promise<DropExecutorRequest> {
+    return {
+        explanation: await getFromIpfs(request.explanation),
+        timestamp: FromBlockchainDate(request.timestamp),
+        accepted: request.accepted == BigInt(0) ? null : FromBlockchainDate(request.accepted),
+    };
+}
+
+export async function toCancelTaskRequest(request : ITasks.CancelTaskRequestStructOutput) : Promise<CancelTaskRequest> {
+    return {
+        explanation: await getFromIpfs(request.explanation),
+        timestamp: FromBlockchainDate(request.timestamp),
+        accepted: request.accepted == BigInt(0) ? null : FromBlockchainDate(request.accepted),
+    };
+}
+
 export interface ApplyForTaskSettings {
     tasks: Tasks;
     taskId: bigint;
     metadata?: ApplicationMetadata,
-    reward?: bigint[],
+    reward?: Reward[],
 };
 export async function applyForTask(settings: ApplyForTaskSettings) {
     const metadata : ApplicationMetadata = {
@@ -144,4 +174,59 @@ export async function reviewSubmission(settings : ReviewSubmissionSettings) {
     };
     const metadataHash = await addToIpfs(JSON.stringify(settings.judgementMetadata ?? metadata));
     return settings.tasks.reviewSubmission(settings.taskId, settings.submissionId, settings.judgement, metadataHash);
+}
+
+export interface ChangeScopeSettings {
+    tasks: Tasks;
+    taskId: bigint;
+    metadata?: TaskMetadata;
+    deadline?: Date;
+    reward?: Reward[]
+};
+export async function changeScope(settings : ChangeScopeSettings) {
+    const metadata : TaskMetadata = {
+        title: "",
+        description: "",
+        resources: []
+    };
+    const metadataHash = await addToIpfs(JSON.stringify(settings.metadata ?? metadata));
+    const deadline = settings.deadline ? ToBlockchainDate(settings.deadline) : now() + 1 * days;
+    const reward = settings.reward ?? [];
+    return settings.tasks.changeScope(settings.taskId, metadataHash, deadline, reward);
+}
+
+export interface DropExecutorSettings {
+    tasks: Tasks;
+    taskId: bigint;
+    explanation?: DropExecutorRequestMetadata;
+};
+export async function dropExecutor(settings : DropExecutorSettings) {
+    const metadata : DropExecutorRequestMetadata = {
+        explanation: "",
+    };
+    const metadataHash = await addToIpfs(JSON.stringify(settings.explanation ?? metadata));
+    return settings.tasks.dropExecutor(settings.taskId, metadataHash);
+}
+
+export interface CancelTaskSettings {
+    tasks: Tasks;
+    taskId: bigint;
+    explanation?: CancelTaskRequestMetadata;
+};
+export async function cancelTask(settings : CancelTaskSettings) {
+    const metadata : CancelTaskRequestMetadata = {
+        explanation: "",
+    };
+    const metadataHash = await addToIpfs(JSON.stringify(settings.explanation ?? metadata));
+    return settings.tasks.cancelTask(settings.taskId, metadataHash);
+}
+
+export interface AcceptRequestSettings {
+    tasks: Tasks;
+    taskId: bigint;
+    requestType: RequestType;
+    requestId: bigint;
+};
+export async function acceptRequest(settings : AcceptRequestSettings) {
+    return settings.tasks.acceptRequest(settings.taskId, settings.requestType, settings.requestId);
 }

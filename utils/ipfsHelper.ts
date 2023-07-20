@@ -32,6 +32,10 @@ export async function addToIpfs(json: string): Promise<string> {
 }
 
 export async function getFromIpfs(hash: string): Promise<any> {
+  if (hash == undefined || hash == "") {
+    return null;
+  }
+
   if (!network.live) {
     const index = ethers.toBigInt(hash);
     return JSON.parse(ipfsMock[Number(index)]);

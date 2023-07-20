@@ -74,7 +74,7 @@ describe("Apply For Task", function () {
 
   it("should have the correct reward", async function () {
     const task = await loadFixture(createBudgetTaskFixture);
-    const reward = task.budget.map(b => b.amount);
+    const reward = task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; });
     await applyForTask({
       tasks: task.TasksExecutor,
       taskId: task.taskId,
@@ -83,17 +83,17 @@ describe("Apply For Task", function () {
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.applications).to.be.lengthOf(1);
     for (let i = 0; i < reward.length; i++) {
-      expect(taskInfo.applications[0].reward[i]).to.be.equal(reward[i])
+      expect(taskInfo.applications[0].reward[i].nextToken).to.be.equal(reward[i].nextToken);
+      expect(taskInfo.applications[0].reward[i].to).to.be.equal(reward[i].to);
+      expect(taskInfo.applications[0].reward[i].amount).to.be.equal(reward[i].amount);
     }
   });
 
   it("should be in open state", async function () {
     const task = await loadFixture(createBudgetTaskFixture);
-    const reward = task.budget.map(b => b.amount);
     await applyForTask({
       tasks: task.TasksExecutor,
       taskId: task.taskId,
-      reward: reward,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.state).to.be.equal(TaskState.Open);
@@ -176,8 +176,8 @@ describe("Apply For Task", function () {
 
   it("should revert if reward more than budget", async function () {
     const task = await loadFixture(createBudgetTaskFixture);
-    let reward = task.budget.map(b => b.amount);
-    reward[0] += BigInt(1);
+    let reward = task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; });
+    reward[0].amount += BigInt(1);
     const tx = applyForTask({
       tasks: task.TasksExecutor,
       taskId: task.taskId,
@@ -188,16 +188,14 @@ describe("Apply For Task", function () {
 
   it("should not allow reward array longer than budget", async function () {
     const task = await loadFixture(createBudgetTaskFixture);
-    const reward = task.budget.map(b => b.amount);
+    const reward = task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; });
     const extraReward = reward.map(i => i); // Copy
-    extraReward.push(BigInt(1));
-    await applyForTask({
+    extraReward.push({ nextToken: true, to: task.executor, amount: BigInt(1) });
+    const tx = applyForTask({
       tasks: task.TasksExecutor,
       taskId: task.taskId,
       reward: extraReward,
     });
-    const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
-    expect(taskInfo.applications).to.be.lengthOf(1);
-    expect(taskInfo.applications[0].reward).to.be.deep.equal(reward);
+    await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "RewardAboveBudget");
   });
 });

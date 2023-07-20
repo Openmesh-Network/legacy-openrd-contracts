@@ -1,12 +1,10 @@
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { ethers } from "hardhat";
-import { applyForTask, getTask } from "../../utils/taskHelper";
-import { ToBlockchainDate } from "../../utils/timeUnits";
-import { createBudgetTaskFixture, createTakenTaskFixture, createTakenTaskWithAcceptedSubmissionFixture, createTaskFixture } from "./00_TestTasksFixtures";
-import { TaskState } from "../../utils/taskTypes";
+import { getTask } from "../../utils/taskHelper";
+import { createTaskFixture } from "./00_TestTasksFixtures";
 
 describe("Get Task", function () {
+  // Most functionality is already tested in CreateTask
   it("should not be allowed on a task id that does not exist", async function () {
     const task = await loadFixture(createTaskFixture);
     const tx = getTask({

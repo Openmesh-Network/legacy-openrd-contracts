@@ -6,6 +6,7 @@ import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "@typechain/hardhat";
 import "@nomicfoundation/hardhat-ethers";
+import "@openzeppelin/hardhat-upgrades";
 
 import { config as dotEnvConfig } from "dotenv";
 dotEnvConfig();
@@ -14,7 +15,7 @@ const fakePrivKey = "00000000000000000000000000000000000000000000000000000000000
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.19",
+    version: "0.8.17",
     settings: {
       optimizer: {
         enabled: true,
@@ -23,10 +24,11 @@ const config: HardhatUserConfig = {
     }
   },
   networks: {
-    "mumbai": {
+    mumbai: {
       accounts: [process.env.PRIV_KEY ?? fakePrivKey],
-      url: "https://rpc.ankr.com/polygon_mumbai"
-    }
+      url: "https://rpc.ankr.com/polygon_mumbai",
+      deploy: ["00_Tasks", "02_Plugins", "03_NFT", "04_DAO"],
+    },
   },
   namedAccounts: {
     deployer: {
@@ -42,7 +44,7 @@ const config: HardhatUserConfig = {
   gasReporter: {
     enabled: false,
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
-    excludeContracts: ["mocks/", "ERC20"],
+    excludeContracts: ["mocks/", "ERC20", "ERC721"],
     // token: "MATIC",
     // gasPriceApi: "https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice"
   },

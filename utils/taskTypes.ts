@@ -27,6 +27,15 @@ export interface Task {
     executorApplication: number;
     executorConfirmationTimestamp: Date;
     submissions: Submission[];
+    changeScopeRequests: ChangeScopeRequest[];
+    dropExecutorRequests: DropExecutorRequest[];
+    cancelTaskRequests: CancelTaskRequest[];
+}
+
+export interface Reward {
+    nextToken: boolean;
+    to: string;
+    amount: bigint;
 }
 
 export interface ApplicationMetadata {
@@ -40,7 +49,7 @@ export interface Application {
     timestamp: Date;
     applicant: string;
     accepted: boolean;
-    reward: bigint[];
+    reward: Reward[];
 }
 
 export interface SubmissionMetadata {
@@ -61,3 +70,31 @@ export interface Submission {
     judgementTimestamp: Date;
     feedback: SubmissionJudgementMetadata;
 }
+
+export interface ChangeScopeRequest {
+    metadata: TaskMetadata;
+    timestamp: Date;
+    accepted: Date | null;
+    deadline: Date;
+    reward: Reward[];
+}
+
+export interface DropExecutorRequestMetadata {
+    explanation: string;
+}
+export interface DropExecutorRequest {
+    explanation: DropExecutorRequestMetadata;
+    timestamp: Date;
+    accepted: Date | null;
+}
+
+export interface CancelTaskRequestMetadata {
+    explanation: string;
+}
+export interface CancelTaskRequest {
+    explanation: CancelTaskRequestMetadata;
+    timestamp: Date;
+    accepted: Date | null;
+}
+
+export enum RequestType { ChangeScope, DropExecutor, CancelTask }; 

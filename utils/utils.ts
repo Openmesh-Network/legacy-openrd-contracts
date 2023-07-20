@@ -1,16 +1,32 @@
-import { TransactionReceipt } from "ethers";
-import { Interface, LogDescription } from "@ethersproject/abi";
+import { TransactionReceipt, Interface, LogDescription } from "ethers";
 
 // Various utility functions
 
-export function findEventsTopicLog(
-    receipt: TransactionReceipt,
-    iface: Interface,
-    eventName: string
-  ): LogDescription[] {
-    const topic = iface.getEventTopic(eventName);
-    const log = receipt.logs.filter(x => x.topics[0] == topic);
-    return log.map(l => iface.parseLog({topics: l.topics.map(s => s), data: l.data}));
+interface Log {
+  topics: readonly string[] | string[];
+  data: string;
+}
+
+export function getEventsFromReceipt(
+  receipt: TransactionReceipt,
+  iface: Interface,
+  eventName: string
+): LogDescription[] {
+  return getEventsFromLogs(receipt.logs.map(l => l), iface, eventName);
+}
+
+export function getEventsFromLogs(
+  logs: Log[] | undefined,
+  iface: Interface,
+  eventName: string
+): LogDescription[] {
+  if (!logs) {
+    throw new Error();
+  }
+
+  const topic = iface.getEvent(eventName)?.topicHash;
+  const log = logs.filter(x => x.topics[0] == topic);
+  return log.map(l => iface.parseLog({topics: l.topics.map(s => s), data: l.data})) as LogDescription[];
 }
 
 export async function asyncFilter<T>(arr : T[], predicate : ((elem : T) => Promise<boolean>)) {

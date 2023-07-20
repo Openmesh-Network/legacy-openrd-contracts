@@ -3,7 +3,7 @@ import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { ethers, getUnnamedAccounts } from "hardhat";
 import { reviewSubmission, getTask } from "../../utils/taskHelper";
 import { ToBlockchainDate } from "../../utils/timeUnits";
-import { createBudgetTaskWithExecutorAndSubmissionFixture, createBudgetTaskWithExecutorAndSubmissionFullRewardFixture, createTakenTaskWithAcceptedSubmissionFixture, createTakenTaskWithSubmissionFixture, createTaskFixture } from "./00_TestTasksFixtures";
+import { createBudgetTaskWithExecutorAndSubmissionFixture, createBudgetTaskWithExecutorAndSubmissionFullRewardFixture, createBudgetTaskWithExecutorAndSubmissionIncompleteRewardFixture, createTakenTaskWithAcceptedSubmissionFixture, createTakenTaskWithSubmissionFixture, createTaskFixture } from "./00_TestTasksFixtures";
 import { SubmissionJudgement, SubmissionJudgementMetadata, TaskState } from "../../utils/taskTypes";
 
 describe("Review Submission", function () {
@@ -56,7 +56,7 @@ describe("Review Submission", function () {
     });
     for (let i = 0; i < task.budget.length; i++) {
       const ERC20 = await ethers.getContractAt("ERC20", task.budget[i].tokenContract);
-      expect(await ERC20.balanceOf(task.executor)).to.be.equal(task.reward[i]);
+      expect(await ERC20.balanceOf(task.executor)).to.be.equal(task.reward[i].amount);
     }
   });
 
@@ -70,7 +70,22 @@ describe("Review Submission", function () {
     });
     for (let i = 0; i < task.budget.length; i++) {
       const ERC20 = await ethers.getContractAt("ERC20", task.budget[i].tokenContract);
-      expect(await ERC20.balanceOf(task.proposer)).to.be.equal(task.budget[i].amount - task.reward[i]);
+      expect(await ERC20.balanceOf(task.proposer)).to.be.equal(task.budget[i].amount - task.reward[i].amount);
+    }
+  });
+
+  it("should have refunded left over budget after accept, when not all tokens are used as reward", async function () {
+    const task = await loadFixture(createBudgetTaskWithExecutorAndSubmissionIncompleteRewardFixture);
+    await reviewSubmission({
+      tasks: task.TasksProposer,
+      taskId: task.taskId,
+      submissionId: BigInt(0),
+      judgement: SubmissionJudgement.Accepted,
+    });
+    for (let i = 0; i < task.budget.length; i++) {
+      const ERC20 = await ethers.getContractAt("ERC20", task.budget[i].tokenContract);
+      const sub = i >= task.reward.length ? BigInt(0) : task.reward[i].amount;
+      expect(await ERC20.balanceOf(task.proposer)).to.be.equal(task.budget[i].amount - sub);
     }
   });
 
@@ -272,5 +287,16 @@ describe("Review Submission", function () {
       judgement: SubmissionJudgement.Rejected,
     });
     await expect(tx).to.be.revertedWithCustomError(task.TasksProposer, "SubmissionAlreadyJudged");
+  });
+
+  it("should not be allowed on a non-existing submission", async function () {
+    const task = await loadFixture(createTakenTaskWithSubmissionFixture);
+    const tx = reviewSubmission({
+      tasks: task.TasksProposer,
+      taskId: task.taskId,
+      submissionId: BigInt(1),
+      judgement: SubmissionJudgement.Accepted,
+    });
+    await expect(tx).to.be.revertedWithCustomError(task.TasksProposer, "SubmissionDoesNotExist");
   });
 });
