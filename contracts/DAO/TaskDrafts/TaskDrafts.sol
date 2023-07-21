@@ -1,6 +1,12 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-contract TaskDrafts {
+import { ITasks } from "../../Tasks/ITasks.sol";
+import { IPluginProposals } from "../Governance/IPluginProposals.sol";
 
+contract TaskDrafts {
+    ITasks private tasks;
+    IPluginProposals private governancePlugin;
+
+    
 }

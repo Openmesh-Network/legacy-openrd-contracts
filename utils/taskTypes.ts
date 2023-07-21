@@ -16,19 +16,19 @@ export interface TaskMetadata {
 
 export enum TaskState { Open, Taken, Closed }
 export interface Task {
-    metadata: TaskMetadata;
+    // metadata: TaskMetadata;
     deadline: Date;
     budget: BudgetItem[];
     proposer: string;
-    creationTimestamp: Date;
+    // creationTimestamp: Date;
     state: TaskState;
     escrow: string;
     applications: Application[];
     executorApplication: number;
-    executorConfirmationTimestamp: Date;
+    // executorConfirmationTimestamp: Date;
     submissions: Submission[];
-    changeScopeRequests: ChangeScopeRequest[];
-    dropExecutorRequests: DropExecutorRequest[];
+    // changeScopeRequests: ChangeScopeRequest[];
+    // dropExecutorRequests: DropExecutorRequest[];
     cancelTaskRequests: CancelTaskRequest[];
 }
 
@@ -45,8 +45,8 @@ export interface ApplicationMetadata {
 }
 
 export interface Application {
-    metadata: ApplicationMetadata;
-    timestamp: Date;
+    // metadata: ApplicationMetadata;
+    // timestamp: Date;
     applicant: string;
     accepted: boolean;
     reward: Reward[];
@@ -64,17 +64,18 @@ export interface SubmissionJudgementMetadata {
 
 export enum SubmissionJudgement { None, Accepted, Rejected }
 export interface Submission {
-    metadata: SubmissionMetadata;
-    timestamp: Date;
+    // metadata: SubmissionMetadata;
+    // timestamp: Date;
     judgement: SubmissionJudgement;
-    judgementTimestamp: Date;
-    feedback: SubmissionJudgementMetadata;
+    // judgementTimestamp: Date;
+    // feedback: SubmissionJudgementMetadata;
 }
 
 export interface ChangeScopeRequest {
-    metadata: TaskMetadata;
-    timestamp: Date;
-    accepted: Date | null;
+    // metadata: TaskMetadata;
+    // timestamp: Date;
+    // accepted: Date | null;
+    accepted: boolean;
     deadline: Date;
     reward: Reward[];
 }
@@ -83,18 +84,21 @@ export interface DropExecutorRequestMetadata {
     explanation: string;
 }
 export interface DropExecutorRequest {
-    explanation: DropExecutorRequestMetadata;
-    timestamp: Date;
-    accepted: Date | null;
+    // explanation: DropExecutorRequestMetadata;
+    // timestamp: Date;
+    // accepted: Date | null;
+    accepted: boolean;
 }
 
 export interface CancelTaskRequestMetadata {
     explanation: string;
 }
 export interface CancelTaskRequest {
-    explanation: CancelTaskRequestMetadata;
-    timestamp: Date;
-    accepted: Date | null;
+    // explanation: CancelTaskRequestMetadata;
+    // timestamp: Date;
+    // accepted: Date | null;
+    accepted: boolean;
+    executed: boolean;
 }
 
 export enum RequestType { ChangeScope, DropExecutor, CancelTask }; 

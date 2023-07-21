@@ -27,7 +27,12 @@ const config: HardhatUserConfig = {
     mumbai: {
       accounts: [process.env.PRIV_KEY ?? fakePrivKey],
       url: "https://rpc.ankr.com/polygon_mumbai",
-      deploy: ["00_Tasks", "02_Plugins", "03_NFT", "04_DAO"],
+      deploy: ["00_Tasks", "02_Plugins", "03_NFT", "04_DAO"].map(d => `deploy/${d}`),
+      verify: {
+        etherscan: {
+          apiKey: process.env.POLYGONSCAN_API_KEY ?? "",
+        },
+      },
     },
   },
   namedAccounts: {
@@ -50,11 +55,10 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      //ethereum
       mainnet: process.env.ETHERSCAN_API_KEY ?? "",
       polygonMumbai: process.env.POLYGONSCAN_API_KEY ?? "",
     }
-  },
+  }
 };
 
 export default config;

@@ -10,7 +10,7 @@ export async function getDAO() {
   await loadFixture(TestSetup);
   const { deployer } = await getNamedAccounts();
   const signer = await ethers.getImpersonatedSigner(deployer);
-  const daoInfo = JSON.parse(await getVar("department-test-0-test"));
+  const daoInfo = JSON.parse(await getVar("department-test-0-devops"));
   const TokenListGovernance = await ethers.getContractAt("TokenListGovernance", daoInfo.tokenListGovernance, signer) as any as TokenListGovernance;
 
   const nftInfo = deployments.get("NFT");

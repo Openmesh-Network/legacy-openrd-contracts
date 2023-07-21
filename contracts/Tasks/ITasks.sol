@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -23,6 +23,8 @@ interface ITasks {
 
     error RequestDoesNotExist();
     error RequestAlreadyAccepted();
+    error RequestNotAccepted();
+    error RequestAlreadyExecuted();
 
     event TaskCreated(uint256 taskId, address proposer, string metadata, uint64 deadline, ERC20Transfer[] budget);
     event ApplicationCreated(uint256 taskId, uint16 applicationId, address applicant, string metadata, Reward[] reward);
@@ -36,6 +38,7 @@ interface ITasks {
     event DropExecutorRequested(uint256 taskId, uint8 requestId, address proposer, string explanation);
     event CancelTaskRequested(uint256 taskId, uint8 requestId, address proposer, string explanation);
     event RequestAccepted(uint256 taskId, RequestType requestType, uint8 requestId, address executor);
+    event RequestExecuted(uint256 taskId, RequestType requestType, uint8 requestId, address by);
     event TaskCancelled(uint256 taskId);
 
     /// @notice A container for ERC20 transfer information.
@@ -64,8 +67,8 @@ interface ITasks {
     /// @param accepted If the application has been accepted by the proposer.
     /// @param reward How much rewards the applicant want for completion.
     struct Application {
-        string metadata;
-        uint64 timestamp;
+        // string metadata;
+        // uint64 timestamp;
         address applicant;
         bool accepted;
         uint8 rewardCount;
@@ -73,8 +76,8 @@ interface ITasks {
     }
 
     struct OffChainApplication {
-        string metadata;
-        uint64 timestamp;
+        // string metadata;
+        // uint64 timestamp;
         address applicant;
         bool accepted;
         Reward[] reward;
@@ -88,11 +91,11 @@ interface ITasks {
     /// @param judgementTimestamp When the judgement has been made.
     /// @param feedback A response from the proposer. (IPFS hash)
     struct Submission {
-        string metadata;
-        uint64 timestamp;
+        // string metadata;
+        // uint64 timestamp;
         SubmissionJudgement judgement;
-        uint64 judgementTimestamp;
-        string feedback;
+        // uint64 judgementTimestamp;
+        // string feedback;
     }
 
     enum RequestType { ChangeScope, DropExecutor, CancelTask }
@@ -104,18 +107,20 @@ interface ITasks {
     /// @param deadline New deadline for the task.
     /// @param reward New reward for the executor of the task.
     struct ChangeScopeRequest {
-        string metadata;
-        uint64 timestamp;
-        uint64 accepted;
+        // string metadata;
+        // uint64 timestamp;
+        // uint64 accepted;
+        bool accepted;
         uint64 deadline;
         uint8 rewardCount;
         mapping(uint8 => Reward) reward;
     }
 
     struct OffChainChangeScopeRequest {
-        string metadata;
-        uint64 timestamp;
-        uint64 accepted;
+        // string metadata;
+        // uint64 timestamp;
+        // uint64 accepted;
+        bool accepted;
         uint64 deadline;
         Reward[] reward;
     }
@@ -125,9 +130,10 @@ interface ITasks {
     /// @param explanation Why the executor should be dropped.
     /// @param timestamp When the request was made.
     struct DropExecutorRequest {
-        string explanation;
-        uint64 timestamp;
-        uint64 accepted;
+        // string explanation;
+        // uint64 timestamp;
+        // uint64 accepted;
+        bool accepted;
     }
 
     /// @notice A container for a request to cancel the task.
@@ -135,9 +141,11 @@ interface ITasks {
     /// @param explanation Why the task should be cancelled.
     /// @param timestamp When the request was made.
     struct CancelTaskRequest {
-        string explanation;
-        uint64 timestamp;
-        uint64 accepted;
+        // string explanation;
+        // uint64 timestamp;
+        // uint64 accepted;
+        bool accepted;
+        bool executed;
     }
 
     enum TaskState { Open, Taken, Closed }
@@ -153,48 +161,48 @@ interface ITasks {
     /// @param executorConfirmationTimestamp When the executor has confirmed to take the task.
     /// @param submissions Submission made to finish the task.
     struct Task {
-        string metadata;
+        // string metadata;
 
-        uint64 creationTimestamp;
-        uint64 executorConfirmationTimestamp;
+        // uint64 creationTimestamp;
+        // uint64 executorConfirmationTimestamp;
         uint64 deadline;
 
         Escrow escrow;
 
         address proposer;
         TaskState state;
-        bool changed;
+        // bool changed;
         uint16 executorApplication;
         uint8 budgetCount;
         uint16 applicationCount;
         uint8 submissionCount;
-        uint8 changeScopeRequestCount;
-        uint8 dropExecutorRequestCount;
+        // uint8 changeScopeRequestCount;
+        // uint8 dropExecutorRequestCount;
         uint8 cancelTaskRequestCount;
 
         mapping(uint8 => ERC20Transfer) budget;
         mapping(uint16 => Application) applications;
         mapping(uint8 => Submission) submissions;
-        mapping(uint8 => ChangeScopeRequest) changeScopeRequests;
-        mapping(uint8 => DropExecutorRequest) dropExecutorRequests;
+        // mapping(uint8 => ChangeScopeRequest) changeScopeRequests;
+        // mapping(uint8 => DropExecutorRequest) dropExecutorRequests;
         mapping(uint8 => CancelTaskRequest) cancelTaskRequests;
     }
 
     struct OffChainTask {
-        string metadata;
+        // string metadata;
         uint64 deadline;
-        uint64 creationTimestamp;
-        uint64 executorConfirmationTimestamp;
+        // uint64 creationTimestamp;
+        // uint64 executorConfirmationTimestamp;
         uint16 executorApplication;
         address proposer;
         TaskState state;
-        bool changed;
+        // bool changed;
         Escrow escrow;
         ERC20Transfer[] budget;
         OffChainApplication[] applications;
         Submission[] submissions;
-        OffChainChangeScopeRequest[] changeScopeRequests;
-        DropExecutorRequest[] dropExecutorRequests;
+        // OffChainChangeScopeRequest[] changeScopeRequests;
+        // DropExecutorRequest[] dropExecutorRequests;
         CancelTaskRequest[] cancelTaskRequests;
     }
 
@@ -298,20 +306,20 @@ interface ITasks {
     /// @param _newMetadata New description of the task. (IPFS hash)
     /// @param _newDeadline New deadline of the task.
     /// @param _newReward New reward of the task.
-    function changeScope(
-        uint256 _taskId,
-        string calldata _newMetadata,
-        uint64 _newDeadline,
-        Reward[] calldata _newReward
-    ) external returns (uint8 changeTaskRequestId);
+    // function changeScope(
+    //     uint256 _taskId,
+    //     string calldata _newMetadata,
+    //     uint64 _newDeadline,
+    //     Reward[] calldata _newReward
+    // ) external returns (uint8 changeTaskRequestId);
 
     /// @notice Drops the current executor of the task
     /// @param _taskId Id of the task.
     /// @param _explanation Why the executor should be dropped.
-    function dropExecutor(
-        uint256 _taskId,
-        string calldata _explanation
-    ) external returns (uint8 dropExecutorRequestId);
+    // function dropExecutor(
+    //     uint256 _taskId,
+    //     string calldata _explanation
+    // ) external returns (uint8 dropExecutorRequestId);
 
     /// @notice Cancels a task. This can be used to close a task and receive back the budget.
     /// @param _taskId Id of the task.
@@ -326,6 +334,13 @@ interface ITasks {
     /// @param _requestType What kind of request it is.
     /// @param _requestId Id of the request.
     function acceptRequest(
+        uint256 _taskId,
+        RequestType _requestType,
+        uint8 _requestId,
+        bool _execute
+    ) external;
+
+    function executeRequest(
         uint256 _taskId,
         RequestType _requestType,
         uint8 _requestId

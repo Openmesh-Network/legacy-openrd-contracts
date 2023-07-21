@@ -20,25 +20,25 @@ describe("Take Task", function () {
     expect(taskInfo.executorApplication).to.be.equal(task.acceptedApplications[0]);
   });
 
-  it("should have an executor confirmation", async function () {
-    const task = await loadFixture(createApprovedApplicationsTaskFixture);
-    const application = task.acceptedApplications[0];
-    const tx = await takeTask({
-      tasks: task.TasksExecutor.connect(task.applicants[Number(application)]),
-      taskId: task.taskId,
-      application: application,
-    });
-    const receipt = await tx.wait();    
-    if (!receipt) {
-      throw new Error();
-  }
-    const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
-    const confirmationBlock = await ethers.provider.getBlock(receipt.blockNumber);
-    if (!confirmationBlock) {
-        throw new Error();
-    }
-    expect(ToBlockchainDate(taskInfo.executorConfirmationTimestamp)).to.be.equal(confirmationBlock.timestamp);
-  });
+  // it("should have an executor confirmation", async function () {
+  //   const task = await loadFixture(createApprovedApplicationsTaskFixture);
+  //   const application = task.acceptedApplications[0];
+  //   const tx = await takeTask({
+  //     tasks: task.TasksExecutor.connect(task.applicants[Number(application)]),
+  //     taskId: task.taskId,
+  //     application: application,
+  //   });
+  //   const receipt = await tx.wait();    
+  //   if (!receipt) {
+  //     throw new Error();
+  // }
+  //   const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
+  //   const confirmationBlock = await ethers.provider.getBlock(receipt.blockNumber);
+  //   if (!confirmationBlock) {
+  //       throw new Error();
+  //   }
+  //   expect(ToBlockchainDate(taskInfo.executorConfirmationTimestamp)).to.be.equal(confirmationBlock.timestamp);
+  // });
 
   it("should allow any accepted applicant", async function () {
     for (let i = 0; true; i++) {
@@ -79,12 +79,12 @@ describe("Take Task", function () {
       application: application,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
-    expect(taskInfo.metadata).to.be.deep.equal(taskInfoBefore.metadata);
+    // expect(taskInfo.metadata).to.be.deep.equal(taskInfoBefore.metadata);
     expect(ToBlockchainDate(taskInfo.deadline)).to.be.equal(ToBlockchainDate(taskInfoBefore.deadline));
     expect(taskInfo.budget).to.be.deep.equal(taskInfoBefore.budget);
     expect(taskInfo.escrow).to.be.equal(taskInfoBefore.escrow);
     expect(taskInfo.proposer).to.be.equal(taskInfoBefore.proposer);
-    expect(ToBlockchainDate(taskInfo.creationTimestamp)).to.be.equal(ToBlockchainDate(taskInfoBefore.creationTimestamp));
+    // expect(ToBlockchainDate(taskInfo.creationTimestamp)).to.be.equal(ToBlockchainDate(taskInfoBefore.creationTimestamp));
   });
   
   it("should not have changed applications", async function () {
@@ -99,8 +99,8 @@ describe("Take Task", function () {
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.applications.length).to.be.equal(taskInfoBefore.applications.length);
     for (let i = 0; i < taskInfo.applications.length; i++) {
-      expect(taskInfo.applications[i].metadata).to.be.deep.equal(taskInfoBefore.applications[i].metadata);
-      expect(ToBlockchainDate(taskInfo.applications[i].timestamp)).to.be.equal(ToBlockchainDate(taskInfoBefore.applications[i].timestamp));
+      // expect(taskInfo.applications[i].metadata).to.be.deep.equal(taskInfoBefore.applications[i].metadata);
+      // expect(ToBlockchainDate(taskInfo.applications[i].timestamp)).to.be.equal(ToBlockchainDate(taskInfoBefore.applications[i].timestamp));
       expect(taskInfo.applications[i].applicant).to.be.equal(taskInfoBefore.applications[i].applicant);
       expect(taskInfo.applications[i].reward).to.be.deep.equal(taskInfoBefore.applications[i].reward);
     }

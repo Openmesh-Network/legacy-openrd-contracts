@@ -1,6 +1,5 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
-pragma solidity ^0.8.8;
+// SPDX-License-Identifier: None
+pragma solidity ^0.8.0;
 
 import { ERC165Upgradeable } from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -14,6 +13,7 @@ import { IDAO } from "@aragon/osx/core/dao/IDAO.sol";
 import { RATIO_BASE, RatioOutOfBounds } from "@aragon/osx/plugins/utils/Ratio.sol";
 import { ITokenMajorityVoting } from "./ITokenMajorityVoting.sol";
 
+// Based on packages/contracts/src/plugins/governance/majority-voting/MajorityVotingBase.sol
 abstract contract TokenMajorityVotingBase is
     ITokenMajorityVoting,
     Initializable,

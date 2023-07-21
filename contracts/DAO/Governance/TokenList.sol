@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
-pragma solidity ^0.8.8;
+// SPDX-License-Identifier: None
+pragma solidity ^0.8.0;
 
 import {CheckpointsUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/CheckpointsUpgradeable.sol";
 
 import {_uncheckedAdd, _uncheckedSub} from "@aragon/osx/utils/UncheckedMath.sol";
 
+// Based on https://github.com/aragon/osx/blob/develop/packages/contracts/src/plugins/utils/Addresslist.sol
 abstract contract TokenList {
     using CheckpointsUpgradeable for CheckpointsUpgradeable.History;
 

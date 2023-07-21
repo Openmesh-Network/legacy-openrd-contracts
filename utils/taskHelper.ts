@@ -48,27 +48,27 @@ export interface GetTaskSettings {
 export async function getTask(settings: GetTaskSettings) : Promise<Task> {
     const rawTask = await settings.tasks.getTask(settings.taskId);
     return {
-        metadata: await getFromIpfs(rawTask.metadata),
+        // metadata: await getFromIpfs(rawTask.metadata),
         deadline: FromBlockchainDate(rawTask.deadline),
         budget: rawTask.budget,
         proposer: rawTask.proposer,
-        creationTimestamp: FromBlockchainDate(rawTask.creationTimestamp),
+        // creationTimestamp: FromBlockchainDate(rawTask.creationTimestamp),
         state: Number(rawTask.state),
         escrow: rawTask.escrow,
         applications: await asyncMap(rawTask.applications, toApplication),
         executorApplication: Number(rawTask.executorApplication),
-        executorConfirmationTimestamp: FromBlockchainDate(rawTask.executorConfirmationTimestamp),
+        // executorConfirmationTimestamp: FromBlockchainDate(rawTask.executorConfirmationTimestamp),
         submissions: await asyncMap(rawTask.submissions, toSubmission),
-        changeScopeRequests: await asyncMap(rawTask.changeScopeRequests, toChangeScopeRequest),
-        dropExecutorRequests: await asyncMap(rawTask.dropExecutorRequests, toDropExecutorRequest),
+        // changeScopeRequests: await asyncMap(rawTask.changeScopeRequests, toChangeScopeRequest),
+        // dropExecutorRequests: await asyncMap(rawTask.dropExecutorRequests, toDropExecutorRequest),
         cancelTaskRequests: await asyncMap(rawTask.cancelTaskRequests, toCancelTaskRequest),
     };
 }
 
 export async function toApplication(application : ITasks.OffChainApplicationStructOutput) : Promise<Application> {
     return {
-        metadata: await getFromIpfs(application.metadata),
-        timestamp: FromBlockchainDate(application.timestamp),
+        // metadata: await getFromIpfs(application.metadata),
+        // timestamp: FromBlockchainDate(application.timestamp),
         applicant: application.applicant,
         accepted: application.accepted,
         reward: application.reward,
@@ -77,37 +77,41 @@ export async function toApplication(application : ITasks.OffChainApplicationStru
 
 export async function toSubmission(submission : ITasks.SubmissionStructOutput) : Promise<Submission> {
     return {
-        metadata: await getFromIpfs(submission.metadata),
-        timestamp: FromBlockchainDate(submission.timestamp),
+        // metadata: await getFromIpfs(submission.metadata),
+        // timestamp: FromBlockchainDate(submission.timestamp),
         judgement: Number(submission.judgement),
-        judgementTimestamp: FromBlockchainDate(submission.judgementTimestamp),
-        feedback: await getFromIpfs(submission.feedback),
+        // judgementTimestamp: FromBlockchainDate(submission.judgementTimestamp),
+        // feedback: await getFromIpfs(submission.feedback),
     };
 }
 
-export async function toChangeScopeRequest(request : ITasks.OffChainChangeScopeRequestStructOutput) : Promise<ChangeScopeRequest> {
-    return {
-        metadata: await getFromIpfs(request.metadata),
-        timestamp: FromBlockchainDate(request.timestamp),
-        accepted: request.accepted == BigInt(0) ? null : FromBlockchainDate(request.accepted),
-        deadline: FromBlockchainDate(request.deadline),
-        reward: request.reward,
-    };
-}
+// export async function toChangeScopeRequest(request : ITasks.OffChainChangeScopeRequestStructOutput) : Promise<ChangeScopeRequest> {
+//     return {
+//         // metadata: await getFromIpfs(request.metadata),
+//         // timestamp: FromBlockchainDate(request.timestamp),
+//         // accepted: request.accepted == BigInt(0) ? null : FromBlockchainDate(request.accepted),
+//         accepted: request.accepted,
+//         deadline: FromBlockchainDate(request.deadline),
+//         reward: request.reward,
+//     };
+// }
 
-export async function toDropExecutorRequest(request : ITasks.DropExecutorRequestStructOutput) : Promise<DropExecutorRequest> {
-    return {
-        explanation: await getFromIpfs(request.explanation),
-        timestamp: FromBlockchainDate(request.timestamp),
-        accepted: request.accepted == BigInt(0) ? null : FromBlockchainDate(request.accepted),
-    };
-}
+// export async function toDropExecutorRequest(request : ITasks.DropExecutorRequestStructOutput) : Promise<DropExecutorRequest> {
+//     return {
+//         // explanation: await getFromIpfs(request.explanation),
+//         // timestamp: FromBlockchainDate(request.timestamp),
+//         // accepted: request.accepted == BigInt(0) ? null : FromBlockchainDate(request.accepted),
+//         accepted: request.accepted,
+//     };
+// }
 
 export async function toCancelTaskRequest(request : ITasks.CancelTaskRequestStructOutput) : Promise<CancelTaskRequest> {
     return {
-        explanation: await getFromIpfs(request.explanation),
-        timestamp: FromBlockchainDate(request.timestamp),
-        accepted: request.accepted == BigInt(0) ? null : FromBlockchainDate(request.accepted),
+        // explanation: await getFromIpfs(request.explanation),
+        // timestamp: FromBlockchainDate(request.timestamp),
+        // accepted: request.accepted == BigInt(0) ? null : FromBlockchainDate(request.accepted),
+        accepted: request.accepted,
+        executed: request.executed,
     };
 }
 
@@ -183,30 +187,30 @@ export interface ChangeScopeSettings {
     deadline?: Date;
     reward?: Reward[]
 };
-export async function changeScope(settings : ChangeScopeSettings) {
-    const metadata : TaskMetadata = {
-        title: "",
-        description: "",
-        resources: []
-    };
-    const metadataHash = await addToIpfs(JSON.stringify(settings.metadata ?? metadata));
-    const deadline = settings.deadline ? ToBlockchainDate(settings.deadline) : now() + 1 * days;
-    const reward = settings.reward ?? [];
-    return settings.tasks.changeScope(settings.taskId, metadataHash, deadline, reward);
-}
+// export async function changeScope(settings : ChangeScopeSettings) {
+//     const metadata : TaskMetadata = {
+//         title: "",
+//         description: "",
+//         resources: []
+//     };
+//     const metadataHash = await addToIpfs(JSON.stringify(settings.metadata ?? metadata));
+//     const deadline = settings.deadline ? ToBlockchainDate(settings.deadline) : now() + 1 * days;
+//     const reward = settings.reward ?? [];
+//     return settings.tasks.changeScope(settings.taskId, metadataHash, deadline, reward);
+// }
 
 export interface DropExecutorSettings {
     tasks: Tasks;
     taskId: bigint;
     explanation?: DropExecutorRequestMetadata;
 };
-export async function dropExecutor(settings : DropExecutorSettings) {
-    const metadata : DropExecutorRequestMetadata = {
-        explanation: "",
-    };
-    const metadataHash = await addToIpfs(JSON.stringify(settings.explanation ?? metadata));
-    return settings.tasks.dropExecutor(settings.taskId, metadataHash);
-}
+// export async function dropExecutor(settings : DropExecutorSettings) {
+//     const metadata : DropExecutorRequestMetadata = {
+//         explanation: "",
+//     };
+//     const metadataHash = await addToIpfs(JSON.stringify(settings.explanation ?? metadata));
+//     return settings.tasks.dropExecutor(settings.taskId, metadataHash);
+// }
 
 export interface CancelTaskSettings {
     tasks: Tasks;
@@ -226,7 +230,19 @@ export interface AcceptRequestSettings {
     taskId: bigint;
     requestType: RequestType;
     requestId: bigint;
+    execute?: boolean;
 };
 export async function acceptRequest(settings : AcceptRequestSettings) {
-    return settings.tasks.acceptRequest(settings.taskId, settings.requestType, settings.requestId);
+    const execute = settings.execute ?? true;
+    return settings.tasks.acceptRequest(settings.taskId, settings.requestType, settings.requestId, execute);
+}
+
+export interface ExecuteRequestSettings {
+    tasks: Tasks;
+    taskId: bigint;
+    requestType: RequestType;
+    requestId: bigint;
+};
+export async function executeRequest(settings : ExecuteRequestSettings) {
+    return settings.tasks.executeRequest(settings.taskId, settings.requestType, settings.requestId);
 }

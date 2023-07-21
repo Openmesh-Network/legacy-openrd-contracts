@@ -23,3 +23,11 @@ export async function getVar(variableName : string) : Promise<string> {
     
     return vars[variableName];
 }
+
+export async function setBool(variableName : string, value : boolean, retain : boolean = false) : Promise<void> {
+    return await setVar(variableName, String(value), retain);
+}
+
+export async function getBool(variableName : string) : Promise<boolean> {
+    return await getVar(variableName) === "true";
+}

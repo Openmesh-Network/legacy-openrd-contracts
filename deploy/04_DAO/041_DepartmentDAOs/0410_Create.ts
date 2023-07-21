@@ -2,16 +2,21 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction, DeploymentsExtension } from "hardhat-deploy/types";
 import { ethers } from "hardhat";
 import { DAOFactory } from "../../../typechain-types";
-import { getVar, setVar } from "../../../utils/globalVars";
+import { getBool, getVar, setVar } from "../../../utils/globalVars";
 import { getEventsFromLogs } from "../../../utils/utils";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+    if (!await getBool("NewTokenListGovernance") && !await getBool("NewNFT")) {
+        return;
+    }
+
 	const { deployments, getNamedAccounts } = hre;
     const { deployer } = await getNamedAccounts();
 
     const nftCollection = (await deployments.get("NFT")).address;
 
-    await createDepartment(deployer, "test", nftCollection, deployments);
+    await createDepartment(deployer, "devops", nftCollection, deployments);
+    await createDepartment(deployer, "engineering", nftCollection, deployments);
 };
 export default func;
 func.tags = ["DepartmentDAO"];

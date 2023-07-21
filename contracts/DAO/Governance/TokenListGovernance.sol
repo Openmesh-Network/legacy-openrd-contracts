@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
 import { SafeCastUpgradeable } from "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
@@ -8,12 +8,17 @@ import { TokenList } from "./TokenList.sol";
 import { TokenMajorityVotingBase, IDAO, IERC721 } from "../TokenMajorityVoting/TokenMajorityVotingBase.sol";
 import { ITokenMembership } from "../TokenMembership/ITokenMembership.sol";
 import { ITokenListGovernance } from "./ITokenListGovernance.sol";
+import { IPluginProposals } from "./IPluginProposals.sol";
 
-contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMembership, ITokenListGovernance {
+// Based on https://github.com/aragon/osx/blob/develop/packages/contracts/src/plugins/governance/majority-voting/addresslist/AddresslistVoting.sol
+contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMembership, ITokenListGovernance, IPluginProposals {
  using SafeCastUpgradeable for uint256;
  
     /// @notice The ID of the permission required to call the `addMembers` and `removeMembers` functions.
     bytes32 public constant UPDATE_MEMBERS_PERMISSION_ID = keccak256("UPDATE_MEMBERS_PERMISSION");
+    
+    /// @notice The ID of the permission required to call the `createPluginProposal` functions.
+    bytes32 public constant PLUGIN_PROPOSAL_PERMISSION_ID = keccak256("PLUGIN_PROPOSAL_PERMISSION");
 
     /// @notice Initializes the component.
     /// @dev This method is required to support [ERC-1822](https://eips.ethereum.org/EIPS/eip-1822).
@@ -37,17 +42,14 @@ contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMember
         return _interfaceId == type(ITokenListGovernance).interfaceId || super.supportsInterface(_interfaceId);
     }
 
-    /// @notice Adds new members to the token list.
-    /// @param _members The Members of members to be added.
-    /// @dev This function is used during the plugin initialization.
+    /// @inheritdoc ITokenListGovernance
     function addMembers(
         uint256[] calldata _members
     ) external auth(UPDATE_MEMBERS_PERMISSION_ID) {
         _addTokens(_members);
     }
 
-    /// @notice Removes existing members from the token list.
-    /// @param _members The Members of the members to be removed.
+    /// @inheritdoc ITokenListGovernance
     function removeMembers(
         uint256[] calldata _members
     ) external auth(UPDATE_MEMBERS_PERMISSION_ID) {
@@ -57,6 +59,23 @@ contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMember
     /// @inheritdoc TokenMajorityVotingBase
     function totalVotingPower(uint256 _blockNumber) public view override returns (uint256) {
         return tokenlistLengthAtBlock(_blockNumber);
+    }
+    
+    /// @inheritdoc IPluginProposals
+    function createPluginProposal(
+        bytes calldata _metadata,
+        IDAO.Action[] calldata _actions,
+        uint256 _allowFailureMap,
+        uint64 _startDate,
+        uint64 _endDate
+    ) external auth(PLUGIN_PROPOSAL_PERMISSION_ID) returns (uint256 proposalId) {
+        proposalId = _createProposalBase(
+            _metadata,
+            _actions,
+            _allowFailureMap,
+            _startDate,
+            _endDate
+        );
     }
 
     /// @inheritdoc TokenMajorityVotingBase
@@ -78,6 +97,31 @@ contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMember
             revert ProposalCreationForbidden(_tokenId);
         }
 
+        proposalId = _createProposalBase(
+            _metadata,
+            _actions,
+            _allowFailureMap,
+            _startDate,
+            _endDate
+        );
+
+        if (_voteOption != VoteOption.None) {
+            vote(proposalId, _voteOption, _tryEarlyExecution, _tokenId);
+        }
+    }
+    
+    /// @inheritdoc ITokenMembership
+    function isMember(uint256 _tokenId) external view override returns (bool) {
+        return isListed(_tokenId);
+    }
+
+    function _createProposalBase(
+        bytes calldata _metadata,
+        IDAO.Action[] calldata _actions,
+        uint256 _allowFailureMap,
+        uint64 _startDate,
+        uint64 _endDate
+    ) internal returns (uint256 proposalId) {
         uint64 snapshotBlock;
         unchecked {
             snapshotBlock = block.number.toUint64() - 1; // The snapshot block must be mined already to protect the transaction against backrunning transactions causing census changes.
@@ -118,15 +162,6 @@ contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMember
                 ++i;
             }
         }
-
-        if (_voteOption != VoteOption.None) {
-            vote(proposalId, _voteOption, _tryEarlyExecution, _tokenId);
-        }
-    }
-    
-    /// @inheritdoc ITokenMembership
-    function isMember(uint256 _tokenId) external view override returns (bool) {
-        return isListed(_tokenId);
     }
 
     /// @inheritdoc TokenMajorityVotingBase

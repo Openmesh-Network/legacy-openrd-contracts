@@ -1,15 +1,19 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { getEventsFromLogs, getEventsFromReceipt } from "../../../utils/utils";
+import { getEventsFromLogs } from "../../../utils/utils";
 import { ethers } from "hardhat";
-import { setVar } from "../../../utils/globalVars";
+import { getBool, setVar } from "../../../utils/globalVars";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+    if (!await getBool("NewTokenListGovernance")) {
+        return;
+    }
+
 	const { deployments, getNamedAccounts } = hre;
     const { deployer } = await getNamedAccounts();
 
     const tokenListGovernance = await deployments.get("TokenListGovernanceSetup");
-    const subdomain = "tokenlist-test-0";
+    const subdomain = "tokenlist-test-4";
     
     const receipt = await deployments.execute("PluginRepoFactory",
         {

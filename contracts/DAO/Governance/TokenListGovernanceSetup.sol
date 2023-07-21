@@ -1,6 +1,5 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
-pragma solidity 0.8.17;
+// SPDX-License-Identifier: None
+pragma solidity ^0.8.0;
 
 import { IDAO } from "@aragon/osx/core/dao/IDAO.sol";
 import { DAO } from "@aragon/osx/core/dao/DAO.sol";
@@ -8,6 +7,7 @@ import { PermissionLib } from "@aragon/osx/core/permission/PermissionLib.sol";
 import { PluginSetup, IPluginSetup } from "@aragon/osx/framework/plugin/setup/PluginSetup.sol";
 import { TokenListGovernance, TokenMajorityVotingBase } from "./TokenListGovernance.sol";
 
+// Based on https://github.com/aragon/osx/blob/develop/packages/contracts/src/plugins/governance/majority-voting/addresslist/AddresslistVotingSetup.sol
 contract TokenListGovernanceSetup is PluginSetup {
     /// @notice The address of `TokenListGovernance` plugin logic contract to be used in creating proxy contracts.
     TokenListGovernance private immutable tokenListGovernanceBase;

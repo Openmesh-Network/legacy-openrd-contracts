@@ -12,31 +12,31 @@ import { TestSetup } from "../Helpers/TestSetup";
 
 describe("Create Task", function () {
   // Check if variables are set
-  it("should have the correct metadata", async function () {
-    await loadFixture(TestSetup);
-    const { proposer } = await getNamedAccounts();
-    const TasksProposer = await ethers.getContract("Tasks", proposer) as Tasks;
-    const metadata = {
-        title: "title",
-        description: "description",
-        resources: [{
-            name: "Google",
-            url: "https://www.google.com" //Normal website
-        }, {
-            name: "IPFS item",
-            url: "ipfs://bafybeih6dsywniag6kub6ceeywcl2shxlzj5xtxndb5tsg3jvupy65654a" //ipfs.tech website
-        }],
-    };
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksProposer,
-        metadata: metadata,
-    };
-    const { taskId } = await createTask(createTaskSettings);
-    const task = await getTask({ tasks: TasksProposer, taskId: taskId });
-    expect(task.metadata.title).to.be.equal(metadata.title);
-    expect(task.metadata.description).to.be.equal(metadata.description);
-    expect(task.metadata.resources).to.be.deep.equal(metadata.resources);
-  });
+  // it("should have the correct metadata", async function () {
+  //   await loadFixture(TestSetup);
+  //   const { proposer } = await getNamedAccounts();
+  //   const TasksProposer = await ethers.getContract("Tasks", proposer) as Tasks;
+  //   const metadata = {
+  //       title: "title",
+  //       description: "description",
+  //       resources: [{
+  //           name: "Google",
+  //           url: "https://www.google.com" //Normal website
+  //       }, {
+  //           name: "IPFS item",
+  //           url: "ipfs://bafybeih6dsywniag6kub6ceeywcl2shxlzj5xtxndb5tsg3jvupy65654a" //ipfs.tech website
+  //       }],
+  //   };
+  //   const createTaskSettings : CreateTaskSettings = {
+  //       tasks: TasksProposer,
+  //       metadata: metadata,
+  //   };
+  //   const { taskId } = await createTask(createTaskSettings);
+  //   const task = await getTask({ tasks: TasksProposer, taskId: taskId });
+  //   expect(task.metadata.title).to.be.equal(metadata.title);
+  //   expect(task.metadata.description).to.be.equal(metadata.description);
+  //   expect(task.metadata.resources).to.be.deep.equal(metadata.resources);
+  // });
 
   it("should have the correct deadline", async function () {
     await loadFixture(TestSetup);
@@ -115,21 +115,21 @@ describe("Create Task", function () {
     expect(task.proposer).to.be.equal(proposer);
   });
 
-  it("should have the correct creation date", async function () {
-    await loadFixture(TestSetup);
-    const { proposer } = await getNamedAccounts();
-    const TasksProposer = await ethers.getContract("Tasks", proposer) as Tasks;
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksProposer,
-    };
-    const { taskId, receipt } = await createTask(createTaskSettings);
-    const task = await getTask({ tasks: TasksProposer, taskId: taskId });
-    const creationBlock = await ethers.provider.getBlock(receipt.blockNumber);
-    if (!creationBlock) {
-        throw new Error();
-    }
-    expect(ToBlockchainDate(task.creationTimestamp)).to.be.equal(creationBlock.timestamp);
-  });
+  // it("should have the correct creation date", async function () {
+  //   await loadFixture(TestSetup);
+  //   const { proposer } = await getNamedAccounts();
+  //   const TasksProposer = await ethers.getContract("Tasks", proposer) as Tasks;
+  //   const createTaskSettings : CreateTaskSettings = {
+  //       tasks: TasksProposer,
+  //   };
+  //   const { taskId, receipt } = await createTask(createTaskSettings);
+  //   const task = await getTask({ tasks: TasksProposer, taskId: taskId });
+  //   const creationBlock = await ethers.provider.getBlock(receipt.blockNumber);
+  //   if (!creationBlock) {
+  //       throw new Error();
+  //   }
+  //   expect(ToBlockchainDate(task.creationTimestamp)).to.be.equal(creationBlock.timestamp);
+  // });
 
   it("should be open", async function () {
     await loadFixture(TestSetup);
@@ -168,17 +168,17 @@ describe("Create Task", function () {
     expect(task.executorApplication).to.be.equal(0);
   });
 
-  it("should have no executor confirmation", async function () {
-    await loadFixture(TestSetup);
-    const { proposer } = await getNamedAccounts();
-    const TasksProposer = await ethers.getContract("Tasks", proposer) as Tasks;
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksProposer,
-    };
-    const { taskId } = await createTask(createTaskSettings);
-    const task = await getTask({ tasks: TasksProposer, taskId: taskId });
-    expect(ToBlockchainDate(task.executorConfirmationTimestamp)).to.be.equal(0);
-  });
+  // it("should have no executor confirmation", async function () {
+  //   await loadFixture(TestSetup);
+  //   const { proposer } = await getNamedAccounts();
+  //   const TasksProposer = await ethers.getContract("Tasks", proposer) as Tasks;
+  //   const createTaskSettings : CreateTaskSettings = {
+  //       tasks: TasksProposer,
+  //   };
+  //   const { taskId } = await createTask(createTaskSettings);
+  //   const task = await getTask({ tasks: TasksProposer, taskId: taskId });
+  //   expect(ToBlockchainDate(task.executorConfirmationTimestamp)).to.be.equal(0);
+  // });
 
   it("should have no submissions", async function () {
     await loadFixture(TestSetup);
