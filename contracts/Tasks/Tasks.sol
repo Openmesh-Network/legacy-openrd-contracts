@@ -201,7 +201,9 @@ contract Tasks is Context, ITasks {
     function createTask(
         string calldata _metadata,
         uint64 _deadline,
-        ERC20Transfer[] calldata _budget
+        ERC20Transfer[] calldata _budget,
+        address _manager,
+        PreapprovedApplication[] calldata _preapprove
     ) external returns (uint256 taskId) {
         unchecked {
             taskId = taskCounter++;
@@ -221,7 +223,7 @@ contract Tasks is Context, ITasks {
             }
         }
         
-        task.proposer = _msgSender();
+        task.proposer = _manager;
 
         // Default values are already correct (save gas)
         // task.state = TaskState.Open;
@@ -229,7 +231,21 @@ contract Tasks is Context, ITasks {
             ++openTasks;
         }
 
-        emit TaskCreated(taskId, _metadata, _deadline, _budget);
+        if (_preapprove.length > 0) {
+            task.applicationCount = uint16(_preapprove.length);
+            for (uint16 i; i < _preapprove.length; ) {
+                Application storage application = task.applications[i];
+                application.applicant = _preapprove[i].applicant;
+                application.accepted = true;
+                _setReward(task, application, _preapprove[i].reward);
+
+                unchecked {
+                    ++i;
+                }
+            }
+        }
+
+        emit TaskCreated(taskId, _metadata, _deadline, _budget, _manager, _preapprove);
     }
 
     /// @inheritdoc ITasks
@@ -248,39 +264,13 @@ contract Tasks is Context, ITasks {
         }
 
         Application storage application = task.applications[task.applicationCount];
+        application.applicant = _msgSender();
+        _setReward(task, application, _reward);
         unchecked {
             applicationId = task.applicationCount++;
         }
-        application.applicant = _msgSender();
-        application.rewardCount = uint8(_reward.length);
 
-        uint8 j;
-        ERC20Transfer memory erc20Transfer = task.budget[0];
-        uint256 alreadyReserved;
-        for (uint8 i; i < uint8(_reward.length); ) {
-            // erc20Transfer.amount -= _reward[i].amount (underflow error, but that is not a nice custom once)
-            unchecked {
-                alreadyReserved += _reward[i].amount;
-            }
-            if (alreadyReserved > erc20Transfer.amount) {
-                revert RewardAboveBudget(i);
-            }
-
-            application.reward[i] = _reward[i];
-
-            if (_reward[i].nextToken) {
-                alreadyReserved = 0;
-                unchecked {
-                    erc20Transfer = task.budget[++j];
-                }
-            }
-
-            unchecked {
-                ++i;
-            }
-        }
-
-        emit ApplicationCreated(_taskId, applicationId, _metadata, _reward);
+        emit ApplicationCreated(_taskId, applicationId, _metadata, _reward, task.proposer, _msgSender());
     }
     
     /// @inheritdoc ITasks
@@ -306,12 +296,12 @@ contract Tasks is Context, ITasks {
             }
             
             task.applications[_applications[i]].accepted = true;
+            emit ApplicationAccepted(_taskId, uint16(i), _msgSender(), task.applications[_applications[i]].applicant);
+            
             unchecked {
                 ++i;
             }
         }
-
-        emit ApplicationsAccepted(_taskId, _applications);
     }
     
     /// @inheritdoc ITasks
@@ -347,7 +337,7 @@ contract Tasks is Context, ITasks {
             ++takenTasks;
         }
 
-        emit TaskTaken(_taskId, _application);
+        emit TaskTaken(_taskId, _application, task.proposer, _msgSender());
     }
     
     /// @inheritdoc ITasks
@@ -371,7 +361,7 @@ contract Tasks is Context, ITasks {
             submissionId = task.submissionCount++;
         }
 
-        emit SubmissionCreated(_taskId, submissionId, _metadata);
+        emit SubmissionCreated(_taskId, submissionId, _metadata, task.proposer, _msgSender());
     }
     
     /// @inheritdoc ITasks
@@ -404,7 +394,7 @@ contract Tasks is Context, ITasks {
 
         if (_judgement == SubmissionJudgement.Accepted) {
             Application storage executor = task.applications[task.executorApplication];
-            address proposer = task.proposer;
+            address proposer = _msgSender(); // task.proposer;
             Escrow escrow = task.escrow;
 
             uint8 j;
@@ -446,10 +436,10 @@ contract Tasks is Context, ITasks {
                 ++successfulTasks;
             }
 
-            emit TaskCompleted(_taskId);
+            emit TaskCompleted(_taskId, proposer, executor.applicant);
         }
 
-        emit SubmissionReviewed(_taskId, _submission, _judgement, _feedback);
+        emit SubmissionReviewed(_taskId, _submission, _judgement, _feedback, _msgSender(), task.applications[task.executorApplication].applicant);
     }
     
     /// @inheritdoc ITasks
@@ -668,7 +658,7 @@ contract Tasks is Context, ITasks {
         uint256 _taskId,
         RequestType _requestType,
         uint8 _requestId
-    ) public {
+    ) external {
         if (_taskId >= taskCounter) {
             revert TaskDoesNotExist();
         }
@@ -745,6 +735,40 @@ contract Tasks is Context, ITasks {
         }
 
         emit RequestExecuted(_taskId, _requestType, _requestId, _msgSender());
+    }
+
+    function _setReward(
+        Task storage task,
+        Application storage application, 
+        Reward[] calldata _reward
+    ) internal {
+        application.rewardCount = uint8(_reward.length);
+
+        uint8 j;
+        ERC20Transfer memory erc20Transfer = task.budget[0];
+        uint256 alreadyReserved;
+        for (uint8 i; i < uint8(_reward.length); ) {
+            // erc20Transfer.amount -= _reward[i].amount (underflow error, but that is not a nice custom once)
+            unchecked {
+                alreadyReserved += _reward[i].amount;
+            }
+            if (alreadyReserved > erc20Transfer.amount) {
+                revert RewardAboveBudget(i);
+            }
+
+            application.reward[i] = _reward[i];
+
+            if (_reward[i].nextToken) {
+                alreadyReserved = 0;
+                unchecked {
+                    erc20Transfer = task.budget[++j];
+                }
+            }
+
+            unchecked {
+                ++i;
+            }
+        }
     }
     
     function _refundProposer(Task storage task) internal {

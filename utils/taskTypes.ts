@@ -14,6 +14,11 @@ export interface TaskMetadata {
     resources: Resource[];
 }
 
+export interface PreapprovedApplication {
+    applicant : string;
+    reward : Reward[];
+}
+
 export enum TaskState { Open, Taken, Closed }
 export interface Task {
     // metadata: TaskMetadata;

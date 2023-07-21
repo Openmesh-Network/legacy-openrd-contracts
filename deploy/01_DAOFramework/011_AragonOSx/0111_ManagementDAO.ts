@@ -11,7 +11,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         contract: "DAO",
         proxy: {
             owner: deployer,
-            proxyContract: "ERC1967Proxy",
+            proxyContract: "PreferredProxy",
             proxyArgs: ['{implementation}', '{data}'],
             execute: {
                 init: {

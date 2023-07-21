@@ -5,15 +5,15 @@ import { ethers } from "hardhat";
 import { getBool, setVar } from "../../../utils/globalVars";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-    if (!await getBool("NewTokenListGovernance")) {
+    if (!await getBool("NewDraftsSetup")) {
         return;
     }
 
 	const { deployments, getNamedAccounts } = hre;
     const { deployer } = await getNamedAccounts();
 
-    const tokenListGovernance = await deployments.get("TokenListGovernanceSetup");
-    const subdomain = "tokenlist-test-6";
+    const taskDrafts = await deployments.get("TaskDraftsSetup");
+    const subdomain = "taskdraft-test-3";
     
     const receipt = await deployments.execute("PluginRepoFactory",
         {
@@ -21,7 +21,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         },
         "createPluginRepoWithFirstVersion",
         subdomain,
-        tokenListGovernance.address,
+        taskDrafts.address,
         deployer,
         "0x01", //build metadata
         "0x01", //release metadata
@@ -29,8 +29,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const pluginRepoRegistry = await ethers.getContract("PluginRepoRegistry");
     const repo = getEventsFromLogs(receipt.logs, pluginRepoRegistry.interface, "PluginRepoRegistered")[0].args.pluginRepo;
-    await setVar("TokenListGovernanceRepo", repo, true);
+    await setVar("TaskDraftsRepo", repo, true);
 };
 export default func;
-func.tags = ["TokenListGovernance"]
-func.dependencies = ["TokenListGovernanceSetup"];
+func.tags = ["TaskDrafts"]
+func.dependencies = ["TaskDraftsSetup"];

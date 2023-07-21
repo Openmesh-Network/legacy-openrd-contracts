@@ -8,7 +8,7 @@ import { TokenList } from "./TokenList.sol";
 import { TokenMajorityVotingBase, IDAO, IERC721 } from "../TokenMajorityVoting/TokenMajorityVotingBase.sol";
 import { ITokenMembership } from "../TokenMembership/ITokenMembership.sol";
 import { ITokenListGovernance } from "./ITokenListGovernance.sol";
-import { IPluginProposals } from "./IPluginProposals.sol";
+import { IPluginProposals, PLUGIN_PROPOSAL_PERMISSION_ID } from "./IPluginProposals.sol";
 
 // Based on https://github.com/aragon/osx/blob/develop/packages/contracts/src/plugins/governance/majority-voting/addresslist/AddresslistVoting.sol
 contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMembership, ITokenListGovernance, IPluginProposals {
@@ -16,9 +16,6 @@ contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMember
  
     /// @notice The ID of the permission required to call the `addMembers` and `removeMembers` functions.
     bytes32 public constant UPDATE_MEMBERS_PERMISSION_ID = keccak256("UPDATE_MEMBERS_PERMISSION");
-    
-    /// @notice The ID of the permission required to call the `createPluginProposal` functions.
-    bytes32 public constant PLUGIN_PROPOSAL_PERMISSION_ID = keccak256("PLUGIN_PROPOSAL_PERMISSION");
 
     /// @notice Initializes the component.
     /// @dev This method is required to support [ERC-1822](https://eips.ethereum.org/EIPS/eip-1822).

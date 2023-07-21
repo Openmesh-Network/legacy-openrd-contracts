@@ -6,7 +6,6 @@ import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "@typechain/hardhat";
 import "@nomicfoundation/hardhat-ethers";
-import "@openzeppelin/hardhat-upgrades";
 
 import { config as dotEnvConfig } from "dotenv";
 dotEnvConfig();
@@ -19,7 +18,7 @@ const config: HardhatUserConfig = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 1_000_000,
+        runs: 1_000_000, // Higher is not allowed by Etherscan verification
       }
     }
   },
@@ -30,7 +29,7 @@ const config: HardhatUserConfig = {
       deploy: ["00_Tasks", "02_Plugins", "03_NFT", "04_DAO"].map(d => `deploy/${d}`),
       verify: {
         etherscan: {
-          apiKey: process.env.POLYGONSCAN_API_KEY ?? "",
+          apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",
         },
       },
     },
@@ -55,8 +54,8 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      mainnet: process.env.ETHERSCAN_API_KEY ?? "",
-      polygonMumbai: process.env.POLYGONSCAN_API_KEY ?? "",
+      mainnet: process.env.X_ETHERSCAN_API_KEY ?? "",
+      polygonMumbai: process.env.X_POLYGONSCAN_API_KEY ?? "",
     }
   }
 };

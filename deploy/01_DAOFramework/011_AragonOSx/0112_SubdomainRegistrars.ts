@@ -29,7 +29,7 @@ async function deploySubdomainRegistrar(deployer : string, node : string, deploy
         contract: "ENSSubdomainRegistrar",
         proxy: {
             owner: deployer,
-            proxyContract: "ERC1967Proxy",
+            proxyContract: "PreferredProxy",
             proxyArgs: ['{implementation}', '{data}'],
             execute: {
                 init: {

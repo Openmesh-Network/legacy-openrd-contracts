@@ -26,14 +26,15 @@ interface ITasks {
     error RequestNotAccepted();
     error RequestAlreadyExecuted();
 
-    event TaskCreated(uint256 taskId, string metadata, uint64 deadline, ERC20Transfer[] budget);
-    event ApplicationCreated(uint256 taskId, uint16 applicationId, string metadata, Reward[] reward);
-    event ApplicationsAccepted(uint256 taskId, uint16[] applications);
-    event TaskTaken(uint256 taskId, uint16 applicationId);
-    event SubmissionCreated(uint256 taskId, uint8 submissionId, string metadata);
-    event SubmissionReviewed(uint256 taskId, uint8 submissionId, SubmissionJudgement judgement, string feedback);
-    event TaskCompleted(uint256 taskId);
+    event TaskCreated(uint256 taskId, string metadata, uint64 deadline, ERC20Transfer[] budget, address manager, PreapprovedApplication[] preapproved);
+    event ApplicationCreated(uint256 taskId, uint16 applicationId, string metadata, Reward[] reward, address proposer, address applicant);
+    event ApplicationAccepted(uint256 taskId, uint16 application, address proposer, address applicant);
+    event TaskTaken(uint256 taskId, uint16 applicationId, address proposer, address executor);
+    event SubmissionCreated(uint256 taskId, uint8 submissionId, string metadata, address proposer, address executor);
+    event SubmissionReviewed(uint256 taskId, uint8 submissionId, SubmissionJudgement judgement, string feedback, address proposer, address executor);
+    event TaskCompleted(uint256 taskId, address proposer, address executor);
 
+    // TODO: Maybe add proposer and executor to the following events
     event ChangeScopeRequested(uint256 taskId, uint8 requestId, string metadata, uint64 deadline, Reward[] reward);
     event DropExecutorRequested(uint256 taskId, uint8 requestId, string explanation);
     event CancelTaskRequested(uint256 taskId, uint8 requestId, string explanation);
@@ -74,6 +75,12 @@ interface ITasks {
     struct OffChainApplication {
         address applicant;
         bool accepted;
+        Reward[] reward;
+    }
+
+    /// @notice For approving people on task creation (they are not required to make an application)
+    struct PreapprovedApplication {
+        address applicant;
         Reward[] reward;
     }
 
@@ -210,11 +217,14 @@ interface ITasks {
     /// @param _metadata Metadata of the task. (IPFS hash)
     /// @param _deadline Block timestamp at which the task expires if not completed.
     /// @param _budget Maximum ERC20 rewards that can be earned by completing the task.
+    /// @param _manager Who will manage the task (become the proposer).
     /// @return taskId Id of the newly created task.
     function createTask(
         string calldata _metadata,
         uint64 _deadline,
-        ERC20Transfer[] calldata _budget
+        ERC20Transfer[] calldata _budget,
+        address _manager,
+        PreapprovedApplication[] calldata _preapprove
     ) external returns (uint256 taskId);
     
     /// @notice Apply to take the task.

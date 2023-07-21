@@ -1,7 +1,7 @@
 import { FromBlockchainDate, ToBlockchainDate, days, now } from "./timeUnits";
 import { ITasks, Tasks } from "../typechain-types";
-import { ContractTransactionReceipt, ContractTransactionResponse } from "ethers";
-import { Application, ApplicationMetadata, BudgetItem, CancelTaskRequest, CancelTaskRequestMetadata, ChangeScopeRequest, DropExecutorRequest, DropExecutorRequestMetadata, RequestType, Reward, Submission, SubmissionJudgement, SubmissionJudgementMetadata, SubmissionMetadata, Task, TaskMetadata, TaskState } from "./taskTypes";
+import { ContractTransactionReceipt, ContractTransactionResponse, Signer } from "ethers";
+import { Application, ApplicationMetadata, BudgetItem, CancelTaskRequest, CancelTaskRequestMetadata, ChangeScopeRequest, DropExecutorRequest, DropExecutorRequestMetadata, PreapprovedApplication, RequestType, Reward, Submission, SubmissionJudgement, SubmissionJudgementMetadata, SubmissionMetadata, Task, TaskMetadata, TaskState } from "./taskTypes";
 import { asyncMap, getEventsFromReceipt } from "./utils";
 import { addToIpfs, getFromIpfs } from "./ipfsHelper";
 
@@ -12,6 +12,8 @@ export interface CreateTaskSettings {
     metadata?: TaskMetadata;
     deadline?: Date;
     budget?: BudgetItem[];
+    manager?: string;
+    preapproved?: PreapprovedApplication[];
 }
 export async function createTaskTransaction(settings : CreateTaskSettings) : Promise<ContractTransactionResponse> {
     const metadata : TaskMetadata = {
@@ -22,7 +24,9 @@ export async function createTaskTransaction(settings : CreateTaskSettings) : Pro
     const metadataHash = await addToIpfs(JSON.stringify(settings.metadata ?? metadata));
     const deadline = settings.deadline ? ToBlockchainDate(settings.deadline) : now() + 1 * days;
     const budget = settings.budget ?? [];
-    return settings.tasks.createTask(metadataHash, deadline, budget);
+    const manager = settings.manager ?? await (settings.tasks.runner as Signer).getAddress();
+    const preapproved = settings.preapproved ?? [];
+    return settings.tasks.createTask(metadataHash, deadline, budget, manager, preapproved);
 }
 
 export interface CreateTaskResult {

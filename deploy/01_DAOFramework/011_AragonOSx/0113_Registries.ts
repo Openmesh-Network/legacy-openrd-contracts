@@ -13,7 +13,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         from: deployer,
         proxy: {
             owner: deployer,
-            proxyContract: "ERC1967Proxy",
+            proxyContract: "PreferredProxy",
             proxyArgs: ['{implementation}', '{data}'],
             execute: {
                 init: {
@@ -28,7 +28,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         from: deployer,
         proxy: {
             owner: deployer,
-            proxyContract: "ERC1967Proxy",
+            proxyContract: "PreferredProxy",
             proxyArgs: ['{implementation}', '{data}'],
             execute: {
                 init: {
