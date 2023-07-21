@@ -2,9 +2,10 @@
 pragma solidity ^0.8.0;
 
 import { ITasks, IERC20, Escrow } from "./ITasks.sol";
+import { Context } from "@openzeppelin/contracts/utils/Context.sol";
 import { Clones } from "@openzeppelin/contracts/proxy/Clones.sol";
 
-contract Tasks is ITasks {
+contract Tasks is Context, ITasks {
     /// @notice The incremental ID for tasks.
     uint256 private taskCounter;
 
@@ -42,10 +43,7 @@ contract Tasks is ITasks {
         }
 
         Task storage task = tasks[_taskId];
-        // offchainTask.metadata = task.metadata;
         offchainTask.deadline = task.deadline;
-        // offchainTask.creationTimestamp = task.creationTimestamp;
-        // offchainTask.executorConfirmationTimestamp = task.executorConfirmationTimestamp;
         offchainTask.executorApplication = task.executorApplication;
         offchainTask.proposer = task.proposer;
         offchainTask.state = task.state;
@@ -62,8 +60,6 @@ contract Tasks is ITasks {
         offchainTask.applications = new OffChainApplication[](task.applicationCount);
         for (uint8 i; i < offchainTask.applications.length; ) {
             Application storage application = task.applications[i];
-            // offchainTask.applications[i].metadata = application.metadata;
-            // offchainTask.applications[i].timestamp = application.timestamp;
             offchainTask.applications[i].applicant = application.applicant;
             offchainTask.applications[i].accepted = application.accepted;
             offchainTask.applications[i].reward = new Reward[](application.rewardCount);
@@ -212,22 +208,20 @@ contract Tasks is ITasks {
         }
 
         Task storage task = tasks[taskId];
-        // task.metadata = _metadata;
         task.deadline = _deadline;
         task.budgetCount = uint8(_budget.length);
         Escrow escrow = Escrow(Clones.clone(escrowImplementation));
         escrow.__Escrow_init();
         task.escrow = escrow;
         for (uint8 i; i < _budget.length; ) {
-            _budget[i].tokenContract.transferFrom(msg.sender, address(escrow), _budget[i].amount);
+            _budget[i].tokenContract.transferFrom(_msgSender(), address(escrow), _budget[i].amount);
             task.budget[i] = _budget[i];
             unchecked {
                 ++i;
             }
         }
         
-        // task.creationTimestamp = uint64(block.timestamp);
-        task.proposer = msg.sender;
+        task.proposer = _msgSender();
 
         // Default values are already correct (save gas)
         // task.state = TaskState.Open;
@@ -235,7 +229,7 @@ contract Tasks is ITasks {
             ++openTasks;
         }
 
-        emit TaskCreated(taskId, msg.sender, _metadata, _deadline, _budget);
+        emit TaskCreated(taskId, _metadata, _deadline, _budget);
     }
 
     /// @inheritdoc ITasks
@@ -257,9 +251,7 @@ contract Tasks is ITasks {
         unchecked {
             applicationId = task.applicationCount++;
         }
-        // application.metadata = _metadata;
-        // application.timestamp = uint64(block.timestamp);
-        application.applicant = msg.sender;
+        application.applicant = _msgSender();
         application.rewardCount = uint8(_reward.length);
 
         uint8 j;
@@ -288,7 +280,7 @@ contract Tasks is ITasks {
             }
         }
 
-        emit ApplicationCreated(_taskId, applicationId, msg.sender, _metadata, _reward);
+        emit ApplicationCreated(_taskId, applicationId, _metadata, _reward);
     }
     
     /// @inheritdoc ITasks
@@ -304,7 +296,7 @@ contract Tasks is ITasks {
         if (task.state != TaskState.Open) {
             revert TaskNotOpen();
         }
-        if (task.proposer != msg.sender) {
+        if (task.proposer != _msgSender()) {
             revert NotProposer();
         }
 
@@ -319,7 +311,7 @@ contract Tasks is ITasks {
             }
         }
 
-        emit ApplicationsAccepted(_taskId, _applications, msg.sender);
+        emit ApplicationsAccepted(_taskId, _applications);
     }
     
     /// @inheritdoc ITasks
@@ -340,7 +332,7 @@ contract Tasks is ITasks {
         }
 
         Application storage application_ = task.applications[_application];
-        if (application_.applicant != msg.sender) {
+        if (application_.applicant != _msgSender()) {
             revert NotYourApplication();
         }
         if (!application_.accepted) {
@@ -348,7 +340,6 @@ contract Tasks is ITasks {
         }
 
         task.executorApplication = _application;
-        // task.executorConfirmationTimestamp = uint64(block.timestamp);
 
         task.state = TaskState.Taken;
         unchecked {
@@ -356,7 +347,7 @@ contract Tasks is ITasks {
             ++takenTasks;
         }
 
-        emit TaskTaken(_taskId, _application, msg.sender);
+        emit TaskTaken(_taskId, _application);
     }
     
     /// @inheritdoc ITasks
@@ -372,18 +363,15 @@ contract Tasks is ITasks {
         if (task.state != TaskState.Taken) {
             revert TaskNotTaken();
         }
-        if (task.applications[task.executorApplication].applicant != msg.sender) {
+        if (task.applications[task.executorApplication].applicant != _msgSender()) {
             revert NotExecutor();
         }
 
-        // Submission storage submission = task.submissions[task.submissionCount];
         unchecked { 
             submissionId = task.submissionCount++;
         }
-        // submission.metadata = _metadata;
-        // submission.timestamp = uint64(block.timestamp);
 
-        emit SubmissionCreated(_taskId, submissionId, msg.sender, _metadata);
+        emit SubmissionCreated(_taskId, submissionId, _metadata);
     }
     
     /// @inheritdoc ITasks
@@ -401,7 +389,7 @@ contract Tasks is ITasks {
         if (task.state != TaskState.Taken) {
             revert TaskNotTaken();
         }
-        if (task.proposer != msg.sender) {
+        if (task.proposer != _msgSender()) {
             revert NotProposer();
         }
         if (_submission >= task.submissionCount) {
@@ -412,11 +400,7 @@ contract Tasks is ITasks {
         if (submission_.judgement != SubmissionJudgement.None) {
             revert SubmissionAlreadyJudged();
         }
-        // You can judge with judgement None, to give feedback without any judgement yet
-        // You can then call this function again to overwrite the feedback (kinda like a draft)
         submission_.judgement = _judgement;
-        // submission_.judgementTimestamp = uint64(block.timestamp);
-        // submission_.feedback = _feedback;
 
         if (_judgement == SubmissionJudgement.Accepted) {
             Application storage executor = task.applications[task.executorApplication];
@@ -465,7 +449,7 @@ contract Tasks is ITasks {
             emit TaskCompleted(_taskId);
         }
 
-        emit SubmissionReviewed(_taskId, _submission, msg.sender, _judgement, _feedback);
+        emit SubmissionReviewed(_taskId, _submission, _judgement, _feedback);
     }
     
     /// @inheritdoc ITasks
@@ -483,7 +467,7 @@ contract Tasks is ITasks {
         // if (task.state != TaskState.Taken) {
         //     revert TaskNotTaken();
         // }
-        // if (task.proposer != msg.sender) {
+        // if (task.proposer != _msgSender()) {
         //     revert NotProposer();
         // }
 
@@ -506,7 +490,7 @@ contract Tasks is ITasks {
         //     if (_newReward[i].nextToken) {
         //         if (needed > erc20Transfer.amount) {
         //             // Excisting budget in escrow doesnt cover the new reward
-        //             erc20Transfer.tokenContract.transferFrom(msg.sender, address(task.escrow), needed - erc20Transfer.amount);
+        //             erc20Transfer.tokenContract.transferFrom(_msgSender(), address(task.escrow), needed - erc20Transfer.amount);
         //         }
 
         //         needed = 0;
@@ -524,7 +508,7 @@ contract Tasks is ITasks {
         //     changeTaskRequestId = task.changeScopeRequestCount++;
         // }
         
-        // emit ChangeScopeRequested(_taskId, changeTaskRequestId, msg.sender, _newMetadata, _newDeadline, _newReward);
+        // emit ChangeScopeRequested(_taskId, changeTaskRequestId, _msgSender(), _newMetadata, _newDeadline, _newReward);
     // }
 
     /// @inheritdoc ITasks
@@ -540,7 +524,7 @@ contract Tasks is ITasks {
         // if (task.state != TaskState.Taken) {
         //     revert TaskNotTaken();
         // }
-        // if (task.proposer != msg.sender) {
+        // if (task.proposer != _msgSender()) {
         //     revert NotProposer();
         // }
 
@@ -551,7 +535,7 @@ contract Tasks is ITasks {
         //     dropExecutorRequestId = task.dropExecutorRequestCount++;
         // }
 
-        // emit DropExecutorRequested(_taskId, dropExecutorRequestId, msg.sender, _explanation);
+        // emit DropExecutorRequested(_taskId, dropExecutorRequestId, _msgSender(), _explanation);
     // }
 
     /// @inheritdoc ITasks
@@ -564,7 +548,7 @@ contract Tasks is ITasks {
         }
 
         Task storage task = tasks[_taskId];
-        if (task.proposer != msg.sender) {
+        if (task.proposer != _msgSender()) {
             revert NotProposer();
         }
 
@@ -581,14 +565,11 @@ contract Tasks is ITasks {
         }
         else {
             // Task is taken and deadline has not past
-            // CancelTaskRequest storage request = task.cancelTaskRequests[task.cancelTaskRequestCount];
-            // request.explanation = _explanation;
-            // request.timestamp = uint64(block.timestamp);
             unchecked {
                 cancelTaskRequestId = task.cancelTaskRequestCount++;
             }
 
-            emit CancelTaskRequested(_taskId, cancelTaskRequestId, msg.sender, _explanation);
+            emit CancelTaskRequested(_taskId, cancelTaskRequestId, _explanation);
         }
     }
 
@@ -607,7 +588,7 @@ contract Tasks is ITasks {
         if (task.state != TaskState.Taken) {
             revert TaskNotTaken();
         }
-        if (task.applications[task.executorApplication].applicant != msg.sender) {
+        if (task.applications[task.executorApplication].applicant != _msgSender()) {
             revert NotExecutor();
         }
         
@@ -665,7 +646,7 @@ contract Tasks is ITasks {
             }
             
             CancelTaskRequest storage request = task.cancelTaskRequests[_requestId];
-            if (request.accepted) { //(request.accepted != 0) {
+            if (request.accepted) {
                 revert RequestAlreadyAccepted();
             }
 
@@ -676,13 +657,13 @@ contract Tasks is ITasks {
                 request.executed = true;
             }
 
-            request.accepted = true;//uint64(block.timestamp);
+            request.accepted = true;
         }
 
-        emit RequestAccepted(_taskId, _requestType, _requestId, msg.sender);
+        emit RequestAccepted(_taskId, _requestType, _requestId);
     }
 
-        /// @inheritdoc ITasks
+    /// @inheritdoc ITasks
     function executeRequest(
         uint256 _taskId,
         RequestType _requestType,
@@ -751,7 +732,7 @@ contract Tasks is ITasks {
             }
             
             CancelTaskRequest storage request = task.cancelTaskRequests[_requestId];
-            if (!request.accepted) { //(request.accepted == 0) {
+            if (!request.accepted) {
                 revert RequestNotAccepted();
             }
             if (request.executed) {
@@ -760,10 +741,10 @@ contract Tasks is ITasks {
 
             _refundProposer(task);
             emit TaskCancelled(_taskId);
-            request.executed = true;//uint64(block.timestamp);
+            request.executed = true;
         }
 
-        emit RequestExecuted(_taskId, _requestType, _requestId, msg.sender);
+        emit RequestExecuted(_taskId, _requestType, _requestId, _msgSender());
     }
     
     function _refundProposer(Task storage task) internal {

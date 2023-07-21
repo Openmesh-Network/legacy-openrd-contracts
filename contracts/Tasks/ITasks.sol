@@ -26,18 +26,18 @@ interface ITasks {
     error RequestNotAccepted();
     error RequestAlreadyExecuted();
 
-    event TaskCreated(uint256 taskId, address proposer, string metadata, uint64 deadline, ERC20Transfer[] budget);
-    event ApplicationCreated(uint256 taskId, uint16 applicationId, address applicant, string metadata, Reward[] reward);
-    event ApplicationsAccepted(uint256 taskId, uint16[] applications, address proposer);
-    event TaskTaken(uint256 taskId, uint16 applicationId, address applicant);
-    event SubmissionCreated(uint256 taskId, uint8 submissionId, address executor, string metadata);
-    event SubmissionReviewed(uint256 taskId, uint8 submissionId, address proposer, SubmissionJudgement judgement, string feedback);
+    event TaskCreated(uint256 taskId, string metadata, uint64 deadline, ERC20Transfer[] budget);
+    event ApplicationCreated(uint256 taskId, uint16 applicationId, string metadata, Reward[] reward);
+    event ApplicationsAccepted(uint256 taskId, uint16[] applications);
+    event TaskTaken(uint256 taskId, uint16 applicationId);
+    event SubmissionCreated(uint256 taskId, uint8 submissionId, string metadata);
+    event SubmissionReviewed(uint256 taskId, uint8 submissionId, SubmissionJudgement judgement, string feedback);
     event TaskCompleted(uint256 taskId);
 
-    event ChangeScopeRequested(uint256 taskId, uint8 requestId, address proposer, string metadata, uint64 deadline, Reward[] reward);
-    event DropExecutorRequested(uint256 taskId, uint8 requestId, address proposer, string explanation);
-    event CancelTaskRequested(uint256 taskId, uint8 requestId, address proposer, string explanation);
-    event RequestAccepted(uint256 taskId, RequestType requestType, uint8 requestId, address executor);
+    event ChangeScopeRequested(uint256 taskId, uint8 requestId, string metadata, uint64 deadline, Reward[] reward);
+    event DropExecutorRequested(uint256 taskId, uint8 requestId, string explanation);
+    event CancelTaskRequested(uint256 taskId, uint8 requestId, string explanation);
+    event RequestAccepted(uint256 taskId, RequestType requestType, uint8 requestId);
     event RequestExecuted(uint256 taskId, RequestType requestType, uint8 requestId, address by);
     event TaskCancelled(uint256 taskId);
 
@@ -61,14 +61,10 @@ interface ITasks {
     }
 
     /// @notice A container for a task application.
-    /// @param metadata Metadata of the application. (IPFS hash)
-    /// @param timestamp When the application has been made.
     /// @param applicant Who has submitted this application.
     /// @param accepted If the application has been accepted by the proposer.
-    /// @param reward How much rewards the applicant want for completion.
+    /// @param reward How much rewards the applicant wants for completion.
     struct Application {
-        // string metadata;
-        // uint64 timestamp;
         address applicant;
         bool accepted;
         uint8 rewardCount;
@@ -76,8 +72,6 @@ interface ITasks {
     }
 
     struct OffChainApplication {
-        // string metadata;
-        // uint64 timestamp;
         address applicant;
         bool accepted;
         Reward[] reward;
@@ -85,88 +79,60 @@ interface ITasks {
 
     enum SubmissionJudgement { None, Accepted, Rejected }
     /// @notice A container for a task submission.
-    /// @param metadata Metadata of the submission. (IPFS hash)
-    /// @param timestamp When the submission has been made.
     /// @param judgement Judgement cast on the submission.
-    /// @param judgementTimestamp When the judgement has been made.
-    /// @param feedback A response from the proposer. (IPFS hash)
     struct Submission {
-        // string metadata;
-        // uint64 timestamp;
         SubmissionJudgement judgement;
-        // uint64 judgementTimestamp;
-        // string feedback;
     }
 
     enum RequestType { ChangeScope, DropExecutor, CancelTask }
 
     /// @notice A container for a request to change the scope of a task.
-    /// @param accepted When the request was accepted (0 = not accepted)
-    /// @param metadata New task metadata. (IPFS hash)
-    /// @param timestamp When the request was made.
+    /// @param accepted If the request was accepted.
+    /// @param executed If the request was executed.
     /// @param deadline New deadline for the task.
     /// @param reward New reward for the executor of the task.
     struct ChangeScopeRequest {
-        // string metadata;
-        // uint64 timestamp;
-        // uint64 accepted;
         bool accepted;
+        bool executed;
         uint64 deadline;
         uint8 rewardCount;
         mapping(uint8 => Reward) reward;
     }
 
     struct OffChainChangeScopeRequest {
-        // string metadata;
-        // uint64 timestamp;
-        // uint64 accepted;
         bool accepted;
+        bool executed;
         uint64 deadline;
         Reward[] reward;
     }
 
     /// @notice A container for a request to drop the executor of a task.
-    /// @param accepted When the request was accepted (0 = not accepted)
-    /// @param explanation Why the executor should be dropped.
-    /// @param timestamp When the request was made.
+    /// @param accepted If the request was accepted.
+    /// @param executed If the request was executed.
     struct DropExecutorRequest {
-        // string explanation;
-        // uint64 timestamp;
-        // uint64 accepted;
         bool accepted;
+        bool executed;
     }
 
     /// @notice A container for a request to cancel the task.
-    /// @param accepted When the request was accepted (0 = not accepted)
-    /// @param explanation Why the task should be cancelled.
-    /// @param timestamp When the request was made.
+    /// @param accepted If the request was accepted.
+    /// @param executed If the request was executed.
     struct CancelTaskRequest {
-        // string explanation;
-        // uint64 timestamp;
-        // uint64 accepted;
         bool accepted;
         bool executed;
     }
 
     enum TaskState { Open, Taken, Closed }
     /// @notice A container for task-related information.
-    /// @param metadata Metadata of the task. (IPFS hash)
     /// @param deadline Block timestamp at which the task expires if not completed.
     /// @param budget Maximum ERC20 rewards that can be earned by completing the task.
     /// @param proposer Who has created the task.
-    /// @param creationTimestamp When the task has been created.
     /// @param state Current state the task is in.
     /// @param applications Applications to take the job.
     /// @param executorApplication Index of the application that will execture the task.
-    /// @param executorConfirmationTimestamp When the executor has confirmed to take the task.
     /// @param submissions Submission made to finish the task.
     struct Task {
-        // string metadata;
-
-        // uint64 creationTimestamp;
-        // uint64 executorConfirmationTimestamp;
         uint64 deadline;
-
         Escrow escrow;
 
         address proposer;
@@ -189,14 +155,10 @@ interface ITasks {
     }
 
     struct OffChainTask {
-        // string metadata;
         uint64 deadline;
-        // uint64 creationTimestamp;
-        // uint64 executorConfirmationTimestamp;
         uint16 executorApplication;
         address proposer;
         TaskState state;
-        // bool changed;
         Escrow escrow;
         ERC20Transfer[] budget;
         OffChainApplication[] applications;
@@ -333,6 +295,7 @@ interface ITasks {
     /// @param _taskId Id of the task.
     /// @param _requestType What kind of request it is.
     /// @param _requestId Id of the request.
+    /// @param _execute If the request should also be executed in this transaction.
     function acceptRequest(
         uint256 _taskId,
         RequestType _requestType,
@@ -340,6 +303,10 @@ interface ITasks {
         bool _execute
     ) external;
 
+    /// @notice Exectued an accepted request, allows anyone to pay for the gas costs of the execution.
+    /// @param _taskId Id of the task.
+    /// @param _requestType What kind of request it is.
+    /// @param _requestId Id of the request.
     function executeRequest(
         uint256 _taskId,
         RequestType _requestType,

@@ -8,5 +8,8 @@ contract TaskDrafts {
     ITasks private tasks;
     IPluginProposals private governancePlugin;
 
-    
+    constructor(ITasks _tasks, IPluginProposals _governancePlugin) {
+        tasks = _tasks;
+        governancePlugin = _governancePlugin;
+    }
 }
