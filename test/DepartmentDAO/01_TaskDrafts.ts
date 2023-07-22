@@ -12,5 +12,8 @@ describe("Department DAO Task Drafts", function () {
       manager: dao.deployer,
       preapproved: [],
     });
+    // approve and execute proposal
+
+    // check if new task is created with correct info
   });
 });

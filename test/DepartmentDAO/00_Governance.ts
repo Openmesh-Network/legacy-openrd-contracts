@@ -2,20 +2,17 @@ import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { deployments, ethers, getNamedAccounts } from "hardhat";
 import { IDAO, MockERC721, TaskDrafts, TokenListGovernance } from "../../typechain-types";
 import { TestSetup } from "../Helpers/TestSetup";
-import { getVar } from "../../utils/globalVars";
 import { expect } from "chai";
 import { days, minutes, now } from "../../utils/timeUnits";
+import { ether } from "../../utils/ethersUnits";
 
 export async function getDAO() {
   await loadFixture(TestSetup);
   const { deployer } = await getNamedAccounts();
-  const signer = await ethers.getImpersonatedSigner(deployer);
-  const daoInfo = JSON.parse(await getVar("department-test-4-devops"));
-  const TokenListGovernance = await ethers.getContractAt("TokenListGovernance", daoInfo.tokenListGovernance, signer) as any as TokenListGovernance;
-  const TaskDrafts = await ethers.getContractAt("TaskDrafts", daoInfo.taskDrafts, signer) as any as TaskDrafts;
-
-  const nftInfo = deployments.get("NFT");
-  const NFT = await ethers.getContractAt("MockERC721", (await nftInfo).address, signer) as any as MockERC721;
+  
+  const TokenListGovernance = await ethers.getContract("devops_tokenListGovernance", deployer) as TokenListGovernance;
+  const TaskDrafts = await ethers.getContract("devops_taskDrafts", deployer) as TaskDrafts;
+  const NFT = await ethers.getContract("NFT", deployer) as MockERC721;
 
   return { TokenListGovernance, TaskDrafts, NFT, deployer };
 }
@@ -68,7 +65,15 @@ describe("Department DAO Governance", function () {
   it("allow when NFT accepted", async function () {
     const dao = await loadFixture(getDAO);
     await dao.NFT.grantToken(dao.deployer, 5);
-    await dao.TokenListGovernance.addMembers([5]);
+
+    // Move this to a helper function (get DAO signer? execute as DAO?)
+    const managementDAO = await deployments.get("management_dao");
+    (await ethers.getSigners())[0].sendTransaction({
+      to: managementDAO.address,
+      value: ether,
+    });
+    await dao.TokenListGovernance.connect(await ethers.getImpersonatedSigner(managementDAO.address)).addMembers([5]);
+
     const metadata = ethers.toUtf8Bytes("0x");
     const actions : IDAO.ActionStruct[] = [];
     const start = now() + 30 * minutes;
