@@ -1,5 +1,5 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { deployments, ethers, getNamedAccounts } from "hardhat";
+import { ethers, getNamedAccounts } from "hardhat";
 import { Tasks } from "../../typechain-types";
 import { acceptApplications, applyForTask, createSubmission, createTask, reviewSubmission, takeTask } from "../../utils/taskHelper";
 import { GetBudgetItem } from "../Helpers/MockERC20Helper";
@@ -11,13 +11,13 @@ import { TestSetup } from "../Helpers/TestSetup";
 // Base cases
 export async function createTaskFixture() {
   await loadFixture(TestSetup);
-  const { proposer, executor } = await getNamedAccounts();
-  const TasksProposer = await ethers.getContract("Tasks", proposer) as Tasks;
+  const { manager, executor } = await getNamedAccounts();
+  const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
   const TasksExecutor = await ethers.getContract("Tasks", executor) as Tasks;
   const { taskId } = await createTask({
-    tasks: TasksProposer,
+    tasks: TasksManager,
   });
-  return { proposer, executor, TasksProposer, TasksExecutor, taskId };
+  return { manager, executor, TasksManager, TasksExecutor, taskId };
 }
 
 export async function createTaskWithApplicationFixture() {
@@ -32,7 +32,7 @@ export async function createTaskWithApplicationFixture() {
 export async function createTaskWithAcceptedApplicationFixture() {
   const task = await loadFixture(createTaskWithApplicationFixture);
   await acceptApplications({
-    tasks: task.TasksProposer,
+    tasks: task.TasksManager,
     taskId: task.taskId,
     applications: [BigInt(0)],
   });
@@ -61,7 +61,7 @@ export async function createTakenTaskWithSubmissionFixture() {
 export async function createTakenTaskWithAcceptedSubmissionFixture() {
   const task = await loadFixture(createTakenTaskWithSubmissionFixture);
   await reviewSubmission({
-    tasks: task.TasksProposer,
+    tasks: task.TasksManager,
     taskId: task.taskId,
     submissionId: BigInt(0),
     judgement: SubmissionJudgement.Accepted,
@@ -72,16 +72,16 @@ export async function createTakenTaskWithAcceptedSubmissionFixture() {
 // Special cases
 export async function createBudgetTaskFixture() {
   await loadFixture(TestSetup);
-  const { proposer, executor } = await getNamedAccounts();
-  const TasksProposer = await ethers.getContract("Tasks", proposer) as Tasks;
+  const { manager, executor } = await getNamedAccounts();
+  const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
   const TasksExecutor = await ethers.getContract("Tasks", executor) as Tasks;
   const amounts = [Wei(1), Wei(10), Gwei(1), Gwei(5), Ether(1), Ether(20), Ether(100), Ether(1337), Ether(1_000_000)];
-  const budget = await asyncMap(amounts, a => GetBudgetItem(TasksProposer, a, proposer));
+  const budget = await asyncMap(amounts, a => GetBudgetItem(TasksManager, a, manager));
   const { taskId } = await createTask({
-    tasks: TasksProposer,
+    tasks: TasksManager,
     budget: budget,
   });
-  return { proposer, executor, TasksProposer, TasksExecutor, taskId, budget };
+  return { manager, executor, TasksManager, TasksExecutor, taskId, budget };
 }
 
 export async function createApplicationsTaskFixture() {
@@ -101,7 +101,7 @@ export async function createApprovedApplicationsTaskFixture() {
   const task = await loadFixture(createApplicationsTaskFixture);
   const acceptedApplications = task.applicants.map((_, i) => i).filter((_, i) => i % 2 == 0).map(BigInt);
   await acceptApplications({
-    tasks: task.TasksProposer,
+    tasks: task.TasksManager,
     taskId: task.taskId,
     applications: acceptedApplications,
   });
@@ -117,7 +117,7 @@ export async function createBudgetTaskWithExecutorAndSubmissionFixture() {
     reward: reward,
   });
   await acceptApplications({
-    tasks: task.TasksProposer,
+    tasks: task.TasksManager,
     taskId: task.taskId,
     applications: [BigInt(0)]
   });
@@ -141,7 +141,7 @@ export async function createBudgetTaskWithExecutorAndSubmissionFullRewardFixture
     reward: task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; }),
   });
   await acceptApplications({
-    tasks: task.TasksProposer,
+    tasks: task.TasksManager,
     taskId: task.taskId,
     applications: [BigInt(0)]
   });
@@ -167,7 +167,7 @@ export async function createBudgetTaskWithExecutorAndSubmissionIncompleteRewardF
     reward: reward,
   });
   await acceptApplications({
-    tasks: task.TasksProposer,
+    tasks: task.TasksManager,
     taskId: task.taskId,
     applications: [BigInt(0)]
   });
@@ -181,6 +181,24 @@ export async function createBudgetTaskWithExecutorAndSubmissionIncompleteRewardF
     taskId: task.taskId,
   });
   return { ...task, reward };
+}
+
+export async function createPreapprovedBudgetTaskFixture() {
+  await loadFixture(TestSetup);
+  const { manager, executor } = await getNamedAccounts();
+  const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
+  const TasksExecutor = await ethers.getContract("Tasks", executor) as Tasks;
+  const amounts = [Wei(1), Wei(10), Gwei(1), Gwei(5), Ether(1), Ether(20), Ether(100), Ether(1337), Ether(1_000_000)];
+  const budget = await asyncMap(amounts, a => GetBudgetItem(TasksManager, a, manager));
+  const { taskId } = await createTask({
+    tasks: TasksManager,
+    budget: budget,
+    preapproved: [{
+      applicant: executor,
+      reward: amounts.map(b => { return { nextToken: true, to: executor, amount: b }; }),
+    }]
+  });
+  return { manager, executor, TasksManager, TasksExecutor, taskId, budget };
 }
 
 describe("Tasks Fixtures", function () {
@@ -233,6 +251,10 @@ describe("Tasks Fixtures", function () {
 
     it("create budget task with executor and submission incomplete reward", async function () {
       await loadFixture(createBudgetTaskWithExecutorAndSubmissionIncompleteRewardFixture);
+    });
+
+    it("create preapproved budget task", async function() {
+      await loadFixture(createPreapprovedBudgetTaskFixture);
     });
   });
 });

@@ -92,7 +92,7 @@ describe("Apply For Task", function () {
     expect(ToBlockchainDate(taskInfo.deadline)).to.be.equal(ToBlockchainDate(taskInfoBefore.deadline));
     expect(taskInfo.budget).to.be.deep.equal(taskInfoBefore.budget);
     expect(taskInfo.escrow).to.be.equal(taskInfoBefore.escrow);
-    expect(taskInfo.proposer).to.be.equal(taskInfoBefore.proposer);
+    expect(taskInfo.manager).to.be.equal(taskInfoBefore.manager);
   });
 
   it("should have no executor", async function () {

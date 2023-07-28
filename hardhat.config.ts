@@ -38,17 +38,20 @@ const config: HardhatUserConfig = {
     deployer: {
         default: 0, // here this will by default take the first account as deployer
     },
-    proposer: {
+    creator: {
         default: 1,
     },
-    executor: {
+    manager: {
         default: 2,
+    },
+    executor: {
+        default: 3,
     },
   },
   gasReporter: {
     enabled: false,
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
-    excludeContracts: ["mocks/", "ERC20", "ERC721"],
+    excludeContracts: ["mocks/", "ERC20", "ERC721", "DAO", "DAOFactory", "ENSRegistry", "PluginRepoFactory", "ENSSubdomainRegistrar", "PluginRepoRegistry", "PluginSetupProcessor", "PublicResolver", "PreferredProxy", "PluginRepo"],
     // token: "MATIC",
     // gasPriceApi: "https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice"
   },

@@ -48,7 +48,7 @@ describe("Create Submission", function () {
     expect(ToBlockchainDate(taskInfo.deadline)).to.be.equal(ToBlockchainDate(taskInfoBefore.deadline));
     expect(taskInfo.budget).to.be.deep.equal(taskInfoBefore.budget);
     expect(taskInfo.escrow).to.be.equal(taskInfoBefore.escrow);
-    expect(taskInfo.proposer).to.be.equal(taskInfoBefore.proposer);
+    expect(taskInfo.manager).to.be.equal(taskInfoBefore.manager);
   });
   
   it("should not have changed applications", async function () {
@@ -108,13 +108,13 @@ describe("Create Submission", function () {
     await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "TaskNotTaken");
   });
 
-  it("should not be allowed by proposer", async function () {
+  it("should not be allowed by manager", async function () {
     const task = await loadFixture(createTakenTaskFixture);
     const tx = createSubmission({
-      tasks: task.TasksProposer,
+      tasks: task.TasksManager,
       taskId: task.taskId,
     });
-    await expect(tx).to.be.revertedWithCustomError(task.TasksProposer, "NotExecutor");
+    await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "NotExecutor");
   });
   
   it("should not be allowed by anyone else", async function () {

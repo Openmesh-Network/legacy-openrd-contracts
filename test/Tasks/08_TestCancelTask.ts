@@ -12,14 +12,14 @@ describe("Cancel task", function () {
         explanation: "Juse because",
     };
     await cancelTask({
-        tasks: task.TasksProposer,
+        tasks: task.TasksManager,
         taskId: task.taskId,
         explanation: metadata,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.cancelTaskRequests).to.be.lengthOf(1);
     expect(taskInfo.cancelTaskRequests[0].explanation).to.be.deep.equal(metadata);
-    expect(taskInfo.cancelTaskRequests[0].accepted).to.be.false;
+    expect(taskInfo.cancelTaskRequests[0].request.accepted).to.be.false;
     expect(taskInfo.state).to.be.equal(TaskState.Taken);
     await acceptRequest({
         tasks: task.TasksExecutor,
@@ -29,13 +29,13 @@ describe("Cancel task", function () {
     });
     const taskInfo2 = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo2.state).to.be.equal(TaskState.Closed);
-    expect(taskInfo2.cancelTaskRequests[0].accepted).to.be.true;
+    expect(taskInfo2.cancelTaskRequests[0].request.accepted).to.be.true;
   });
 
   it("should not need request on open task", async function () {
     const task = await loadFixture(createTaskFixture);
     await cancelTask({
-        tasks: task.TasksProposer,
+        tasks: task.TasksManager,
         taskId: task.taskId,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
@@ -45,7 +45,7 @@ describe("Cancel task", function () {
   it("budget", async function () {
     const task = await loadFixture(createBudgetTaskFixture);
     await cancelTask({
-        tasks: task.TasksProposer,
+        tasks: task.TasksManager,
         taskId: task.taskId,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
@@ -58,13 +58,13 @@ describe("Cancel task", function () {
         explanation: "Juse because",
     };
     await cancelTask({
-        tasks: task.TasksProposer,
+        tasks: task.TasksManager,
         taskId: task.taskId,
         explanation: metadata,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.cancelTaskRequests).to.be.lengthOf(1);
-    expect(taskInfo.cancelTaskRequests[0].executed).to.be.false;
+    expect(taskInfo.cancelTaskRequests[0].request.executed).to.be.false;
     expect(taskInfo.state).to.be.equal(TaskState.Taken);
     await acceptRequest({
         tasks: task.TasksExecutor,
@@ -74,7 +74,7 @@ describe("Cancel task", function () {
         execute: false,
     });
     const taskInfo2 = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
-    expect(taskInfo2.cancelTaskRequests[0].executed).to.be.false;
+    expect(taskInfo2.cancelTaskRequests[0].request.executed).to.be.false;
     expect(taskInfo2.state).to.be.equal(TaskState.Taken);
     await executeRequest({
       tasks: task.TasksExecutor,
@@ -83,7 +83,7 @@ describe("Cancel task", function () {
       requestId: BigInt(0),
     });
     const taskInfo3 = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
-    expect(taskInfo3.cancelTaskRequests[0].executed).to.be.true;
+    expect(taskInfo3.cancelTaskRequests[0].request.executed).to.be.true;
     expect(taskInfo3.state).to.be.equal(TaskState.Closed);
   });
 });

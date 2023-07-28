@@ -1,9 +1,8 @@
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { ethers } from "hardhat";
 import { getTask, takeTask } from "../../utils/taskHelper";
 import { ToBlockchainDate } from "../../utils/timeUnits";
-import { createApprovedApplicationsTaskFixture, createTakenTaskFixture, createTakenTaskWithAcceptedSubmissionFixture } from "./00_TestTasksFixtures";
+import { createApprovedApplicationsTaskFixture, createPreapprovedBudgetTaskFixture, createTakenTaskFixture, createTakenTaskWithAcceptedSubmissionFixture } from "./00_TestTasksFixtures";
 import { TaskState } from "../../utils/taskTypes";
 
 describe("Take Task", function () {
@@ -36,6 +35,17 @@ describe("Take Task", function () {
     }
   });
 
+  it("should allow preapproved applicant", async function () {
+      const task = await loadFixture(createPreapprovedBudgetTaskFixture);
+      const application = BigInt(0);
+      const tx = await takeTask({
+        tasks: task.TasksExecutor,
+        taskId: task.taskId,
+        application: application,
+      });
+      await expect(tx).to.be.not.reverted;
+  });
+
   it("should be in taken state", async function () {
     const task = await loadFixture(createApprovedApplicationsTaskFixture);
     const application = task.acceptedApplications[0];
@@ -63,7 +73,7 @@ describe("Take Task", function () {
     expect(ToBlockchainDate(taskInfo.deadline)).to.be.equal(ToBlockchainDate(taskInfoBefore.deadline));
     expect(taskInfo.budget).to.be.deep.equal(taskInfoBefore.budget);
     expect(taskInfo.escrow).to.be.equal(taskInfoBefore.escrow);
-    expect(taskInfo.proposer).to.be.equal(taskInfoBefore.proposer);
+    expect(taskInfo.manager).to.be.equal(taskInfoBefore.manager);
   });
   
   it("should not have changed applications", async function () {
@@ -161,10 +171,10 @@ describe("Take Task", function () {
     }
   });
 
-  it("should not allow the proposer to confirm", async function () {
+  it("should not allow the manager to confirm", async function () {
     const task = await loadFixture(createApprovedApplicationsTaskFixture);
     const application = task.acceptedApplications[0];
-    const confirmer = task.TasksProposer;
+    const confirmer = task.TasksManager;
     const tx = takeTask({
       tasks: confirmer,
       taskId: task.taskId,

@@ -15,7 +15,7 @@ describe("Task Count", function () {
 
   it("should be one after creating one task", async function () {
     const task = await loadFixture(createTaskFixture);
-    const taskCount = await task.TasksProposer.taskCount();
+    const taskCount = await task.TasksManager.taskCount();
     expect(taskCount).to.be.equal(BigInt(1));
   });
 

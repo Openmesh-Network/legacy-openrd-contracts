@@ -8,9 +8,9 @@ describe("Get Task", function () {
   it("should not be allowed on a task id that does not exist", async function () {
     const task = await loadFixture(createTaskFixture);
     const tx = getTask({
-      tasks: task.TasksProposer,
+      tasks: task.TasksManager,
       taskId: task.taskId + BigInt(1),
     });
-    await expect(tx).to.be.revertedWithCustomError(task.TasksProposer, "TaskDoesNotExist");
+    await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "TaskDoesNotExist");
   });
 });

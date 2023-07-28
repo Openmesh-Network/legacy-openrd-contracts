@@ -17,7 +17,7 @@ describe("Task Statistics", function () {
 
   it("should be correct for 1 open task", async function () {
     const task = await loadFixture(createTaskFixture);
-    const stats = await task.TasksProposer.taskStatistics();
+    const stats = await task.TasksManager.taskStatistics();
     expect(stats.open).to.be.equal(BigInt(1));
     expect(stats.taken).to.be.equal(BigInt(0));
     expect(stats.successful).to.be.equal(BigInt(0));

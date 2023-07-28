@@ -2,7 +2,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { getEventsFromLogs } from "../../../utils/utils";
 import { ethers } from "hardhat";
-import { getBool, getVar, setVar } from "../../../utils/globalVars";
+import { getBool, getVar } from "../../../utils/globalVars";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     if (!await getBool("NewDraftsSetup")) {
@@ -29,7 +29,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const pluginRepoRegistry = await ethers.getContract("PluginRepoRegistry");
     const repo = getEventsFromLogs(receipt.logs, pluginRepoRegistry.interface, "PluginRepoRegistered")[0].args.pluginRepo;
-    await setVar("TaskDraftsRepo", repo, true);
+    await deployments.save("TaskDraftsRepo", { address : repo, abi: (await deployments.getArtifact("PluginRepo")).abi });
 };
 export default func;
 func.tags = ["TaskDrafts"]

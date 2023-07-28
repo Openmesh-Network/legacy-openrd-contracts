@@ -2,10 +2,12 @@
 pragma solidity ^0.8.0;
 
 import { ITasks, IERC20, Escrow } from "./ITasks.sol";
+import { TasksEnsure } from "./TasksEnsure.sol";
+import { TasksUtils } from "./TasksUtils.sol";
 import { Context } from "@openzeppelin/contracts/utils/Context.sol";
 import { Clones } from "@openzeppelin/contracts/proxy/Clones.sol";
 
-contract Tasks is Context, ITasks {
+contract Tasks is Context, TasksEnsure, TasksUtils {
     /// @notice The incremental ID for tasks.
     uint256 private taskCounter;
 
@@ -38,84 +40,8 @@ contract Tasks is Context, ITasks {
     function getTask(
         uint256 _taskId
     ) public view returns (OffChainTask memory offchainTask) {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
-
-        Task storage task = tasks[_taskId];
-        offchainTask.metadata = task.metadata;
-        offchainTask.deadline = task.deadline;
-        offchainTask.executorApplication = task.executorApplication;
-        offchainTask.proposer = task.proposer;
-        offchainTask.state = task.state;
-        offchainTask.escrow = task.escrow;
-
-        offchainTask.budget = new ERC20Transfer[](task.budgetCount);
-        for (uint8 i; i < offchainTask.budget.length; ) {
-            offchainTask.budget[i] = task.budget[i];
-            unchecked {
-                ++i;
-            }
-        }
-        
-        offchainTask.applications = new OffChainApplication[](task.applicationCount);
-        for (uint8 i; i < offchainTask.applications.length; ) {
-            Application storage application = task.applications[i];
-            offchainTask.applications[i].metadata = application.metadata;
-            offchainTask.applications[i].applicant = application.applicant;
-            offchainTask.applications[i].accepted = application.accepted;
-            offchainTask.applications[i].reward = new Reward[](application.rewardCount);
-            for (uint8 j; j < offchainTask.applications[i].reward.length; ) {
-                offchainTask.applications[i].reward[j] = application.reward[j];
-                unchecked {
-                    ++j;
-                }
-            }
-            unchecked {
-                ++i;
-            }
-        }
-
-        offchainTask.submissions = new Submission[](task.submissionCount);
-        for (uint8 i; i < offchainTask.submissions.length; ) {
-            offchainTask.submissions[i] = task.submissions[i];
-            unchecked {
-                ++i;
-            }
-        }
-
-        // offchainTask.changeScopeRequests = new OffChainChangeScopeRequest[](task.changeScopeRequestCount);
-        // for (uint8 i; i < offchainTask.changeScopeRequests.length; ) {
-        //     offchainTask.changeScopeRequests[i].metadata = task.changeScopeRequests[i].metadata;
-        //     offchainTask.changeScopeRequests[i].accepted = task.changeScopeRequests[i].accepted;
-        //     offchainTask.changeScopeRequests[i].deadline = task.changeScopeRequests[i].deadline;
-        //     offchainTask.changeScopeRequests[i].reward = new Reward[](task.changeScopeRequests[i].rewardCount);
-        //     for (uint8 j; j < offchainTask.changeScopeRequests[i].reward.length; ) {
-        //         offchainTask.changeScopeRequests[i].reward[j] = task.changeScopeRequests[i].reward[j];
-        //         unchecked {
-        //             ++j;
-        //         }
-        //     }
-        //     unchecked {
-        //         ++i;
-        //     }
-        // }
-
-        // offchainTask.dropExecutorRequests = new DropExecutorRequest[](task.dropExecutorRequestCount);
-        // for (uint8 i; i < offchainTask.dropExecutorRequests.length; ) {
-        //     offchainTask.dropExecutorRequests[i] = task.dropExecutorRequests[i];
-        //     unchecked {
-        //         ++i;
-        //     }
-        // }
-
-        offchainTask.cancelTaskRequests = new CancelTaskRequest[](task.cancelTaskRequestCount);
-        for (uint8 i; i < offchainTask.cancelTaskRequests.length; ) {
-            offchainTask.cancelTaskRequests[i] = task.cancelTaskRequests[i];
-            unchecked {
-                ++i;
-            }
-        }
+        Task storage task = _getTask(_taskId);
+        offchainTask = _toOffchainTask(task);
     }
 
     /// @inheritdoc ITasks
@@ -134,24 +60,24 @@ contract Tasks is Context, ITasks {
     }
     
     /// @inheritdoc ITasks
-    function getProposingTasks(
-        address _proposer,
+    function getManagingTasks(
+        address _manager,
         uint256 _fromTaskId,
         uint256 _max
     ) external view returns (OffChainTask[] memory) {
         uint256 totalTasks = taskCounter;
         uint256[] memory taskIndexes = new uint256[](totalTasks);
-        uint256 proposerTasksCount;
+        uint256 managerTasksCount;
         if (_fromTaskId == 0) {
             _fromTaskId = totalTasks - 1;
         }
-        for (uint i = _fromTaskId; i != type(uint).max; ) {
-            if (tasks[i].proposer == _proposer) {
-                taskIndexes[proposerTasksCount] = i;
+        for (uint256 i = _fromTaskId; i != type(uint256).max; ) {
+            if (tasks[i].manager == _manager) {
+                taskIndexes[managerTasksCount] = i;
                 unchecked {
-                    ++proposerTasksCount;
+                    ++managerTasksCount;
                 }
-                if (proposerTasksCount == _max) {
+                if (managerTasksCount == _max) {
                     // _max == 0 never triggering is on purpose
                     break;
                 }
@@ -162,7 +88,7 @@ contract Tasks is Context, ITasks {
             }
         }
         // decrease length of array to match real entries
-        assembly { mstore(taskIndexes, sub(mload(taskIndexes), sub(totalTasks, proposerTasksCount))) }
+        assembly { mstore(taskIndexes, sub(mload(taskIndexes), sub(totalTasks, managerTasksCount))) }
         return getTasks(taskIndexes);
     }
     
@@ -178,7 +104,7 @@ contract Tasks is Context, ITasks {
         if (_fromTaskId == 0) {
             _fromTaskId = totalTasks - 1;
         }
-        for (uint i = _fromTaskId; i != type(uint).max; ) {
+        for (uint256 i = _fromTaskId; i != type(uint256).max; ) {
             if (tasks[i].state != TaskState.Open && tasks[i].applications[tasks[i].executorApplication].applicant == _executor) {
                 taskIndexes[executorTasksCount] = i;
                 unchecked {
@@ -207,9 +133,7 @@ contract Tasks is Context, ITasks {
         address _manager,
         PreapprovedApplication[] calldata _preapprove
     ) external returns (uint256 taskId) {
-        unchecked {
-            taskId = taskCounter++;
-        }
+        taskId = taskCounter++;
 
         Task storage task = tasks[taskId];
         task.metadata = _metadata;
@@ -218,7 +142,7 @@ contract Tasks is Context, ITasks {
         Escrow escrow = Escrow(Clones.clone(escrowImplementation));
         escrow.__Escrow_init();
         task.escrow = escrow;
-        for (uint8 i; i < _budget.length; ) {
+        for (uint8 i; i < uint8(_budget.length); ) {
             _budget[i].tokenContract.transferFrom(_msgSender(), address(escrow), _budget[i].amount);
             task.budget[i] = _budget[i];
             unchecked {
@@ -226,17 +150,20 @@ contract Tasks is Context, ITasks {
             }
         }
         
-        task.proposer = _manager;
+        task.manager = _manager;
+        task.creator = _msgSender();
 
         // Default values are already correct (save gas)
         // task.state = TaskState.Open;
         unchecked {
+            // Impossible to overflow due to openTasks <= taskCounter
             ++openTasks;
         }
 
+        // Gas optimization
         if (_preapprove.length > 0) {
             task.applicationCount = uint16(_preapprove.length);
-            for (uint16 i; i < _preapprove.length; ) {
+            for (uint16 i; i < uint16(_preapprove.length); ) {
                 Application storage application = task.applications[i];
                 application.applicant = _preapprove[i].applicant;
                 application.accepted = true;
@@ -248,7 +175,7 @@ contract Tasks is Context, ITasks {
             }
         }
 
-        emit TaskCreated(taskId, _metadata, _deadline, _budget, _manager, _preapprove);
+        emit TaskCreated(taskId, _metadata, _deadline, _budget, _msgSender(), _manager, _preapprove);
     }
 
     /// @inheritdoc ITasks
@@ -257,14 +184,8 @@ contract Tasks is Context, ITasks {
         string calldata _metadata,
         Reward[] calldata _reward
     ) external returns (uint16 applicationId) {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
-
-        Task storage task = tasks[_taskId];
-        if (task.state != TaskState.Open) {
-            revert TaskNotOpen();
-        }
+        Task storage task = _getTask(_taskId);
+        _ensureTaskIsOpen(task);
 
         Application storage application = task.applications[task.applicationCount];
         application.metadata = _metadata;
@@ -277,39 +198,27 @@ contract Tasks is Context, ITasks {
             }
         }
 
-        unchecked {
-            applicationId = task.applicationCount++;
-        }
+        applicationId = task.applicationCount++;
 
-        emit ApplicationCreated(_taskId, applicationId, _metadata, _reward, task.proposer, _msgSender());
+        emit ApplicationCreated(_taskId, applicationId, _metadata, _reward, task.manager, _msgSender());
     }
     
     /// @inheritdoc ITasks
     function acceptApplications(
         uint256 _taskId,
-        uint16[] calldata _applications
+        uint16[] calldata _applicationIds
     ) external {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
-        
-        Task storage task = tasks[_taskId];
-        if (task.state != TaskState.Open) {
-            revert TaskNotOpen();
-        }
-        if (task.proposer != _msgSender()) {
-            revert NotProposer();
-        }
+        Task storage task = _getTask(_taskId);
+        _ensureTaskIsOpen(task);
+        _ensureSenderIsManager(task);
 
-        for (uint i; i < _applications.length; ) {
-            if (_applications[i] >= task.applicationCount) {
-                revert ApplicationDoesNotExist();
-            }
+        for (uint i; i < _applicationIds.length; ) {
+            _ensureApplicationExists(task, _applicationIds[i]);
             
-            Application storage application_ = task.applications[_applications[i]];
-            application_.accepted = true;
-            _increaseBudgetToReward(task, application_.rewardCount, application_.reward);
-            emit ApplicationAccepted(_taskId, uint16(i), _msgSender(), application_.applicant);
+            Application storage application = task.applications[_applicationIds[i]];
+            application.accepted = true;
+            _increaseBudgetToReward(task, application.rewardCount, application.reward);
+            emit ApplicationAccepted(_taskId, _applicationIds[i], _msgSender(), application.applicant);
             
             unchecked {
                 ++i;
@@ -320,29 +229,17 @@ contract Tasks is Context, ITasks {
     /// @inheritdoc ITasks
     function takeTask(
         uint256 _taskId,
-        uint16 _application
+        uint16 _applicationId
     ) external {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
-        
-        Task storage task = tasks[_taskId];
-        if (task.state != TaskState.Open) {
-            revert TaskNotOpen();
-        }
-        if (_application >= task.applicationCount) {
-            revert ApplicationDoesNotExist();
-        }
+        Task storage task = _getTask(_taskId);
+        _ensureTaskIsOpen(task);
+        _ensureApplicationExists(task, _applicationId);
 
-        Application storage application_ = task.applications[_application];
-        if (application_.applicant != _msgSender()) {
-            revert NotYourApplication();
-        }
-        if (!application_.accepted) {
-            revert ApplicationNotAccepted();
-        }
+        Application storage application = task.applications[_applicationId];
+        _ensureSenderIsApplicant(application);
+        _ensureApplicationIsAccepted(application);
 
-        task.executorApplication = _application;
+        task.executorApplication = _applicationId;
 
         task.state = TaskState.Taken;
         unchecked {
@@ -350,7 +247,7 @@ contract Tasks is Context, ITasks {
             ++takenTasks;
         }
 
-        emit TaskTaken(_taskId, _application, task.proposer, _msgSender());
+        emit TaskTaken(_taskId, _applicationId, task.manager, _msgSender());
     }
     
     /// @inheritdoc ITasks
@@ -358,213 +255,69 @@ contract Tasks is Context, ITasks {
         uint256 _taskId,
         string calldata _metadata
     ) external returns (uint8 submissionId) {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
-        
-        Task storage task = tasks[_taskId];
-        if (task.state != TaskState.Taken) {
-            revert TaskNotTaken();
-        }
-        if (task.applications[task.executorApplication].applicant != _msgSender()) {
-            revert NotExecutor();
-        }
+        Task storage task = _getTask(_taskId);
+        _ensureTaskIsTaken(task);
+        _ensureSenderIsExecutor(task);
 
-        Submission storage submission_ = task.submissions[task.submissionCount];
-        submission_.metadata = _metadata;
-        unchecked { 
-            submissionId = task.submissionCount++;
-        }
+        Submission storage submission = task.submissions[task.submissionCount];
+        submission.metadata = _metadata;
+        submissionId = task.submissionCount++;
 
-        emit SubmissionCreated(_taskId, submissionId, _metadata, task.proposer, _msgSender());
+        emit SubmissionCreated(_taskId, submissionId, _metadata, task.manager, _msgSender());
     }
     
     /// @inheritdoc ITasks
     function reviewSubmission(
         uint256 _taskId,
-        uint8 _submission,
+        uint8 _submissionId,
         SubmissionJudgement _judgement,
         string calldata _feedback
     ) external {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
-        
-        Task storage task = tasks[_taskId];
-        if (task.state != TaskState.Taken) {
-            revert TaskNotTaken();
-        }
-        if (task.proposer != _msgSender()) {
-            revert NotProposer();
-        }
-        if (_submission >= task.submissionCount) {
-            revert SubmissionDoesNotExist();
-        }
+        Task storage task = _getTask(_taskId);
+        _ensureTaskIsTaken(task);
+        _ensureSenderIsManager(task);
+        _ensureSubmissionExists(task, _submissionId);
 
-        Submission storage submission_ = task.submissions[_submission];
-        if (submission_.judgement != SubmissionJudgement.None) {
-            revert SubmissionAlreadyJudged();
-        }
-        submission_.judgement = _judgement;
-        submission_.feedback = _feedback;
+        Submission storage submission = task.submissions[_submissionId];
+        _ensureSubmissionNotJudged(submission);
+        submission.judgement = _judgement;
+        submission.feedback = _feedback;
 
         if (_judgement == SubmissionJudgement.Accepted) {
-            Application storage executor = task.applications[task.executorApplication];
-            address proposer = _msgSender(); // task.proposer;
-            Escrow escrow = task.escrow;
-
-            uint8 j;
-            ERC20Transfer memory erc20Transfer = task.budget[0];
-            uint8 rewardCount = executor.rewardCount;
-            for (uint8 i; i < rewardCount; ) {
-                Reward memory reward = executor.reward[i];
-                escrow.transfer(erc20Transfer.tokenContract, executor.applicant, reward.amount);
-                unchecked {
-                    erc20Transfer.amount -= reward.amount;
-                }
-
-                if (reward.nextToken) {
-                    if (erc20Transfer.amount > 0) {
-                        escrow.transfer(erc20Transfer.tokenContract, proposer, erc20Transfer.amount);
-                    }
-
-                    unchecked {
-                        erc20Transfer = task.budget[++j];
-                    }
-                }
-
-                unchecked {
-                    ++i;
-                }
-            }
-            uint8 budgetCount = task.budgetCount;
-            while (j < budgetCount) {
-                escrow.transfer(erc20Transfer.tokenContract, proposer, erc20Transfer.amount);
-                
-                unchecked {
-                    erc20Transfer = task.budget[++j];
-                }
-            }
-
-            task.state = TaskState.Closed;
+            _payoutTask(task);
             unchecked {
                 --takenTasks;
                 ++successfulTasks;
             }
 
-            emit TaskCompleted(_taskId, proposer, executor.applicant);
+            emit TaskCompleted(_taskId, _msgSender(), task.applications[task.executorApplication].applicant);
         }
 
-        emit SubmissionReviewed(_taskId, _submission, _judgement, _feedback, _msgSender(), task.applications[task.executorApplication].applicant);
+        emit SubmissionReviewed(_taskId, _submissionId, _judgement, _feedback, _msgSender(), task.applications[task.executorApplication].applicant);
     }
-    
-    /// @inheritdoc ITasks
-    // function changeScope(
-    //     uint256 _taskId,
-    //     string calldata _newMetadata,
-    //     uint64 _newDeadline,
-    //     Reward[] calldata _newReward
-    // ) external returns (uint8 changeTaskRequestId) {
-        // if (_taskId >= taskCounter) {
-        //     revert TaskDoesNotExist();
-        // }
-
-        // Task storage task = tasks[_taskId];
-        // if (task.state != TaskState.Taken) {
-        //     revert TaskNotTaken();
-        // }
-        // if (task.proposer != _msgSender()) {
-        //     revert NotProposer();
-        // }
-
-        // ChangeScopeRequest storage request = task.changeScopeRequests[task.changeScopeRequestCount];
-        // request.metadata = _newMetadata;
-        // request.timestamp = uint64(block.timestamp);
-        // request.deadline = _newDeadline;
-        // request.rewardCount = uint8(_newReward.length);
-
-        // uint8 j;
-        // ERC20Transfer memory erc20Transfer = task.budget[0];
-        // uint256 needed;
-        // for (uint8 i; i < uint8(_newReward.length); ) {
-        //     unchecked {
-        //         needed += _newReward[i].amount;
-        //     }
-
-        //     request.reward[i] = _newReward[i];
-
-        //     if (_newReward[i].nextToken) {
-        //         if (needed > erc20Transfer.amount) {
-        //             // Excisting budget in escrow doesnt cover the new reward
-        //             erc20Transfer.tokenContract.transferFrom(_msgSender(), address(task.escrow), needed - erc20Transfer.amount);
-        //         }
-
-        //         needed = 0;
-        //         unchecked {
-        //             erc20Transfer = task.budget[++j];
-        //         }
-        //     }
-
-        //     unchecked {
-        //         ++i;
-        //     }
-        // }
-
-        // unchecked {
-        //     changeTaskRequestId = task.changeScopeRequestCount++;
-        // }
-        
-        // emit ChangeScopeRequested(_taskId, changeTaskRequestId, _msgSender(), _newMetadata, _newDeadline, _newReward);
-    // }
-
-    /// @inheritdoc ITasks
-    // function dropExecutor(
-    //     uint256 _taskId,
-    //     string calldata _explanation
-    // ) external returns (uint8 dropExecutorRequestId) {
-        // if (_taskId >= taskCounter) {
-        //     revert TaskDoesNotExist();
-        // }
-
-        // Task storage task = tasks[_taskId];
-        // if (task.state != TaskState.Taken) {
-        //     revert TaskNotTaken();
-        // }
-        // if (task.proposer != _msgSender()) {
-        //     revert NotProposer();
-        // }
-
-        // DropExecutorRequest storage request = task.dropExecutorRequests[task.dropExecutorRequestCount];
-        // request.explanation = _explanation;
-        // request.timestamp = uint64(block.timestamp);
-        // unchecked {
-        //     dropExecutorRequestId = task.dropExecutorRequestCount++;
-        // }
-
-        // emit DropExecutorRequested(_taskId, dropExecutorRequestId, _msgSender(), _explanation);
-    // }
 
     /// @inheritdoc ITasks
     function cancelTask(
         uint256 _taskId,
         string calldata _explanation
     ) external returns (uint8 cancelTaskRequestId) {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
+        Task storage task = _getTask(_taskId);
+        _ensureSenderIsManager(task);
 
-        Task storage task = tasks[_taskId];
-        if (task.proposer != _msgSender()) {
-            revert NotProposer();
-        }
-
-        if (task.state == TaskState.Closed) {
-            revert TaskClosed();
-        }
+        _ensureTaskNotClosed(task);
 
         if (task.state == TaskState.Open || task.deadline <= uint64(block.timestamp)) {
             // Task is open or deadline past
-            _refundProposer(task);
+            _refundCreator(task);
+            if (task.state == TaskState.Open) {
+                unchecked {
+                    --openTasks;
+                }
+            } else if (task.state == TaskState.Taken) {
+                unchecked {
+                    --takenTasks;
+                }
+            }
             emit TaskCancelled(_taskId, _msgSender(), task.state == TaskState.Open ? address(0) : task.applications[task.executorApplication].applicant);
             // Max means no request
             cancelTaskRequestId = type(uint8).max;
@@ -573,9 +326,7 @@ contract Tasks is Context, ITasks {
             // Task is taken and deadline has not past
             CancelTaskRequest storage request = task.cancelTaskRequests[task.cancelTaskRequestCount];
             request.explanation = _explanation;
-            unchecked {
-                cancelTaskRequestId = task.cancelTaskRequestCount++;
-            }
+            cancelTaskRequestId = task.cancelTaskRequestCount++;
 
             emit CancelTaskRequested(_taskId, cancelTaskRequestId, _explanation, _msgSender(), task.applications[task.executorApplication].applicant);
         }
@@ -588,87 +339,30 @@ contract Tasks is Context, ITasks {
         uint8 _requestId,
         bool _execute
     ) external {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
-
-        Task storage task = tasks[_taskId];
-        if (task.state != TaskState.Taken) {
-            revert TaskNotTaken();
-        }
-        if (task.applications[task.executorApplication].applicant != _msgSender()) {
-            revert NotExecutor();
-        }
+        Task storage task = _getTask(_taskId);
+        _ensureTaskIsTaken(task);
+        _ensureSenderIsExecutor(task);
         
-        if (_requestType == RequestType.ChangeScope) {
-            // if (_requestId >= task.changeScopeRequestCount) {
-            //     revert RequestDoesNotExist();
-            // }
-
-            // ChangeScopeRequest storage request = task.changeScopeRequests[_requestId];
-            // if (request.accepted != 0) {
-            //     revert RequestAlreadyAccepted();
-            // }
-
-            // task.metadata = request.metadata;
-            // task.deadline = request.deadline;
-            // task.changed = true;
-            // Application storage executor = task.applications[task.executorApplication];
-            // uint8 rewardCount = request.rewardCount;
-            // executor.rewardCount = rewardCount;
-            // for (uint8 i; i < rewardCount; ) {
-            //     executor.reward[i] = request.reward[i];
-
-            //     unchecked {
-            //         ++i;
-            //     }
-            // }
-
-            // request.accepted = uint64(block.timestamp);
-        } else if (_requestType == RequestType.DropExecutor) {
-            // if (_requestId >= task.dropExecutorRequestCount) {
-            //     revert RequestDoesNotExist();
-            // }
+        if (_requestType == RequestType.CancelTask) {
+            _ensureCancelTaskRequestExists(task, _requestId);
             
-            // DropExecutorRequest storage request = task.dropExecutorRequests[_requestId];
-            // if (request.accepted != 0) {
-            //     revert RequestAlreadyAccepted();
-            // }
-
-            // task.submissionCount = 0;
-            // if (task.changed) {
-            //     task.applicationCount = 0;
-            //     task.changed = false; // hmm maybe questionable, would be better in case the new executor is dropped again and the task is not changed again, but does not make sense ux wise
-            // }
-
-            // task.state = TaskState.Open;
-            // unchecked {
-            //     --takenTasks;
-            //     ++openTasks;
-            // }
-
-            // request.accepted = uint64(block.timestamp);
-        } else { // if (_requestType == RequestType.CancelTask) {
-            if (_requestId >= task.cancelTaskRequestCount) {
-                revert RequestDoesNotExist();
-            }
-            
-            CancelTaskRequest storage request = task.cancelTaskRequests[_requestId];
-            if (request.accepted) {
-                revert RequestAlreadyAccepted();
-            }
+            CancelTaskRequest storage cancelTaskRequest = task.cancelTaskRequests[_requestId];
+            _ensureRequestNotAccepted(cancelTaskRequest.request);
 
             if (_execute) {
-                // use executeRequest here? (more gas due to all the checks...)
-                _refundProposer(task);
-                emit TaskCancelled(_taskId, task.proposer, _msgSender());
-                request.executed = true;
+                // use executeRequest in the body instead? (more gas due to all the checks, but less code duplication)
+                _refundCreator(task);
+                unchecked {
+                    --takenTasks;
+                }
+                emit TaskCancelled(_taskId, task.manager, _msgSender());
+                cancelTaskRequest.request.executed = true;
             }
 
-            request.accepted = true;
+            cancelTaskRequest.request.accepted = true;
         }
 
-        emit RequestAccepted(_taskId, _requestType, _requestId, task.proposer, _msgSender());
+        emit RequestAccepted(_taskId, _requestType, _requestId, task.manager, _msgSender());
     }
 
     /// @inheritdoc ITasks
@@ -677,82 +371,25 @@ contract Tasks is Context, ITasks {
         RequestType _requestType,
         uint8 _requestId
     ) external {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
-
-        Task storage task = tasks[_taskId];
-        if (task.state != TaskState.Taken) {
-            revert TaskNotTaken();
-        }
+        Task storage task = _getTask(_taskId);
+        _ensureTaskIsTaken(task);
         
-        if (_requestType == RequestType.ChangeScope) {
-            // if (_requestId >= task.changeScopeRequestCount) {
-            //     revert RequestDoesNotExist();
-            // }
-
-            // ChangeScopeRequest storage request = task.changeScopeRequests[_requestId];
-            // if (request.accepted != 0) {
-            //     revert RequestAlreadyAccepted();
-            // }
-
-            // task.metadata = request.metadata;
-            // task.deadline = request.deadline;
-            // task.changed = true;
-            // Application storage executor = task.applications[task.executorApplication];
-            // uint8 rewardCount = request.rewardCount;
-            // executor.rewardCount = rewardCount;
-            // for (uint8 i; i < rewardCount; ) {
-            //     executor.reward[i] = request.reward[i];
-
-            //     unchecked {
-            //         ++i;
-            //     }
-            // }
-
-            // request.accepted = uint64(block.timestamp);
-        } else if (_requestType == RequestType.DropExecutor) {
-            // if (_requestId >= task.dropExecutorRequestCount) {
-            //     revert RequestDoesNotExist();
-            // }
+        if (_requestType == RequestType.CancelTask) {
+            _ensureCancelTaskRequestExists(task, _requestId);
             
-            // DropExecutorRequest storage request = task.dropExecutorRequests[_requestId];
-            // if (request.accepted != 0) {
-            //     revert RequestAlreadyAccepted();
-            // }
+            CancelTaskRequest storage cancelTaskRequest = task.cancelTaskRequests[_requestId];
+            _ensureRequestAccepted(cancelTaskRequest.request);
+            _ensureRequestNotExecuted(cancelTaskRequest.request);
 
-            // task.submissionCount = 0;
-            // if (task.changed) {
-            //     task.applicationCount = 0;
-            //     task.changed = false; // hmm maybe questionable, would be better in case the new executor is dropped again and the task is not changed again, but does not make sense ux wise
-            // }
-
-            // task.state = TaskState.Open;
-            // unchecked {
-            //     --takenTasks;
-            //     ++openTasks;
-            // }
-
-            // request.accepted = uint64(block.timestamp);
-        } else { // if (_requestType == RequestType.CancelTask) {
-            if (_requestId >= task.cancelTaskRequestCount) {
-                revert RequestDoesNotExist();
+            _refundCreator(task);
+            unchecked {
+                --takenTasks;
             }
-            
-            CancelTaskRequest storage request = task.cancelTaskRequests[_requestId];
-            if (!request.accepted) {
-                revert RequestNotAccepted();
-            }
-            if (request.executed) {
-                revert RequestAlreadyExecuted();
-            }
-
-            _refundProposer(task);
-            emit TaskCancelled(_taskId, task.proposer, task.applications[task.executorApplication].applicant);
-            request.executed = true;
+            emit TaskCancelled(_taskId, task.manager, task.applications[task.executorApplication].applicant);
+            cancelTaskRequest.request.executed = true;
         }
 
-        emit RequestExecuted(_taskId, _requestType, _requestId, _msgSender(), task.proposer, task.applications[task.executorApplication].applicant);
+        emit RequestExecuted(_taskId, _requestType, _requestId, _msgSender(), task.manager, task.applications[task.executorApplication].applicant);
     }
 
     /// @inheritdoc ITasks
@@ -760,18 +397,10 @@ contract Tasks is Context, ITasks {
         uint256 _taskId,
         uint64 _extension
     ) external {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
+        Task storage task = _getTask(_taskId);
+        _ensureSenderIsManager(task);
 
-        Task storage task = tasks[_taskId];
-        if (task.proposer != _msgSender()) {
-            revert NotProposer();
-        }
-
-        if (task.state == TaskState.Closed) {
-            revert TaskClosed();
-        }
+        _ensureTaskNotClosed(task);
 
         task.deadline += _extension;
 
@@ -783,20 +412,12 @@ contract Tasks is Context, ITasks {
         uint256 _taskId,
         uint96[] calldata _increase
     ) external {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
+        Task storage task = _getTask(_taskId);
+        _ensureSenderIsManager(task);
 
-        Task storage task = tasks[_taskId];
-        if (task.proposer != _msgSender()) {
-            revert NotProposer();
-        }
+        _ensureTaskIsOpen(task);
 
-        if (task.state != TaskState.Open) {
-            revert TaskNotOpen();
-        }
-
-        for (uint8 i; i < _increase.length; ) {
+        for (uint8 i; i < uint8(_increase.length); ) {
             ERC20Transfer storage transfer = task.budget[i];
             transfer.tokenContract.transferFrom(_msgSender(), address(task.escrow), _increase[i]);
             transfer.amount += _increase[i];
@@ -814,112 +435,20 @@ contract Tasks is Context, ITasks {
         uint256 _taskId,
         string calldata _newMetadata
     ) external {
-        if (_taskId >= taskCounter) {
-            revert TaskDoesNotExist();
-        }
+        Task storage task = _getTask(_taskId);
+        _ensureSenderIsManager(task);
 
-        Task storage task = tasks[_taskId];
-        if (task.proposer != _msgSender()) {
-            revert NotProposer();
-        }
-
-        if (task.state != TaskState.Open) {
-            revert TaskNotOpen();
-        }
+        _ensureTaskIsOpen(task);
 
         task.metadata = _newMetadata;
         emit MetadataEditted(_taskId, _newMetadata, _msgSender());
     }
 
-    function _increaseBudgetToReward(
-        Task storage task,
-        uint8 _length,
-        mapping(uint8 => Reward) storage _reward
-    ) internal {
-        uint8 j;
-        ERC20Transfer memory erc20Transfer = task.budget[0];
-        uint256 needed;
-        for (uint8 i; i < _length; ) {
-            unchecked {
-                needed += _reward[i].amount;
-            }
-
-            if (_reward[i].nextToken) {
-                if (needed > erc20Transfer.amount) {
-                    // Existing budget in escrow doesnt cover the n reward
-                    erc20Transfer.tokenContract.transferFrom(_msgSender(), address(task.escrow), needed - erc20Transfer.amount);
-                }
-
-                needed = 0;
-                unchecked {
-                    erc20Transfer = task.budget[++j];
-                }
-            }
-
-            unchecked {
-                ++i;
-            }
-        }
-    }
-
-    function _setRewardBellowBudget(
-        Task storage task,
-        Application storage application, 
-        Reward[] calldata _reward
-    ) internal {
-        application.rewardCount = uint8(_reward.length);
-
-        uint8 j;
-        ERC20Transfer memory erc20Transfer = task.budget[0];
-        uint256 alreadyReserved;
-        for (uint8 i; i < uint8(_reward.length); ) {
-            // erc20Transfer.amount -= _reward[i].amount (underflow error, but that is not a nice custom once)
-            unchecked {
-                alreadyReserved += _reward[i].amount;
-            }
-            if (alreadyReserved > erc20Transfer.amount) {
-                revert RewardAboveBudget(i);
-            }
-
-            application.reward[i] = _reward[i];
-
-            if (_reward[i].nextToken) {
-                alreadyReserved = 0;
-                unchecked {
-                    erc20Transfer = task.budget[++j];
-                }
-            }
-
-            unchecked {
-                ++i;
-            }
-        }
-    }
-    
-    function _refundProposer(Task storage task) internal {
-        uint8 budgetCount = task.budgetCount;
-        address proposer = task.proposer;
-        Escrow escrow = task.escrow;
-        for (uint8 i; i < budgetCount; ) {
-            ERC20Transfer memory erc20Transfer = task.budget[i];
-            escrow.transfer(erc20Transfer.tokenContract, proposer, erc20Transfer.amount);
-
-            unchecked {
-                ++i;
-            }
+    function _getTask(uint256 _taskId) internal view returns (Task storage task) {
+        if (_taskId >= taskCounter) {
+            revert TaskDoesNotExist();
         }
 
-        if (task.state == TaskState.Open) {
-            unchecked {
-                --openTasks;
-            }
-        } else if (task.state == TaskState.Taken) {
-            unchecked {
-                --takenTasks;
-            }
-        }
-        task.state = TaskState.Closed;
-
-        // Possibly could do some assembly trickery here to get the index of the task and emit TaskCancelled
+        task = tasks[_taskId];
     }
 }

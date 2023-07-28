@@ -1,5 +1,4 @@
-import { ethers } from "hardhat";
-import { getVar } from "../../../utils/globalVars";
+import { deployments, ethers } from "hardhat";
 import { BigNumberish } from "ethers";
 
 // TODO allow to also override voting settings
@@ -32,7 +31,7 @@ export async function getTokenListGovernanceSettings(nftCollection : string, tok
                 release: 1,
                 build: 1,
             },
-            pluginSetupRepo: await getVar("TokenListGovernanceRepo"),
+            pluginSetupRepo: (await deployments.get("TokenListGovernanceRepo")).address,
         },
         data: tokenListGovernanceBytes,
     };
@@ -58,7 +57,7 @@ export async function geTaskDraftsSettings(tasks : string, governancePlugin : st
                 release: 1,
                 build: 1,
             },
-            pluginSetupRepo: await getVar("TaskDraftsRepo"),
+            pluginSetupRepo: (await deployments.get("TaskDraftsRepo")).address,
         },
         data: taskDraftsBytes,
     };

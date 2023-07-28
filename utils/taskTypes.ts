@@ -24,14 +24,13 @@ export interface Task {
     metadata: TaskMetadata;
     deadline: Date;
     budget: BudgetItem[];
-    proposer: string;
+    creator: string;
+    manager: string;
     state: TaskState;
     escrow: string;
     applications: Application[];
     executorApplication: number;
     submissions: Submission[];
-    // changeScopeRequests: ChangeScopeRequest[];
-    // dropExecutorRequests: DropExecutorRequest[];
     cancelTaskRequests: CancelTaskRequest[];
 }
 
@@ -71,28 +70,16 @@ export interface Submission {
     feedback: SubmissionJudgementMetadata;
 }
 
-export interface ChangeScopeRequest {
-    // metadata: TaskMetadata;
+export enum RequestType { CancelTask }; 
+export interface Request {
     accepted: boolean;
-    deadline: Date;
-    reward: Reward[];
-}
-
-export interface DropExecutorRequestMetadata {
-    explanation: string;
-}
-export interface DropExecutorRequest {
-    // explanation: DropExecutorRequestMetadata;
-    accepted: boolean;
+    executed: boolean;
 }
 
 export interface CancelTaskRequestMetadata {
     explanation: string;
 }
 export interface CancelTaskRequest {
+    request: Request;
     explanation: CancelTaskRequestMetadata;
-    accepted: boolean;
-    executed: boolean;
 }
-
-export enum RequestType { ChangeScope, DropExecutor, CancelTask }; 

@@ -6,7 +6,7 @@ import { createDAO } from "../utils/DAODeployer";
 import { geTaskDraftsSettings, getTokenListGovernanceSettings } from "../utils/PluginSettings";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-    if (!await getBool("NewTokenListGovernance") && !await getBool("NewDraftsSetup") && !await getBool("NewNFT") && false) {
+    if (!await getBool("NewTokenListGovernance") && !await getBool("NewDraftsSetup") && !await getBool("NewNFT")) {
         return;
     }
 
