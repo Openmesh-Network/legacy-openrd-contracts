@@ -8,43 +8,22 @@ import { SubmissionJudgement, SubmissionJudgementMetadata, TaskState } from "../
 
 describe("Review Submission", function () {
   // Check if variables are set
-  // it("should have the correct feedback", async function () {
-  //   const task = await loadFixture(createTakenTaskWithSubmissionFixture);
-  //   const feedback : SubmissionJudgementMetadata = {
-  //     feedback: "LGTM!",
-  //   };
-  //   await reviewSubmission({
-  //     tasks: task.TasksProposer,
-  //     taskId: task.taskId,
-  //     submissionId: BigInt(0),
-  //     judgement: SubmissionJudgement.Accepted,
-  //     judgementMetadata: feedback,
-  //   });
-  //   const taskInfo = await getTask({ tasks: task.TasksProposer, taskId: task.taskId });
-  //   expect(taskInfo.submissions).to.be.lengthOf(1);
-  //   expect(taskInfo.submissions[0].feedback).to.be.deep.equal(feedback);
-  // });
-
-  // it("should have the correct timestamp", async function () {
-  //   const task = await loadFixture(createTakenTaskWithSubmissionFixture);
-  //   const tx = await reviewSubmission({
-  //     tasks: task.TasksProposer,
-  //     taskId: task.taskId,
-  //     submissionId: BigInt(0),
-  //     judgement: SubmissionJudgement.Accepted,
-  //   });
-  //   const receipt = await tx.wait();    
-  //   if (!receipt) {
-  //     throw new Error();
-  // }
-  //   const taskInfo = await getTask({ tasks: task.TasksProposer, taskId: task.taskId });
-  //   const confirmationBlock = await ethers.provider.getBlock(receipt.blockNumber);
-  //   if (!confirmationBlock) {
-  //       throw new Error();
-  //   }
-  //   expect(taskInfo.submissions).to.be.lengthOf(1);
-  //   expect(ToBlockchainDate(taskInfo.submissions[0].judgementTimestamp)).to.be.equal(confirmationBlock.timestamp);
-  // });
+  it("should have the correct feedback", async function () {
+    const task = await loadFixture(createTakenTaskWithSubmissionFixture);
+    const feedback : SubmissionJudgementMetadata = {
+      feedback: "LGTM!",
+    };
+    await reviewSubmission({
+      tasks: task.TasksProposer,
+      taskId: task.taskId,
+      submissionId: BigInt(0),
+      judgement: SubmissionJudgement.Accepted,
+      judgementMetadata: feedback,
+    });
+    const taskInfo = await getTask({ tasks: task.TasksProposer, taskId: task.taskId });
+    expect(taskInfo.submissions).to.be.lengthOf(1);
+    expect(taskInfo.submissions[0].feedback).to.be.deep.equal(feedback);
+  });
 
   it("should have transfered the reward after accept", async function () {
     const task = await loadFixture(createBudgetTaskWithExecutorAndSubmissionFixture);
@@ -154,12 +133,11 @@ describe("Review Submission", function () {
       judgement: SubmissionJudgement.Accepted,
     });
     const taskInfo = await getTask({ tasks: task.TasksProposer, taskId: task.taskId });
-    // expect(taskInfo.metadata).to.be.deep.equal(taskInfoBefore.metadata);
+    expect(taskInfo.metadata).to.be.deep.equal(taskInfoBefore.metadata);
     expect(ToBlockchainDate(taskInfo.deadline)).to.be.equal(ToBlockchainDate(taskInfoBefore.deadline));
     expect(taskInfo.budget).to.be.deep.equal(taskInfoBefore.budget);
     expect(taskInfo.escrow).to.be.equal(taskInfoBefore.escrow);
     expect(taskInfo.proposer).to.be.equal(taskInfoBefore.proposer);
-    // expect(ToBlockchainDate(taskInfo.creationTimestamp)).to.be.equal(ToBlockchainDate(taskInfoBefore.creationTimestamp));
   });
   
   it("should not have changed applications", async function () {
@@ -174,8 +152,7 @@ describe("Review Submission", function () {
     const taskInfo = await getTask({ tasks: task.TasksProposer, taskId: task.taskId });
     expect(taskInfo.applications.length).to.be.equal(taskInfoBefore.applications.length);
     for (let i = 0; i < taskInfo.applications.length; i++) {
-      // expect(taskInfo.applications[i].metadata).to.be.deep.equal(taskInfoBefore.applications[i].metadata);
-      // expect(ToBlockchainDate(taskInfo.applications[i].timestamp)).to.be.equal(ToBlockchainDate(taskInfoBefore.applications[i].timestamp));
+      expect(taskInfo.applications[i].metadata).to.be.deep.equal(taskInfoBefore.applications[i].metadata);
       expect(taskInfo.applications[i].applicant).to.be.equal(taskInfoBefore.applications[i].applicant);
       expect(taskInfo.applications[i].reward).to.be.deep.equal(taskInfoBefore.applications[i].reward);
     }
@@ -196,21 +173,20 @@ describe("Review Submission", function () {
     }
   });
   
-  // it("should not have changed submissions", async function () {
-  //   const task = await loadFixture(createTakenTaskWithSubmissionFixture);
-  //   const taskInfoBefore = await getTask({ tasks: task.TasksProposer, taskId: task.taskId });
-  //   await reviewSubmission({
-  //     tasks: task.TasksProposer,
-  //     taskId: task.taskId,
-  //     submissionId: BigInt(0),
-  //     judgement: SubmissionJudgement.Accepted,
-  //   });
-  //   const taskInfo = await getTask({ tasks: task.TasksProposer, taskId: task.taskId });
-  //   for (let i = 0; i < taskInfo.submissions.length; i++) {
-  //     expect(taskInfo.submissions[i].metadata).to.be.deep.equal(taskInfoBefore.submissions[i].metadata);
-  //     expect(ToBlockchainDate(taskInfo.submissions[i].timestamp)).to.be.equal(ToBlockchainDate(taskInfoBefore.submissions[i].timestamp));
-  //   }
-  // });
+  it("should not have changed submissions", async function () {
+    const task = await loadFixture(createTakenTaskWithSubmissionFixture);
+    const taskInfoBefore = await getTask({ tasks: task.TasksProposer, taskId: task.taskId });
+    await reviewSubmission({
+      tasks: task.TasksProposer,
+      taskId: task.taskId,
+      submissionId: BigInt(0),
+      judgement: SubmissionJudgement.Accepted,
+    });
+    const taskInfo = await getTask({ tasks: task.TasksProposer, taskId: task.taskId });
+    for (let i = 0; i < taskInfo.submissions.length; i++) {
+      expect(taskInfo.submissions[i].metadata).to.be.deep.equal(taskInfoBefore.submissions[i].metadata);
+    }
+  });
   
   //Check for exploits
   it("should not be allowed on a task id that does not exist", async function () {

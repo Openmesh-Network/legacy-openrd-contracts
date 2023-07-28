@@ -21,16 +21,14 @@ export interface PreapprovedApplication {
 
 export enum TaskState { Open, Taken, Closed }
 export interface Task {
-    // metadata: TaskMetadata;
+    metadata: TaskMetadata;
     deadline: Date;
     budget: BudgetItem[];
     proposer: string;
-    // creationTimestamp: Date;
     state: TaskState;
     escrow: string;
     applications: Application[];
     executorApplication: number;
-    // executorConfirmationTimestamp: Date;
     submissions: Submission[];
     // changeScopeRequests: ChangeScopeRequest[];
     // dropExecutorRequests: DropExecutorRequest[];
@@ -50,8 +48,7 @@ export interface ApplicationMetadata {
 }
 
 export interface Application {
-    // metadata: ApplicationMetadata;
-    // timestamp: Date;
+    metadata: ApplicationMetadata;
     applicant: string;
     accepted: boolean;
     reward: Reward[];
@@ -69,17 +66,13 @@ export interface SubmissionJudgementMetadata {
 
 export enum SubmissionJudgement { None, Accepted, Rejected }
 export interface Submission {
-    // metadata: SubmissionMetadata;
-    // timestamp: Date;
+    metadata: SubmissionMetadata;
     judgement: SubmissionJudgement;
-    // judgementTimestamp: Date;
-    // feedback: SubmissionJudgementMetadata;
+    feedback: SubmissionJudgementMetadata;
 }
 
 export interface ChangeScopeRequest {
     // metadata: TaskMetadata;
-    // timestamp: Date;
-    // accepted: Date | null;
     accepted: boolean;
     deadline: Date;
     reward: Reward[];
@@ -90,8 +83,6 @@ export interface DropExecutorRequestMetadata {
 }
 export interface DropExecutorRequest {
     // explanation: DropExecutorRequestMetadata;
-    // timestamp: Date;
-    // accepted: Date | null;
     accepted: boolean;
 }
 
@@ -99,9 +90,7 @@ export interface CancelTaskRequestMetadata {
     explanation: string;
 }
 export interface CancelTaskRequest {
-    // explanation: CancelTaskRequestMetadata;
-    // timestamp: Date;
-    // accepted: Date | null;
+    explanation: CancelTaskRequestMetadata;
     accepted: boolean;
     executed: boolean;
 }

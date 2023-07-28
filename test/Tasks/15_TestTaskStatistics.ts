@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { getTask } from "../../utils/taskHelper";
 import { createTaskFixture } from "./00_TestTasksFixtures";
 import { TestSetup } from "../Helpers/TestSetup";
 import { ethers } from "hardhat";

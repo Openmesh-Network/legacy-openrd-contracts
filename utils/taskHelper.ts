@@ -52,16 +52,14 @@ export interface GetTaskSettings {
 export async function getTask(settings: GetTaskSettings) : Promise<Task> {
     const rawTask = await settings.tasks.getTask(settings.taskId);
     return {
-        // metadata: await getFromIpfs(rawTask.metadata),
+        metadata: await getFromIpfs(rawTask.metadata),
         deadline: FromBlockchainDate(rawTask.deadline),
         budget: rawTask.budget,
         proposer: rawTask.proposer,
-        // creationTimestamp: FromBlockchainDate(rawTask.creationTimestamp),
         state: Number(rawTask.state),
         escrow: rawTask.escrow,
         applications: await asyncMap(rawTask.applications, toApplication),
         executorApplication: Number(rawTask.executorApplication),
-        // executorConfirmationTimestamp: FromBlockchainDate(rawTask.executorConfirmationTimestamp),
         submissions: await asyncMap(rawTask.submissions, toSubmission),
         // changeScopeRequests: await asyncMap(rawTask.changeScopeRequests, toChangeScopeRequest),
         // dropExecutorRequests: await asyncMap(rawTask.dropExecutorRequests, toDropExecutorRequest),
@@ -71,8 +69,7 @@ export async function getTask(settings: GetTaskSettings) : Promise<Task> {
 
 export async function toApplication(application : ITasks.OffChainApplicationStructOutput) : Promise<Application> {
     return {
-        // metadata: await getFromIpfs(application.metadata),
-        // timestamp: FromBlockchainDate(application.timestamp),
+        metadata: await getFromIpfs(application.metadata),
         applicant: application.applicant,
         accepted: application.accepted,
         reward: application.reward,
@@ -81,11 +78,9 @@ export async function toApplication(application : ITasks.OffChainApplicationStru
 
 export async function toSubmission(submission : ITasks.SubmissionStructOutput) : Promise<Submission> {
     return {
-        // metadata: await getFromIpfs(submission.metadata),
-        // timestamp: FromBlockchainDate(submission.timestamp),
+        metadata: await getFromIpfs(submission.metadata),
         judgement: Number(submission.judgement),
-        // judgementTimestamp: FromBlockchainDate(submission.judgementTimestamp),
-        // feedback: await getFromIpfs(submission.feedback),
+        feedback: await getFromIpfs(submission.feedback),
     };
 }
 
@@ -111,9 +106,7 @@ export async function toSubmission(submission : ITasks.SubmissionStructOutput) :
 
 export async function toCancelTaskRequest(request : ITasks.CancelTaskRequestStructOutput) : Promise<CancelTaskRequest> {
     return {
-        // explanation: await getFromIpfs(request.explanation),
-        // timestamp: FromBlockchainDate(request.timestamp),
-        // accepted: request.accepted == BigInt(0) ? null : FromBlockchainDate(request.accepted),
+        explanation: await getFromIpfs(request.explanation),
         accepted: request.accepted,
         executed: request.executed,
     };

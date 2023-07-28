@@ -1,10 +1,11 @@
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { acceptApplications, getTask } from "../../utils/taskHelper";
+import { acceptApplications, applyForTask, getTask } from "../../utils/taskHelper";
 import { ToBlockchainDate } from "../../utils/timeUnits";
-import { createApplicationsTaskFixture, createTakenTaskFixture, createTakenTaskWithAcceptedSubmissionFixture } from "./00_TestTasksFixtures";
+import { createApplicationsTaskFixture, createBudgetTaskFixture, createTakenTaskFixture, createTakenTaskWithAcceptedSubmissionFixture } from "./00_TestTasksFixtures";
 import { TaskState } from "../../utils/taskTypes";
 import { ethers, getUnnamedAccounts } from "hardhat";
+import { MockERC20 } from "../../typechain-types";
 
 describe("Accept Applications", function () {
   // Check if variables are set
@@ -60,12 +61,11 @@ describe("Accept Applications", function () {
       applications: acceptedApplications.map(BigInt),
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
-    // expect(taskInfo.metadata).to.be.deep.equal(taskInfoBefore.metadata);
+    expect(taskInfo.metadata).to.be.deep.equal(taskInfoBefore.metadata);
     expect(ToBlockchainDate(taskInfo.deadline)).to.be.equal(ToBlockchainDate(taskInfoBefore.deadline));
     expect(taskInfo.budget).to.be.deep.equal(taskInfoBefore.budget);
     expect(taskInfo.escrow).to.be.equal(taskInfoBefore.escrow);
     expect(taskInfo.proposer).to.be.equal(taskInfoBefore.proposer);
-    // expect(ToBlockchainDate(taskInfo.creationTimestamp)).to.be.equal(ToBlockchainDate(taskInfoBefore.creationTimestamp));
   });
   
   it("should not have changed applications", async function () {
@@ -80,8 +80,7 @@ describe("Accept Applications", function () {
     const taskInfo = await getTask({ tasks: task.TasksProposer, taskId: task.taskId });
     expect(taskInfo.applications.length).to.be.equal(taskInfoBefore.applications.length);
     for (let i = 0; i < taskInfo.applications.length; i++) {
-      // expect(taskInfo.applications[i].metadata).to.be.deep.equal(taskInfoBefore.applications[i].metadata);
-      // expect(ToBlockchainDate(taskInfo.applications[i].timestamp)).to.be.equal(ToBlockchainDate(taskInfoBefore.applications[i].timestamp));
+      expect(taskInfo.applications[i].metadata).to.be.deep.equal(taskInfoBefore.applications[i].metadata);
       expect(taskInfo.applications[i].applicant).to.be.equal(taskInfoBefore.applications[i].applicant);
       expect(taskInfo.applications[i].reward).to.be.deep.equal(taskInfoBefore.applications[i].reward);
     }
@@ -98,18 +97,6 @@ describe("Accept Applications", function () {
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.executorApplication).to.be.equal(0);
   });
-
-  // it("should have no executor confirmation", async function () {
-  //   const task = await loadFixture(createApplicationsTaskFixture);
-  //   const acceptedApplications = task.applicants.map((_, i) => i).filter((_, i) => i % 2 == 0);
-  //   await acceptApplications({
-  //     tasks: task.TasksProposer,
-  //     taskId: task.taskId,
-  //     applications: acceptedApplications.map(BigInt),
-  //   });
-  //   const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
-  //   expect(ToBlockchainDate(taskInfo.executorConfirmationTimestamp)).to.be.equal(0);
-  // });
 
   it("should have no submissions", async function () {
     const task = await loadFixture(createApplicationsTaskFixture);
@@ -187,5 +174,25 @@ describe("Accept Applications", function () {
       applications: acceptedApplications.map(BigInt),
     });
     await expect(tx).to.be.revertedWithCustomError(tasks, "NotProposer");
+  });
+
+  it("should increase if reward more than budget", async function () {
+    const task = await loadFixture(createBudgetTaskFixture);
+    let reward = task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; });
+    reward[0].amount += BigInt(1);
+    const ERC20 = await ethers.getContractAt("MockERC20", task.budget[0].tokenContract, await ethers.getSigner(task.proposer)) as any as MockERC20;
+    await ERC20.increaseBalance(task.proposer, BigInt(1));
+    await ERC20.approve(await task.TasksProposer.getAddress(), BigInt(1));
+    await applyForTask({
+      tasks: task.TasksExecutor,
+      taskId: task.taskId,
+      reward: reward,
+    });
+    await acceptApplications({
+      tasks: task.TasksProposer,
+      taskId: task.taskId,
+      applications: [BigInt(0)],
+    });
+    expect(await ERC20.balanceOf(task.proposer)).to.be.be.equal(BigInt(0));
   });
 });

@@ -26,3 +26,6 @@ export async function createDAO(deployer : string, subdomain : string, pluginSet
 
     return { daoAddress, pluginAddresses };
 }
+
+// exports dummy function for hardhat-deploy. Otherwise we would have to move this file
+export default function () {}

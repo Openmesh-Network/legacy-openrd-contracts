@@ -18,7 +18,7 @@ describe("Cancel task", function () {
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.cancelTaskRequests).to.be.lengthOf(1);
-    //expect(taskInfo.cancelTaskRequests[0].explanation).to.be.deep.equal(metadata);
+    expect(taskInfo.cancelTaskRequests[0].explanation).to.be.deep.equal(metadata);
     expect(taskInfo.cancelTaskRequests[0].accepted).to.be.false;
     expect(taskInfo.state).to.be.equal(TaskState.Taken);
     await acceptRequest({

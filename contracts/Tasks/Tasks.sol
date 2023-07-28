@@ -43,6 +43,7 @@ contract Tasks is Context, ITasks {
         }
 
         Task storage task = tasks[_taskId];
+        offchainTask.metadata = task.metadata;
         offchainTask.deadline = task.deadline;
         offchainTask.executorApplication = task.executorApplication;
         offchainTask.proposer = task.proposer;
@@ -60,6 +61,7 @@ contract Tasks is Context, ITasks {
         offchainTask.applications = new OffChainApplication[](task.applicationCount);
         for (uint8 i; i < offchainTask.applications.length; ) {
             Application storage application = task.applications[i];
+            offchainTask.applications[i].metadata = application.metadata;
             offchainTask.applications[i].applicant = application.applicant;
             offchainTask.applications[i].accepted = application.accepted;
             offchainTask.applications[i].reward = new Reward[](application.rewardCount);
@@ -210,6 +212,7 @@ contract Tasks is Context, ITasks {
         }
 
         Task storage task = tasks[taskId];
+        task.metadata = _metadata;
         task.deadline = _deadline;
         task.budgetCount = uint8(_budget.length);
         Escrow escrow = Escrow(Clones.clone(escrowImplementation));
@@ -237,7 +240,7 @@ contract Tasks is Context, ITasks {
                 Application storage application = task.applications[i];
                 application.applicant = _preapprove[i].applicant;
                 application.accepted = true;
-                _setReward(task, application, _preapprove[i].reward);
+                _setRewardBellowBudget(task, application, _preapprove[i].reward);
 
                 unchecked {
                     ++i;
@@ -264,8 +267,16 @@ contract Tasks is Context, ITasks {
         }
 
         Application storage application = task.applications[task.applicationCount];
+        application.metadata = _metadata;
         application.applicant = _msgSender();
-        _setReward(task, application, _reward);
+        application.rewardCount = uint8(_reward.length);
+        for (uint8 i; i < uint8(_reward.length); ) {
+            application.reward[i] = _reward[i];
+            unchecked {
+                ++i;
+            }
+        }
+
         unchecked {
             applicationId = task.applicationCount++;
         }
@@ -295,8 +306,10 @@ contract Tasks is Context, ITasks {
                 revert ApplicationDoesNotExist();
             }
             
-            task.applications[_applications[i]].accepted = true;
-            emit ApplicationAccepted(_taskId, uint16(i), _msgSender(), task.applications[_applications[i]].applicant);
+            Application storage application_ = task.applications[_applications[i]];
+            application_.accepted = true;
+            _increaseBudgetToReward(task, application_.rewardCount, application_.reward);
+            emit ApplicationAccepted(_taskId, uint16(i), _msgSender(), application_.applicant);
             
             unchecked {
                 ++i;
@@ -357,6 +370,8 @@ contract Tasks is Context, ITasks {
             revert NotExecutor();
         }
 
+        Submission storage submission_ = task.submissions[task.submissionCount];
+        submission_.metadata = _metadata;
         unchecked { 
             submissionId = task.submissionCount++;
         }
@@ -391,6 +406,7 @@ contract Tasks is Context, ITasks {
             revert SubmissionAlreadyJudged();
         }
         submission_.judgement = _judgement;
+        submission_.feedback = _feedback;
 
         if (_judgement == SubmissionJudgement.Accepted) {
             Application storage executor = task.applications[task.executorApplication];
@@ -549,17 +565,19 @@ contract Tasks is Context, ITasks {
         if (task.state == TaskState.Open || task.deadline <= uint64(block.timestamp)) {
             // Task is open or deadline past
             _refundProposer(task);
-            emit TaskCancelled(_taskId);
+            emit TaskCancelled(_taskId, _msgSender(), task.state == TaskState.Open ? address(0) : task.applications[task.executorApplication].applicant);
             // Max means no request
             cancelTaskRequestId = type(uint8).max;
         }
         else {
             // Task is taken and deadline has not past
+            CancelTaskRequest storage request = task.cancelTaskRequests[task.cancelTaskRequestCount];
+            request.explanation = _explanation;
             unchecked {
                 cancelTaskRequestId = task.cancelTaskRequestCount++;
             }
 
-            emit CancelTaskRequested(_taskId, cancelTaskRequestId, _explanation);
+            emit CancelTaskRequested(_taskId, cancelTaskRequestId, _explanation, _msgSender(), task.applications[task.executorApplication].applicant);
         }
     }
 
@@ -643,14 +661,14 @@ contract Tasks is Context, ITasks {
             if (_execute) {
                 // use executeRequest here? (more gas due to all the checks...)
                 _refundProposer(task);
-                emit TaskCancelled(_taskId);
+                emit TaskCancelled(_taskId, task.proposer, _msgSender());
                 request.executed = true;
             }
 
             request.accepted = true;
         }
 
-        emit RequestAccepted(_taskId, _requestType, _requestId);
+        emit RequestAccepted(_taskId, _requestType, _requestId, task.proposer, _msgSender());
     }
 
     /// @inheritdoc ITasks
@@ -730,14 +748,121 @@ contract Tasks is Context, ITasks {
             }
 
             _refundProposer(task);
-            emit TaskCancelled(_taskId);
+            emit TaskCancelled(_taskId, task.proposer, task.applications[task.executorApplication].applicant);
             request.executed = true;
         }
 
-        emit RequestExecuted(_taskId, _requestType, _requestId, _msgSender());
+        emit RequestExecuted(_taskId, _requestType, _requestId, _msgSender(), task.proposer, task.applications[task.executorApplication].applicant);
     }
 
-    function _setReward(
+    /// @inheritdoc ITasks
+    function extendDeadline(
+        uint256 _taskId,
+        uint64 _extension
+    ) external {
+        if (_taskId >= taskCounter) {
+            revert TaskDoesNotExist();
+        }
+
+        Task storage task = tasks[_taskId];
+        if (task.proposer != _msgSender()) {
+            revert NotProposer();
+        }
+
+        if (task.state == TaskState.Closed) {
+            revert TaskClosed();
+        }
+
+        task.deadline += _extension;
+
+        emit DeadlineExtended(_taskId, _extension, _msgSender(), task.state == TaskState.Open ? address(0) : task.applications[task.executorApplication].applicant);
+    }
+
+    /// @inheritdoc ITasks
+    function increaseBudget(
+        uint256 _taskId,
+        uint96[] calldata _increase
+    ) external {
+        if (_taskId >= taskCounter) {
+            revert TaskDoesNotExist();
+        }
+
+        Task storage task = tasks[_taskId];
+        if (task.proposer != _msgSender()) {
+            revert NotProposer();
+        }
+
+        if (task.state != TaskState.Open) {
+            revert TaskNotOpen();
+        }
+
+        for (uint8 i; i < _increase.length; ) {
+            ERC20Transfer storage transfer = task.budget[i];
+            transfer.tokenContract.transferFrom(_msgSender(), address(task.escrow), _increase[i]);
+            transfer.amount += _increase[i];
+
+            unchecked {
+                ++i;
+            }
+        }
+
+        emit BudgetIncreased(_taskId, _increase, _msgSender());
+    }
+
+    /// @inheritdoc ITasks
+    function editMetadata(
+        uint256 _taskId,
+        string calldata _newMetadata
+    ) external {
+        if (_taskId >= taskCounter) {
+            revert TaskDoesNotExist();
+        }
+
+        Task storage task = tasks[_taskId];
+        if (task.proposer != _msgSender()) {
+            revert NotProposer();
+        }
+
+        if (task.state != TaskState.Open) {
+            revert TaskNotOpen();
+        }
+
+        task.metadata = _newMetadata;
+        emit MetadataEditted(_taskId, _newMetadata, _msgSender());
+    }
+
+    function _increaseBudgetToReward(
+        Task storage task,
+        uint8 _length,
+        mapping(uint8 => Reward) storage _reward
+    ) internal {
+        uint8 j;
+        ERC20Transfer memory erc20Transfer = task.budget[0];
+        uint256 needed;
+        for (uint8 i; i < _length; ) {
+            unchecked {
+                needed += _reward[i].amount;
+            }
+
+            if (_reward[i].nextToken) {
+                if (needed > erc20Transfer.amount) {
+                    // Existing budget in escrow doesnt cover the n reward
+                    erc20Transfer.tokenContract.transferFrom(_msgSender(), address(task.escrow), needed - erc20Transfer.amount);
+                }
+
+                needed = 0;
+                unchecked {
+                    erc20Transfer = task.budget[++j];
+                }
+            }
+
+            unchecked {
+                ++i;
+            }
+        }
+    }
+
+    function _setRewardBellowBudget(
         Task storage task,
         Application storage application, 
         Reward[] calldata _reward

@@ -64,3 +64,6 @@ export async function geTaskDraftsSettings(tasks : string, governancePlugin : st
     };
     return taskDraftsSettings;
 }
+
+// exports dummy function for hardhat-deploy. Otherwise we would have to move this file
+export default function () {}

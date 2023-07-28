@@ -34,13 +34,16 @@ interface ITasks {
     event SubmissionReviewed(uint256 taskId, uint8 submissionId, SubmissionJudgement judgement, string feedback, address proposer, address executor);
     event TaskCompleted(uint256 taskId, address proposer, address executor);
 
-    // TODO: Maybe add proposer and executor to the following events
-    event ChangeScopeRequested(uint256 taskId, uint8 requestId, string metadata, uint64 deadline, Reward[] reward);
-    event DropExecutorRequested(uint256 taskId, uint8 requestId, string explanation);
-    event CancelTaskRequested(uint256 taskId, uint8 requestId, string explanation);
-    event RequestAccepted(uint256 taskId, RequestType requestType, uint8 requestId);
-    event RequestExecuted(uint256 taskId, RequestType requestType, uint8 requestId, address by);
-    event TaskCancelled(uint256 taskId);
+    // event ChangeScopeRequested(uint256 taskId, uint8 requestId, string metadata, uint64 deadline, Reward[] reward);
+    // event DropExecutorRequested(uint256 taskId, uint8 requestId, string explanation);
+    event CancelTaskRequested(uint256 taskId, uint8 requestId, string explanation, address proposer, address executor);
+    event RequestAccepted(uint256 taskId, RequestType requestType, uint8 requestId, address proposer, address executor);
+    event RequestExecuted(uint256 taskId, RequestType requestType, uint8 requestId, address by, address proposer, address executor);
+    event TaskCancelled(uint256 taskId, address proposer, address executor);
+
+    event DeadlineExtended(uint256 taskId, uint64 extension, address proposer, address executor);
+    event BudgetIncreased(uint256 taskId, uint96[] increase, address proposer);
+    event MetadataEditted(uint256 taskId, string newMetadata, address proposer);
 
     /// @notice A container for ERC20 transfer information.
     /// @param tokenContract ERC20 token to transfer.
@@ -57,15 +60,17 @@ interface ITasks {
     /// @param amount How much of this token should be transfered.
     struct Reward {
         bool nextToken;
-        address to; // Might change this to index instead of address array, will do some gas testing
+        address to;
         uint88 amount;
     }
 
     /// @notice A container for a task application.
+    /// @param metadata Metadata of the application. (IPFS hash)
     /// @param applicant Who has submitted this application.
     /// @param accepted If the application has been accepted by the proposer.
     /// @param reward How much rewards the applicant wants for completion.
     struct Application {
+        string metadata;
         address applicant;
         bool accepted;
         uint8 rewardCount;
@@ -73,6 +78,7 @@ interface ITasks {
     }
 
     struct OffChainApplication {
+        string metadata;
         address applicant;
         bool accepted;
         Reward[] reward;
@@ -86,9 +92,13 @@ interface ITasks {
 
     enum SubmissionJudgement { None, Accepted, Rejected }
     /// @notice A container for a task submission.
+    /// @param metadata Metadata of the submission. (IPFS hash)
     /// @param judgement Judgement cast on the submission.
+    /// @param feedback A response from the proposer. (IPFS hash)
     struct Submission {
+        string metadata;
         SubmissionJudgement judgement;
+        string feedback;
     }
 
     enum RequestType { ChangeScope, DropExecutor, CancelTask }
@@ -123,14 +133,17 @@ interface ITasks {
 
     /// @notice A container for a request to cancel the task.
     /// @param accepted If the request was accepted.
+    /// @param explanation Why the task should be cancelled.
     /// @param executed If the request was executed.
     struct CancelTaskRequest {
+        string explanation;
         bool accepted;
         bool executed;
     }
 
     enum TaskState { Open, Taken, Closed }
     /// @notice A container for task-related information.
+    /// @param metadata Metadata of the task. (IPFS hash)
     /// @param deadline Block timestamp at which the task expires if not completed.
     /// @param budget Maximum ERC20 rewards that can be earned by completing the task.
     /// @param proposer Who has created the task.
@@ -139,6 +152,8 @@ interface ITasks {
     /// @param executorApplication Index of the application that will execture the task.
     /// @param submissions Submission made to finish the task.
     struct Task {
+        string metadata;
+
         uint64 deadline;
         Escrow escrow;
 
@@ -162,6 +177,7 @@ interface ITasks {
     }
 
     struct OffChainTask {
+        string metadata;
         uint64 deadline;
         uint16 executorApplication;
         address proposer;
@@ -195,7 +211,7 @@ interface ITasks {
     
     /// @notice Retrieves all tasks of a proposer. Most recent ones first.
     /// @param _proposer The proposer to fetch tasks of.
-    /// @param _fromTaskId What taskId to start from.
+    /// @param _fromTaskId What taskId to start from. 0 for most recent task.
     /// @param _max The maximum amount of tasks to return. 0 for no max.
     function getProposingTasks(
         address _proposer,
@@ -205,7 +221,7 @@ interface ITasks {
     
     /// @notice Retrieves all tasks of an executor. Most recent ones first.
     /// @param _executor The executor to fetch tasks of.
-    /// @param _fromTaskId What taskId to start from.
+    /// @param _fromTaskId What taskId to start from. 0 for most recent task.
     /// @param _max The maximum amount of tasks to return. 0 for no max.
     function getExecutingTasks(
         address _executor,
@@ -321,5 +337,30 @@ interface ITasks {
         uint256 _taskId,
         RequestType _requestType,
         uint8 _requestId
+    ) external;
+
+    /// @notice Extend the deadline of a task.
+    /// @param _taskId Id of the task.
+    /// @param _extension How much to extend the deadline by.
+    function extendDeadline(
+        uint256 _taskId,
+        uint64 _extension
+    ) external;
+
+    /// @notice Increase the budget of the task.
+    /// @param _taskId Id of the task.
+    /// @param _increase How much to increase each tokens amount by.
+    function increaseBudget(
+        uint256 _taskId,
+        uint96[] calldata _increase
+    ) external;
+
+    /// @notice Edit the metadata of a task.
+    /// @param _taskId Id of the task.
+    /// @param _newMetadata New metadata of the task.
+    /// @dev This metadata update might change the task completely. Show a warning to people who applied before the change.
+    function editMetadata(
+        uint256 _taskId,
+        string calldata _newMetadata
     ) external;
 }
