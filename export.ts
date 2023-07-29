@@ -514,7 +514,7 @@ export default {
       ]
     },
     "NFT": {
-      "address": "0xF64B843844B5E00228e5625f0279A552D2aFd6fE",
+      "address": "0xe31f2529d11992BCD2982A2F2286A7641bEFA7Db",
       "abi": [
         {
           "inputs": [
@@ -2653,8 +2653,375 @@ export default {
         }
       ]
     },
+    "TaskDraftsImplementation": {
+      "address": "0xbAE887E8648864e34d520bF80F94BdCD5Aa5b788",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "dao",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "where",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "permissionId",
+              "type": "bytes32"
+            }
+          ],
+          "name": "DaoUnauthorized",
+          "type": "error"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "previousAdmin",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "newAdmin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminChanged",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "beacon",
+              "type": "address"
+            }
+          ],
+          "name": "BeaconUpgraded",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "version",
+              "type": "uint8"
+            }
+          ],
+          "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "implementation",
+              "type": "address"
+            }
+          ],
+          "name": "Upgraded",
+          "type": "event"
+        },
+        {
+          "inputs": [],
+          "name": "UPGRADE_PLUGIN_PERMISSION_ID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes",
+              "name": "_metadata",
+              "type": "bytes"
+            },
+            {
+              "internalType": "uint64",
+              "name": "_startDate",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "_endDate",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "contract IERC20",
+                      "name": "tokenContract",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.ERC20Transfer[]",
+                  "name": "budget",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "manager",
+                  "type": "address"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "applicant",
+                      "type": "address"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "bool",
+                          "name": "nextToken",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "to",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "uint88",
+                          "name": "amount",
+                          "type": "uint88"
+                        }
+                      ],
+                      "internalType": "struct ITasks.Reward[]",
+                      "name": "reward",
+                      "type": "tuple[]"
+                    }
+                  ],
+                  "internalType": "struct ITasks.PreapprovedApplication[]",
+                  "name": "preapproved",
+                  "type": "tuple[]"
+                }
+              ],
+              "internalType": "struct ITaskDrafts.CreateTaskInfo",
+              "name": "_taskInfo",
+              "type": "tuple"
+            }
+          ],
+          "name": "createDraftTask",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "dao",
+          "outputs": [
+            {
+              "internalType": "contract IDAO",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getGovernanceContract",
+          "outputs": [
+            {
+              "internalType": "contract IPluginProposals",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getTasksContract",
+          "outputs": [
+            {
+              "internalType": "contract ITasks",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "implementation",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "contract IDAO",
+              "name": "_dao",
+              "type": "address"
+            },
+            {
+              "internalType": "contract ITasks",
+              "name": "_tasks",
+              "type": "address"
+            },
+            {
+              "internalType": "contract IPluginProposals",
+              "name": "_governancePlugin",
+              "type": "address"
+            }
+          ],
+          "name": "initialize",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "pluginType",
+          "outputs": [
+            {
+              "internalType": "enum IPlugin.PluginType",
+              "name": "",
+              "type": "uint8"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "proxiableUUID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes4",
+              "name": "_interfaceId",
+              "type": "bytes4"
+            }
+          ],
+          "name": "supportsInterface",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "contract ITasks",
+              "name": "_tasks",
+              "type": "address"
+            },
+            {
+              "internalType": "contract IPluginProposals",
+              "name": "_governancePlugin",
+              "type": "address"
+            }
+          ],
+          "name": "updateAddresses",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newImplementation",
+              "type": "address"
+            }
+          ],
+          "name": "upgradeTo",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newImplementation",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "upgradeToAndCall",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        }
+      ]
+    },
     "TaskDraftsRepo": {
-      "address": "0xEedae7A490Bc843f7733D939ac136aF0B6b69321",
+      "address": "0xB4d40b7A6996201fd989826614f2823CD25B692a",
       "abi": [
         {
           "inputs": [],
@@ -3590,7 +3957,7 @@ export default {
       ]
     },
     "TaskDraftsSetup": {
-      "address": "0xe4E35d4Be0f2D5CD04d4722DD8a511735cC9bef4",
+      "address": "0x429AF5bEe20e47F5aBfe79B96F3FBd5891cdC89a",
       "abi": [
         {
           "inputs": [],
@@ -3858,7 +4225,7 @@ export default {
       ]
     },
     "Tasks": {
-      "address": "0x5680539b190B1348906a4bA40Ec109602F81B8AA",
+      "address": "0x399e635cc8988C73B61c93C1d73cDDE7e8400a1e",
       "abi": [
         {
           "inputs": [],
@@ -5603,8 +5970,1287 @@ export default {
         }
       ]
     },
+    "TokenListGovernanceImplementation": {
+      "address": "0x49EdefE1B0e5A415c88CeD8E0958376cf95613A8",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "dao",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "where",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "permissionId",
+              "type": "bytes32"
+            }
+          ],
+          "name": "DaoUnauthorized",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint64",
+              "name": "limit",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "actual",
+              "type": "uint64"
+            }
+          ],
+          "name": "DateOutOfBounds",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "InvalidTokenlistUpdate",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint64",
+              "name": "limit",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "actual",
+              "type": "uint64"
+            }
+          ],
+          "name": "MinDurationOutOfBounds",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "sender",
+              "type": "uint256"
+            }
+          ],
+          "name": "ProposalCreationForbidden",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            }
+          ],
+          "name": "ProposalExecutionForbidden",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "limit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "actual",
+              "type": "uint256"
+            }
+          ],
+          "name": "RatioOutOfBounds",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "TokenNotOwnedBySender",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "account",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum ITokenMajorityVoting.VoteOption",
+              "name": "voteOption",
+              "type": "uint8"
+            }
+          ],
+          "name": "VoteCastForbidden",
+          "type": "error"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "previousAdmin",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "newAdmin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminChanged",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "beacon",
+              "type": "address"
+            }
+          ],
+          "name": "BeaconUpgraded",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "version",
+              "type": "uint8"
+            }
+          ],
+          "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256[]",
+              "name": "members",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "MembersAdded",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256[]",
+              "name": "members",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "MembersRemoved",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "definingContract",
+              "type": "address"
+            }
+          ],
+          "name": "MembershipContractAnnounced",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "creator",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "endDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "value",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct IDAO.Action[]",
+              "name": "actions",
+              "type": "tuple[]"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "allowFailureMap",
+              "type": "uint256"
+            }
+          ],
+          "name": "ProposalCreated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            }
+          ],
+          "name": "ProposalExecuted",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256[]",
+              "name": "tokens",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "TokensAdded",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256[]",
+              "name": "tokens",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "TokensRemoved",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "implementation",
+              "type": "address"
+            }
+          ],
+          "name": "Upgraded",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "voter",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "enum ITokenMajorityVoting.VoteOption",
+              "name": "voteOption",
+              "type": "uint8"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "votingPower",
+              "type": "uint256"
+            }
+          ],
+          "name": "VoteCast",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "enum TokenMajorityVotingBase.VotingMode",
+              "name": "votingMode",
+              "type": "uint8"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "supportThreshold",
+              "type": "uint32"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "minParticipation",
+              "type": "uint32"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "minDuration",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "minProposerVotingPower",
+              "type": "uint256"
+            }
+          ],
+          "name": "VotingSettingsUpdated",
+          "type": "event"
+        },
+        {
+          "inputs": [],
+          "name": "UPDATE_MEMBERS_PERMISSION_ID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "UPDATE_VOTING_SETTINGS_PERMISSION_ID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "UPGRADE_PLUGIN_PERMISSION_ID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256[]",
+              "name": "_members",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "addMembers",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_proposalId",
+              "type": "uint256"
+            }
+          ],
+          "name": "canExecute",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_proposalId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_voter",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum ITokenMajorityVoting.VoteOption",
+              "name": "_voteOption",
+              "type": "uint8"
+            }
+          ],
+          "name": "canVote",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes",
+              "name": "_metadata",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "value",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct IDAO.Action[]",
+              "name": "_actions",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_allowFailureMap",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint64",
+              "name": "_startDate",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "_endDate",
+              "type": "uint64"
+            }
+          ],
+          "name": "createPluginProposal",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes",
+              "name": "_metadata",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "value",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct IDAO.Action[]",
+              "name": "_actions",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_allowFailureMap",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint64",
+              "name": "_startDate",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "_endDate",
+              "type": "uint64"
+            },
+            {
+              "internalType": "enum ITokenMajorityVoting.VoteOption",
+              "name": "_voteOption",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bool",
+              "name": "_tryEarlyExecution",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "createProposal",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "dao",
+          "outputs": [
+            {
+              "internalType": "contract IDAO",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_proposalId",
+              "type": "uint256"
+            }
+          ],
+          "name": "execute",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_proposalId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getProposal",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "open",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "executed",
+              "type": "bool"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "enum TokenMajorityVotingBase.VotingMode",
+                  "name": "votingMode",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "supportThreshold",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "startDate",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "endDate",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "snapshotBlock",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minVotingPower",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct TokenMajorityVotingBase.ProposalParameters",
+              "name": "parameters",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "abstain",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "yes",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "no",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct TokenMajorityVotingBase.Tally",
+              "name": "tally",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "value",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct IDAO.Action[]",
+              "name": "actions",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "allowFailureMap",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_proposalId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_voter",
+              "type": "uint256"
+            }
+          ],
+          "name": "getVoteOption",
+          "outputs": [
+            {
+              "internalType": "enum ITokenMajorityVoting.VoteOption",
+              "name": "",
+              "type": "uint8"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "implementation",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "contract IDAO",
+              "name": "_dao",
+              "type": "address"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "enum TokenMajorityVotingBase.VotingMode",
+                  "name": "votingMode",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "supportThreshold",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "minParticipation",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "minDuration",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minProposerVotingPower",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct TokenMajorityVotingBase.VotingSettings",
+              "name": "_votingSettings",
+              "type": "tuple"
+            },
+            {
+              "internalType": "contract IERC721",
+              "name": "_tokenCollection",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "_members",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "initialize",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "isListed",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_blockNumber",
+              "type": "uint256"
+            }
+          ],
+          "name": "isListedAtBlock",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "isMember",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_proposalId",
+              "type": "uint256"
+            }
+          ],
+          "name": "isMinParticipationReached",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_proposalId",
+              "type": "uint256"
+            }
+          ],
+          "name": "isSupportThresholdReached",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_proposalId",
+              "type": "uint256"
+            }
+          ],
+          "name": "isSupportThresholdReachedEarly",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "minDuration",
+          "outputs": [
+            {
+              "internalType": "uint64",
+              "name": "",
+              "type": "uint64"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "minParticipation",
+          "outputs": [
+            {
+              "internalType": "uint32",
+              "name": "",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "minProposerVotingPower",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "pluginType",
+          "outputs": [
+            {
+              "internalType": "enum IPlugin.PluginType",
+              "name": "",
+              "type": "uint8"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "proposalCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "proxiableUUID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256[]",
+              "name": "_members",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "removeMembers",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "supportThreshold",
+          "outputs": [
+            {
+              "internalType": "uint32",
+              "name": "",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes4",
+              "name": "_interfaceId",
+              "type": "bytes4"
+            }
+          ],
+          "name": "supportsInterface",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "tokenlistLength",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_blockNumber",
+              "type": "uint256"
+            }
+          ],
+          "name": "tokenlistLengthAtBlock",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_blockNumber",
+              "type": "uint256"
+            }
+          ],
+          "name": "totalVotingPower",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "enum TokenMajorityVotingBase.VotingMode",
+                  "name": "votingMode",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "supportThreshold",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "minParticipation",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "minDuration",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minProposerVotingPower",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct TokenMajorityVotingBase.VotingSettings",
+              "name": "_votingSettings",
+              "type": "tuple"
+            }
+          ],
+          "name": "updateVotingSettings",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newImplementation",
+              "type": "address"
+            }
+          ],
+          "name": "upgradeTo",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newImplementation",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "upgradeToAndCall",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_proposalId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum ITokenMajorityVoting.VoteOption",
+              "name": "_voteOption",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bool",
+              "name": "_tryEarlyExecution",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "vote",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "votingMode",
+          "outputs": [
+            {
+              "internalType": "enum TokenMajorityVotingBase.VotingMode",
+              "name": "",
+              "type": "uint8"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]
+    },
     "TokenListGovernanceRepo": {
-      "address": "0x74f9aCC383365CeD177A9F31430E5cAce3E4841a",
+      "address": "0x52fec5e67Cb8021A244492721E408ed1419727B9",
       "abi": [
         {
           "inputs": [],
@@ -6540,7 +8186,7 @@ export default {
       ]
     },
     "TokenListGovernanceSetup": {
-      "address": "0x56210FE7ea56509e092045e0C47AA6921f900D1A",
+      "address": "0xf4ea672D1f4706373A0a35f147fF3195626987Fc",
       "abi": [
         {
           "inputs": [],
@@ -6808,7 +8454,7 @@ export default {
       ]
     },
     "community_dao": {
-      "address": "0xc16ABfC018dB3aacFE441c3fbED2a7F05FB44747",
+      "address": "0xe539C300a5761befD681773F0196388B1Bb38b22",
       "abi": [
         {
           "inputs": [],
@@ -7969,7 +9615,7 @@ export default {
       ]
     },
     "community_tokenListGovernance": {
-      "address": "0x63c62a7b666d742c14AfBCa3ac4D9a890fabfAdA",
+      "address": "0x15A79022a6D1a13a1bCc0C148705E83EE0Ae7bD9",
       "abi": [
         {
           "inputs": [
@@ -9248,7 +10894,7 @@ export default {
       ]
     },
     "devops_dao": {
-      "address": "0x82DA923d6aEE52a73f2CE5dD729cf7bF732EA387",
+      "address": "0x6B6993cc38B6a0eAA7f96830Ff635f5C75f905eC",
       "abi": [
         {
           "inputs": [],
@@ -10409,7 +12055,7 @@ export default {
       ]
     },
     "devops_taskDrafts": {
-      "address": "0xDDC8a1bf297c210DdDD6c230456158116AFe5dD4",
+      "address": "0xA8F56Ce01030F0e9D218580fF4102CC611a25E39",
       "abi": [
         {
           "inputs": [
@@ -10776,7 +12422,7 @@ export default {
       ]
     },
     "devops_tokenListGovernance": {
-      "address": "0x1BeC0e4A5e1d2B40a53854327515725A8e436Ff2",
+      "address": "0xD187fAa63678397a184c167F4C2B4F3E2b59B090",
       "abi": [
         {
           "inputs": [
@@ -12055,7 +13701,7 @@ export default {
       ]
     },
     "engineering_dao": {
-      "address": "0x64cc08da33C496e31eC05374D38502DDD7eD93ab",
+      "address": "0x8f1A69607E9C9Ec18828332186f115680cc6E5D0",
       "abi": [
         {
           "inputs": [],
@@ -13216,7 +14862,7 @@ export default {
       ]
     },
     "engineering_taskDrafts": {
-      "address": "0x6C88B501f76c29aC44DBa215DA097ACa1A38048f",
+      "address": "0xF0Da1c5254661F0b323800284d70a9ddD72612a3",
       "abi": [
         {
           "inputs": [
@@ -13583,7 +15229,7 @@ export default {
       ]
     },
     "engineering_tokenListGovernance": {
-      "address": "0xDf8364bC35435083910ecAF2A477F301B7DF3a09",
+      "address": "0xFDFfFfd40e64Bdf162945352dbD5CD5B32023C49",
       "abi": [
         {
           "inputs": [
@@ -14862,7 +16508,7 @@ export default {
       ]
     },
     "management_dao": {
-      "address": "0x8c48eB25F7572C7a695f56bc3B8736fDcB0b54B4",
+      "address": "0xfC596446E700f07F13603ea0688651c8c1DD9B19",
       "abi": [
         {
           "inputs": [],
@@ -16023,7 +17669,7 @@ export default {
       ]
     },
     "management_tokenListGovernance": {
-      "address": "0xa28612Da5F851e1bac04D8B0412Bb8D1D63Caa1A",
+      "address": "0x4AbCd4A907c0f73C816959B1C79FFC3CB6428052",
       "abi": [
         {
           "inputs": [
@@ -17302,7 +18948,7 @@ export default {
       ]
     },
     "parent_dao": {
-      "address": "0xE6303c5facd15351168825D352F303229A148f3F",
+      "address": "0x6dB2574875d1bfE2F1279a088592cAF51403f9b3",
       "abi": [
         {
           "inputs": [],
@@ -18463,7 +20109,7 @@ export default {
       ]
     },
     "parent_tokenListGovernance": {
-      "address": "0x98FEd1C2DfFBA185f9411Cc63b5Fe2dA926F8a3a",
+      "address": "0x4800597B0850D49C087765eFffC986fABD10aE3F",
       "abi": [
         {
           "inputs": [

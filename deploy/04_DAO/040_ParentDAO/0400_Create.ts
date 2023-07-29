@@ -19,8 +19,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const dao = await createDAO(deployer, subdomain, [tokenListGovernanceSettings], deployments);
 
-    await deployments.save("parent_dao", { address : dao.daoAddress, abi: (await deployments.getArtifact("DAO")).abi });
-    await deployments.save("parent_tokenListGovernance", { address : dao.pluginAddresses[0], abi: (await deployments.getArtifact("TokenListGovernance")).abi });
+    // TODO: Verify as proxy contracts
+    await deployments.save("parent_dao", { address : dao.daoAddress, ...(await deployments.getArtifact("DAO")) });
+    await deployments.save("parent_tokenListGovernance", { address : dao.pluginAddresses[0], ...(await deployments.getArtifact("TokenListGovernance")) });
 };
 export default func;
 func.tags = ["ParentDAO"];

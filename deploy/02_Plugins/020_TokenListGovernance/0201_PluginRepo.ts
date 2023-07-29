@@ -29,7 +29,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const pluginRepoRegistry = await ethers.getContract("PluginRepoRegistry");
     const repo = getEventsFromLogs(receipt.logs, pluginRepoRegistry.interface, "PluginRepoRegistered")[0].args.pluginRepo;
-    await deployments.save("TokenListGovernanceRepo", { address : repo, abi: (await deployments.getArtifact("PluginRepo")).abi });
+    await deployments.save("TokenListGovernanceRepo", { address : repo, ...(await deployments.getArtifact("PluginRepo")), args: [] });
 };
 export default func;
 func.tags = ["TokenListGovernance"]

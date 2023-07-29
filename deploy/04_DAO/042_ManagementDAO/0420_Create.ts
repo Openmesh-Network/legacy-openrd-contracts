@@ -19,8 +19,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const dao = await createDAO(deployer, subdomain, [tokenListGovernanceSettings], deployments);
 
-    await deployments.save("management_dao", { address : dao.daoAddress, abi: (await deployments.getArtifact("DAO")).abi });
-    await deployments.save("management_tokenListGovernance", { address : dao.pluginAddresses[0], abi: (await deployments.getArtifact("TokenListGovernance")).abi });
+    await deployments.save("management_dao", { address : dao.daoAddress, ...(await deployments.getArtifact("DAO")) });
+    await deployments.save("management_tokenListGovernance", { address : dao.pluginAddresses[0], ...(await deployments.getArtifact("TokenListGovernance")) });
 };
 export default func;
 func.tags = ["ManagementDAO"];

@@ -40,7 +40,7 @@ async function createDepartment(deployer : string, departmentName : string, depl
 
     const dao = await createDAO(deployer, subdomain, [tokenListGovernanceSettings, taskDraftsSettings], deployments);
 
-    await deployments.save(departmentName + "_dao", { address : dao.daoAddress, abi: (await deployments.getArtifact("DAO")).abi });
-    await deployments.save(departmentName + "_tokenListGovernance", { address : dao.pluginAddresses[0], abi: (await deployments.getArtifact("TokenListGovernance")).abi });
-    await deployments.save(departmentName + "_taskDrafts", { address : dao.pluginAddresses[1], abi: (await deployments.getArtifact("TaskDrafts")).abi });
+    await deployments.save(departmentName + "_dao", { address : dao.daoAddress, ...(await deployments.getArtifact("DAO")) });
+    await deployments.save(departmentName + "_tokenListGovernance", { address : dao.pluginAddresses[0], ...(await deployments.getArtifact("TokenListGovernance")) });
+    await deployments.save(departmentName + "_taskDrafts", { address : dao.pluginAddresses[1], ...(await deployments.getArtifact("TaskDrafts")) });
 }
