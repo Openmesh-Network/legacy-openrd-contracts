@@ -4,9 +4,9 @@ import { BudgetItem } from "../../utils/taskTypes";
 
 export async function DeployMockERC20(namedAccount? : string) : Promise<MockERC20> {
     const { deployer } = await getNamedAccounts();
-    let ERC20 = await ethers.deployContract("MockERC20", ["Mock ERC20", "MOCK"], await ethers.getImpersonatedSigner(deployer)) as any as MockERC20;
+    let ERC20 = await ethers.deployContract("MockERC20", ["Mock ERC20", "MOCK"], await ethers.getSigner(deployer)) as any as MockERC20;
     if (namedAccount) {
-        ERC20 = ERC20.connect(await ethers.getImpersonatedSigner(namedAccount));
+        ERC20 = ERC20.connect(await ethers.getSigner(namedAccount));
     }
     return ERC20;
 }

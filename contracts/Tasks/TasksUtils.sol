@@ -77,6 +77,7 @@ abstract contract TasksUtils is ITasks, Context {
                 if (needed > erc20Transfer.amount) {
                     // Existing budget in escrow doesnt cover the needed reward
                     erc20Transfer.tokenContract.transferFrom(_msgSender(), address(task.escrow), needed - erc20Transfer.amount);
+                    task.budget[j].amount = uint96(needed);
                 }
 
                 needed = 0;
@@ -131,35 +132,27 @@ abstract contract TasksUtils is ITasks, Context {
         Escrow escrow = task.escrow;
 
         uint8 j;
-        ERC20Transfer memory erc20Transfer = task.budget[0];
         uint8 rewardCount = executor.rewardCount;
-        for (uint8 i; i < rewardCount; ) {
-            Reward memory reward = executor.reward[i];
-            escrow.transfer(erc20Transfer.tokenContract, executor.applicant, reward.amount);
-            unchecked {
-                erc20Transfer.amount -= reward.amount;
-            }
-
-            if (reward.nextToken) {
-                if (erc20Transfer.amount > 0) {
-                    escrow.transfer(erc20Transfer.tokenContract, creator, erc20Transfer.amount);
-                }
-
+        uint8 budgetCount = task.budgetCount;
+        for (uint8 i; i < budgetCount; ) {
+            ERC20Transfer memory erc20Transfer = task.budget[i];
+            while (j < rewardCount) {
+                Reward memory reward = executor.reward[j];
+                escrow.transfer(erc20Transfer.tokenContract, reward.to, reward.amount);
                 unchecked {
-                    erc20Transfer = task.budget[++j];
+                    erc20Transfer.amount -= reward.amount;
+                    ++j;
+                }
+
+                if (reward.nextToken) {
+                    break;
                 }
             }
+
+            escrow.transfer(erc20Transfer.tokenContract, creator, erc20Transfer.amount);
 
             unchecked {
                 ++i;
-            }
-        }
-        uint8 budgetCount = task.budgetCount;
-        while (j < budgetCount) {
-            escrow.transfer(erc20Transfer.tokenContract, creator, erc20Transfer.amount);
-            
-            unchecked {
-                erc20Transfer = task.budget[++j];
             }
         }
 

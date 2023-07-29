@@ -1,29 +1,23 @@
-// import { expect } from "chai";
-// import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-// import { createTaskFixture } from "./00_TestTasksFixtures";
-// import { TestSetup } from "../Helpers/TestSetup";
-// import { ethers } from "hardhat";
-// import { Tasks } from "../../typechain-types";
+import { expect } from "chai";
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { createTaskFixture } from "./00_TestTasksFixtures";
+import { getTask } from "../../utils/taskHelper";
+import { ToBlockchainDate, days } from "../../utils/timeUnits";
 
-// describe("Task Count", function () {
-//   it("should be zero with no tasks", async function () {
-//     await loadFixture(TestSetup);
-//     const Tasks = await ethers.getContract("Tasks") as Tasks;
-//     const taskCount = await Tasks.taskCount();
-//     expect(taskCount).to.be.equal(BigInt(0));
-//   });
+describe("Extend Deadline", function () {
+  it("should extend the deadline", async function () {
+    const task = await loadFixture(createTaskFixture);
+    const taskInfoBefore = await getTask({ tasks: task.TasksManager, taskId: task.taskId });
+    const extension = 1 * days;
+    await task.TasksManager.extendDeadline(task.taskId, extension);
+    const taskInfo = await getTask({ tasks: task.TasksManager, taskId: task.taskId });
+    expect(ToBlockchainDate(taskInfo.deadline)).to.be.equal(ToBlockchainDate(taskInfoBefore.deadline) + extension);
+  });
 
-//   it("should be one after creating one task", async function () {
-//     const task = await loadFixture(createTaskFixture);
-//     const taskCount = await task.TasksManager.taskCount();
-//     expect(taskCount).to.be.equal(BigInt(1));
-//   });
-
-//   // taken tasks
-
-//   // closed tasks
-
-//   // cancelled tasks
-
-//   // other functions should have no change
-// });
+  it("should not be allowed by not manager", async function () {
+    const task = await loadFixture(createTaskFixture);
+    const extension = 1 * days;
+    const tx = task.TasksExecutor.extendDeadline(task.taskId, extension);
+    await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "NotManager");
+  });
+});

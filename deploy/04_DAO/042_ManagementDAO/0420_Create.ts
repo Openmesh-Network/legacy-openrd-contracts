@@ -24,4 +24,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 export default func;
 func.tags = ["ManagementDAO"];
-func.dependencies = ["CommunityDAO"];
+func.dependencies = ["TokenListGovernance", "NFT", "CommunityDAO"];

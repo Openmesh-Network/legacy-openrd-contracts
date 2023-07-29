@@ -92,4 +92,12 @@ abstract contract TasksEnsure is ITasks, Context {
             revert RequestAlreadyExecuted();
         }
     }
+
+    function _ensureRewardEndsWithNextToken(Reward[] memory reward) internal pure {
+        unchecked {
+            if (reward.length != 0 && !reward[reward.length-1].nextToken) {
+                revert RewardDoesntEndWithNewToken();
+            }
+        }
+    }
 }

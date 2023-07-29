@@ -9,9 +9,10 @@ export async function getTokenListGovernanceSettings(nftCollection : string, tok
         "uint256[] members",
         "address manager",
     ];
+    enum VotingMode { Standard, EarlyExecution, VoteReplacement };
     const tokenListGovernanceValues : any[] = [
         {
-            votingMode: 1, // Early execution
+            votingMode: VotingMode.EarlyExecution,
             supportThreshold: 50 * 10**4, // % * 10**4 (ppm)
             minParticipation: 20 * 10**4, // % * 10**4 (ppm)
             minDuration: 3600, // seconds

@@ -1,4 +1,5 @@
 import { TransactionReceipt, Interface, LogDescription } from "ethers";
+import { ethers } from "hardhat";
 
 // Various utility functions
 
@@ -29,13 +30,20 @@ export function getEventsFromLogs(
   return log.map(l => iface.parseLog({topics: l.topics.map(s => s), data: l.data})) as LogDescription[];
 }
 
-export async function asyncFilter<T>(arr : T[], predicate : ((elem : T) => Promise<boolean>)) {
+export async function asyncFilter<T>(arr : T[], predicate : ((elem : T) => Promise<boolean>)) : Promise<T[]> {
   const results = await Promise.all(arr.map(predicate));
 
   return arr.filter((_v, index) => results[index]);
 }
 
-export async function asyncMap<T1, T2>(arr : T1[], func : ((elem : T1) => Promise<T2>)) {
+export async function asyncMap<T1, T2>(arr : T1[], func : ((elem : T1) => Promise<T2>)) : Promise<T2[]> {
   return Promise.all(arr.map(func));
 }
   
+export function getInferfaceId(iface : Interface) : string {
+  let interfaceId = BigInt(0);
+  iface.forEachFunction(f => {
+    interfaceId = interfaceId ^ BigInt(f.selector);
+  });
+  return ethers.toBeHex(interfaceId);
+}

@@ -6,6 +6,7 @@ import { createApplicationsTaskFixture, createBudgetTaskFixture, createTakenTask
 import { TaskState } from "../../utils/taskTypes";
 import { ethers, getUnnamedAccounts } from "hardhat";
 import { MockERC20 } from "../../typechain-types";
+import { Wei } from "../../utils/ethersUnits";
 
 describe("Accept Applications", function () {
   // Check if variables are set
@@ -167,7 +168,7 @@ describe("Accept Applications", function () {
     const task = await loadFixture(createApplicationsTaskFixture);
     const acceptedApplications = task.applicants.map((_, i) => i).filter((_, i) => i % 2 == 0);
     const accounts = await getUnnamedAccounts();
-    const tasks = task.TasksExecutor.connect(await ethers.getImpersonatedSigner(accounts[0]));
+    const tasks = task.TasksExecutor.connect(await ethers.getSigner(accounts[0]));
     const tx = acceptApplications({
       tasks: tasks,
       taskId: task.taskId,
@@ -178,11 +179,13 @@ describe("Accept Applications", function () {
 
   it("should increase if reward more than budget", async function () {
     const task = await loadFixture(createBudgetTaskFixture);
+    const taskInfoBefore = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
+    const increase = Wei(1);
     let reward = task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; });
-    reward[0].amount += BigInt(1);
+    reward[0].amount += increase;
     const ERC20 = await ethers.getContractAt("MockERC20", task.budget[0].tokenContract, await ethers.getSigner(task.manager)) as any as MockERC20;
-    await ERC20.increaseBalance(task.manager, BigInt(1));
-    await ERC20.approve(await task.TasksManager.getAddress(), BigInt(1));
+    await ERC20.increaseBalance(task.manager, increase);
+    await ERC20.approve(await task.TasksManager.getAddress(), increase);
     await applyForTask({
       tasks: task.TasksExecutor,
       taskId: task.taskId,
@@ -193,6 +196,8 @@ describe("Accept Applications", function () {
       taskId: task.taskId,
       applications: [BigInt(0)],
     });
+    const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
+    expect(taskInfo.budget[0].amount).to.be.equal(taskInfoBefore.budget[0].amount + increase);
     expect(await ERC20.balanceOf(task.manager)).to.be.be.equal(BigInt(0));
   });
 });

@@ -1,6 +1,6 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { deployments, ethers, getNamedAccounts } from "hardhat";
-import { IDAO, MockERC721, TaskDrafts, TokenListGovernance } from "../../typechain-types";
+import { DAO, IDAO, MockERC721, TaskDrafts, Tasks, TokenListGovernance } from "../../typechain-types";
 import { TestSetup } from "../Helpers/TestSetup";
 import { expect } from "chai";
 import { days, minutes, now } from "../../utils/timeUnits";
@@ -10,11 +10,13 @@ export async function getDAO() {
   await loadFixture(TestSetup);
   const { deployer } = await getNamedAccounts();
   
+  const DAO = await ethers.getContract("devops_dao", deployer) as DAO;
   const TokenListGovernance = await ethers.getContract("devops_tokenListGovernance", deployer) as TokenListGovernance;
   const TaskDrafts = await ethers.getContract("devops_taskDrafts", deployer) as TaskDrafts;
   const NFT = await ethers.getContract("NFT", deployer) as MockERC721;
+  const Tasks = await ethers.getContract("Tasks", deployer) as Tasks;
 
-  return { TokenListGovernance, TaskDrafts, NFT, deployer };
+  return { DAO, TokenListGovernance, TaskDrafts, NFT, deployer, Tasks };
 }
 
 describe("Department DAO Governance", function () {

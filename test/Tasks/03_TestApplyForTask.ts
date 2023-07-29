@@ -142,4 +142,16 @@ describe("Apply For Task", function () {
     });
     await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "TaskNotOpen");
   });
+  
+  it("should not be allowed with reward that does not end with nextToken true", async function () {
+    const task = await loadFixture(createBudgetTaskFixture);
+    let reward = task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; });
+    reward[reward.length-1].nextToken = false;
+    const tx = applyForTask({
+      tasks: task.TasksExecutor,
+      taskId: task.taskId,
+      reward: reward,
+    });
+    await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "RewardDoesntEndWithNewToken");
+  });
 });

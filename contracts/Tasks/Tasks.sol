@@ -22,8 +22,15 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
     /// @notice The base escrow contract that will be cloned for every task.
     address private escrowImplementation;
 
+    /// @notice This address has the power to disable the contract, in case an exploit is discovered.
+    address private disabler;
+    error Disabled();
+    error NotDisabled();
+    error NotDisabler();
+
     constructor() {
         escrowImplementation = address(new Escrow());
+        disabler = _msgSender();
     }
 
     /// @inheritdoc ITasks
@@ -133,6 +140,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         address _manager,
         PreapprovedApplication[] calldata _preapprove
     ) external returns (uint256 taskId) {
+        _ensureNotDisabled();
         taskId = taskCounter++;
 
         Task storage task = tasks[taskId];
@@ -167,6 +175,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 Application storage application = task.applications[i];
                 application.applicant = _preapprove[i].applicant;
                 application.accepted = true;
+                _ensureRewardEndsWithNextToken(_preapprove[i].reward);
                 _setRewardBellowBudget(task, application, _preapprove[i].reward);
 
                 unchecked {
@@ -184,8 +193,10 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         string calldata _metadata,
         Reward[] calldata _reward
     ) external returns (uint16 applicationId) {
+        _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsOpen(task);
+        _ensureRewardEndsWithNextToken(_reward);
 
         Application storage application = task.applications[task.applicationCount];
         application.metadata = _metadata;
@@ -208,6 +219,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         uint256 _taskId,
         uint16[] calldata _applicationIds
     ) external {
+        _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsOpen(task);
         _ensureSenderIsManager(task);
@@ -231,6 +243,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         uint256 _taskId,
         uint16 _applicationId
     ) external {
+        _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsOpen(task);
         _ensureApplicationExists(task, _applicationId);
@@ -241,11 +254,11 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         task.executorApplication = _applicationId;
 
-        task.state = TaskState.Taken;
         unchecked {
             --openTasks;
             ++takenTasks;
         }
+        task.state = TaskState.Taken;
 
         emit TaskTaken(_taskId, _applicationId, task.manager, _msgSender());
     }
@@ -255,6 +268,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         uint256 _taskId,
         string calldata _metadata
     ) external returns (uint8 submissionId) {
+        _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsTaken(task);
         _ensureSenderIsExecutor(task);
@@ -273,6 +287,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         SubmissionJudgement _judgement,
         string calldata _feedback
     ) external {
+        _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsTaken(task);
         _ensureSenderIsManager(task);
@@ -284,11 +299,11 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         submission.feedback = _feedback;
 
         if (_judgement == SubmissionJudgement.Accepted) {
-            _payoutTask(task);
             unchecked {
                 --takenTasks;
                 ++successfulTasks;
             }
+            _payoutTask(task);
 
             emit TaskCompleted(_taskId, _msgSender(), task.applications[task.executorApplication].applicant);
         }
@@ -301,6 +316,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         uint256 _taskId,
         string calldata _explanation
     ) external returns (uint8 cancelTaskRequestId) {
+        _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureSenderIsManager(task);
 
@@ -308,16 +324,17 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         if (task.state == TaskState.Open || task.deadline <= uint64(block.timestamp)) {
             // Task is open or deadline past
-            _refundCreator(task);
             if (task.state == TaskState.Open) {
                 unchecked {
                     --openTasks;
                 }
-            } else if (task.state == TaskState.Taken) {
+            } else { // if (task.state == TaskState.Taken) {
                 unchecked {
                     --takenTasks;
                 }
             }
+            _refundCreator(task);
+
             emit TaskCancelled(_taskId, _msgSender(), task.state == TaskState.Open ? address(0) : task.applications[task.executorApplication].applicant);
             // Max means no request
             cancelTaskRequestId = type(uint8).max;
@@ -339,11 +356,13 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         uint8 _requestId,
         bool _execute
     ) external {
+        _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsTaken(task);
         _ensureSenderIsExecutor(task);
         
-        if (_requestType == RequestType.CancelTask) {
+        //if (_requestType == RequestType.CancelTask) {
+        {
             _ensureCancelTaskRequestExists(task, _requestId);
             
             CancelTaskRequest storage cancelTaskRequest = task.cancelTaskRequests[_requestId];
@@ -351,10 +370,11 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
             if (_execute) {
                 // use executeRequest in the body instead? (more gas due to all the checks, but less code duplication)
-                _refundCreator(task);
                 unchecked {
                     --takenTasks;
                 }
+                _refundCreator(task);
+
                 emit TaskCancelled(_taskId, task.manager, _msgSender());
                 cancelTaskRequest.request.executed = true;
             }
@@ -371,20 +391,23 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         RequestType _requestType,
         uint8 _requestId
     ) external {
+        _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsTaken(task);
         
-        if (_requestType == RequestType.CancelTask) {
+        //if (_requestType == RequestType.CancelTask) {
+        {
             _ensureCancelTaskRequestExists(task, _requestId);
             
             CancelTaskRequest storage cancelTaskRequest = task.cancelTaskRequests[_requestId];
             _ensureRequestAccepted(cancelTaskRequest.request);
             _ensureRequestNotExecuted(cancelTaskRequest.request);
 
-            _refundCreator(task);
             unchecked {
                 --takenTasks;
             }
+            _refundCreator(task);
+
             emit TaskCancelled(_taskId, task.manager, task.applications[task.executorApplication].applicant);
             cancelTaskRequest.request.executed = true;
         }
@@ -397,6 +420,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         uint256 _taskId,
         uint64 _extension
     ) external {
+        _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureSenderIsManager(task);
 
@@ -412,6 +436,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         uint256 _taskId,
         uint96[] calldata _increase
     ) external {
+        _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureSenderIsManager(task);
 
@@ -435,6 +460,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         uint256 _taskId,
         string calldata _newMetadata
     ) external {
+        _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureSenderIsManager(task);
 
@@ -443,6 +469,21 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         task.metadata = _newMetadata;
         emit MetadataEditted(_taskId, _newMetadata, _msgSender());
     }
+    
+    function disable() external {
+        _ensureDisabler();
+        disabler = address(0);
+    }
+
+    // Ideally you are able to transfer it to the new contract, but that requires addition to the escrow contract
+    // I prefer this, so the escrow contract keeps being basic (both for security and clone costs)
+    function refund(uint256 _taskId) external {
+        _ensureDisabled();
+        Task storage task = _getTask(_taskId);
+        _ensureTaskNotClosed(task);
+        // oficially should update taskOpen / Taken here, but as the contract will cease operations, no point
+        _refundCreator(task);
+    }
 
     function _getTask(uint256 _taskId) internal view returns (Task storage task) {
         if (_taskId >= taskCounter) {
@@ -450,5 +491,23 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         }
 
         task = tasks[_taskId];
+    }
+
+    function _ensureNotDisabled() internal view {
+        if (disabler == address(0)) {
+            revert Disabled();
+        }
+    }
+
+    function _ensureDisabled() internal view {
+        if (disabler != address(0)) {
+            revert NotDisabled();
+        }
+    }
+
+    function _ensureDisabler() internal view {
+        if (_msgSender() != disabler) {
+            revert NotDisabler();
+        }
     }
 }

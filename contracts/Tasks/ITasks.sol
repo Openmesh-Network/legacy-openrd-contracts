@@ -28,6 +28,7 @@ interface ITasks {
     error NotExecutor();
 
     error RewardAboveBudget();
+    error RewardDoesntEndWithNewToken();
     error ApplicationDoesNotExist();
     error NotYourApplication();
     error ApplicationNotAccepted();
@@ -67,6 +68,7 @@ interface ITasks {
     /// @notice A container for a reward payout.
     /// @param nextToken If this reward is payed out in the next ERC20 token.
     /// @dev IERC20 (address) is a lot of storage, rather just keep those only in budget.
+    /// @notice nextToken should always be true for the last entry
     /// @param to Whom this token should be transfered to.
     /// @param amount How much of this token should be transfered.
     struct Reward {

@@ -514,7 +514,7 @@ export default {
       ]
     },
     "NFT": {
-      "address": "0xd81FED12c70a83F03EE4Ff4793A66Ea2aD574443",
+      "address": "0xF64B843844B5E00228e5625f0279A552D2aFd6fE",
       "abi": [
         {
           "inputs": [
@@ -2654,7 +2654,7 @@ export default {
       ]
     },
     "TaskDraftsRepo": {
-      "address": "0xD22F7A4C7Ad5e5cDFF8214D64601E00372A030cf",
+      "address": "0xEedae7A490Bc843f7733D939ac136aF0B6b69321",
       "abi": [
         {
           "inputs": [],
@@ -3590,7 +3590,7 @@ export default {
       ]
     },
     "TaskDraftsSetup": {
-      "address": "0xE00AB3472A0b95fa5A85Dd1c13103fe84Ec4dd1e",
+      "address": "0xe4E35d4Be0f2D5CD04d4722DD8a511735cC9bef4",
       "abi": [
         {
           "inputs": [],
@@ -3858,7 +3858,7 @@ export default {
       ]
     },
     "Tasks": {
-      "address": "0x56EBA30A7Aa8655215C20ffA1983910B9F5a8a77",
+      "address": "0x5680539b190B1348906a4bA40Ec109602F81B8AA",
       "abi": [
         {
           "inputs": [],
@@ -3873,6 +3873,21 @@ export default {
         {
           "inputs": [],
           "name": "ApplicationNotAccepted",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "Disabled",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "NotDisabled",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "NotDisabler",
           "type": "error"
         },
         {
@@ -3913,6 +3928,11 @@ export default {
         {
           "inputs": [],
           "name": "RewardAboveBudget",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "RewardDoesntEndWithNewToken",
           "type": "error"
         },
         {
@@ -4711,6 +4731,13 @@ export default {
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "disable",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [
             {
               "internalType": "uint256",
@@ -5485,6 +5512,19 @@ export default {
               "internalType": "uint256",
               "name": "_taskId",
               "type": "uint256"
+            }
+          ],
+          "name": "refund",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_taskId",
+              "type": "uint256"
             },
             {
               "internalType": "uint8",
@@ -5564,7 +5604,7 @@ export default {
       ]
     },
     "TokenListGovernanceRepo": {
-      "address": "0x1670B1C7b57Da473Db9b71AFCE676Bb42d7a6309",
+      "address": "0x74f9aCC383365CeD177A9F31430E5cAce3E4841a",
       "abi": [
         {
           "inputs": [],
@@ -6500,7 +6540,7 @@ export default {
       ]
     },
     "TokenListGovernanceSetup": {
-      "address": "0x79cE64C2819F78B32C776d2B6f3DccD83599910D",
+      "address": "0x56210FE7ea56509e092045e0C47AA6921f900D1A",
       "abi": [
         {
           "inputs": [],
@@ -6768,7 +6808,7 @@ export default {
       ]
     },
     "community_dao": {
-      "address": "0xaA837b62b510FD3A8c7222f2EB6966D7c4cCa93D",
+      "address": "0xc16ABfC018dB3aacFE441c3fbED2a7F05FB44747",
       "abi": [
         {
           "inputs": [],
@@ -7929,7 +7969,7 @@ export default {
       ]
     },
     "community_tokenListGovernance": {
-      "address": "0x3C2aA78768B458De4035790E7C162dfAaae80C35",
+      "address": "0x63c62a7b666d742c14AfBCa3ac4D9a890fabfAdA",
       "abi": [
         {
           "inputs": [
@@ -9208,7 +9248,7 @@ export default {
       ]
     },
     "devops_dao": {
-      "address": "0xcdF3E6c6fa2c14352b10f690843e3A725514d1C6",
+      "address": "0x82DA923d6aEE52a73f2CE5dD729cf7bF732EA387",
       "abi": [
         {
           "inputs": [],
@@ -10369,7 +10409,7 @@ export default {
       ]
     },
     "devops_taskDrafts": {
-      "address": "0xc5A9357bE06EcEF85FfA2F180634A551A5171BDF",
+      "address": "0xDDC8a1bf297c210DdDD6c230456158116AFe5dD4",
       "abi": [
         {
           "inputs": [
@@ -10736,7 +10776,7 @@ export default {
       ]
     },
     "devops_tokenListGovernance": {
-      "address": "0x77298FB7b514DabD64097dBEB89d205B19133424",
+      "address": "0x1BeC0e4A5e1d2B40a53854327515725A8e436Ff2",
       "abi": [
         {
           "inputs": [
@@ -12015,7 +12055,7 @@ export default {
       ]
     },
     "engineering_dao": {
-      "address": "0x57A4d5acAf0f499Ec3ce57e9859cA9CD060dADDb",
+      "address": "0x64cc08da33C496e31eC05374D38502DDD7eD93ab",
       "abi": [
         {
           "inputs": [],
@@ -13176,7 +13216,7 @@ export default {
       ]
     },
     "engineering_taskDrafts": {
-      "address": "0xaACDEc08BDC30530db4E561E9dE8ab1cdc997413",
+      "address": "0x6C88B501f76c29aC44DBa215DA097ACa1A38048f",
       "abi": [
         {
           "inputs": [
@@ -13543,7 +13583,7 @@ export default {
       ]
     },
     "engineering_tokenListGovernance": {
-      "address": "0x2761cd684dEa193A2C37dFF5b43A720b296eD5E3",
+      "address": "0xDf8364bC35435083910ecAF2A477F301B7DF3a09",
       "abi": [
         {
           "inputs": [
@@ -14822,7 +14862,7 @@ export default {
       ]
     },
     "management_dao": {
-      "address": "0xBBf30647Fc8DC9A70d56b09Eb89094a1B35aD6f4",
+      "address": "0x8c48eB25F7572C7a695f56bc3B8736fDcB0b54B4",
       "abi": [
         {
           "inputs": [],
@@ -15983,7 +16023,7 @@ export default {
       ]
     },
     "management_tokenListGovernance": {
-      "address": "0xa64CD99041B5156a9F3710999Da06EE9360144F5",
+      "address": "0xa28612Da5F851e1bac04D8B0412Bb8D1D63Caa1A",
       "abi": [
         {
           "inputs": [
@@ -17262,7 +17302,7 @@ export default {
       ]
     },
     "parent_dao": {
-      "address": "0xc597AB11F842250136D96cF6c8BBe817aD07d31E",
+      "address": "0xE6303c5facd15351168825D352F303229A148f3F",
       "abi": [
         {
           "inputs": [],
@@ -18423,7 +18463,7 @@ export default {
       ]
     },
     "parent_tokenListGovernance": {
-      "address": "0xA361d3bc9BC9305D1ea2e05738CE82274Da674a4",
+      "address": "0x98FEd1C2DfFBA185f9411Cc63b5Fe2dA926F8a3a",
       "abi": [
         {
           "inputs": [

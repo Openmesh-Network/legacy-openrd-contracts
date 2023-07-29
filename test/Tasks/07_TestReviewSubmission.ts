@@ -236,7 +236,7 @@ describe("Review Submission", function () {
   it("should revert if anyone else tries to review", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
     const accounts = await getUnnamedAccounts();
-    const tasks = task.TasksExecutor.connect(await ethers.getImpersonatedSigner(accounts[0]));
+    const tasks = task.TasksExecutor.connect(await ethers.getSigner(accounts[0]));
     const tx = reviewSubmission({
       tasks: tasks,
       taskId: task.taskId,

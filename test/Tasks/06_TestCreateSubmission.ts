@@ -120,7 +120,7 @@ describe("Create Submission", function () {
   it("should not be allowed by anyone else", async function () {
     const task = await loadFixture(createTakenTaskFixture);
     const accounts = await getUnnamedAccounts();
-    const tasks = task.TasksExecutor.connect(await ethers.getImpersonatedSigner(accounts[0]));
+    const tasks = task.TasksExecutor.connect(await ethers.getSigner(accounts[0]));
     const tx = createSubmission({
       tasks: tasks,
       taskId: task.taskId,
