@@ -49,7 +49,7 @@ const config: HardhatUserConfig = {
     },
   },
   gasReporter: {
-    enabled: true,
+    enabled: false,
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
     excludeContracts: ["mocks/", "ERC20", "ERC721", "DAO", "DAOFactory", "ENSRegistry", "PluginRepoFactory", "ENSSubdomainRegistrar", "PluginRepoRegistry", "PluginSetupProcessor", "PublicResolver", "PreferredProxy", "PluginRepo"],
     // token: "MATIC",
