@@ -15,7 +15,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const TaskDraftsSetup = await ethers.getContractAt("TaskDraftsSetup", deployResult.address) as any as TaskDraftsSetup;
     await deployments.save("TaskDraftsImplementation", { 
         address: await TaskDraftsSetup.implementation(), 
-        ...(await deployments.getExtendedArtifact("TaskDrafts")) 
+        ...(await deployments.getExtendedArtifact("TaskDrafts")),
+        args: [],
     });
 
     await setBool("NewDraftsSetup", deployResult.newlyDeployed);

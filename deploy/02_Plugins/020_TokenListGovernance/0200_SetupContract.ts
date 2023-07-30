@@ -15,7 +15,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const TokenListGovernanceSetup = await ethers.getContractAt("TokenListGovernanceSetup", deployResult.address) as any as TokenListGovernanceSetup;
     await deployments.save("TokenListGovernanceImplementation", { 
         address: await TokenListGovernanceSetup.implementation(), 
-        ...(await deployments.getExtendedArtifact("TokenListGovernance")) 
+        ...(await deployments.getExtendedArtifact("TokenListGovernance")),
+        args: [],
     });
 
     await setBool("NewTokenListGovernance", deployResult.newlyDeployed);

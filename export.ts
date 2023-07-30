@@ -2654,7 +2654,7 @@ export default {
       ]
     },
     "TaskDraftsImplementation": {
-      "address": "0xbAE887E8648864e34d520bF80F94BdCD5Aa5b788",
+      "address": "0xD624D8B9F02519138c53630F1CD530E1C09E46d7",
       "abi": [
         {
           "inputs": [
@@ -3021,7 +3021,7 @@ export default {
       ]
     },
     "TaskDraftsRepo": {
-      "address": "0xB4d40b7A6996201fd989826614f2823CD25B692a",
+      "address": "0x3329Aa0b3F8f3E91aBe18384E8416a3620293058",
       "abi": [
         {
           "inputs": [],
@@ -3957,7 +3957,7 @@ export default {
       ]
     },
     "TaskDraftsSetup": {
-      "address": "0x429AF5bEe20e47F5aBfe79B96F3FBd5891cdC89a",
+      "address": "0xA8e813Ca5be17069237e82Fe202233C83199DBD8",
       "abi": [
         {
           "inputs": [],
@@ -4225,7 +4225,7 @@ export default {
       ]
     },
     "Tasks": {
-      "address": "0x399e635cc8988C73B61c93C1d73cDDE7e8400a1e",
+      "address": "0x48FC281D5a1Ee656a189e4b02D2881b94A36e0b6",
       "abi": [
         {
           "inputs": [],
@@ -4341,7 +4341,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4372,7 +4372,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4432,7 +4432,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4457,7 +4457,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4494,7 +4494,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4525,7 +4525,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4550,7 +4550,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4587,7 +4587,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4630,7 +4630,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4667,7 +4667,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4710,7 +4710,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4735,7 +4735,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4760,7 +4760,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -4850,7 +4850,7 @@ export default {
           "anonymous": false,
           "inputs": [
             {
-              "indexed": false,
+              "indexed": true,
               "internalType": "uint256",
               "name": "taskId",
               "type": "uint256"
@@ -8454,7 +8454,7 @@ export default {
       ]
     },
     "community_dao": {
-      "address": "0xe539C300a5761befD681773F0196388B1Bb38b22",
+      "address": "0xDd145cE002dDc4fDC0CeA6e00CA24a733955D44A",
       "abi": [
         {
           "inputs": [],
@@ -9615,7 +9615,7 @@ export default {
       ]
     },
     "community_tokenListGovernance": {
-      "address": "0x15A79022a6D1a13a1bCc0C148705E83EE0Ae7bD9",
+      "address": "0x4aBBB7AfE750E492C5eE4049d816aF4937c376d0",
       "abi": [
         {
           "inputs": [
@@ -10894,7 +10894,7 @@ export default {
       ]
     },
     "devops_dao": {
-      "address": "0x6B6993cc38B6a0eAA7f96830Ff635f5C75f905eC",
+      "address": "0x38396D416dF17D22f629Da8a4e1B884D8BD35C0d",
       "abi": [
         {
           "inputs": [],
@@ -12055,7 +12055,7 @@ export default {
       ]
     },
     "devops_taskDrafts": {
-      "address": "0xA8F56Ce01030F0e9D218580fF4102CC611a25E39",
+      "address": "0xB994402Df294E22FAE82635978979Bb96c545D14",
       "abi": [
         {
           "inputs": [
@@ -12422,7 +12422,7 @@ export default {
       ]
     },
     "devops_tokenListGovernance": {
-      "address": "0xD187fAa63678397a184c167F4C2B4F3E2b59B090",
+      "address": "0xf5753a0B814eA218bF90eFd23A63B418E7BDE319",
       "abi": [
         {
           "inputs": [
@@ -13701,7 +13701,7 @@ export default {
       ]
     },
     "engineering_dao": {
-      "address": "0x8f1A69607E9C9Ec18828332186f115680cc6E5D0",
+      "address": "0x8B7640612485153952603A828F4Fc0fa86416C82",
       "abi": [
         {
           "inputs": [],
@@ -14862,7 +14862,7 @@ export default {
       ]
     },
     "engineering_taskDrafts": {
-      "address": "0xF0Da1c5254661F0b323800284d70a9ddD72612a3",
+      "address": "0xF1882F27fC2313512F7147f4c39BdaB32e63e72a",
       "abi": [
         {
           "inputs": [
@@ -15229,7 +15229,7 @@ export default {
       ]
     },
     "engineering_tokenListGovernance": {
-      "address": "0xFDFfFfd40e64Bdf162945352dbD5CD5B32023C49",
+      "address": "0x8a32d69bBf1052d80817b03C188b776A523441b5",
       "abi": [
         {
           "inputs": [
@@ -16508,7 +16508,7 @@ export default {
       ]
     },
     "management_dao": {
-      "address": "0xfC596446E700f07F13603ea0688651c8c1DD9B19",
+      "address": "0xB779C1CEBc31f7093f2E328A9EE12926Eb6ACfd3",
       "abi": [
         {
           "inputs": [],
@@ -17669,7 +17669,7 @@ export default {
       ]
     },
     "management_tokenListGovernance": {
-      "address": "0x4AbCd4A907c0f73C816959B1C79FFC3CB6428052",
+      "address": "0x455eF88CD70e34486372795d962f65900D935852",
       "abi": [
         {
           "inputs": [
@@ -18948,7 +18948,7 @@ export default {
       ]
     },
     "parent_dao": {
-      "address": "0x6dB2574875d1bfE2F1279a088592cAF51403f9b3",
+      "address": "0xa579AF96c51588cd53eEC1C9514C734a757817EB",
       "abi": [
         {
           "inputs": [],
@@ -20109,7 +20109,7 @@ export default {
       ]
     },
     "parent_tokenListGovernance": {
-      "address": "0x4800597B0850D49C087765eFffC986fABD10aE3F",
+      "address": "0xB070a3638767768Ac9acA2Ec2F16a058539f6DF8",
       "abi": [
         {
           "inputs": [

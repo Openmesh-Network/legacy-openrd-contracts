@@ -40,22 +40,22 @@ interface ITasks {
     error RequestNotAccepted();
     error RequestAlreadyExecuted();
 
-    event TaskCreated(uint256 taskId, string metadata, uint64 deadline, ERC20Transfer[] budget, address creator, address manager, PreapprovedApplication[] preapproved);
-    event ApplicationCreated(uint256 taskId, uint16 applicationId, string metadata, Reward[] reward, address manager, address applicant);
-    event ApplicationAccepted(uint256 taskId, uint16 applicationId, address manager, address applicant);
-    event TaskTaken(uint256 taskId, uint16 applicationId, address manager, address executor);
-    event SubmissionCreated(uint256 taskId, uint8 submissionId, string metadata, address manager, address executor);
-    event SubmissionReviewed(uint256 taskId, uint8 submissionId, SubmissionJudgement judgement, string feedback, address manager, address executor);
-    event TaskCompleted(uint256 taskId, address manager, address executor);
+    event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ERC20Transfer[] budget, address creator, address manager, PreapprovedApplication[] preapproved);
+    event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string metadata, Reward[] reward, address manager, address applicant);
+    event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId, address manager, address applicant);
+    event TaskTaken(uint256 indexed taskId, uint16 applicationId, address manager, address executor);
+    event SubmissionCreated(uint256 indexed taskId, uint8 submissionId, string metadata, address manager, address executor);
+    event SubmissionReviewed(uint256 indexed taskId, uint8 submissionId, SubmissionJudgement judgement, string feedback, address manager, address executor);
+    event TaskCompleted(uint256 indexed taskId, address manager, address executor);
 
-    event CancelTaskRequested(uint256 taskId, uint8 requestId, string explanation, address manager, address executor);
-    event TaskCancelled(uint256 taskId, address manager, address executor);
-    event RequestAccepted(uint256 taskId, RequestType requestType, uint8 requestId, address manager, address executor);
-    event RequestExecuted(uint256 taskId, RequestType requestType, uint8 requestId, address by, address manager, address executor);
+    event CancelTaskRequested(uint256 indexed taskId, uint8 requestId, string explanation, address manager, address executor);
+    event TaskCancelled(uint256 indexed taskId, address manager, address executor);
+    event RequestAccepted(uint256 indexed taskId, RequestType requestType, uint8 requestId, address manager, address executor);
+    event RequestExecuted(uint256 indexed taskId, RequestType requestType, uint8 requestId, address by, address manager, address executor);
 
-    event DeadlineExtended(uint256 taskId, uint64 extension, address manager, address executor);
-    event BudgetIncreased(uint256 taskId, uint96[] increase, address manager);
-    event MetadataEditted(uint256 taskId, string newMetadata, address manager);
+    event DeadlineExtended(uint256 indexed taskId, uint64 extension, address manager, address executor);
+    event BudgetIncreased(uint256 indexed taskId, uint96[] increase, address manager);
+    event MetadataEditted(uint256 indexed taskId, string newMetadata, address manager);
 
     /// @notice A container for ERC20 transfer information.
     /// @param tokenContract ERC20 token to transfer.

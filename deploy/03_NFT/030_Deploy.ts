@@ -12,7 +12,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         args: ["Plopmenz NFTs", "PLOP"]
     });
 
-    await setBool("NewNFT", true);
+    await setBool("NewNFT", deployResult.newlyDeployed);
 };
 export default func;
 func.tags = ["NFT"];
