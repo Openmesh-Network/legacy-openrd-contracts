@@ -15,7 +15,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const subdomain = "community-test-" + await getVar("ENSCounter");
 
     const nftCollection = await deployments.get("NFT");
-    const maxSupply = 50; // Change to all token voting?
+    const maxSupply = 50; 
+    // This is not the final governance model of the community DAO, so for now the TokenListGovernance is used
+    // This will have it's own plugin in the future
     const tokenListGovernanceSettings = await getTokenListGovernanceSettings(nftCollection.address, [...Array(maxSupply).keys()], ethers.ZeroAddress);
 
     const dao = await createDAO(deployer, subdomain, [tokenListGovernanceSettings], deployments);
