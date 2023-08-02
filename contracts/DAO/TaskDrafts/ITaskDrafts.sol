@@ -15,15 +15,25 @@ interface ITaskDrafts {
         ITasks.PreapprovedApplication[] preapproved;
     }
 
+    /// @notice The Tasks contract where tasks are created.
     function getTasksContract() external view returns (ITasks);
 
+    /// @notice The governance plugin (instance) contract where proposals are created.
     function getGovernanceContract() external view returns (IPluginProposals);
 
+    /// @notice Updates the Tasks and governance plugin contract addresses.
+    /// @param _tasks The new Tasks contract address.
+    /// @param _governancePlugin The new governance plugin contract address.
     function updateAddresses(
         ITasks _tasks, 
         IPluginProposals _governancePlugin
     ) external;
 
+    /// @notice Create a proposal to create a task.
+    /// @param _metadata The metadata of the proposal.
+    /// @param _startDate The start date of the proposal.
+    /// @param _endDate The end date of the proposal.
+    /// @param _taskInfo The task to be created if the proposal passes.
     function createDraftTask(
     	bytes calldata _metadata,
         uint64 _startDate,

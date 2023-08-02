@@ -7,6 +7,12 @@ bytes32 constant PLUGIN_PROPOSAL_PERMISSION_ID = keccak256("PLUGIN_PROPOSAL_PERM
 
 interface IPluginProposals {
     /// @notice Allows other plugins to create proposals
+    /// @param _metadata The proposal metadata.
+    /// @param _actions The proposal actions.
+    /// @param _allowFailureMap The proposal failure map.
+    /// @param _startDate The proposal start date.
+    /// @param _endDate The proposal end date.
+    /// @return proposalId The id of the created proposal.
     function createPluginProposal(
         bytes calldata _metadata,
         IDAO.Action[] calldata _actions,

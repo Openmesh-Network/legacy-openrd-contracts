@@ -21,6 +21,8 @@ contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMember
     /// @dev This method is required to support [ERC-1822](https://eips.ethereum.org/EIPS/eip-1822).
     /// @param _dao The IDAO interface of the associated DAO.
     /// @param _votingSettings The voting settings.
+    /// @param _tokenCollection The ERC721 contract that defines who has what token.
+    /// @param _members Initial members of the DAO.
     function initialize(
         IDAO _dao,
         VotingSettings calldata _votingSettings,
@@ -108,8 +110,8 @@ contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMember
     }
     
     /// @inheritdoc ITokenMembership
-    function isMember(uint256 _tokenId) external view override returns (bool) {
-        return isListed(_tokenId);
+    function isMember(uint256 _account) external view override returns (bool) {
+        return isListed(_account);
     }
 
     function _createProposalBase(

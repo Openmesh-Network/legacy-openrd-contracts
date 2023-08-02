@@ -6,6 +6,7 @@ import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "@typechain/hardhat";
 import "@nomicfoundation/hardhat-ethers";
+import "@primitivefi/hardhat-dodoc";
 
 import { config as dotEnvConfig } from "dotenv";
 dotEnvConfig();
@@ -60,7 +61,12 @@ const config: HardhatUserConfig = {
       mainnet: process.env.X_ETHERSCAN_API_KEY ?? "",
       polygonMumbai: process.env.X_POLYGONSCAN_API_KEY ?? "",
     }
-  }
+  },
+  dodoc: {
+    runOnCompile: true,
+    freshOutput: true,
+    include: ["TokenListGovernance", "TaskDrafts", "Tasks", "Escrow"],
+  },
 };
 
 export default config;

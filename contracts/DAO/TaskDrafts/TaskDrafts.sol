@@ -10,6 +10,10 @@ contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
     ITasks private tasks;
     IPluginProposals private governancePlugin;
 
+    /// @notice Initialize the TaskDrafts plugin.
+    /// @param _dao The dao where this plugin is installed.
+    /// @param _tasks The tasks contract to create tasks.
+    /// @param _governancePlugin The governance plugin contract to create proposals.
     function initialize(
         IDAO _dao,
         ITasks _tasks, 

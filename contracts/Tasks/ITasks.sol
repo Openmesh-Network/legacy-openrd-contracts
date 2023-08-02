@@ -153,7 +153,6 @@ interface ITasks {
 
         address manager;
         TaskState state;
-        /// @notice To prevent redundant storage, used an id heres
         uint16 executorApplication;
         uint8 budgetCount;
         uint16 applicationCount;

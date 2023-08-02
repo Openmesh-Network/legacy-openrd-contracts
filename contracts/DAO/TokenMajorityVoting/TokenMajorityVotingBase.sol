@@ -224,18 +224,18 @@ abstract contract TokenMajorityVotingBase is
     /// @inheritdoc ITokenMajorityVoting
     function getVoteOption(
         uint256 _proposalId,
-        uint256 _voter
+        uint256 _account
     ) public view virtual returns (VoteOption) {
-        return proposals[_proposalId].voters[_voter];
+        return proposals[_proposalId].voters[_account];
     }
 
     /// @inheritdoc ITokenMajorityVoting
     function canVote(
         uint256 _proposalId,
-        uint256 _voter,
+        uint256 _account,
         VoteOption _voteOption
     ) public view virtual returns (bool) {
-        return _canVote(_proposalId, _voter, _voteOption);
+        return _canVote(_proposalId, _account, _voteOption);
     }
 
     /// @inheritdoc ITokenMajorityVoting
@@ -379,6 +379,7 @@ abstract contract TokenMajorityVotingBase is
     /// @notice Internal function to cast a vote. It assumes the queried vote exists.
     /// @param _proposalId The ID of the proposal.
     /// @param _voteOption The chosen vote option to be casted on the proposal vote.
+    /// @param _voter The ID of the token that is voting.
     /// @param _tryEarlyExecution If `true`,  early execution is tried after the vote cast. The call does not revert if early execution is not possible.
     function _vote(
         uint256 _proposalId,
