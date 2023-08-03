@@ -168,6 +168,8 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             ++openTasks;
         }
 
+        emit TaskCreated(taskId, _metadata, _deadline, _budget, _msgSender(), _manager);
+
         // Gas optimization
         if (_preapprove.length > 0) {
             task.applicationCount = uint16(_preapprove.length);
@@ -177,14 +179,14 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 application.accepted = true;
                 _ensureRewardEndsWithNextToken(_preapprove[i].reward);
                 _setRewardBellowBudget(task, application, _preapprove[i].reward);
+                
+                emit ApplicationCreated(taskId, i, "", _preapprove[i].reward, _manager, _preapprove[i].applicant);
 
                 unchecked {
                     ++i;
                 }
             }
         }
-
-        emit TaskCreated(taskId, _metadata, _deadline, _budget, _msgSender(), _manager, _preapprove);
     }
 
     /// @inheritdoc ITasks

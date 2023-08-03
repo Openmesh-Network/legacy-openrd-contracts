@@ -40,7 +40,7 @@ interface ITasks {
     error RequestNotAccepted();
     error RequestAlreadyExecuted();
 
-    event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ERC20Transfer[] budget, address creator, address manager, PreapprovedApplication[] preapproved);
+    event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ERC20Transfer[] budget, address creator, address manager);
     event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string metadata, Reward[] reward, address manager, address applicant);
     event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId, address manager, address applicant);
     event TaskTaken(uint256 indexed taskId, uint16 applicationId, address manager, address executor);

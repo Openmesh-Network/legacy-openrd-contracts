@@ -642,7 +642,7 @@ event TaskCompleted(uint256 indexed taskId, address manager, address executor)
 ### TaskCreated
 
 ```solidity
-event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITasks.ERC20Transfer[] budget, address creator, address manager, ITasks.PreapprovedApplication[] preapproved)
+event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITasks.ERC20Transfer[] budget, address creator, address manager)
 ```
 
 
@@ -659,7 +659,6 @@ event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITas
 | budget  | ITasks.ERC20Transfer[] | undefined |
 | creator  | address | undefined |
 | manager  | address | undefined |
-| preapproved  | ITasks.PreapprovedApplication[] | undefined |
 
 ### TaskTaken
 
