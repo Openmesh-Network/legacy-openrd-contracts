@@ -13,6 +13,12 @@ npm t
 ```
 Runs all the unit tests.
 
+## Test coverage
+```
+npx hardhat coverage
+```
+Runs all the unit tests and calculates the test coverage.
+
 ## Deployment
 ```
 npx hardhat deploy --network mumbai
