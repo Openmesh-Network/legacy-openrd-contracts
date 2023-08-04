@@ -5,7 +5,7 @@ The smart contracts and deployment of daodevt.
 ```
 npm i
 ```
-Copy .env.example to .env and fill in the PRIV_KEY with the private you want to use.
+Copy .env.example to .env and fill in the PRIV_KEY with the private key you want to use.
 
 ## Testing
 ```

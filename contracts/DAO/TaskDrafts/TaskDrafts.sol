@@ -55,6 +55,9 @@ contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
         uint64 _endDate,
         CreateTaskInfo calldata _taskInfo
     ) external {
+        // Could also add approve ERC20's of budget here
+        // Currently the DAO should approve select ERC20's in advance (once) for unlimited spending
+
         IDAO.Action[] memory actions = new IDAO.Action[](1);
         {
             bytes memory callData = abi.encodeWithSelector(
