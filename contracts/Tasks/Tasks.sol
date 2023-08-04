@@ -295,6 +295,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         Submission storage submission = task.submissions[_submissionId];
         _ensureSubmissionNotJudged(submission);
+        _ensureJudgementNotNone(_judgement);
         submission.judgement = _judgement;
         submission.feedback = _feedback;
 

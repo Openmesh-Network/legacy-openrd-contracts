@@ -34,6 +34,7 @@ interface ITasks {
     error ApplicationNotAccepted();
     error SubmissionDoesNotExist();
     error SubmissionAlreadyJudged();
+    error JudgementNone();
 
     error RequestDoesNotExist();
     error RequestAlreadyAccepted();

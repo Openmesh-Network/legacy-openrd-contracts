@@ -679,6 +679,17 @@ error ApplicationNotAccepted()
 
 
 
+### JudgementNone
+
+```solidity
+error JudgementNone()
+```
+
+
+
+
+
+
 ### NotExecutor
 
 ```solidity

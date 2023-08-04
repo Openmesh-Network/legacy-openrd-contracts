@@ -246,9 +246,7 @@ describe("Review Submission", function () {
     await expect(tx).to.be.revertedWithCustomError(tasks, "NotManager");
   });
 
-  // should not be allowed on already judged submission
-
-  it("should revert if executor tries to review", async function () {
+  it("should not be allowed on already judged submission", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
     await reviewSubmission({
       tasks: task.TasksManager,
@@ -274,5 +272,16 @@ describe("Review Submission", function () {
       judgement: SubmissionJudgement.Accepted,
     });
     await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "SubmissionDoesNotExist");
+  });
+
+  it("should revert if judgement is none", async function () {
+    const task = await loadFixture(createTakenTaskWithSubmissionFixture);
+    const tx = reviewSubmission({
+      tasks: task.TasksManager,
+      taskId: task.taskId,
+      submissionId: BigInt(0),
+      judgement: SubmissionJudgement.None,
+    });
+    await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "JudgementNone");
   });
 });

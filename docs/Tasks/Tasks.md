@@ -717,6 +717,17 @@ error Disabled()
 
 
 
+### JudgementNone
+
+```solidity
+error JudgementNone()
+```
+
+
+
+
+
+
 ### NotDisabled
 
 ```solidity

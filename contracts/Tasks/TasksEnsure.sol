@@ -26,21 +26,32 @@ abstract contract TasksEnsure is ITasks, Context {
         }
     }
     
+
     function _ensureSenderIsManager(Task storage task) internal view {
         if (task.manager != _msgSender()) {
             revert NotManager();
         }
     }
 
-    function _ensureApplicationExists(Task storage task, uint16 _applicationId) internal view {
-        if (_applicationId >= task.applicationCount) {
-            revert ApplicationDoesNotExist();
+    ///@dev Should only be called is the task is not open!
+    function _ensureSenderIsExecutor(Task storage task) internal view {
+        if (task.applications[task.executorApplication].applicant != _msgSender()) {
+            revert NotExecutor();
         }
     }
 
-    function _ensureSubmissionExists(Task storage task, uint8 _submissionId) internal view {
-        if (_submissionId >= task.submissionCount) {
-            revert SubmissionDoesNotExist();
+
+    function _ensureRewardEndsWithNextToken(Reward[] memory reward) internal pure {
+        unchecked {
+            if (reward.length != 0 && !reward[reward.length-1].nextToken) {
+                revert RewardDoesntEndWithNewToken();
+            }
+        }
+    }
+
+    function _ensureApplicationExists(Task storage task, uint16 _applicationId) internal view {
+        if (_applicationId >= task.applicationCount) {
+            revert ApplicationDoesNotExist();
         }
     }
 
@@ -56,18 +67,24 @@ abstract contract TasksEnsure is ITasks, Context {
         }
     }
 
+    function _ensureSubmissionExists(Task storage task, uint8 _submissionId) internal view {
+        if (_submissionId >= task.submissionCount) {
+            revert SubmissionDoesNotExist();
+        }
+    }
+
     function _ensureSubmissionNotJudged(Submission storage submission) internal view {
         if (submission.judgement != SubmissionJudgement.None) {
             revert SubmissionAlreadyJudged();
         }
     }
 
-    ///@dev Should only be called is the task is not open!
-    function _ensureSenderIsExecutor(Task storage task) internal view {
-        if (task.applications[task.executorApplication].applicant != _msgSender()) {
-            revert NotExecutor();
+    function _ensureJudgementNotNone(SubmissionJudgement judgement) internal pure {
+        if (judgement == SubmissionJudgement.None) {
+            revert JudgementNone();
         }
     }
+
 
     function _ensureCancelTaskRequestExists(Task storage task, uint8 _requestId) internal view {
         if (_requestId >= task.cancelTaskRequestCount) {
@@ -90,14 +107,6 @@ abstract contract TasksEnsure is ITasks, Context {
     function _ensureRequestNotExecuted(Request storage request) internal view {
         if (request.executed) {
             revert RequestAlreadyExecuted();
-        }
-    }
-
-    function _ensureRewardEndsWithNextToken(Reward[] memory reward) internal pure {
-        unchecked {
-            if (reward.length != 0 && !reward[reward.length-1].nextToken) {
-                revert RewardDoesntEndWithNewToken();
-            }
         }
     }
 }
