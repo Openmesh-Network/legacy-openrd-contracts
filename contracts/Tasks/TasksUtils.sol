@@ -167,11 +167,14 @@ abstract contract TasksUtils is ITasks, Context {
                 }
             }
 
-            escrow.transfer(
-                erc20Transfer.tokenContract,
-                creator,
-                erc20Transfer.amount
-            );
+            // Gas optimization
+            if (erc20Transfer.amount != 0) {
+                escrow.transfer(
+                    erc20Transfer.tokenContract,
+                    creator,
+                    erc20Transfer.amount
+                );
+            }
 
             unchecked {
                 ++i;
