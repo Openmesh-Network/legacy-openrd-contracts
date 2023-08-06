@@ -12,8 +12,8 @@ import { TestSetup } from "../Helpers/TestSetup";
 export async function createTaskFixture() {
   await loadFixture(TestSetup);
   const { manager, executor } = await getNamedAccounts();
-  const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
-  const TasksExecutor = await ethers.getContract("Tasks", executor) as Tasks;
+  const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+  const TasksExecutor = (await ethers.getContract("Tasks", executor)) as Tasks;
   const { taskId } = await createTask({
     tasks: TasksManager,
   });
@@ -73,10 +73,10 @@ export async function createTakenTaskWithAcceptedSubmissionFixture() {
 export async function createBudgetTaskFixture() {
   await loadFixture(TestSetup);
   const { manager, executor } = await getNamedAccounts();
-  const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
-  const TasksExecutor = await ethers.getContract("Tasks", executor) as Tasks;
+  const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+  const TasksExecutor = (await ethers.getContract("Tasks", executor)) as Tasks;
   const amounts = [Wei(1), Wei(10), Gwei(1), Gwei(5), Ether(1), Ether(20), Ether(100), Ether(1337), Ether(1_000_000)];
-  const budget = await asyncMap(amounts, a => GetBudgetItem(TasksManager, a, manager));
+  const budget = await asyncMap(amounts, (a) => GetBudgetItem(TasksManager, a, manager));
   const { taskId } = await createTask({
     tasks: TasksManager,
     budget: budget,
@@ -99,7 +99,10 @@ export async function createApplicationsTaskFixture() {
 
 export async function createApprovedApplicationsTaskFixture() {
   const task = await loadFixture(createApplicationsTaskFixture);
-  const acceptedApplications = task.applicants.map((_, i) => i).filter((_, i) => i % 2 == 0).map(BigInt);
+  const acceptedApplications = task.applicants
+    .map((_, i) => i)
+    .filter((_, i) => i % 2 == 0)
+    .map(BigInt);
   await acceptApplications({
     tasks: task.TasksManager,
     taskId: task.taskId,
@@ -110,7 +113,9 @@ export async function createApprovedApplicationsTaskFixture() {
 
 export async function createBudgetTaskWithExecutorAndSubmissionFixture() {
   const task = await loadFixture(createBudgetTaskFixture);
-  const reward = task.budget.map((_, i) => { return { nextToken: true, to: task.executor, amount: BigInt(i) }; });
+  const reward = task.budget.map((_, i) => {
+    return { nextToken: true, to: task.executor, amount: BigInt(i) };
+  });
   await applyForTask({
     tasks: task.TasksExecutor,
     taskId: task.taskId,
@@ -119,7 +124,7 @@ export async function createBudgetTaskWithExecutorAndSubmissionFixture() {
   await acceptApplications({
     tasks: task.TasksManager,
     taskId: task.taskId,
-    applications: [BigInt(0)]
+    applications: [BigInt(0)],
   });
   await takeTask({
     tasks: task.TasksExecutor,
@@ -138,12 +143,14 @@ export async function createBudgetTaskWithExecutorAndSubmissionFullRewardFixture
   await applyForTask({
     tasks: task.TasksExecutor,
     taskId: task.taskId,
-    reward: task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; }),
+    reward: task.budget.map((b) => {
+      return { nextToken: true, to: task.executor, amount: b.amount };
+    }),
   });
   await acceptApplications({
     tasks: task.TasksManager,
     taskId: task.taskId,
-    applications: [BigInt(0)]
+    applications: [BigInt(0)],
   });
   await takeTask({
     tasks: task.TasksExecutor,
@@ -159,7 +166,9 @@ export async function createBudgetTaskWithExecutorAndSubmissionFullRewardFixture
 
 export async function createBudgetTaskWithExecutorAndSubmissionIncompleteRewardFixture() {
   const task = await loadFixture(createBudgetTaskFixture);
-  const reward = task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; });
+  const reward = task.budget.map((b) => {
+    return { nextToken: true, to: task.executor, amount: b.amount };
+  });
   reward.pop();
   await applyForTask({
     tasks: task.TasksExecutor,
@@ -169,7 +178,7 @@ export async function createBudgetTaskWithExecutorAndSubmissionIncompleteRewardF
   await acceptApplications({
     tasks: task.TasksManager,
     taskId: task.taskId,
-    applications: [BigInt(0)]
+    applications: [BigInt(0)],
   });
   await takeTask({
     tasks: task.TasksExecutor,
@@ -186,43 +195,47 @@ export async function createBudgetTaskWithExecutorAndSubmissionIncompleteRewardF
 export async function createPreapprovedBudgetTaskFixture() {
   await loadFixture(TestSetup);
   const { manager, executor } = await getNamedAccounts();
-  const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
-  const TasksExecutor = await ethers.getContract("Tasks", executor) as Tasks;
+  const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+  const TasksExecutor = (await ethers.getContract("Tasks", executor)) as Tasks;
   const amounts = [Wei(1), Wei(10), Gwei(1), Gwei(5), Ether(1), Ether(20), Ether(100), Ether(1337), Ether(1_000_000)];
-  const budget = await asyncMap(amounts, a => GetBudgetItem(TasksManager, a, manager));
+  const budget = await asyncMap(amounts, (a) => GetBudgetItem(TasksManager, a, manager));
   const { taskId } = await createTask({
     tasks: TasksManager,
     budget: budget,
-    preapproved: [{
-      applicant: executor,
-      reward: amounts.map(b => { return { nextToken: true, to: executor, amount: b }; }),
-    }]
+    preapproved: [
+      {
+        applicant: executor,
+        reward: amounts.map((b) => {
+          return { nextToken: true, to: executor, amount: b };
+        }),
+      },
+    ],
   });
   return { manager, executor, TasksManager, TasksExecutor, taskId, budget };
 }
 
 describe("Tasks Fixtures", function () {
-  describe("Base", function () {  
+  describe("Base", function () {
     it("create task", async function () {
       await loadFixture(createTaskFixture);
     });
-  
+
     it("apply for task", async function () {
       await loadFixture(createTaskWithApplicationFixture);
     });
-  
+
     it("accept applications", async function () {
       await loadFixture(createTaskWithAcceptedApplicationFixture);
     });
-  
+
     it("take task", async function () {
       await loadFixture(createTakenTaskFixture);
     });
-  
+
     it("create submission", async function () {
       await loadFixture(createTakenTaskWithSubmissionFixture);
     });
-  
+
     it("review submission", async function () {
       await loadFixture(createTakenTaskWithAcceptedSubmissionFixture);
     });
@@ -240,11 +253,11 @@ describe("Tasks Fixtures", function () {
     it("create approved applications task", async function () {
       await loadFixture(createApprovedApplicationsTaskFixture);
     });
-    
+
     it("create budget task with executor and submission", async function () {
       await loadFixture(createBudgetTaskWithExecutorAndSubmissionFixture);
     });
-    
+
     it("create budget task with executor and submission full reward", async function () {
       await loadFixture(createBudgetTaskWithExecutorAndSubmissionFullRewardFixture);
     });
@@ -253,7 +266,7 @@ describe("Tasks Fixtures", function () {
       await loadFixture(createBudgetTaskWithExecutorAndSubmissionIncompleteRewardFixture);
     });
 
-    it("create preapproved budget task", async function() {
+    it("create preapproved budget task", async function () {
       await loadFixture(createPreapprovedBudgetTaskFixture);
     });
   });

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Escrow } from "./Escrow.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Escrow} from "./Escrow.sol";
 
 /*
   Some of the functionality in this contract will be removed in the next version.
@@ -41,22 +41,100 @@ interface ITasks {
     error RequestNotAccepted();
     error RequestAlreadyExecuted();
 
-    event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ERC20Transfer[] budget, address creator, address manager, PreapprovedApplication[] preapproved);
-    event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string metadata, Reward[] reward, address manager, address applicant);
-    event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId, address manager, address applicant);
-    event TaskTaken(uint256 indexed taskId, uint16 applicationId, address manager, address executor);
-    event SubmissionCreated(uint256 indexed taskId, uint8 submissionId, string metadata, address manager, address executor);
-    event SubmissionReviewed(uint256 indexed taskId, uint8 submissionId, SubmissionJudgement judgement, string feedback, address manager, address executor);
-    event TaskCompleted(uint256 indexed taskId, address manager, address executor);
+    event TaskCreated(
+        uint256 indexed taskId,
+        string metadata,
+        uint64 deadline,
+        ERC20Transfer[] budget,
+        address creator,
+        address manager,
+        PreapprovedApplication[] preapproved
+    );
+    event ApplicationCreated(
+        uint256 indexed taskId,
+        uint16 applicationId,
+        string metadata,
+        Reward[] reward,
+        address manager,
+        address applicant
+    );
+    event ApplicationAccepted(
+        uint256 indexed taskId,
+        uint16 applicationId,
+        address manager,
+        address applicant
+    );
+    event TaskTaken(
+        uint256 indexed taskId,
+        uint16 applicationId,
+        address manager,
+        address executor
+    );
+    event SubmissionCreated(
+        uint256 indexed taskId,
+        uint8 submissionId,
+        string metadata,
+        address manager,
+        address executor
+    );
+    event SubmissionReviewed(
+        uint256 indexed taskId,
+        uint8 submissionId,
+        SubmissionJudgement judgement,
+        string feedback,
+        address manager,
+        address executor
+    );
+    event TaskCompleted(
+        uint256 indexed taskId,
+        address manager,
+        address executor
+    );
 
-    event CancelTaskRequested(uint256 indexed taskId, uint8 requestId, string explanation, address manager, address executor);
-    event TaskCancelled(uint256 indexed taskId, address manager, address executor);
-    event RequestAccepted(uint256 indexed taskId, RequestType requestType, uint8 requestId, address manager, address executor);
-    event RequestExecuted(uint256 indexed taskId, RequestType requestType, uint8 requestId, address by, address manager, address executor);
+    event CancelTaskRequested(
+        uint256 indexed taskId,
+        uint8 requestId,
+        string explanation,
+        address manager,
+        address executor
+    );
+    event TaskCancelled(
+        uint256 indexed taskId,
+        address manager,
+        address executor
+    );
+    event RequestAccepted(
+        uint256 indexed taskId,
+        RequestType requestType,
+        uint8 requestId,
+        address manager,
+        address executor
+    );
+    event RequestExecuted(
+        uint256 indexed taskId,
+        RequestType requestType,
+        uint8 requestId,
+        address by,
+        address manager,
+        address executor
+    );
 
-    event DeadlineExtended(uint256 indexed taskId, uint64 extension, address manager, address executor);
-    event BudgetIncreased(uint256 indexed taskId, uint96[] increase, address manager);
-    event MetadataEditted(uint256 indexed taskId, string newMetadata, address manager);
+    event DeadlineExtended(
+        uint256 indexed taskId,
+        uint64 extension,
+        address manager,
+        address executor
+    );
+    event BudgetIncreased(
+        uint256 indexed taskId,
+        uint96[] increase,
+        address manager
+    );
+    event MetadataEditted(
+        uint256 indexed taskId,
+        string newMetadata,
+        address manager
+    );
 
     /// @notice A container for ERC20 transfer information.
     /// @param tokenContract ERC20 token to transfer.
@@ -104,7 +182,11 @@ interface ITasks {
         Reward[] reward;
     }
 
-    enum SubmissionJudgement { None, Accepted, Rejected }
+    enum SubmissionJudgement {
+        None,
+        Accepted,
+        Rejected
+    }
     /// @notice A container for a task submission.
     /// @param metadata Metadata of the submission. (IPFS hash)
     /// @param judgement Judgement cast on the submission.
@@ -115,7 +197,9 @@ interface ITasks {
         SubmissionJudgement judgement;
     }
 
-    enum RequestType { CancelTask }
+    enum RequestType {
+        CancelTask
+    }
 
     /// @notice A container for shared request information.
     /// @param accepted If the request was accepted.
@@ -133,7 +217,11 @@ interface ITasks {
         string explanation;
     }
 
-    enum TaskState { Open, Taken, Closed }
+    enum TaskState {
+        Open,
+        Taken,
+        Closed
+    }
     /// @notice A container for task-related information.
     /// @param metadata Metadata of the task. (IPFS hash)
     /// @param deadline Block timestamp at which the task expires if not completed.
@@ -146,12 +234,9 @@ interface ITasks {
     /// @dev Storage blocks seperated by newlines.
     struct Task {
         string metadata;
-
         uint64 deadline;
         Escrow escrow;
-
         address creator;
-
         address manager;
         TaskState state;
         uint16 executorApplication;
@@ -159,7 +244,6 @@ interface ITasks {
         uint16 applicationCount;
         uint8 submissionCount;
         uint8 cancelTaskRequestCount;
-
         mapping(uint8 => ERC20Transfer) budget;
         mapping(uint16 => Application) applications;
         mapping(uint8 => Submission) submissions;
@@ -182,22 +266,29 @@ interface ITasks {
 
     /// @notice Retrieves the current amount of created tasks.
     function taskCount() external view returns (uint256);
-    
+
     /// @notice Retrieves the current statistics of created tasks.
-    function taskStatistics() external view returns (uint256 openTasks, uint256 takenTasks, uint256 successfulTasks);
+    function taskStatistics()
+        external
+        view
+        returns (
+            uint256 openTasks,
+            uint256 takenTasks,
+            uint256 successfulTasks
+        );
 
     /// @notice Retrieves all task information by id.
     /// @param _taskId Id of the task.
     function getTask(
         uint256 _taskId
     ) external view returns (OffChainTask memory);
-    
+
     /// @notice Retrieves multiple tasks.
     /// @param _taskIds Ids of the tasks.
     function getTasks(
         uint256[] calldata _taskIds
     ) external view returns (OffChainTask[] memory);
-    
+
     /// @notice Retrieves all tasks of a manager. Most recent ones first.
     /// @param _manager The manager to fetch tasks of.
     /// @param _fromTaskId What taskId to start from. 0 for most recent task.
@@ -207,7 +298,7 @@ interface ITasks {
         uint256 _fromTaskId,
         uint256 _max
     ) external view returns (OffChainTask[] memory);
-    
+
     /// @notice Retrieves all tasks of an executor. Most recent ones first.
     /// @param _executor The executor to fetch tasks of.
     /// @param _fromTaskId What taskId to start from. 0 for most recent task.
@@ -231,7 +322,7 @@ interface ITasks {
         address _manager,
         PreapprovedApplication[] calldata _preapprove
     ) external returns (uint256 taskId);
-    
+
     /// @notice Apply to take the task.
     /// @param _taskId Id of the task.
     /// @param _metadata Metadata of your application.
@@ -241,7 +332,7 @@ interface ITasks {
         string calldata _metadata,
         Reward[] calldata _reward
     ) external returns (uint16 applicationId);
-    
+
     /// @notice Accept application to allow them to take the task.
     /// @param _taskId Id of the task.
     /// @param _applicationIds Indexes of the applications to accept.
@@ -249,15 +340,12 @@ interface ITasks {
         uint256 _taskId,
         uint16[] calldata _applicationIds
     ) external;
-    
+
     /// @notice Take the task after your application has been accepted.
     /// @param _taskId Id of the task.
     /// @param _applicationId Index of application you made that has been accepted.
-    function takeTask(
-        uint256 _taskId,
-        uint16 _applicationId
-    ) external;
-    
+    function takeTask(uint256 _taskId, uint16 _applicationId) external;
+
     /// @notice Create a submission.
     /// @param _taskId Id of the task.
     /// @param _metadata Metadata of the submission. (IPFS hash)
@@ -265,7 +353,7 @@ interface ITasks {
         uint256 _taskId,
         string calldata _metadata
     ) external returns (uint8 submissionId);
-    
+
     /// @notice Review a submission.
     /// @param _taskId Id of the task.
     /// @param _submissionId Index of the submission that is reviewed.
@@ -311,10 +399,7 @@ interface ITasks {
     /// @notice Extend the deadline of a task.
     /// @param _taskId Id of the task.
     /// @param _extension How much to extend the deadline by.
-    function extendDeadline(
-        uint256 _taskId,
-        uint64 _extension
-    ) external;
+    function extendDeadline(uint256 _taskId, uint64 _extension) external;
 
     /// @notice Increase the budget of the task.
     /// @param _taskId Id of the task.

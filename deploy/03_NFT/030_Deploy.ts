@@ -3,16 +3,16 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { setBool } from "../../utils/globalVars";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-	const { deployments, getNamedAccounts } = hre;
-    const { deployer } = await getNamedAccounts();
+  const { deployments, getNamedAccounts } = hre;
+  const { deployer } = await getNamedAccounts();
 
-    const deployResult = await deployments.deploy("NFT", {
-        from: deployer,
-        contract: "MockERC721",
-        args: ["Plopmenz NFTs", "PLOP"]
-    });
+  const deployResult = await deployments.deploy("NFT", {
+    from: deployer,
+    contract: "MockERC721",
+    args: ["Plopmenz NFTs", "PLOP"],
+  });
 
-    await setBool("NewNFT", deployResult.newlyDeployed);
+  await setBool("NewNFT", deployResult.newlyDeployed);
 };
 export default func;
 func.tags = ["NFT"];

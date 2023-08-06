@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { ITasks, Escrow } from "./ITasks.sol";
-import { Context } from "@openzeppelin/contracts/utils/Context.sol";
+import {ITasks, Escrow} from "./ITasks.sol";
+import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 
 /*
   Higher level functions to allow the Tasks file to be more readable.
 */
 abstract contract TasksUtils is ITasks, Context {
-    function _toOffchainTask(Task storage task) internal view returns (OffChainTask memory offchainTask) {
+    function _toOffchainTask(
+        Task storage task
+    ) internal view returns (OffChainTask memory offchainTask) {
         offchainTask.metadata = task.metadata;
         offchainTask.deadline = task.deadline;
         offchainTask.executorApplication = task.executorApplication;
@@ -24,14 +26,18 @@ abstract contract TasksUtils is ITasks, Context {
                 ++i;
             }
         }
-        
-        offchainTask.applications = new OffChainApplication[](task.applicationCount);
+
+        offchainTask.applications = new OffChainApplication[](
+            task.applicationCount
+        );
         for (uint8 i; i < offchainTask.applications.length; ) {
             Application storage application = task.applications[i];
             offchainTask.applications[i].metadata = application.metadata;
             offchainTask.applications[i].applicant = application.applicant;
             offchainTask.applications[i].accepted = application.accepted;
-            offchainTask.applications[i].reward = new Reward[](application.rewardCount);
+            offchainTask.applications[i].reward = new Reward[](
+                application.rewardCount
+            );
             for (uint8 j; j < offchainTask.applications[i].reward.length; ) {
                 offchainTask.applications[i].reward[j] = application.reward[j];
                 unchecked {
@@ -51,7 +57,9 @@ abstract contract TasksUtils is ITasks, Context {
             }
         }
 
-        offchainTask.cancelTaskRequests = new CancelTaskRequest[](task.cancelTaskRequestCount);
+        offchainTask.cancelTaskRequests = new CancelTaskRequest[](
+            task.cancelTaskRequestCount
+        );
         for (uint8 i; i < offchainTask.cancelTaskRequests.length; ) {
             offchainTask.cancelTaskRequests[i] = task.cancelTaskRequests[i];
             unchecked {
@@ -76,7 +84,11 @@ abstract contract TasksUtils is ITasks, Context {
             if (_reward[i].nextToken) {
                 if (needed > erc20Transfer.amount) {
                     // Existing budget in escrow doesnt cover the needed reward
-                    erc20Transfer.tokenContract.transferFrom(_msgSender(), address(task.escrow), needed - erc20Transfer.amount);
+                    erc20Transfer.tokenContract.transferFrom(
+                        _msgSender(),
+                        address(task.escrow),
+                        needed - erc20Transfer.amount
+                    );
                     task.budget[j].amount = uint96(needed);
                 }
 
@@ -94,7 +106,7 @@ abstract contract TasksUtils is ITasks, Context {
 
     function _setRewardBellowBudget(
         Task storage task,
-        Application storage application, 
+        Application storage application,
         Reward[] calldata _reward
     ) internal {
         application.rewardCount = uint8(_reward.length);
@@ -127,7 +139,9 @@ abstract contract TasksUtils is ITasks, Context {
     }
 
     function _payoutTask(Task storage task) internal {
-        Application storage executor = task.applications[task.executorApplication];
+        Application storage executor = task.applications[
+            task.executorApplication
+        ];
         address creator = task.creator;
         Escrow escrow = task.escrow;
 
@@ -138,7 +152,11 @@ abstract contract TasksUtils is ITasks, Context {
             ERC20Transfer memory erc20Transfer = task.budget[i];
             while (j < rewardCount) {
                 Reward memory reward = executor.reward[j];
-                escrow.transfer(erc20Transfer.tokenContract, reward.to, reward.amount);
+                escrow.transfer(
+                    erc20Transfer.tokenContract,
+                    reward.to,
+                    reward.amount
+                );
                 unchecked {
                     erc20Transfer.amount -= reward.amount;
                     ++j;
@@ -149,7 +167,11 @@ abstract contract TasksUtils is ITasks, Context {
                 }
             }
 
-            escrow.transfer(erc20Transfer.tokenContract, creator, erc20Transfer.amount);
+            escrow.transfer(
+                erc20Transfer.tokenContract,
+                creator,
+                erc20Transfer.amount
+            );
 
             unchecked {
                 ++i;
@@ -158,14 +180,18 @@ abstract contract TasksUtils is ITasks, Context {
 
         task.state = TaskState.Closed;
     }
-    
+
     function _refundCreator(Task storage task) internal {
         uint8 budgetCount = task.budgetCount;
         address creator = task.creator;
         Escrow escrow = task.escrow;
         for (uint8 i; i < budgetCount; ) {
             ERC20Transfer memory erc20Transfer = task.budget[i];
-            escrow.transfer(erc20Transfer.tokenContract, creator, erc20Transfer.amount);
+            escrow.transfer(
+                erc20Transfer.tokenContract,
+                creator,
+                erc20Transfer.amount
+            );
 
             unchecked {
                 ++i;

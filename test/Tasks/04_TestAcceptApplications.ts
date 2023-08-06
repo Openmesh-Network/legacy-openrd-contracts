@@ -2,7 +2,12 @@ import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { acceptApplications, applyForTask, getTask } from "../../utils/taskHelper";
 import { ToBlockchainDate } from "../../utils/timeUnits";
-import { createApplicationsTaskFixture, createBudgetTaskFixture, createTakenTaskFixture, createTakenTaskWithAcceptedSubmissionFixture } from "./00_TestTasksFixtures";
+import {
+  createApplicationsTaskFixture,
+  createBudgetTaskFixture,
+  createTakenTaskFixture,
+  createTakenTaskWithAcceptedSubmissionFixture,
+} from "./00_TestTasksFixtures";
 import { TaskState } from "../../utils/taskTypes";
 import { ethers, getUnnamedAccounts } from "hardhat";
 import { MockERC20 } from "../../typechain-types";
@@ -68,7 +73,7 @@ describe("Accept Applications", function () {
     expect(taskInfo.escrow).to.be.equal(taskInfoBefore.escrow);
     expect(taskInfo.manager).to.be.equal(taskInfoBefore.manager);
   });
-  
+
   it("should not have changed applications", async function () {
     const task = await loadFixture(createApplicationsTaskFixture);
     const taskInfoBefore = await getTask({ tasks: task.TasksManager, taskId: task.taskId });
@@ -110,7 +115,7 @@ describe("Accept Applications", function () {
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.submissions).to.have.lengthOf(0);
   });
-  
+
   //Check for exploits
   it("should not be allowed on a task id that does not exist", async function () {
     const task = await loadFixture(createApplicationsTaskFixture);
@@ -181,9 +186,11 @@ describe("Accept Applications", function () {
     const task = await loadFixture(createBudgetTaskFixture);
     const taskInfoBefore = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     const increase = Wei(1);
-    let reward = task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; });
+    let reward = task.budget.map((b) => {
+      return { nextToken: true, to: task.executor, amount: b.amount };
+    });
     reward[0].amount += increase;
-    const ERC20 = await ethers.getContractAt("MockERC20", task.budget[0].tokenContract, await ethers.getSigner(task.manager)) as any as MockERC20;
+    const ERC20 = (await ethers.getContractAt("MockERC20", task.budget[0].tokenContract, await ethers.getSigner(task.manager))) as any as MockERC20;
     await ERC20.increaseBalance(task.manager, increase);
     await ERC20.approve(await task.TasksManager.getAddress(), increase);
     await applyForTask({

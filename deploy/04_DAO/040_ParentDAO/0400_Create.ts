@@ -6,22 +6,22 @@ import { ethers } from "hardhat";
 import { getBool, getVar } from "../../../utils/globalVars";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-    if (!await getBool("NewTokenListGovernance") && !await getBool("NewDraftsSetup") && !await getBool("NewNFT")) {
-        return;
-    }
+  if (!(await getBool("NewTokenListGovernance")) && !(await getBool("NewDraftsSetup")) && !(await getBool("NewNFT"))) {
+    return;
+  }
 
-	const { deployments, getNamedAccounts } = hre;
-    const { deployer } = await getNamedAccounts();
-    const subdomain = "parent-test-" + await getVar("ENSCounter");
+  const { deployments, getNamedAccounts } = hre;
+  const { deployer } = await getNamedAccounts();
+  const subdomain = "parent-test-" + (await getVar("ENSCounter"));
 
-    const nftCollection = await deployments.get("NFT");
-    const tokenListGovernanceSettings = await getTokenListGovernanceSettings(nftCollection.address, [0], ethers.ZeroAddress); // Change to normal address list voting?
+  const nftCollection = await deployments.get("NFT");
+  const tokenListGovernanceSettings = await getTokenListGovernanceSettings(nftCollection.address, [0], ethers.ZeroAddress); // Change to normal address list voting?
 
-    const dao = await createDAO(deployer, subdomain, [tokenListGovernanceSettings], deployments);
+  const dao = await createDAO(deployer, subdomain, [tokenListGovernanceSettings], deployments);
 
-    // TODO: Verify as proxy contracts
-    await deployments.save("parent_dao", { address : dao.daoAddress, ...(await deployments.getArtifact("DAO")) });
-    await deployments.save("parent_tokenListGovernance", { address : dao.pluginAddresses[0], ...(await deployments.getArtifact("TokenListGovernance")) });
+  // TODO: Verify as proxy contracts
+  await deployments.save("parent_dao", { address: dao.daoAddress, ...(await deployments.getArtifact("DAO")) });
+  await deployments.save("parent_tokenListGovernance", { address: dao.pluginAddresses[0], ...(await deployments.getArtifact("TokenListGovernance")) });
 };
 export default func;
 func.tags = ["ParentDAO"];

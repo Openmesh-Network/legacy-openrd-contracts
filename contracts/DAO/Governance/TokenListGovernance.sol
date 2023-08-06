@@ -1,21 +1,28 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { SafeCastUpgradeable } from "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
-import { RATIO_BASE, _applyRatioCeiled } from "@aragon/osx/plugins/utils/Ratio.sol";
-import { TokenList } from "./TokenList.sol";
+import {SafeCastUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
+import {RATIO_BASE, _applyRatioCeiled} from "@aragon/osx/plugins/utils/Ratio.sol";
+import {TokenList} from "./TokenList.sol";
 
-import { TokenMajorityVotingBase, IDAO, IERC721 } from "../TokenMajorityVoting/TokenMajorityVotingBase.sol";
-import { ITokenMembership } from "../TokenMembership/ITokenMembership.sol";
-import { ITokenListGovernance } from "./ITokenListGovernance.sol";
-import { IPluginProposals, PLUGIN_PROPOSAL_PERMISSION_ID } from "./IPluginProposals.sol";
+import {TokenMajorityVotingBase, IDAO, IERC721} from "../TokenMajorityVoting/TokenMajorityVotingBase.sol";
+import {ITokenMembership} from "../TokenMembership/ITokenMembership.sol";
+import {ITokenListGovernance} from "./ITokenListGovernance.sol";
+import {IPluginProposals, PLUGIN_PROPOSAL_PERMISSION_ID} from "./IPluginProposals.sol";
 
 // Based on https://github.com/aragon/osx/blob/develop/packages/contracts/src/plugins/governance/majority-voting/addresslist/AddresslistVoting.sol
-contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMembership, ITokenListGovernance, IPluginProposals {
- using SafeCastUpgradeable for uint256;
- 
+contract TokenListGovernance is
+    TokenMajorityVotingBase,
+    TokenList,
+    ITokenMembership,
+    ITokenListGovernance,
+    IPluginProposals
+{
+    using SafeCastUpgradeable for uint256;
+
     /// @notice The ID of the permission required to call the `addMembers` and `removeMembers` functions.
-    bytes32 public constant UPDATE_MEMBERS_PERMISSION_ID = keccak256("UPDATE_MEMBERS_PERMISSION");
+    bytes32 public constant UPDATE_MEMBERS_PERMISSION_ID =
+        keccak256("UPDATE_MEMBERS_PERMISSION");
 
     /// @notice Initializes the component.
     /// @dev This method is required to support [ERC-1822](https://eips.ethereum.org/EIPS/eip-1822).
@@ -37,8 +44,12 @@ contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMember
     /// @notice Checks if this or the parent contract supports an interface by its ID.
     /// @param _interfaceId The ID of the interface.
     /// @return Returns `true` if the interface is supported.
-    function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
-        return _interfaceId == type(ITokenListGovernance).interfaceId || super.supportsInterface(_interfaceId);
+    function supportsInterface(
+        bytes4 _interfaceId
+    ) public view virtual override returns (bool) {
+        return
+            _interfaceId == type(ITokenListGovernance).interfaceId ||
+            super.supportsInterface(_interfaceId);
     }
 
     /// @inheritdoc ITokenListGovernance
@@ -56,10 +67,12 @@ contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMember
     }
 
     /// @inheritdoc TokenMajorityVotingBase
-    function totalVotingPower(uint256 _blockNumber) public view override returns (uint256) {
+    function totalVotingPower(
+        uint256 _blockNumber
+    ) public view override returns (uint256) {
         return tokenlistLengthAtBlock(_blockNumber);
     }
-    
+
     /// @inheritdoc IPluginProposals
     function createPluginProposal(
         bytes calldata _metadata,
@@ -67,7 +80,11 @@ contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMember
         uint256 _allowFailureMap,
         uint64 _startDate,
         uint64 _endDate
-    ) external auth(PLUGIN_PROPOSAL_PERMISSION_ID) returns (uint256 proposalId) {
+    )
+        external
+        auth(PLUGIN_PROPOSAL_PERMISSION_ID)
+        returns (uint256 proposalId)
+    {
         proposalId = _createProposalBase(
             _metadata,
             _actions,
@@ -108,7 +125,7 @@ contract TokenListGovernance is TokenMajorityVotingBase, TokenList, ITokenMember
             vote(proposalId, _voteOption, _tryEarlyExecution, _tokenId);
         }
     }
-    
+
     /// @inheritdoc ITokenMembership
     function isMember(uint256 _account) external view override returns (bool) {
         return isListed(_account);

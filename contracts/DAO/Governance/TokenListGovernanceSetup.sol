@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { IDAO } from "@aragon/osx/core/dao/IDAO.sol";
-import { DAO } from "@aragon/osx/core/dao/DAO.sol";
-import { PermissionLib } from "@aragon/osx/core/permission/PermissionLib.sol";
-import { PluginSetup, IPluginSetup } from "@aragon/osx/framework/plugin/setup/PluginSetup.sol";
-import { TokenListGovernance, TokenMajorityVotingBase } from "./TokenListGovernance.sol";
+import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
+import {DAO} from "@aragon/osx/core/dao/DAO.sol";
+import {PermissionLib} from "@aragon/osx/core/permission/PermissionLib.sol";
+import {PluginSetup, IPluginSetup} from "@aragon/osx/framework/plugin/setup/PluginSetup.sol";
+import {TokenListGovernance, TokenMajorityVotingBase} from "./TokenListGovernance.sol";
 
 // Based on https://github.com/aragon/osx/blob/develop/packages/contracts/src/plugins/governance/majority-voting/addresslist/AddresslistVotingSetup.sol
 contract TokenListGovernanceSetup is PluginSetup {
@@ -21,10 +21,25 @@ contract TokenListGovernanceSetup is PluginSetup {
     function prepareInstallation(
         address _dao,
         bytes calldata _data
-    ) external returns (address plugin, PreparedSetupData memory preparedSetupData) {
+    )
+        external
+        returns (address plugin, PreparedSetupData memory preparedSetupData)
+    {
         // Decode `_data` to extract the params needed for deploying and initializing `TokenListGovernance` plugin.
-        (TokenMajorityVotingBase.VotingSettings memory votingSettings, address tokenCollection, uint256[] memory members, address manager) = abi
-            .decode(_data, (TokenMajorityVotingBase.VotingSettings, address, uint256[], address));
+        (
+            TokenMajorityVotingBase.VotingSettings memory votingSettings,
+            address tokenCollection,
+            uint256[] memory members,
+            address manager
+        ) = abi.decode(
+                _data,
+                (
+                    TokenMajorityVotingBase.VotingSettings,
+                    address,
+                    uint256[],
+                    address
+                )
+            );
 
         // Prepare and Deploy the plugin proxy.
         plugin = createERC1967Proxy(
@@ -92,7 +107,11 @@ contract TokenListGovernanceSetup is PluginSetup {
     function prepareUninstallation(
         address _dao,
         SetupPayload calldata _payload
-    ) external view returns (PermissionLib.MultiTargetPermission[] memory permissions) {
+    )
+        external
+        view
+        returns (PermissionLib.MultiTargetPermission[] memory permissions)
+    {
         // Prepare permissions
         permissions = new PermissionLib.MultiTargetPermission[](4);
 

@@ -9,13 +9,13 @@ describe("Cancel task", function () {
   // Check if variables are set
   it("should have the correct metadata", async function () {
     const task = await loadFixture(createTakenTaskFixture);
-    const metadata : CancelTaskRequestMetadata = {
-        explanation: "Juse because",
+    const metadata: CancelTaskRequestMetadata = {
+      explanation: "Juse because",
     };
     await cancelTask({
-        tasks: task.TasksManager,
-        taskId: task.taskId,
-        explanation: metadata,
+      tasks: task.TasksManager,
+      taskId: task.taskId,
+      explanation: metadata,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.cancelTaskRequests).to.be.lengthOf(1);
@@ -23,10 +23,10 @@ describe("Cancel task", function () {
     expect(taskInfo.cancelTaskRequests[0].request.accepted).to.be.false;
     expect(taskInfo.state).to.be.equal(TaskState.Taken);
     await acceptRequest({
-        tasks: task.TasksExecutor,
-        taskId: task.taskId,
-        requestType: RequestType.CancelTask,
-        requestId: BigInt(0),
+      tasks: task.TasksExecutor,
+      taskId: task.taskId,
+      requestType: RequestType.CancelTask,
+      requestId: BigInt(0),
     });
     const taskInfo2 = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo2.state).to.be.equal(TaskState.Closed);
@@ -36,8 +36,8 @@ describe("Cancel task", function () {
   it("should not need request on open task", async function () {
     const task = await loadFixture(createTaskFixture);
     await cancelTask({
-        tasks: task.TasksManager,
-        taskId: task.taskId,
+      tasks: task.TasksManager,
+      taskId: task.taskId,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.state).to.be.equal(TaskState.Closed);
@@ -48,18 +48,18 @@ describe("Cancel task", function () {
     const taskInfoBefore = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     await time.increaseTo(ToBlockchainDate(taskInfoBefore.deadline));
     await cancelTask({
-        tasks: task.TasksManager,
-        taskId: task.taskId,
+      tasks: task.TasksManager,
+      taskId: task.taskId,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.state).to.be.equal(TaskState.Closed);
   });
-  
+
   it("budget", async function () {
     const task = await loadFixture(createBudgetTaskFixture);
     await cancelTask({
-        tasks: task.TasksManager,
-        taskId: task.taskId,
+      tasks: task.TasksManager,
+      taskId: task.taskId,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.state).to.be.equal(TaskState.Closed);
@@ -68,19 +68,19 @@ describe("Cancel task", function () {
   it("should be able to execute later", async function () {
     const task = await loadFixture(createTakenTaskFixture);
     await cancelTask({
-        tasks: task.TasksManager,
-        taskId: task.taskId,
+      tasks: task.TasksManager,
+      taskId: task.taskId,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.cancelTaskRequests).to.be.lengthOf(1);
     expect(taskInfo.cancelTaskRequests[0].request.executed).to.be.false;
     expect(taskInfo.state).to.be.equal(TaskState.Taken);
     await acceptRequest({
-        tasks: task.TasksExecutor,
-        taskId: task.taskId,
-        requestType: RequestType.CancelTask,
-        requestId: BigInt(0),
-        execute: false,
+      tasks: task.TasksExecutor,
+      taskId: task.taskId,
+      requestType: RequestType.CancelTask,
+      requestId: BigInt(0),
+      execute: false,
     });
     const taskInfo2 = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo2.cancelTaskRequests[0].request.executed).to.be.false;
@@ -99,8 +99,8 @@ describe("Cancel task", function () {
   it("should not be able to acceot non-existant request", async function () {
     const task = await loadFixture(createTakenTaskFixture);
     await cancelTask({
-        tasks: task.TasksManager,
-        taskId: task.taskId,
+      tasks: task.TasksManager,
+      taskId: task.taskId,
     });
     const tx = acceptRequest({
       tasks: task.TasksExecutor,
@@ -115,15 +115,15 @@ describe("Cancel task", function () {
   it("should not be able to acceot request twice", async function () {
     const task = await loadFixture(createTakenTaskFixture);
     await cancelTask({
-        tasks: task.TasksManager,
-        taskId: task.taskId,
+      tasks: task.TasksManager,
+      taskId: task.taskId,
     });
     await acceptRequest({
-        tasks: task.TasksExecutor,
-        taskId: task.taskId,
-        requestType: RequestType.CancelTask,
-        requestId: BigInt(0),
-        execute: false,
+      tasks: task.TasksExecutor,
+      taskId: task.taskId,
+      requestType: RequestType.CancelTask,
+      requestId: BigInt(0),
+      execute: false,
     });
     const tx = acceptRequest({
       tasks: task.TasksExecutor,
@@ -134,12 +134,12 @@ describe("Cancel task", function () {
     });
     await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "RequestAlreadyAccepted");
   });
-  
+
   it("should not be able to execute not accepted request", async function () {
     const task = await loadFixture(createTakenTaskFixture);
     await cancelTask({
-        tasks: task.TasksManager,
-        taskId: task.taskId,
+      tasks: task.TasksManager,
+      taskId: task.taskId,
     });
     const tx = executeRequest({
       tasks: task.TasksExecutor,
@@ -153,15 +153,15 @@ describe("Cancel task", function () {
   it("should not be able to execute request twice", async function () {
     const task = await loadFixture(createTakenTaskFixture);
     await cancelTask({
-        tasks: task.TasksManager,
-        taskId: task.taskId,
+      tasks: task.TasksManager,
+      taskId: task.taskId,
     });
     await acceptRequest({
-        tasks: task.TasksExecutor,
-        taskId: task.taskId,
-        requestType: RequestType.CancelTask,
-        requestId: BigInt(0),
-        execute: false,
+      tasks: task.TasksExecutor,
+      taskId: task.taskId,
+      requestType: RequestType.CancelTask,
+      requestId: BigInt(0),
+      execute: false,
     });
     await executeRequest({
       tasks: task.TasksExecutor,
@@ -178,12 +178,12 @@ describe("Cancel task", function () {
     // await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "RequestAlreadyExecuted");
     await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "TaskNotTaken");
   });
-  
+
   it("should revert on closed task", async function () {
     const task = await loadFixture(createTakenTaskWithAcceptedSubmissionFixture);
     const tx = cancelTask({
-        tasks: task.TasksManager,
-        taskId: task.taskId,
+      tasks: task.TasksManager,
+      taskId: task.taskId,
     });
     await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "TaskClosed");
   });

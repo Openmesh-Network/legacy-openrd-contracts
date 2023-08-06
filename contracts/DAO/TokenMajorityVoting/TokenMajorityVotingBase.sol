@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { ERC165Upgradeable } from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
-import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import { SafeCastUpgradeable } from "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
-import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import {ERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {SafeCastUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
+import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-import { IProposal } from "@aragon/osx/core/plugin/proposal/IProposal.sol";
-import { ProposalUpgradeable } from "@aragon/osx/core/plugin/proposal/ProposalUpgradeable.sol";
-import { PluginUUPSUpgradeable } from "@aragon/osx/core/plugin/PluginUUPSUpgradeable.sol";
-import { IDAO } from "@aragon/osx/core/dao/IDAO.sol";
-import { RATIO_BASE, RatioOutOfBounds } from "@aragon/osx/plugins/utils/Ratio.sol";
-import { ITokenMajorityVoting } from "./ITokenMajorityVoting.sol";
+import {IProposal} from "@aragon/osx/core/plugin/proposal/IProposal.sol";
+import {ProposalUpgradeable} from "@aragon/osx/core/plugin/proposal/ProposalUpgradeable.sol";
+import {PluginUUPSUpgradeable} from "@aragon/osx/core/plugin/PluginUUPSUpgradeable.sol";
+import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
+import {RATIO_BASE, RatioOutOfBounds} from "@aragon/osx/plugins/utils/Ratio.sol";
+import {ITokenMajorityVoting} from "./ITokenMajorityVoting.sol";
 
 // Based on packages/contracts/src/plugins/governance/majority-voting/MajorityVotingBase.sol
 abstract contract TokenMajorityVotingBase is
@@ -134,12 +134,16 @@ abstract contract TokenMajorityVotingBase is
     /// @param proposalId The ID of the proposal.
     /// @param account The tokenId of the _account.
     /// @param voteOption The chosen vote option.
-    error VoteCastForbidden(uint256 proposalId, uint256 account, VoteOption voteOption);
+    error VoteCastForbidden(
+        uint256 proposalId,
+        uint256 account,
+        VoteOption voteOption
+    );
 
     /// @notice Thrown if the proposal execution is forbidden.
     /// @param proposalId The ID of the proposal.
     error ProposalExecutionForbidden(uint256 proposalId);
-    
+
     /// @notice Thrown if the given tokenId is not owned by the sender.
     /// @param tokenId The ID of the token.
     /// @param sender The address that made the call.
@@ -239,18 +243,23 @@ abstract contract TokenMajorityVotingBase is
     }
 
     /// @inheritdoc ITokenMajorityVoting
-    function canExecute(uint256 _proposalId) public view virtual returns (bool) {
+    function canExecute(
+        uint256 _proposalId
+    ) public view virtual returns (bool) {
         return _canExecute(_proposalId);
     }
 
     /// @inheritdoc ITokenMajorityVoting
-    function isSupportThresholdReached(uint256 _proposalId) public view virtual returns (bool) {
+    function isSupportThresholdReached(
+        uint256 _proposalId
+    ) public view virtual returns (bool) {
         Proposal storage proposal_ = proposals[_proposalId];
 
         // The code below implements the formula of the support criterion explained in the top of this file.
         // `(1 - supportThreshold) * N_yes > supportThreshold *  N_no`
         return
-            (RATIO_BASE - proposal_.parameters.supportThreshold) * proposal_.tally.yes >
+            (RATIO_BASE - proposal_.parameters.supportThreshold) *
+                proposal_.tally.yes >
             proposal_.parameters.supportThreshold * proposal_.tally.no;
     }
 
@@ -260,25 +269,32 @@ abstract contract TokenMajorityVotingBase is
     ) public view virtual returns (bool) {
         Proposal storage proposal_ = proposals[_proposalId];
 
-        uint256 noVotesWorstCase = totalVotingPower(proposal_.parameters.snapshotBlock) -
+        uint256 noVotesWorstCase = totalVotingPower(
+            proposal_.parameters.snapshotBlock
+        ) -
             proposal_.tally.yes -
             proposal_.tally.abstain;
 
         // The code below implements the formula of the early execution support criterion explained in the top of this file.
         // `(1 - supportThreshold) * N_yes > supportThreshold *  N_no,worst-case`
         return
-            (RATIO_BASE - proposal_.parameters.supportThreshold) * proposal_.tally.yes >
+            (RATIO_BASE - proposal_.parameters.supportThreshold) *
+                proposal_.tally.yes >
             proposal_.parameters.supportThreshold * noVotesWorstCase;
     }
 
     /// @inheritdoc ITokenMajorityVoting
-    function isMinParticipationReached(uint256 _proposalId) public view virtual returns (bool) {
+    function isMinParticipationReached(
+        uint256 _proposalId
+    ) public view virtual returns (bool) {
         Proposal storage proposal_ = proposals[_proposalId];
 
         // The code below implements the formula of the participation criterion explained in the top of this file.
         // `N_yes + N_no + N_abstain >= minVotingPower = minParticipation * N_total`
         return
-            proposal_.tally.yes + proposal_.tally.no + proposal_.tally.abstain >=
+            proposal_.tally.yes +
+                proposal_.tally.no +
+                proposal_.tally.abstain >=
             proposal_.parameters.minVotingPower;
     }
 
@@ -313,7 +329,9 @@ abstract contract TokenMajorityVotingBase is
     /// @notice Returns the total voting power checkpointed for a specific block number.
     /// @param _blockNumber The block number.
     /// @return The total voting power.
-    function totalVotingPower(uint256 _blockNumber) public view virtual returns (uint256);
+    function totalVotingPower(
+        uint256 _blockNumber
+    ) public view virtual returns (uint256);
 
     /// @notice Returns all information for a proposal vote by its ID.
     /// @param _proposalId The ID of the proposal.
@@ -416,7 +434,9 @@ abstract contract TokenMajorityVotingBase is
     /// @param _proposalId The ID of the proposal.
     /// @return True if the proposal can be executed, false otherwise.
     /// @dev Threshold and minimal values are compared with `>` and `>=` comparators, respectively.
-    function _canExecute(uint256 _proposalId) internal view virtual returns (bool) {
+    function _canExecute(
+        uint256 _proposalId
+    ) internal view virtual returns (bool) {
         Proposal storage proposal_ = proposals[_proposalId];
 
         // Verify that the vote has not been executed already.
@@ -448,7 +468,9 @@ abstract contract TokenMajorityVotingBase is
     /// @notice Internal function to check if a proposal vote is still open.
     /// @param proposal_ The proposal struct.
     /// @return True if the proposal vote is open, false otherwise.
-    function _isProposalOpen(Proposal storage proposal_) internal view virtual returns (bool) {
+    function _isProposalOpen(
+        Proposal storage proposal_
+    ) internal view virtual returns (bool) {
         uint64 currentTime = block.timestamp.toUint64();
 
         return
@@ -459,7 +481,9 @@ abstract contract TokenMajorityVotingBase is
 
     /// @notice Internal function to update the plugin-wide proposal vote settings.
     /// @param _votingSettings The voting settings to be validated and updated.
-    function _updateVotingSettings(VotingSettings calldata _votingSettings) internal virtual {
+    function _updateVotingSettings(
+        VotingSettings calldata _votingSettings
+    ) internal virtual {
         // Require the support threshold value to be in the interval [0, 10^6-1], because `>` comparision is used in the support criterion and >100% could never be reached.
         if (_votingSettings.supportThreshold > RATIO_BASE - 1) {
             revert RatioOutOfBounds({
@@ -470,15 +494,24 @@ abstract contract TokenMajorityVotingBase is
 
         // Require the minimum participation value to be in the interval [0, 10^6], because `>=` comparision is used in the participation criterion.
         if (_votingSettings.minParticipation > RATIO_BASE) {
-            revert RatioOutOfBounds({limit: RATIO_BASE, actual: _votingSettings.minParticipation});
+            revert RatioOutOfBounds({
+                limit: RATIO_BASE,
+                actual: _votingSettings.minParticipation
+            });
         }
 
         if (_votingSettings.minDuration < 60 minutes) {
-            revert MinDurationOutOfBounds({limit: 60 minutes, actual: _votingSettings.minDuration});
+            revert MinDurationOutOfBounds({
+                limit: 60 minutes,
+                actual: _votingSettings.minDuration
+            });
         }
 
         if (_votingSettings.minDuration > 365 days) {
-            revert MinDurationOutOfBounds({limit: 365 days, actual: _votingSettings.minDuration});
+            revert MinDurationOutOfBounds({
+                limit: 365 days,
+                actual: _votingSettings.minDuration
+            });
         }
 
         votingSettings = _votingSettings;
@@ -509,7 +542,10 @@ abstract contract TokenMajorityVotingBase is
             startDate = _start;
 
             if (startDate < currentTimestamp) {
-                revert DateOutOfBounds({limit: currentTimestamp, actual: startDate});
+                revert DateOutOfBounds({
+                    limit: currentTimestamp,
+                    actual: startDate
+                });
             }
         }
 
@@ -521,7 +557,10 @@ abstract contract TokenMajorityVotingBase is
             endDate = _end;
 
             if (endDate < earliestEndDate) {
-                revert DateOutOfBounds({limit: earliestEndDate, actual: endDate});
+                revert DateOutOfBounds({
+                    limit: earliestEndDate,
+                    actual: endDate
+                });
             }
         }
     }

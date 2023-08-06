@@ -9,8 +9,8 @@ import { PublicResolver } from "../typechain-types";
  * @param node The node in string form
  * @returns The node encoded according to ENS spec
  */
-export function toEnsNode(node : string) : string {
-    return ethers.namehash(node);
+export function toEnsNode(node: string): string {
+  return ethers.namehash(node);
 }
 
 /**
@@ -19,8 +19,8 @@ export function toEnsNode(node : string) : string {
  * @param label The label in string form
  * @returns The label encoded according to ENS spec
  */
-export function toEnsLabel(label : string) : string {
-    return ethers.keccak256(ethers.toUtf8Bytes(label));
+export function toEnsLabel(label: string): string {
+  return ethers.keccak256(ethers.toUtf8Bytes(label));
 }
 
 /**
@@ -31,10 +31,8 @@ export function toEnsLabel(label : string) : string {
  * @param subdomain The subdomain to ask about
  * @returns The address stored at subdomain.domain
  */
-export async function resolveENS(resolver : PublicResolver, domain : string, subdomain : string) : Promise<string> {
-    return await resolver["addr(bytes32)"](ethers.keccak256(
-        ethers.AbiCoder.defaultAbiCoder().encode(
-            ["bytes32 node", "bytes32 _label"], 
-            [toEnsNode(domain), toEnsLabel(subdomain)]
-        )));
+export async function resolveENS(resolver: PublicResolver, domain: string, subdomain: string): Promise<string> {
+  return await resolver["addr(bytes32)"](
+    ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(["bytes32 node", "bytes32 _label"], [toEnsNode(domain), toEnsLabel(subdomain)]))
+  );
 }

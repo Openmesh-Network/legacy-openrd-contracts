@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { ITasks, IERC20, Escrow } from "./ITasks.sol";
-import { TasksEnsure } from "./TasksEnsure.sol";
-import { TasksUtils } from "./TasksUtils.sol";
-import { Context } from "@openzeppelin/contracts/utils/Context.sol";
-import { Clones } from "@openzeppelin/contracts/proxy/Clones.sol";
+import {ITasks, IERC20, Escrow} from "./ITasks.sol";
+import {TasksEnsure} from "./TasksEnsure.sol";
+import {TasksUtils} from "./TasksUtils.sol";
+import {Context} from "@openzeppelin/contracts/utils/Context.sol";
+import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 
 contract Tasks is Context, TasksEnsure, TasksUtils {
     /// @notice The incremental ID for tasks.
@@ -37,9 +37,13 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
     function taskCount() external view returns (uint256) {
         return taskCounter;
     }
-    
+
     /// @inheritdoc ITasks
-    function taskStatistics() external view returns (uint256 open, uint256 taken, uint256 successful) {
+    function taskStatistics()
+        external
+        view
+        returns (uint256 open, uint256 taken, uint256 successful)
+    {
         (open, taken, successful) = (openTasks, takenTasks, successfulTasks);
     }
 
@@ -55,7 +59,9 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
     function getTasks(
         uint256[] memory _taskIds
     ) public view returns (OffChainTask[] memory) {
-        OffChainTask[] memory offchainTasks = new OffChainTask[](_taskIds.length);
+        OffChainTask[] memory offchainTasks = new OffChainTask[](
+            _taskIds.length
+        );
         for (uint i; i < _taskIds.length; ) {
             offchainTasks[i] = getTask(_taskIds[i]);
 
@@ -65,7 +71,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         }
         return offchainTasks;
     }
-    
+
     /// @inheritdoc ITasks
     function getManagingTasks(
         address _manager,
@@ -95,10 +101,15 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             }
         }
         // decrease length of array to match real entries
-        assembly { mstore(taskIndexes, sub(mload(taskIndexes), sub(totalTasks, managerTasksCount))) }
+        assembly {
+            mstore(
+                taskIndexes,
+                sub(mload(taskIndexes), sub(totalTasks, managerTasksCount))
+            )
+        }
         return getTasks(taskIndexes);
     }
-    
+
     /// @inheritdoc ITasks
     function getExecutingTasks(
         address _executor,
@@ -112,7 +123,11 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             _fromTaskId = totalTasks - 1;
         }
         for (uint256 i = _fromTaskId; i != type(uint256).max; ) {
-            if (tasks[i].state != TaskState.Open && tasks[i].applications[tasks[i].executorApplication].applicant == _executor) {
+            if (
+                tasks[i].state != TaskState.Open &&
+                tasks[i].applications[tasks[i].executorApplication].applicant ==
+                _executor
+            ) {
                 taskIndexes[executorTasksCount] = i;
                 unchecked {
                     ++executorTasksCount;
@@ -128,7 +143,12 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             }
         }
         // decrease length of array to match real entries
-        assembly { mstore(taskIndexes, sub(mload(taskIndexes), sub(totalTasks, executorTasksCount))) }
+        assembly {
+            mstore(
+                taskIndexes,
+                sub(mload(taskIndexes), sub(totalTasks, executorTasksCount))
+            )
+        }
         return getTasks(taskIndexes);
     }
 
@@ -151,13 +171,17 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         escrow.__Escrow_init();
         task.escrow = escrow;
         for (uint8 i; i < uint8(_budget.length); ) {
-            _budget[i].tokenContract.transferFrom(_msgSender(), address(escrow), _budget[i].amount);
+            _budget[i].tokenContract.transferFrom(
+                _msgSender(),
+                address(escrow),
+                _budget[i].amount
+            );
             task.budget[i] = _budget[i];
             unchecked {
                 ++i;
             }
         }
-        
+
         task.manager = _manager;
         task.creator = _msgSender();
 
@@ -176,7 +200,11 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 application.applicant = _preapprove[i].applicant;
                 application.accepted = true;
                 _ensureRewardEndsWithNextToken(_preapprove[i].reward);
-                _setRewardBellowBudget(task, application, _preapprove[i].reward);
+                _setRewardBellowBudget(
+                    task,
+                    application,
+                    _preapprove[i].reward
+                );
 
                 unchecked {
                     ++i;
@@ -184,7 +212,15 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             }
         }
 
-        emit TaskCreated(taskId, _metadata, _deadline, _budget, _msgSender(), _manager, _preapprove);
+        emit TaskCreated(
+            taskId,
+            _metadata,
+            _deadline,
+            _budget,
+            _msgSender(),
+            _manager,
+            _preapprove
+        );
     }
 
     /// @inheritdoc ITasks
@@ -198,7 +234,9 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         _ensureTaskIsOpen(task);
         _ensureRewardEndsWithNextToken(_reward);
 
-        Application storage application = task.applications[task.applicationCount];
+        Application storage application = task.applications[
+            task.applicationCount
+        ];
         application.metadata = _metadata;
         application.applicant = _msgSender();
         application.rewardCount = uint8(_reward.length);
@@ -211,9 +249,16 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         applicationId = task.applicationCount++;
 
-        emit ApplicationCreated(_taskId, applicationId, _metadata, _reward, task.manager, _msgSender());
+        emit ApplicationCreated(
+            _taskId,
+            applicationId,
+            _metadata,
+            _reward,
+            task.manager,
+            _msgSender()
+        );
     }
-    
+
     /// @inheritdoc ITasks
     function acceptApplications(
         uint256 _taskId,
@@ -226,23 +271,31 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         for (uint i; i < _applicationIds.length; ) {
             _ensureApplicationExists(task, _applicationIds[i]);
-            
-            Application storage application = task.applications[_applicationIds[i]];
+
+            Application storage application = task.applications[
+                _applicationIds[i]
+            ];
             application.accepted = true;
-            _increaseBudgetToReward(task, application.rewardCount, application.reward);
-            emit ApplicationAccepted(_taskId, _applicationIds[i], _msgSender(), application.applicant);
-            
+            _increaseBudgetToReward(
+                task,
+                application.rewardCount,
+                application.reward
+            );
+            emit ApplicationAccepted(
+                _taskId,
+                _applicationIds[i],
+                _msgSender(),
+                application.applicant
+            );
+
             unchecked {
                 ++i;
             }
         }
     }
-    
+
     /// @inheritdoc ITasks
-    function takeTask(
-        uint256 _taskId,
-        uint16 _applicationId
-    ) external {
+    function takeTask(uint256 _taskId, uint16 _applicationId) external {
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsOpen(task);
@@ -262,7 +315,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         emit TaskTaken(_taskId, _applicationId, task.manager, _msgSender());
     }
-    
+
     /// @inheritdoc ITasks
     function createSubmission(
         uint256 _taskId,
@@ -277,9 +330,15 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         submission.metadata = _metadata;
         submissionId = task.submissionCount++;
 
-        emit SubmissionCreated(_taskId, submissionId, _metadata, task.manager, _msgSender());
+        emit SubmissionCreated(
+            _taskId,
+            submissionId,
+            _metadata,
+            task.manager,
+            _msgSender()
+        );
     }
-    
+
     /// @inheritdoc ITasks
     function reviewSubmission(
         uint256 _taskId,
@@ -306,10 +365,21 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             }
             _payoutTask(task);
 
-            emit TaskCompleted(_taskId, _msgSender(), task.applications[task.executorApplication].applicant);
+            emit TaskCompleted(
+                _taskId,
+                _msgSender(),
+                task.applications[task.executorApplication].applicant
+            );
         }
 
-        emit SubmissionReviewed(_taskId, _submissionId, _judgement, _feedback, _msgSender(), task.applications[task.executorApplication].applicant);
+        emit SubmissionReviewed(
+            _taskId,
+            _submissionId,
+            _judgement,
+            _feedback,
+            _msgSender(),
+            task.applications[task.executorApplication].applicant
+        );
     }
 
     /// @inheritdoc ITasks
@@ -323,30 +393,47 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         _ensureTaskNotClosed(task);
 
-        if (task.state == TaskState.Open || task.deadline <= uint64(block.timestamp)) {
+        if (
+            task.state == TaskState.Open ||
+            task.deadline <= uint64(block.timestamp)
+        ) {
             // Task is open or deadline past
             if (task.state == TaskState.Open) {
                 unchecked {
                     --openTasks;
                 }
-            } else { // if (task.state == TaskState.Taken) {
+            } else {
+                // if (task.state == TaskState.Taken) {
                 unchecked {
                     --takenTasks;
                 }
             }
             _refundCreator(task);
 
-            emit TaskCancelled(_taskId, _msgSender(), task.state == TaskState.Open ? address(0) : task.applications[task.executorApplication].applicant);
+            emit TaskCancelled(
+                _taskId,
+                _msgSender(),
+                task.state == TaskState.Open
+                    ? address(0)
+                    : task.applications[task.executorApplication].applicant
+            );
             // Max means no request
             cancelTaskRequestId = type(uint8).max;
-        }
-        else {
+        } else {
             // Task is taken and deadline has not past
-            CancelTaskRequest storage request = task.cancelTaskRequests[task.cancelTaskRequestCount];
+            CancelTaskRequest storage request = task.cancelTaskRequests[
+                task.cancelTaskRequestCount
+            ];
             request.explanation = _explanation;
             cancelTaskRequestId = task.cancelTaskRequestCount++;
 
-            emit CancelTaskRequested(_taskId, cancelTaskRequestId, _explanation, _msgSender(), task.applications[task.executorApplication].applicant);
+            emit CancelTaskRequested(
+                _taskId,
+                cancelTaskRequestId,
+                _explanation,
+                _msgSender(),
+                task.applications[task.executorApplication].applicant
+            );
         }
     }
 
@@ -361,12 +448,13 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         Task storage task = _getTask(_taskId);
         _ensureTaskIsTaken(task);
         _ensureSenderIsExecutor(task);
-        
+
         //if (_requestType == RequestType.CancelTask) {
         {
             _ensureCancelTaskRequestExists(task, _requestId);
-            
-            CancelTaskRequest storage cancelTaskRequest = task.cancelTaskRequests[_requestId];
+
+            CancelTaskRequest storage cancelTaskRequest = task
+                .cancelTaskRequests[_requestId];
             _ensureRequestNotAccepted(cancelTaskRequest.request);
 
             if (_execute) {
@@ -383,7 +471,13 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             cancelTaskRequest.request.accepted = true;
         }
 
-        emit RequestAccepted(_taskId, _requestType, _requestId, task.manager, _msgSender());
+        emit RequestAccepted(
+            _taskId,
+            _requestType,
+            _requestId,
+            task.manager,
+            _msgSender()
+        );
     }
 
     /// @inheritdoc ITasks
@@ -395,12 +489,13 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsTaken(task);
-        
+
         //if (_requestType == RequestType.CancelTask) {
         {
             _ensureCancelTaskRequestExists(task, _requestId);
-            
-            CancelTaskRequest storage cancelTaskRequest = task.cancelTaskRequests[_requestId];
+
+            CancelTaskRequest storage cancelTaskRequest = task
+                .cancelTaskRequests[_requestId];
             _ensureRequestAccepted(cancelTaskRequest.request);
             _ensureRequestNotExecuted(cancelTaskRequest.request);
 
@@ -409,18 +504,26 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             }
             _refundCreator(task);
 
-            emit TaskCancelled(_taskId, task.manager, task.applications[task.executorApplication].applicant);
+            emit TaskCancelled(
+                _taskId,
+                task.manager,
+                task.applications[task.executorApplication].applicant
+            );
             cancelTaskRequest.request.executed = true;
         }
 
-        emit RequestExecuted(_taskId, _requestType, _requestId, _msgSender(), task.manager, task.applications[task.executorApplication].applicant);
+        emit RequestExecuted(
+            _taskId,
+            _requestType,
+            _requestId,
+            _msgSender(),
+            task.manager,
+            task.applications[task.executorApplication].applicant
+        );
     }
 
     /// @inheritdoc ITasks
-    function extendDeadline(
-        uint256 _taskId,
-        uint64 _extension
-    ) external {
+    function extendDeadline(uint256 _taskId, uint64 _extension) external {
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureSenderIsManager(task);
@@ -429,7 +532,14 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         task.deadline += _extension;
 
-        emit DeadlineExtended(_taskId, _extension, _msgSender(), task.state == TaskState.Open ? address(0) : task.applications[task.executorApplication].applicant);
+        emit DeadlineExtended(
+            _taskId,
+            _extension,
+            _msgSender(),
+            task.state == TaskState.Open
+                ? address(0)
+                : task.applications[task.executorApplication].applicant
+        );
     }
 
     /// @inheritdoc ITasks
@@ -445,7 +555,11 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         for (uint8 i; i < uint8(_increase.length); ) {
             ERC20Transfer storage transfer = task.budget[i];
-            transfer.tokenContract.transferFrom(_msgSender(), address(task.escrow), _increase[i]);
+            transfer.tokenContract.transferFrom(
+                _msgSender(),
+                address(task.escrow),
+                _increase[i]
+            );
             transfer.amount += _increase[i];
 
             unchecked {
@@ -470,7 +584,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         task.metadata = _newMetadata;
         emit MetadataEditted(_taskId, _newMetadata, _msgSender());
     }
-    
+
     function disable() external {
         _ensureDisabler();
         disabler = address(0);
@@ -486,7 +600,9 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         _refundCreator(task);
     }
 
-    function _getTask(uint256 _taskId) internal view returns (Task storage task) {
+    function _getTask(
+        uint256 _taskId
+    ) internal view returns (Task storage task) {
         if (_taskId >= taskCounter) {
             revert TaskDoesNotExist();
         }

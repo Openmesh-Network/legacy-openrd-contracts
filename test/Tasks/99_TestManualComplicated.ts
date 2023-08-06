@@ -1,7 +1,28 @@
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { acceptApplications, acceptRequest, applyForTask, cancelTask, createSubmission, createTask, executeRequest, reviewSubmission, takeTask } from "../../utils/taskHelper";
-import { ApplicationMetadata, BudgetItem, CancelTaskRequestMetadata, PreapprovedApplication, RequestType, Reward, SubmissionJudgement, SubmissionJudgementMetadata, SubmissionMetadata, TaskMetadata } from "../../utils/taskTypes";
+import {
+  acceptApplications,
+  acceptRequest,
+  applyForTask,
+  cancelTask,
+  createSubmission,
+  createTask,
+  executeRequest,
+  reviewSubmission,
+  takeTask,
+} from "../../utils/taskHelper";
+import {
+  ApplicationMetadata,
+  BudgetItem,
+  CancelTaskRequestMetadata,
+  PreapprovedApplication,
+  RequestType,
+  Reward,
+  SubmissionJudgement,
+  SubmissionJudgementMetadata,
+  SubmissionMetadata,
+  TaskMetadata,
+} from "../../utils/taskTypes";
 import { TestSetup } from "../Helpers/TestSetup";
 import { ethers, getNamedAccounts, getUnnamedAccounts } from "hardhat";
 import { Tasks } from "../../typechain-types";
@@ -15,14 +36,14 @@ describe("Manual complicated", function () {
   it("Budget", async function () {
     await loadFixture(TestSetup);
     const { manager, executor } = await getNamedAccounts();
-    const [ funder, teamMember, preapprovedGuy ] = await getUnnamedAccounts();
+    const [funder, teamMember, preapprovedGuy] = await getUnnamedAccounts();
 
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
-    const TasksExecutor = await ethers.getContract("Tasks", executor) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+    const TasksExecutor = (await ethers.getContract("Tasks", executor)) as Tasks;
 
     const USDT = await DeployMockERC20();
     const WETH = await DeployMockERC20();
-  
+
     await USDT.increaseBalance(funder, Ether(500));
     await USDT.increaseBalance(manager, Ether(20_000));
     await USDT.increaseBalance(executor, Ether(100));
@@ -31,13 +52,16 @@ describe("Manual complicated", function () {
     await WETH.increaseBalance(manager, Ether(100));
     await WETH.increaseBalance(teamMember, Ether(500));
 
-    const budget : BudgetItem[] = [{
-      tokenContract: await USDT.getAddress(),
-      amount: Ether(200),
-    }, {
-      tokenContract: await WETH.getAddress(),
-      amount: Ether(1),
-    }];
+    const budget: BudgetItem[] = [
+      {
+        tokenContract: await USDT.getAddress(),
+        amount: Ether(200),
+      },
+      {
+        tokenContract: await WETH.getAddress(),
+        amount: Ether(1),
+      },
+    ];
     const funderSigner = await ethers.getSigner(funder);
     await USDT.connect(funderSigner).approve(await TasksManager.getAddress(), Ether(200));
     await WETH.connect(funderSigner).approve(await TasksManager.getAddress(), Ether(1));
@@ -45,22 +69,28 @@ describe("Manual complicated", function () {
     const deadline = new Date();
     deadline.setTime(deadline.getTime() + 10 * days * 1000);
 
-    const preapproved : PreapprovedApplication[] = [{
-      applicant: preapprovedGuy,
-      reward: [{
-        nextToken: false,
-        to: preapprovedGuy,
-        amount: Ether(50),
-      }, {
-        nextToken: true,
-        to: funder,
-        amount: Ether(150),
-      }, {
-        nextToken: true,
-        to: manager,
-        amount: Ether(1),
-      }]
-    }];
+    const preapproved: PreapprovedApplication[] = [
+      {
+        applicant: preapprovedGuy,
+        reward: [
+          {
+            nextToken: false,
+            to: preapprovedGuy,
+            amount: Ether(50),
+          },
+          {
+            nextToken: true,
+            to: funder,
+            amount: Ether(150),
+          },
+          {
+            nextToken: true,
+            to: manager,
+            amount: Ether(1),
+          },
+        ],
+      },
+    ];
 
     const taskCreation = await createTask({
       tasks: TasksManager.connect(funderSigner),
@@ -71,23 +101,28 @@ describe("Manual complicated", function () {
     });
     const taskId = taskCreation.taskId;
 
-    const reward : Reward[] = [{
-      nextToken: false,
-      to: executor,
-      amount: Ether(100),
-    }, {
-      nextToken: true,
-      to: teamMember,
-      amount: Ether(50),
-    }, {
-      nextToken: false,
-      to: teamMember,
-      amount: Ether(1) / BigInt(2),
-    }, {
-      nextToken: true,
-      to: executor,
-      amount: Ether(1) / BigInt(4),
-    }];
+    const reward: Reward[] = [
+      {
+        nextToken: false,
+        to: executor,
+        amount: Ether(100),
+      },
+      {
+        nextToken: true,
+        to: teamMember,
+        amount: Ether(50),
+      },
+      {
+        nextToken: false,
+        to: teamMember,
+        amount: Ether(1) / BigInt(2),
+      },
+      {
+        nextToken: true,
+        to: executor,
+        amount: Ether(1) / BigInt(4),
+      },
+    ];
     await applyForTask({
       tasks: TasksExecutor,
       taskId: taskId,
@@ -137,25 +172,25 @@ describe("Manual complicated", function () {
 
     expect(await USDT.balanceOf(manager)).to.be.equal(Ether(20_000));
     expect(await WETH.balanceOf(manager)).to.be.equal(Ether(100));
-    expect(await USDT.balanceOf(funder)).to.be.equal(Ether(500)-Ether(200)+Ether(50));
-    expect(await WETH.balanceOf(funder)).to.be.equal(Ether(3)-Ether(1)+Ether(1)/BigInt(4));
-    expect(await USDT.balanceOf(executor)).to.be.equal(Ether(100)+Ether(100));
-    expect(await WETH.balanceOf(executor)).to.be.equal(Ether(0)+Ether(1)/BigInt(4));
-    expect(await USDT.balanceOf(teamMember)).to.be.equal(Ether(0)+Ether(50));
-    expect(await WETH.balanceOf(teamMember)).to.be.equal(Ether(500)+Ether(1)/BigInt(2));
+    expect(await USDT.balanceOf(funder)).to.be.equal(Ether(500) - Ether(200) + Ether(50));
+    expect(await WETH.balanceOf(funder)).to.be.equal(Ether(3) - Ether(1) + Ether(1) / BigInt(4));
+    expect(await USDT.balanceOf(executor)).to.be.equal(Ether(100) + Ether(100));
+    expect(await WETH.balanceOf(executor)).to.be.equal(Ether(0) + Ether(1) / BigInt(4));
+    expect(await USDT.balanceOf(teamMember)).to.be.equal(Ether(0) + Ether(50));
+    expect(await WETH.balanceOf(teamMember)).to.be.equal(Ether(500) + Ether(1) / BigInt(2));
   });
 
   it("Events", async function () {
     await loadFixture(TestSetup);
     const { manager, executor } = await getNamedAccounts();
-    const [ funder, teamMember, preapprovedGuy ] = await getUnnamedAccounts();
+    const [funder, teamMember, preapprovedGuy] = await getUnnamedAccounts();
 
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
-    const TasksExecutor = await ethers.getContract("Tasks", executor) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+    const TasksExecutor = (await ethers.getContract("Tasks", executor)) as Tasks;
 
     const USDT = await DeployMockERC20();
     const WETH = await DeployMockERC20();
-  
+
     await USDT.increaseBalance(funder, Ether(500));
     await USDT.increaseBalance(manager, Ether(20_000));
     await USDT.increaseBalance(executor, Ether(100));
@@ -164,13 +199,16 @@ describe("Manual complicated", function () {
     await WETH.increaseBalance(manager, Ether(100));
     await WETH.increaseBalance(teamMember, Ether(500));
 
-    const budget : BudgetItem[] = [{
-      tokenContract: await USDT.getAddress(),
-      amount: Ether(200),
-    }, {
-      tokenContract: await WETH.getAddress(),
-      amount: Ether(1),
-    }];
+    const budget: BudgetItem[] = [
+      {
+        tokenContract: await USDT.getAddress(),
+        amount: Ether(200),
+      },
+      {
+        tokenContract: await WETH.getAddress(),
+        amount: Ether(1),
+      },
+    ];
     const funderSigner = await ethers.getSigner(funder);
     await USDT.connect(funderSigner).approve(await TasksManager.getAddress(), Ether(200));
     await WETH.connect(funderSigner).approve(await TasksManager.getAddress(), Ether(1));
@@ -178,30 +216,38 @@ describe("Manual complicated", function () {
     const deadline = new Date();
     deadline.setTime(deadline.getTime() + 10 * days * 1000);
 
-    const preapproved : PreapprovedApplication[] = [{
-      applicant: preapprovedGuy,
-      reward: [{
-        nextToken: false,
-        to: preapprovedGuy,
-        amount: Ether(50),
-      }, {
-        nextToken: true,
-        to: funder,
-        amount: Ether(150),
-      }, {
-        nextToken: true,
-        to: manager,
-        amount: Ether(1),
-      }]
-    }];
+    const preapproved: PreapprovedApplication[] = [
+      {
+        applicant: preapprovedGuy,
+        reward: [
+          {
+            nextToken: false,
+            to: preapprovedGuy,
+            amount: Ether(50),
+          },
+          {
+            nextToken: true,
+            to: funder,
+            amount: Ether(150),
+          },
+          {
+            nextToken: true,
+            to: manager,
+            amount: Ether(1),
+          },
+        ],
+      },
+    ];
 
-    const metadata : TaskMetadata = {
+    const metadata: TaskMetadata = {
       title: "Metadata",
       description: "Description",
-      resources: [{
-        name: "One to test",
-        url: "https://one.test"
-      }]
+      resources: [
+        {
+          name: "One to test",
+          url: "https://one.test",
+        },
+      ],
     };
 
     const taskCreation = await createTask({
@@ -233,24 +279,29 @@ describe("Manual complicated", function () {
       }
     }
 
-    const reward : Reward[] = [{
-      nextToken: false,
-      to: executor,
-      amount: Ether(100),
-    }, {
-      nextToken: true,
-      to: teamMember,
-      amount: Ether(50),
-    }, {
-      nextToken: false,
-      to: teamMember,
-      amount: Ether(1) / BigInt(2),
-    }, {
-      nextToken: true,
-      to: executor,
-      amount: Ether(1) / BigInt(4),
-    }];
-    const applicationMetadata : ApplicationMetadata = {
+    const reward: Reward[] = [
+      {
+        nextToken: false,
+        to: executor,
+        amount: Ether(100),
+      },
+      {
+        nextToken: true,
+        to: teamMember,
+        amount: Ether(50),
+      },
+      {
+        nextToken: false,
+        to: teamMember,
+        amount: Ether(1) / BigInt(2),
+      },
+      {
+        nextToken: true,
+        to: executor,
+        amount: Ether(1) / BigInt(4),
+      },
+    ];
+    const applicationMetadata: ApplicationMetadata = {
       title: "Application",
       description: "I am the best",
       resources: [],
@@ -315,7 +366,7 @@ describe("Manual complicated", function () {
     expect(taskTakeEvents[0].args.manager).to.be.equal(manager);
     expect(taskTakeEvents[0].args.executor).to.be.equal(executor);
 
-    const submission : SubmissionMetadata = {
+    const submission: SubmissionMetadata = {
       fileName: "submision",
       fileFormat: ".sub",
       fileContent: "SUBMISSION",
@@ -337,7 +388,7 @@ describe("Manual complicated", function () {
     expect(taskSubmisissionEvents[0].args.manager).to.be.equal(manager);
     expect(taskSubmisissionEvents[0].args.executor).to.be.equal(executor);
 
-    const judgementMetadata : SubmissionJudgementMetadata = {
+    const judgementMetadata: SubmissionJudgementMetadata = {
       feedback: "Do better lol",
     };
     const submissionReview = await reviewSubmission({
@@ -360,7 +411,7 @@ describe("Manual complicated", function () {
     expect(submissionReviewEvents[0].args.manager).to.be.equal(manager);
     expect(submissionReviewEvents[0].args.executor).to.be.equal(executor);
 
-    const cancelReason : CancelTaskRequestMetadata = {
+    const cancelReason: CancelTaskRequestMetadata = {
       explanation: "No faith",
     };
     const taskCancel = await cancelTask({

@@ -1,3 +1,3 @@
 module.exports = {
-    skipFiles: ['mocks/', 'Deps/', 'DAO/Governance/', 'DAO/TokenMajorityVoting', 'DAO/TokenMembership'],
+  skipFiles: ["mocks/", "Deps/", "DAO/Governance/", "DAO/TokenMajorityVoting", "DAO/TokenMembership"],
 };

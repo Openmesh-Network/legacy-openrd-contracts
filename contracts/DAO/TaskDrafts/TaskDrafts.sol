@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import { PluginUUPSUpgradeable, IDAO } from "@aragon/osx/core/plugin/PluginUUPSUpgradeable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {PluginUUPSUpgradeable, IDAO} from "@aragon/osx/core/plugin/PluginUUPSUpgradeable.sol";
 
-import { ITaskDrafts, ITasks, IPluginProposals, UPDATE_ADDRESSES_PERMISSION_ID } from "./ITaskDrafts.sol";
+import {ITaskDrafts, ITasks, IPluginProposals, UPDATE_ADDRESSES_PERMISSION_ID} from "./ITaskDrafts.sol";
 
 contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
     ITasks private tasks;
@@ -16,7 +16,7 @@ contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
     /// @param _governancePlugin The governance plugin contract to create proposals.
     function initialize(
         IDAO _dao,
-        ITasks _tasks, 
+        ITasks _tasks,
         IPluginProposals _governancePlugin
     ) external initializer {
         __PluginUUPSUpgradeable_init(_dao);
@@ -25,8 +25,12 @@ contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
     }
 
     /// @inheritdoc PluginUUPSUpgradeable
-    function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
-        return _interfaceId == type(ITaskDrafts).interfaceId || super.supportsInterface(_interfaceId);
+    function supportsInterface(
+        bytes4 _interfaceId
+    ) public view virtual override returns (bool) {
+        return
+            _interfaceId == type(ITaskDrafts).interfaceId ||
+            super.supportsInterface(_interfaceId);
     }
 
     /// @inheritdoc ITaskDrafts
@@ -41,7 +45,7 @@ contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
 
     /// @inheritdoc ITaskDrafts
     function updateAddresses(
-        ITasks _tasks, 
+        ITasks _tasks,
         IPluginProposals _governancePlugin
     ) external auth(UPDATE_ADDRESSES_PERMISSION_ID) {
         tasks = _tasks;
@@ -50,7 +54,7 @@ contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
 
     /// @inheritdoc ITaskDrafts
     function createDraftTask(
-    	bytes calldata _metadata,
+        bytes calldata _metadata,
         uint64 _startDate,
         uint64 _endDate,
         CreateTaskInfo calldata _taskInfo
@@ -61,9 +65,9 @@ contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
         IDAO.Action[] memory actions = new IDAO.Action[](1);
         {
             bytes memory callData = abi.encodeWithSelector(
-                tasks.createTask.selector, 
-                _taskInfo.metadata, 
-                _taskInfo.deadline, 
+                tasks.createTask.selector,
+                _taskInfo.metadata,
+                _taskInfo.deadline,
                 _taskInfo.budget,
                 _taskInfo.manager,
                 _taskInfo.preapproved
@@ -71,6 +75,12 @@ contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
             actions[0] = IDAO.Action(address(tasks), 0, callData);
         }
 
-        governancePlugin.createPluginProposal(_metadata, actions, 0, _startDate, _endDate);
+        governancePlugin.createPluginProposal(
+            _metadata,
+            actions,
+            0,
+            _startDate,
+            _endDate
+        );
     }
 }

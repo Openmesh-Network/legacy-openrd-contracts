@@ -10,10 +10,11 @@ describe("Create Submission", function () {
   // Check if variables are set
   it("should have the correct metadata", async function () {
     const task = await loadFixture(createTakenTaskFixture);
-    const metadata : SubmissionMetadata = {
+    const metadata: SubmissionMetadata = {
       fileName: "submission.zip",
       fileFormat: "application/zip",
-      fileContent: "01000001011011010110000101111010011010010110111001100111001000000111001101101111011101010111001001100011011001010010000001100011011011110110010001100101",
+      fileContent:
+        "01000001011011010110000101111010011010010110111001100111001000000111001101101111011101010111001001100011011001010010000001100011011011110110010001100101",
     };
     await createSubmission({
       tasks: task.TasksExecutor,
@@ -50,7 +51,7 @@ describe("Create Submission", function () {
     expect(taskInfo.escrow).to.be.equal(taskInfoBefore.escrow);
     expect(taskInfo.manager).to.be.equal(taskInfoBefore.manager);
   });
-  
+
   it("should not have changed applications", async function () {
     const task = await loadFixture(createTakenTaskFixture);
     const taskInfoBefore = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
@@ -66,7 +67,7 @@ describe("Create Submission", function () {
       expect(taskInfo.applications[i].reward).to.be.deep.equal(taskInfoBefore.applications[i].reward);
     }
   });
-  
+
   it("should not have changed accepted applications", async function () {
     const task = await loadFixture(createTakenTaskFixture);
     const taskInfoBefore = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
@@ -79,7 +80,7 @@ describe("Create Submission", function () {
       expect(taskInfo.applications[i].accepted).to.be.equal(taskInfoBefore.applications[i].accepted);
     }
   });
-  
+
   //Check for exploits
   it("should not be allowed on a task id that does not exist", async function () {
     const task = await loadFixture(createTakenTaskFixture);
@@ -116,7 +117,7 @@ describe("Create Submission", function () {
     });
     await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "NotExecutor");
   });
-  
+
   it("should not be allowed by anyone else", async function () {
     const task = await loadFixture(createTakenTaskFixture);
     const accounts = await getUnnamedAccounts();

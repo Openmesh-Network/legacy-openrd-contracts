@@ -5,32 +5,33 @@ import { ethers } from "hardhat";
 import { getBool, getVar } from "../../../utils/globalVars";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-    if (!await getBool("NewDraftsSetup")) {
-        return;
-    }
+  if (!(await getBool("NewDraftsSetup"))) {
+    return;
+  }
 
-	const { deployments, getNamedAccounts } = hre;
-    const { deployer } = await getNamedAccounts();
+  const { deployments, getNamedAccounts } = hre;
+  const { deployer } = await getNamedAccounts();
 
-    const taskDrafts = await deployments.get("TaskDraftsSetup");
-    const subdomain = "taskdraft-test-" + await getVar("ENSCounter");
-    
-    const receipt = await deployments.execute("PluginRepoFactory",
-        {
-            from: deployer,
-        },
-        "createPluginRepoWithFirstVersion",
-        subdomain,
-        taskDrafts.address,
-        deployer,
-        "0x01", //build metadata
-        "0x01", //release metadata
-    );
+  const taskDrafts = await deployments.get("TaskDraftsSetup");
+  const subdomain = "taskdraft-test-" + (await getVar("ENSCounter"));
 
-    const pluginRepoRegistry = await ethers.getContract("PluginRepoRegistry");
-    const repo = getEventsFromLogs(receipt.logs, pluginRepoRegistry.interface, "PluginRepoRegistered")[0].args.pluginRepo;
-    await deployments.save("TaskDraftsRepo", { address : repo, ...(await deployments.getArtifact("PluginRepo")) });
+  const receipt = await deployments.execute(
+    "PluginRepoFactory",
+    {
+      from: deployer,
+    },
+    "createPluginRepoWithFirstVersion",
+    subdomain,
+    taskDrafts.address,
+    deployer,
+    "0x01", //build metadata
+    "0x01" //release metadata
+  );
+
+  const pluginRepoRegistry = await ethers.getContract("PluginRepoRegistry");
+  const repo = getEventsFromLogs(receipt.logs, pluginRepoRegistry.interface, "PluginRepoRegistered")[0].args.pluginRepo;
+  await deployments.save("TaskDraftsRepo", { address: repo, ...(await deployments.getArtifact("PluginRepo")) });
 };
 export default func;
-func.tags = ["TaskDrafts"]
+func.tags = ["TaskDrafts"];
 func.dependencies = ["TaskDraftsSetup"];

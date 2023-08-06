@@ -1,10 +1,10 @@
 import { deployments, network, artifacts } from "hardhat";
-import activeContractsJson from "./active_contract.json"
+import activeContractsJson from "./active_contract.json";
 
 /// Scripts to read AragonOSx active_contracts.json and converts them to hardhat-deploy deployments
 
 async function main() {
-  const activeContracts = activeContractsJson as {[networkName: string]: {[contractName: string]: string}};
+  const activeContracts = activeContractsJson as { [networkName: string]: { [contractName: string]: string } };
   const contractInfo = activeContracts[network.name];
   const contracts = ["DAORegistry", "PluginRepoRegistry", "PluginRepoFactory", "PluginSetupProcessor", "DAOFactory"];
   for (let i = 0; i < contracts.length; i++) {

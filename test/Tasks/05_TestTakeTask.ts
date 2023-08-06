@@ -2,7 +2,12 @@ import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { getTask, takeTask } from "../../utils/taskHelper";
 import { ToBlockchainDate } from "../../utils/timeUnits";
-import { createApprovedApplicationsTaskFixture, createPreapprovedBudgetTaskFixture, createTakenTaskFixture, createTakenTaskWithAcceptedSubmissionFixture } from "./00_TestTasksFixtures";
+import {
+  createApprovedApplicationsTaskFixture,
+  createPreapprovedBudgetTaskFixture,
+  createTakenTaskFixture,
+  createTakenTaskWithAcceptedSubmissionFixture,
+} from "./00_TestTasksFixtures";
 import { TaskState } from "../../utils/taskTypes";
 
 describe("Take Task", function () {
@@ -36,14 +41,14 @@ describe("Take Task", function () {
   });
 
   it("should allow preapproved applicant", async function () {
-      const task = await loadFixture(createPreapprovedBudgetTaskFixture);
-      const application = BigInt(0);
-      const tx = await takeTask({
-        tasks: task.TasksExecutor,
-        taskId: task.taskId,
-        application: application,
-      });
-      await expect(tx).to.be.not.reverted;
+    const task = await loadFixture(createPreapprovedBudgetTaskFixture);
+    const application = BigInt(0);
+    const tx = await takeTask({
+      tasks: task.TasksExecutor,
+      taskId: task.taskId,
+      application: application,
+    });
+    await expect(tx).to.be.not.reverted;
   });
 
   it("should be in taken state", async function () {
@@ -75,7 +80,7 @@ describe("Take Task", function () {
     expect(taskInfo.escrow).to.be.equal(taskInfoBefore.escrow);
     expect(taskInfo.manager).to.be.equal(taskInfoBefore.manager);
   });
-  
+
   it("should not have changed applications", async function () {
     const task = await loadFixture(createApprovedApplicationsTaskFixture);
     const taskInfoBefore = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
@@ -93,7 +98,7 @@ describe("Take Task", function () {
       expect(taskInfo.applications[i].reward).to.be.deep.equal(taskInfoBefore.applications[i].reward);
     }
   });
-  
+
   it("should not have changed accepted applications", async function () {
     const task = await loadFixture(createApprovedApplicationsTaskFixture);
     const taskInfoBefore = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
@@ -120,7 +125,7 @@ describe("Take Task", function () {
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.submissions).to.have.lengthOf(0);
   });
-  
+
   //Check for exploits
   it("should not be allowed on a task id that does not exist", async function () {
     const task = await loadFixture(createApprovedApplicationsTaskFixture);
@@ -152,7 +157,7 @@ describe("Take Task", function () {
     });
     await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "TaskNotOpen");
   });
-  
+
   it("should not allow non-accepted applicants", async function () {
     for (let i = BigInt(0); true; i++) {
       const task = await loadFixture(createApprovedApplicationsTaskFixture);
@@ -182,11 +187,11 @@ describe("Take Task", function () {
     });
     await expect(tx).to.be.revertedWithCustomError(confirmer, "NotYourApplication");
   });
-  
+
   it("should not allow other people to confirm", async function () {
     const task = await loadFixture(createApprovedApplicationsTaskFixture);
     const application = task.acceptedApplications[0];
-    const confirmer = task.TasksExecutor.connect(task.applicants[Number(task.acceptedApplications[1])])
+    const confirmer = task.TasksExecutor.connect(task.applicants[Number(task.acceptedApplications[1])]);
     const tx = takeTask({
       tasks: confirmer,
       taskId: task.taskId,
@@ -194,7 +199,6 @@ describe("Take Task", function () {
     });
     await expect(tx).to.be.revertedWithCustomError(confirmer, "NotYourApplication");
   });
-  
 
   it("should not be allowed on a non-existing application", async function () {
     const task = await loadFixture(createApprovedApplicationsTaskFixture);

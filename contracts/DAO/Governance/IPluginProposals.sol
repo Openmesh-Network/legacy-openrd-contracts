@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { IDAO } from "@aragon/osx/core/dao/IDAO.sol";
+import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
 
-bytes32 constant PLUGIN_PROPOSAL_PERMISSION_ID = keccak256("PLUGIN_PROPOSAL_PERMISSION");
+bytes32 constant PLUGIN_PROPOSAL_PERMISSION_ID = keccak256(
+    "PLUGIN_PROPOSAL_PERMISSION"
+);
 
 interface IPluginProposals {
     /// @notice Allows other plugins to create proposals

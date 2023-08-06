@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { IDAO } from "@aragon/osx/core/dao/IDAO.sol";
+import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
 
 interface ITokenMajorityVoting {
     /// @notice Vote options that a voter can chose from.
@@ -39,17 +39,23 @@ interface ITokenMajorityVoting {
     /// @notice Checks if the support value defined as $$\texttt{support} = \frac{N_\text{yes}}{N_\text{yes}+N_\text{no}}$$ for a proposal vote is greater than the support threshold.
     /// @param _proposalId The ID of the proposal.
     /// @return Returns `true` if the  support is greater than the support threshold and `false` otherwise.
-    function isSupportThresholdReached(uint256 _proposalId) external view returns (bool);
+    function isSupportThresholdReached(
+        uint256 _proposalId
+    ) external view returns (bool);
 
     /// @notice Checks if the worst-case support value defined as $$\texttt{worstCaseSupport} = \frac{N_\text{yes}}{ N_\text{total}-N_\text{abstain}}$$ for a proposal vote is greater than the support threshold.
     /// @param _proposalId The ID of the proposal.
     /// @return Returns `true` if the worst-case support is greater than the support threshold and `false` otherwise.
-    function isSupportThresholdReachedEarly(uint256 _proposalId) external view returns (bool);
+    function isSupportThresholdReachedEarly(
+        uint256 _proposalId
+    ) external view returns (bool);
 
     /// @notice Checks if the participation value defined as $$\texttt{participation} = \frac{N_\text{yes}+N_\text{no}+N_\text{abstain}}{N_\text{total}}$$ for a proposal vote is greater or equal than the minimum participation value.
     /// @param _proposalId The ID of the proposal.
     /// @return Returns `true` if the participation is greater than the minimum participation and `false` otherwise.
-    function isMinParticipationReached(uint256 _proposalId) external view returns (bool);
+    function isMinParticipationReached(
+        uint256 _proposalId
+    ) external view returns (bool);
 
     /// @notice Checks if an account can participate on a proposal vote. This can be because the vote
     /// - has not started,
@@ -78,7 +84,12 @@ interface ITokenMajorityVoting {
     /// @param _voteOption The chosen vote option.
     /// @param _tryEarlyExecution If `true`,  early execution is tried after the vote cast. The call does not revert if early execution is not possible.
     /// @param _tokenId TokenId to use for this vote.
-    function vote(uint256 _proposalId, VoteOption _voteOption, bool _tryEarlyExecution, uint256 _tokenId) external;
+    function vote(
+        uint256 _proposalId,
+        VoteOption _voteOption,
+        bool _tryEarlyExecution,
+        uint256 _tokenId
+    ) external;
 
     /// @notice Executes a proposal.
     /// @param _proposalId The ID of the proposal to be executed.

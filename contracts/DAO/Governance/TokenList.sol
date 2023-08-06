@@ -13,7 +13,8 @@ abstract contract TokenList {
     event TokensRemoved(uint256[] tokens);
 
     /// @notice The mapping containing the checkpointed history of the token list.
-    mapping(uint256 => CheckpointsUpgradeable.History) private _tokenlistCheckpoints;
+    mapping(uint256 => CheckpointsUpgradeable.History)
+        private _tokenlistCheckpoints;
 
     /// @notice The checkpointed history of the length of the address list.
     CheckpointsUpgradeable.History private _tokenlistLengthCheckpoints;
@@ -43,7 +44,9 @@ abstract contract TokenList {
     /// @notice Returns the length of the token list at a specific block number.
     /// @param _blockNumber The specific block to get the count from. If `0`, then the latest checkpoint value is returned.
     /// @return The token list length at the specified block number.
-    function tokenlistLengthAtBlock(uint256 _blockNumber) public view virtual returns (uint256) {
+    function tokenlistLengthAtBlock(
+        uint256 _blockNumber
+    ) public view virtual returns (uint256) {
         return _tokenlistLengthCheckpoints.getAtBlock(_blockNumber);
     }
 

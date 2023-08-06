@@ -12,14 +12,17 @@ describe("Apply For Task", function () {
     const metadata = {
       title: "title",
       description: "description",
-      resources: [{
+      resources: [
+        {
           name: "Google",
-          url: "https://www.google.com" //Normal website
-      }, {
+          url: "https://www.google.com", //Normal website
+        },
+        {
           name: "IPFS item",
-          url: "ipfs://bafybeih6dsywniag6kub6ceeywcl2shxlzj5xtxndb5tsg3jvupy65654a" //ipfs.tech website
-      }],
-  };
+          url: "ipfs://bafybeih6dsywniag6kub6ceeywcl2shxlzj5xtxndb5tsg3jvupy65654a", //ipfs.tech website
+        },
+      ],
+    };
     await applyForTask({
       tasks: task.TasksExecutor,
       taskId: task.taskId,
@@ -40,7 +43,7 @@ describe("Apply For Task", function () {
     expect(taskInfo.applications).to.be.lengthOf(1);
     expect(taskInfo.applications[0].applicant).to.be.equal(task.executor);
   });
-  
+
   it("should be not accepted", async function () {
     const task = await loadFixture(createTaskFixture);
     await applyForTask({
@@ -54,7 +57,9 @@ describe("Apply For Task", function () {
 
   it("should have the correct reward", async function () {
     const task = await loadFixture(createBudgetTaskFixture);
-    const reward = task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; });
+    const reward = task.budget.map((b) => {
+      return { nextToken: true, to: task.executor, amount: b.amount };
+    });
     await applyForTask({
       tasks: task.TasksExecutor,
       taskId: task.taskId,
@@ -114,7 +119,7 @@ describe("Apply For Task", function () {
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.submissions).to.have.lengthOf(0);
   });
-  
+
   //Check for exploits
   it("should not be allowed on a task id that does not exist", async function () {
     const task = await loadFixture(createTaskFixture);
@@ -142,11 +147,13 @@ describe("Apply For Task", function () {
     });
     await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "TaskNotOpen");
   });
-  
+
   it("should not be allowed with reward that does not end with nextToken true", async function () {
     const task = await loadFixture(createBudgetTaskFixture);
-    let reward = task.budget.map(b => { return { nextToken: true, to: task.executor, amount: b.amount }; });
-    reward[reward.length-1].nextToken = false;
+    let reward = task.budget.map((b) => {
+      return { nextToken: true, to: task.executor, amount: b.amount };
+    });
+    reward[reward.length - 1].nextToken = false;
     const tx = applyForTask({
       tasks: task.TasksExecutor,
       taskId: task.taskId,

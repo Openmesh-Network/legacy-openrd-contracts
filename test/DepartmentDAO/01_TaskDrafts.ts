@@ -22,12 +22,12 @@ describe("Department DAO Task Drafts", function () {
     });
     await expect(tx).to.not.be.reverted;
   });
-  
+
   it("should have the right metadata on the task after the proposal passes", async function () {
     const dao = await loadFixture(getDAO);
     const NFTs = [0, 1, 2].map(BigInt);
-    await asyncMap(NFTs, async n => await dao.NFT.grantToken(dao.deployer, n));
-    const metadata : TaskMetadata = {
+    await asyncMap(NFTs, async (n) => await dao.NFT.grantToken(dao.deployer, n));
+    const metadata: TaskMetadata = {
       title: "Draft Task",
       description: "Draft Description",
       resources: [],
@@ -39,8 +39,13 @@ describe("Department DAO Task Drafts", function () {
       manager: dao.deployer,
       preapproved: [],
     });
-    enum VoteOption { None, Abstain, Yes, No };
-    await asyncMap(NFTs, async n => await dao.TokenListGovernance.vote(BigInt(0), VoteOption.Yes, true, n));
+    enum VoteOption {
+      None,
+      Abstain,
+      Yes,
+      No,
+    }
+    await asyncMap(NFTs, async (n) => await dao.TokenListGovernance.vote(BigInt(0), VoteOption.Yes, true, n));
     const taskInfo = await getTask({ tasks: dao.Tasks, taskId: BigInt(0) });
     expect(taskInfo.metadata).to.be.deep.equal(metadata);
   });
@@ -50,11 +55,11 @@ describe("Department DAO Task Drafts", function () {
     expect(await dao.TaskDrafts.getGovernanceContract()).to.be.equal(await dao.TokenListGovernance.getAddress());
     expect(await dao.TaskDrafts.getTasksContract()).to.be.equal(await dao.Tasks.getAddress());
   });
-  
+
   it("should allow the DAO to update the addresses", async function () {
     const dao = await loadFixture(getDAO);
-    const newGovernance = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length-1) + "1";
-    const newTasks = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length-1) + "2";
+    const newGovernance = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length - 1) + "1";
+    const newTasks = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length - 1) + "2";
 
     const DAO = await dao.DAO.getAddress();
     (await ethers.getSigners())[0].sendTransaction({
@@ -65,25 +70,25 @@ describe("Department DAO Task Drafts", function () {
     expect(await dao.TaskDrafts.getGovernanceContract()).to.be.equal(newGovernance);
     expect(await dao.TaskDrafts.getTasksContract()).to.be.equal(newTasks);
   });
-  
+
   it("should not allow other addresses to update the addresses", async function () {
     const dao = await loadFixture(getDAO);
-    const newGovernance = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length-1) + "1";
-    const newTasks = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length-1) + "2";
+    const newGovernance = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length - 1) + "1";
+    const newTasks = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length - 1) + "2";
 
     const tx = dao.TaskDrafts.updateAddresses(newTasks, newGovernance);
     await expect(tx).to.be.reverted;
   });
-  
+
   it("should not allow second init", async function () {
     const dao = await loadFixture(getDAO);
     const tx = dao.TaskDrafts.initialize(dao.DAO, await dao.Tasks.getAddress(), await dao.TokenListGovernance.getAddress());
     await expect(tx).to.be.revertedWith("Initializable: contract is already initialized");
   });
-  
+
   it("should support the correct interfaces", async function () {
     const dao = await loadFixture(getDAO);
-    expect(await dao.TaskDrafts.supportsInterface('0xffffffff')).to.be.false;
+    expect(await dao.TaskDrafts.supportsInterface("0xffffffff")).to.be.false;
     const ITaskDrafts = await ethers.getContractAt("ITaskDrafts", ethers.ZeroAddress);
     expect(await dao.TaskDrafts.supportsInterface(getInferfaceId(ITaskDrafts.interface))).to.be.true;
     const IPlugin = await ethers.getContractAt("IPlugin", ethers.ZeroAddress);

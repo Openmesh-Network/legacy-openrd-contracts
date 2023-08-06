@@ -8,13 +8,15 @@ import { addToIpfs } from "../../utils/ipfsHelper";
 describe("Edit Metadata", function () {
   it("should edit the metadata", async function () {
     const task = await loadFixture(createTaskFixture);
-    const metadata : TaskMetadata = {
+    const metadata: TaskMetadata = {
       title: "NewMetadata",
       description: "NewDescription",
-      resources: [{
-        name: "New first resource",
-        url: "first.resource",
-      }],
+      resources: [
+        {
+          name: "New first resource",
+          url: "first.resource",
+        },
+      ],
     };
     await task.TasksManager.editMetadata(task.taskId, await addToIpfs(JSON.stringify(metadata)));
     const taskInfo = await getTask({ tasks: task.TasksManager, taskId: task.taskId });
@@ -23,13 +25,15 @@ describe("Edit Metadata", function () {
 
   it("not be allowed on not open task", async function () {
     const task = await loadFixture(createTakenTaskFixture);
-    const metadata : TaskMetadata = {
+    const metadata: TaskMetadata = {
       title: "NewMetadata",
       description: "NewDescription",
-      resources: [{
-        name: "New first resource",
-        url: "first.resource",
-      }],
+      resources: [
+        {
+          name: "New first resource",
+          url: "first.resource",
+        },
+      ],
     };
     const tx = task.TasksManager.editMetadata(task.taskId, await addToIpfs(JSON.stringify(metadata)));
     await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "TaskNotOpen");
@@ -37,13 +41,15 @@ describe("Edit Metadata", function () {
 
   it("should not be allowed by not manager", async function () {
     const task = await loadFixture(createTaskFixture);
-    const metadata : TaskMetadata = {
+    const metadata: TaskMetadata = {
       title: "NewMetadata",
       description: "NewDescription",
-      resources: [{
-        name: "New first resource",
-        url: "first.resource",
-      }],
+      resources: [
+        {
+          name: "New first resource",
+          url: "first.resource",
+        },
+      ],
     };
     const tx = task.TasksExecutor.editMetadata(task.taskId, await addToIpfs(JSON.stringify(metadata)));
     await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "NotManager");

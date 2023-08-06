@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { ITasks, Escrow } from "./ITasks.sol";
-import { Context } from "@openzeppelin/contracts/utils/Context.sol";
+import {ITasks, Escrow} from "./ITasks.sol";
+import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 
 /*
   Functions to ensure a certain precondition is met.
@@ -25,7 +25,6 @@ abstract contract TasksEnsure is ITasks, Context {
             revert TaskClosed();
         }
     }
-    
 
     function _ensureSenderIsManager(Task storage task) internal view {
         if (task.manager != _msgSender()) {
@@ -35,58 +34,78 @@ abstract contract TasksEnsure is ITasks, Context {
 
     ///@dev Should only be called is the task is not open!
     function _ensureSenderIsExecutor(Task storage task) internal view {
-        if (task.applications[task.executorApplication].applicant != _msgSender()) {
+        if (
+            task.applications[task.executorApplication].applicant !=
+            _msgSender()
+        ) {
             revert NotExecutor();
         }
     }
 
-
-    function _ensureRewardEndsWithNextToken(Reward[] memory reward) internal pure {
+    function _ensureRewardEndsWithNextToken(
+        Reward[] memory reward
+    ) internal pure {
         unchecked {
-            if (reward.length != 0 && !reward[reward.length-1].nextToken) {
+            if (reward.length != 0 && !reward[reward.length - 1].nextToken) {
                 revert RewardDoesntEndWithNewToken();
             }
         }
     }
 
-    function _ensureApplicationExists(Task storage task, uint16 _applicationId) internal view {
+    function _ensureApplicationExists(
+        Task storage task,
+        uint16 _applicationId
+    ) internal view {
         if (_applicationId >= task.applicationCount) {
             revert ApplicationDoesNotExist();
         }
     }
 
-    function _ensureSenderIsApplicant(Application storage application) internal view {
+    function _ensureSenderIsApplicant(
+        Application storage application
+    ) internal view {
         if (application.applicant != _msgSender()) {
             revert NotYourApplication();
         }
     }
 
-    function _ensureApplicationIsAccepted(Application storage application) internal view {
+    function _ensureApplicationIsAccepted(
+        Application storage application
+    ) internal view {
         if (!application.accepted) {
             revert ApplicationNotAccepted();
         }
     }
 
-    function _ensureSubmissionExists(Task storage task, uint8 _submissionId) internal view {
+    function _ensureSubmissionExists(
+        Task storage task,
+        uint8 _submissionId
+    ) internal view {
         if (_submissionId >= task.submissionCount) {
             revert SubmissionDoesNotExist();
         }
     }
 
-    function _ensureSubmissionNotJudged(Submission storage submission) internal view {
+    function _ensureSubmissionNotJudged(
+        Submission storage submission
+    ) internal view {
         if (submission.judgement != SubmissionJudgement.None) {
             revert SubmissionAlreadyJudged();
         }
     }
 
-    function _ensureJudgementNotNone(SubmissionJudgement judgement) internal pure {
+    function _ensureJudgementNotNone(
+        SubmissionJudgement judgement
+    ) internal pure {
         if (judgement == SubmissionJudgement.None) {
             revert JudgementNone();
         }
     }
 
-
-    function _ensureCancelTaskRequestExists(Task storage task, uint8 _requestId) internal view {
+    function _ensureCancelTaskRequestExists(
+        Task storage task,
+        uint8 _requestId
+    ) internal view {
         if (_requestId >= task.cancelTaskRequestCount) {
             revert RequestDoesNotExist();
         }

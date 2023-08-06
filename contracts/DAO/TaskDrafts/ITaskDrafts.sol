@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { ITasks } from "../../Tasks/ITasks.sol";
-import { IPluginProposals } from "../Governance/IPluginProposals.sol";
+import {ITasks} from "../../Tasks/ITasks.sol";
+import {IPluginProposals} from "../Governance/IPluginProposals.sol";
 
-bytes32 constant UPDATE_ADDRESSES_PERMISSION_ID = keccak256("UPDATE_ADDRESSES_PERMISSION");
+bytes32 constant UPDATE_ADDRESSES_PERMISSION_ID = keccak256(
+    "UPDATE_ADDRESSES_PERMISSION"
+);
 
 interface ITaskDrafts {
     struct CreateTaskInfo {
@@ -25,7 +27,7 @@ interface ITaskDrafts {
     /// @param _tasks The new Tasks contract address.
     /// @param _governancePlugin The new governance plugin contract address.
     function updateAddresses(
-        ITasks _tasks, 
+        ITasks _tasks,
         IPluginProposals _governancePlugin
     ) external;
 
@@ -35,7 +37,7 @@ interface ITaskDrafts {
     /// @param _endDate The end date of the proposal.
     /// @param _taskInfo The task to be created if the proposal passes.
     function createDraftTask(
-    	bytes calldata _metadata,
+        bytes calldata _metadata,
         uint64 _startDate,
         uint64 _endDate,
         CreateTaskInfo calldata _taskInfo

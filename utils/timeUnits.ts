@@ -5,14 +5,16 @@ export const minutes = 60 * seconds;
 export const hours = 60 * minutes;
 export const days = 24 * hours;
 export const week = 7 * days;
-export function now() { return ToBlockchainDate(new Date()); };
-
-export function ToBlockchainDate(date : Date) : number {
-    return Math.round(date.getTime() / 1000);
+export function now() {
+  return ToBlockchainDate(new Date());
 }
 
-export function FromBlockchainDate(date : bigint) : Date {
-    let jsDate = new Date();
-    jsDate.setTime(Number(date) * 1000);
-    return jsDate;
+export function ToBlockchainDate(date: Date): number {
+  return Math.round(date.getTime() / 1000);
+}
+
+export function FromBlockchainDate(date: bigint): Date {
+  let jsDate = new Date();
+  jsDate.setTime(Number(date) * 1000);
+  return jsDate;
 }

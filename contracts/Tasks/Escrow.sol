@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Escrow {
     error AlreadyInitialized();
@@ -15,7 +15,7 @@ contract Escrow {
         if (owner != address(0)) {
             revert AlreadyInitialized();
         }
-        
+
         owner = msg.sender;
     }
 

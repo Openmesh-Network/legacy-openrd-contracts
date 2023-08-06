@@ -20,14 +20,14 @@ const config: HardhatUserConfig = {
       optimizer: {
         enabled: true,
         runs: 1_000_000, // Higher is not allowed by Etherscan verification
-      }
-    }
+      },
+    },
   },
   networks: {
     mumbai: {
       accounts: [process.env.PRIV_KEY ?? fakePrivKey],
       url: "https://rpc.ankr.com/polygon_mumbai",
-      deploy: ["00_Tasks", "02_Plugins", "03_NFT", "04_DAO"].map(d => `deploy/${d}`),
+      deploy: ["00_Tasks", "02_Plugins", "03_NFT", "04_DAO"].map((d) => `deploy/${d}`),
       verify: {
         etherscan: {
           apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",
@@ -37,22 +37,36 @@ const config: HardhatUserConfig = {
   },
   namedAccounts: {
     deployer: {
-        default: 0, // here this will by default take the first account as deployer
+      default: 0, // here this will by default take the first account as deployer
     },
     creator: {
-        default: 1,
+      default: 1,
     },
     manager: {
-        default: 2,
+      default: 2,
     },
     executor: {
-        default: 3,
+      default: 3,
     },
   },
   gasReporter: {
     enabled: false,
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
-    excludeContracts: ["mocks/", "ERC20", "ERC721", "DAO", "DAOFactory", "ENSRegistry", "PluginRepoFactory", "ENSSubdomainRegistrar", "PluginRepoRegistry", "PluginSetupProcessor", "PublicResolver", "PreferredProxy", "PluginRepo"],
+    excludeContracts: [
+      "mocks/",
+      "ERC20",
+      "ERC721",
+      "DAO",
+      "DAOFactory",
+      "ENSRegistry",
+      "PluginRepoFactory",
+      "ENSSubdomainRegistrar",
+      "PluginRepoRegistry",
+      "PluginSetupProcessor",
+      "PublicResolver",
+      "PreferredProxy",
+      "PluginRepo",
+    ],
     // token: "MATIC",
     // gasPriceApi: "https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice"
   },
@@ -60,7 +74,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       mainnet: process.env.X_ETHERSCAN_API_KEY ?? "",
       polygonMumbai: process.env.X_POLYGONSCAN_API_KEY ?? "",
-    }
+    },
   },
   dodoc: {
     runOnCompile: true,

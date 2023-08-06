@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import { IDAO } from "@aragon/osx/core/dao/IDAO.sol";
-import { DAO } from "@aragon/osx/core/dao/DAO.sol";
-import { PermissionLib } from "@aragon/osx/core/permission/PermissionLib.sol";
-import { PluginSetup, IPluginSetup } from "@aragon/osx/framework/plugin/setup/PluginSetup.sol";
-import { TaskDrafts, IPluginProposals, ITasks, UPDATE_ADDRESSES_PERMISSION_ID } from "./TaskDrafts.sol";
-import { PLUGIN_PROPOSAL_PERMISSION_ID } from "../Governance/IPluginProposals.sol";
+import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
+import {DAO} from "@aragon/osx/core/dao/DAO.sol";
+import {PermissionLib} from "@aragon/osx/core/permission/PermissionLib.sol";
+import {PluginSetup, IPluginSetup} from "@aragon/osx/framework/plugin/setup/PluginSetup.sol";
+import {TaskDrafts, IPluginProposals, ITasks, UPDATE_ADDRESSES_PERMISSION_ID} from "./TaskDrafts.sol";
+import {PLUGIN_PROPOSAL_PERMISSION_ID} from "../Governance/IPluginProposals.sol";
 
 contract TaskDraftsSetup is PluginSetup {
     /// @notice The address of `TaskDrafts` plugin logic contract to be used in creating proxy contracts.
@@ -21,10 +21,15 @@ contract TaskDraftsSetup is PluginSetup {
     function prepareInstallation(
         address _dao,
         bytes calldata _data
-    ) external returns (address plugin, PreparedSetupData memory preparedSetupData) {
+    )
+        external
+        returns (address plugin, PreparedSetupData memory preparedSetupData)
+    {
         // Decode `_data` to extract the params needed for deploying and initializing `TaskDrafts` plugin.
-        (ITasks tasks, IPluginProposals governancePlugin) = abi
-            .decode(_data, (ITasks, IPluginProposals));
+        (ITasks tasks, IPluginProposals governancePlugin) = abi.decode(
+            _data,
+            (ITasks, IPluginProposals)
+        );
 
         // Prepare and Deploy the plugin proxy.
         plugin = createERC1967Proxy(
@@ -66,7 +71,11 @@ contract TaskDraftsSetup is PluginSetup {
     function prepareUninstallation(
         address _dao,
         SetupPayload calldata _payload
-    ) external view returns (PermissionLib.MultiTargetPermission[] memory permissions) {
+    )
+        external
+        view
+        returns (PermissionLib.MultiTargetPermission[] memory permissions)
+    {
         // Prepare permissions
         permissions = new PermissionLib.MultiTargetPermission[](2);
 

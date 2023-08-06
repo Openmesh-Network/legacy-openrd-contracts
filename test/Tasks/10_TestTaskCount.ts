@@ -8,7 +8,7 @@ import { Tasks } from "../../typechain-types";
 describe("Task Count", function () {
   it("should be zero with no tasks", async function () {
     await loadFixture(TestSetup);
-    const Tasks = await ethers.getContract("Tasks") as Tasks;
+    const Tasks = (await ethers.getContract("Tasks")) as Tasks;
     const taskCount = await Tasks.taskCount();
     expect(taskCount).to.be.equal(BigInt(0));
   });

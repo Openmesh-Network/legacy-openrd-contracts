@@ -10,28 +10,28 @@ describe("Get Tasks", function () {
   it("should return 1 task successfully", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
     const { taskId } = await createTask({
-        tasks: TasksManager,
+      tasks: TasksManager,
     });
     const taskIds = [taskId];
-    const expected = await asyncMap(taskIds, id => TasksManager.getTask(id));
+    const expected = await asyncMap(taskIds, (id) => TasksManager.getTask(id));
     const multiTask = await TasksManager.getTasks(taskIds);
     expect(multiTask).to.be.deep.equal(expected);
-  });  
+  });
 
   it("should return 2 tasks successfully", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
     const { taskId } = await createTask({
-        tasks: TasksManager,
+      tasks: TasksManager,
     });
     const { taskId: taskId2 } = await createTask({
-        tasks: TasksManager,
+      tasks: TasksManager,
     });
     const taskIds = [taskId, taskId2];
-    const expected = await asyncMap(taskIds, id => TasksManager.getTask(id));
+    const expected = await asyncMap(taskIds, (id) => TasksManager.getTask(id));
     const multiTask = await TasksManager.getTasks(taskIds);
     expect(multiTask).to.be.deep.equal(expected);
   });

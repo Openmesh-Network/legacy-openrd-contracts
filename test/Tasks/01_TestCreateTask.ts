@@ -15,21 +15,24 @@ describe("Create Task", function () {
   it("should have the correct metadata", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
     const metadata = {
-        title: "title",
-        description: "description",
-        resources: [{
-            name: "Google",
-            url: "https://www.google.com" //Normal website
-        }, {
-            name: "IPFS item",
-            url: "ipfs://bafybeih6dsywniag6kub6ceeywcl2shxlzj5xtxndb5tsg3jvupy65654a" //ipfs.tech website
-        }],
+      title: "title",
+      description: "description",
+      resources: [
+        {
+          name: "Google",
+          url: "https://www.google.com", //Normal website
+        },
+        {
+          name: "IPFS item",
+          url: "ipfs://bafybeih6dsywniag6kub6ceeywcl2shxlzj5xtxndb5tsg3jvupy65654a", //ipfs.tech website
+        },
+      ],
     };
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
-        metadata: metadata,
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
+      metadata: metadata,
     };
     const { taskId } = await createTask(createTaskSettings);
     const task = await getTask({ tasks: TasksManager, taskId: taskId });
@@ -41,11 +44,11 @@ describe("Create Task", function () {
   it("should have the correct deadline", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
     const deadline = new Date();
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
-        deadline: deadline,
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
+      deadline: deadline,
     };
     const { taskId } = await createTask(createTaskSettings);
     const task = await getTask({ tasks: TasksManager, taskId: taskId });
@@ -55,30 +58,30 @@ describe("Create Task", function () {
   it("should have the correct budget", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
     const amounts = [Wei(1), Wei(10), Gwei(1), Gwei(5), Ether(1), Ether(20), Ether(100), Ether(1337), Ether(1_000_000)];
-    const budget = await asyncMap(amounts, a => GetBudgetItem(TasksManager, a, manager));
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
-        budget: budget,
+    const budget = await asyncMap(amounts, (a) => GetBudgetItem(TasksManager, a, manager));
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
+      budget: budget,
     };
     const { taskId } = await createTask(createTaskSettings);
     const task = await getTask({ tasks: TasksManager, taskId: taskId });
     for (let i = 0; i < budget.length; i++) {
-        expect(task.budget[i].tokenContract).to.be.equal(budget[i].tokenContract);
-        expect(task.budget[i].amount).to.be.equal(budget[i].amount);
+      expect(task.budget[i].tokenContract).to.be.equal(budget[i].tokenContract);
+      expect(task.budget[i].amount).to.be.equal(budget[i].amount);
     }
   });
 
   it("should have an escrow", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
     const amounts = [Wei(1), Wei(10), Gwei(1), Gwei(5), Ether(1), Ether(20), Ether(100), Ether(1337), Ether(1_000_000)];
-    const budget = await asyncMap(amounts, a => GetBudgetItem(TasksManager, a, manager));
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
-        budget: budget,
+    const budget = await asyncMap(amounts, (a) => GetBudgetItem(TasksManager, a, manager));
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
+      budget: budget,
     };
     const { taskId } = await createTask(createTaskSettings);
     const task = await getTask({ tasks: TasksManager, taskId: taskId });
@@ -88,27 +91,27 @@ describe("Create Task", function () {
   it("should have transfered the budget funds to escrow", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
     const amounts = [Wei(1), Wei(10), Gwei(1), Gwei(5), Ether(1), Ether(20), Ether(100), Ether(1337), Ether(1_000_000)];
-    const budget = await asyncMap(amounts, a => GetBudgetItem(TasksManager, a, manager));
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
-        budget: budget,
+    const budget = await asyncMap(amounts, (a) => GetBudgetItem(TasksManager, a, manager));
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
+      budget: budget,
     };
     const { taskId } = await createTask(createTaskSettings);
     const task = await getTask({ tasks: TasksManager, taskId: taskId });
     for (let i = 0; i < budget.length; i++) {
-        const ERC20 = await ethers.getContractAt("ERC20", budget[i].tokenContract);
-        expect(await ERC20.balanceOf(task.escrow)).to.be.equal(budget[i].amount);
+      const ERC20 = await ethers.getContractAt("ERC20", budget[i].tokenContract);
+      expect(await ERC20.balanceOf(task.escrow)).to.be.equal(budget[i].amount);
     }
   });
 
   it("should have the correct manager", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
     };
     const { taskId } = await createTask(createTaskSettings);
     const task = await getTask({ tasks: TasksManager, taskId: taskId });
@@ -118,22 +121,22 @@ describe("Create Task", function () {
   it("should be open", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
     };
     const { taskId } = await createTask(createTaskSettings);
     const task = await getTask({ tasks: TasksManager, taskId: taskId });
     expect(task.state).to.be.equal(TaskState.Open);
   });
-  
+
   //Check if variables are unset
   it("should have no applications", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
     };
     const { taskId } = await createTask(createTaskSettings);
     const task = await getTask({ tasks: TasksManager, taskId: taskId });
@@ -143,9 +146,9 @@ describe("Create Task", function () {
   it("should have no executor", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
     };
     const { taskId } = await createTask(createTaskSettings);
     const task = await getTask({ tasks: TasksManager, taskId: taskId });
@@ -155,9 +158,9 @@ describe("Create Task", function () {
   it("should have no submissions", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
     };
     const { taskId } = await createTask(createTaskSettings);
     const task = await getTask({ tasks: TasksManager, taskId: taskId });
@@ -168,36 +171,40 @@ describe("Create Task", function () {
   it("should revert if budget not approved", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
     const ERC20 = await DeployMockERC20(manager);
     const amount = Ether(100);
     await ERC20.increaseBalance(manager, amount);
     // No approve
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
-        budget: [{
-            tokenContract: await ERC20.getAddress(),
-            amount: amount,
-        }],
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
+      budget: [
+        {
+          tokenContract: await ERC20.getAddress(),
+          amount: amount,
+        },
+      ],
     };
     const tx = createTaskTransaction(createTaskSettings);
     await expect(tx).to.be.revertedWith("ERC20: insufficient allowance");
   });
-  
+
   it("should revert if balance lower than budget", async function () {
     await loadFixture(TestSetup);
     const { manager } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
     const ERC20 = await DeployMockERC20(manager);
     const amount = Ether(100);
-    await ERC20.increaseBalance(manager, amount-BigInt(1));
+    await ERC20.increaseBalance(manager, amount - BigInt(1));
     await ERC20.approve(await TasksManager.getAddress(), amount);
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
-        budget: [{
-            tokenContract: await ERC20.getAddress(),
-            amount: amount,
-        }],
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
+      budget: [
+        {
+          tokenContract: await ERC20.getAddress(),
+          amount: amount,
+        },
+      ],
     };
     const tx = createTaskTransaction(createTaskSettings);
     await expect(tx).to.be.revertedWith("ERC20: transfer amount exceeds balance");
@@ -206,25 +213,31 @@ describe("Create Task", function () {
   it("should revert if preapproved higher than budget", async function () {
     await loadFixture(TestSetup);
     const { manager, executor } = await getNamedAccounts();
-    const TasksManager = await ethers.getContract("Tasks", manager) as Tasks;
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
     const ERC20 = await DeployMockERC20(manager);
     const amount = Ether(100);
     await ERC20.increaseBalance(manager, amount);
     await ERC20.approve(await TasksManager.getAddress(), amount);
-    const createTaskSettings : CreateTaskSettings = {
-        tasks: TasksManager,
-        budget: [{
-            tokenContract: await ERC20.getAddress(),
-            amount: amount,
-        }],
-        preapproved: [{
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
+      budget: [
+        {
+          tokenContract: await ERC20.getAddress(),
+          amount: amount,
+        },
+      ],
+      preapproved: [
+        {
           applicant: executor,
-          reward: [{
-            nextToken: true,
-            to: executor,
-            amount: amount + BigInt(1),
-          }],
-        }],
+          reward: [
+            {
+              nextToken: true,
+              to: executor,
+              amount: amount + BigInt(1),
+            },
+          ],
+        },
+      ],
     };
     const tx = createTaskTransaction(createTaskSettings);
     await expect(tx).to.be.revertedWithCustomError(TasksManager, "RewardAboveBudget");

@@ -3,14 +3,21 @@ import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { ethers, getUnnamedAccounts } from "hardhat";
 import { reviewSubmission, getTask } from "../../utils/taskHelper";
 import { ToBlockchainDate } from "../../utils/timeUnits";
-import { createBudgetTaskWithExecutorAndSubmissionFixture, createBudgetTaskWithExecutorAndSubmissionFullRewardFixture, createBudgetTaskWithExecutorAndSubmissionIncompleteRewardFixture, createTakenTaskWithAcceptedSubmissionFixture, createTakenTaskWithSubmissionFixture, createTaskFixture } from "./00_TestTasksFixtures";
+import {
+  createBudgetTaskWithExecutorAndSubmissionFixture,
+  createBudgetTaskWithExecutorAndSubmissionFullRewardFixture,
+  createBudgetTaskWithExecutorAndSubmissionIncompleteRewardFixture,
+  createTakenTaskWithAcceptedSubmissionFixture,
+  createTakenTaskWithSubmissionFixture,
+  createTaskFixture,
+} from "./00_TestTasksFixtures";
 import { SubmissionJudgement, SubmissionJudgementMetadata, TaskState } from "../../utils/taskTypes";
 
 describe("Review Submission", function () {
   // Check if variables are set
   it("should have the correct feedback", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
-    const feedback : SubmissionJudgementMetadata = {
+    const feedback: SubmissionJudgementMetadata = {
       feedback: "LGTM!",
     };
     await reviewSubmission({
@@ -109,7 +116,7 @@ describe("Review Submission", function () {
       expect(await ERC20.balanceOf(taskInfo.escrow)).to.be.equal(task.budget[i].amount);
     }
   });
-  
+
   it("should have be in taken state after reject", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
     await reviewSubmission({
@@ -139,7 +146,7 @@ describe("Review Submission", function () {
     expect(taskInfo.escrow).to.be.equal(taskInfoBefore.escrow);
     expect(taskInfo.manager).to.be.equal(taskInfoBefore.manager);
   });
-  
+
   it("should not have changed applications", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
     const taskInfoBefore = await getTask({ tasks: task.TasksManager, taskId: task.taskId });
@@ -157,7 +164,7 @@ describe("Review Submission", function () {
       expect(taskInfo.applications[i].reward).to.be.deep.equal(taskInfoBefore.applications[i].reward);
     }
   });
-  
+
   it("should not have changed accepted applications", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
     const taskInfoBefore = await getTask({ tasks: task.TasksManager, taskId: task.taskId });
@@ -172,7 +179,7 @@ describe("Review Submission", function () {
       expect(taskInfo.applications[i].accepted).to.be.equal(taskInfoBefore.applications[i].accepted);
     }
   });
-  
+
   it("should not have changed submissions", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
     const taskInfoBefore = await getTask({ tasks: task.TasksManager, taskId: task.taskId });
@@ -187,7 +194,7 @@ describe("Review Submission", function () {
       expect(taskInfo.submissions[i].metadata).to.be.deep.equal(taskInfoBefore.submissions[i].metadata);
     }
   });
-  
+
   //Check for exploits
   it("should not be allowed on a task id that does not exist", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
@@ -232,7 +239,7 @@ describe("Review Submission", function () {
     });
     await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "NotManager");
   });
-  
+
   it("should revert if anyone else tries to review", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
     const accounts = await getUnnamedAccounts();
