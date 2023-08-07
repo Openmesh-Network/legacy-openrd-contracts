@@ -47,8 +47,7 @@ interface ITasks {
         uint64 deadline,
         ERC20Transfer[] budget,
         address creator,
-        address manager,
-        PreapprovedApplication[] preapproved
+        address manager
     );
     event ApplicationCreated(
         uint256 indexed taskId,

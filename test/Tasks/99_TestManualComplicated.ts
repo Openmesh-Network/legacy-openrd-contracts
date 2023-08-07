@@ -270,13 +270,18 @@ describe("Manual complicated", function () {
     }
     expect(taskCreationEvents[0].args.creator).to.be.equal(funder);
     expect(taskCreationEvents[0].args.manager).to.be.equal(manager);
+    const taskPreapprovedEvents = getEventsFromReceipt(taskCreation.receipt, TasksManager.interface, "ApplicationCreated");
     for (let i = 0; i < preapproved.length; i++) {
-      expect(taskCreationEvents[0].args.preapproved[i].applicant).to.be.equal(preapproved[i].applicant);
+      expect(taskPreapprovedEvents[i].args.taskId).to.be.equal(taskId);
+      expect(taskPreapprovedEvents[i].args.applicationId).to.be.equal(BigInt(i));
+      expect(taskPreapprovedEvents[i].args.metadata).to.be.equal("");
       for (let j = 0; j < preapproved[i].reward.length; j++) {
-        expect(taskCreationEvents[0].args.preapproved[i].reward[j].nextToken).to.be.equal(preapproved[i].reward[j].nextToken);
-        expect(taskCreationEvents[0].args.preapproved[i].reward[j].to).to.be.equal(preapproved[i].reward[j].to);
-        expect(taskCreationEvents[0].args.preapproved[i].reward[j].amount).to.be.equal(preapproved[i].reward[j].amount);
+        expect(taskPreapprovedEvents[i].args.reward[j].nextToken).to.be.equal(preapproved[i].reward[j].nextToken);
+        expect(taskPreapprovedEvents[i].args.reward[j].to).to.be.equal(preapproved[i].reward[j].to);
+        expect(taskPreapprovedEvents[i].args.reward[j].amount).to.be.equal(preapproved[i].reward[j].amount);
       }
+      expect(taskPreapprovedEvents[i].args.manager).to.be.equal(manager);
+      expect(taskPreapprovedEvents[i].args.applicant).to.be.equal(preapproved[i].applicant);
     }
 
     const reward: Reward[] = [
