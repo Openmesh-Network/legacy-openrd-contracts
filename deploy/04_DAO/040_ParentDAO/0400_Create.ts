@@ -6,7 +6,7 @@ import { ethers } from "hardhat";
 import { getBool, getVar } from "../../../utils/globalVars";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  if (!(await getBool("NewTokenListGovernance")) && !(await getBool("NewDraftsSetup")) && !(await getBool("NewNFT"))) {
+  if (!(await getBool("NewTokenListGovernance")) && !(await getBool("NewNFT"))) {
     return;
   }
 

@@ -10,9 +10,9 @@ export async function getDAO() {
   await loadFixture(TestSetup);
   const { deployer } = await getNamedAccounts();
 
-  const DAO = (await ethers.getContract("devops_dao", deployer)) as DAO;
-  const TokenListGovernance = (await ethers.getContract("devops_tokenListGovernance", deployer)) as TokenListGovernance;
-  const TaskDrafts = (await ethers.getContract("devops_taskDrafts", deployer)) as TaskDrafts;
+  const DAO = (await ethers.getContract("blockchain_dao", deployer)) as DAO;
+  const TokenListGovernance = (await ethers.getContract("blockchain_tokenListGovernance", deployer)) as TokenListGovernance;
+  const TaskDrafts = (await ethers.getContract("blockchain_taskDrafts", deployer)) as TaskDrafts;
   const NFT = (await ethers.getContract("NFT", deployer)) as MockERC721;
   const Tasks = (await ethers.getContract("Tasks", deployer)) as Tasks;
 
