@@ -270,18 +270,25 @@ describe("Manual complicated", function () {
     }
     expect(taskCreationEvents[0].args.creator).to.be.equal(funder);
     expect(taskCreationEvents[0].args.manager).to.be.equal(manager);
-    const taskPreapprovedEvents = getEventsFromReceipt(taskCreation.receipt, TasksManager.interface, "ApplicationCreated");
+    const taskPreapprovedApplicationEvents = getEventsFromReceipt(taskCreation.receipt, TasksManager.interface, "ApplicationCreated");
     for (let i = 0; i < preapproved.length; i++) {
-      expect(taskPreapprovedEvents[i].args.taskId).to.be.equal(taskId);
-      expect(taskPreapprovedEvents[i].args.applicationId).to.be.equal(BigInt(i));
-      expect(taskPreapprovedEvents[i].args.metadata).to.be.equal("");
+      expect(taskPreapprovedApplicationEvents[i].args.taskId).to.be.equal(taskId);
+      expect(taskPreapprovedApplicationEvents[i].args.applicationId).to.be.equal(BigInt(i));
+      expect(taskPreapprovedApplicationEvents[i].args.metadata).to.be.equal("");
       for (let j = 0; j < preapproved[i].reward.length; j++) {
-        expect(taskPreapprovedEvents[i].args.reward[j].nextToken).to.be.equal(preapproved[i].reward[j].nextToken);
-        expect(taskPreapprovedEvents[i].args.reward[j].to).to.be.equal(preapproved[i].reward[j].to);
-        expect(taskPreapprovedEvents[i].args.reward[j].amount).to.be.equal(preapproved[i].reward[j].amount);
+        expect(taskPreapprovedApplicationEvents[i].args.reward[j].nextToken).to.be.equal(preapproved[i].reward[j].nextToken);
+        expect(taskPreapprovedApplicationEvents[i].args.reward[j].to).to.be.equal(preapproved[i].reward[j].to);
+        expect(taskPreapprovedApplicationEvents[i].args.reward[j].amount).to.be.equal(preapproved[i].reward[j].amount);
       }
-      expect(taskPreapprovedEvents[i].args.manager).to.be.equal(manager);
-      expect(taskPreapprovedEvents[i].args.applicant).to.be.equal(preapproved[i].applicant);
+      expect(taskPreapprovedApplicationEvents[i].args.manager).to.be.equal(manager);
+      expect(taskPreapprovedApplicationEvents[i].args.applicant).to.be.equal(preapproved[i].applicant);
+    }
+    const taskPreapprovedAcceptanceEvents = getEventsFromReceipt(taskCreation.receipt, TasksManager.interface, "ApplicationAccepted");
+    for (let i = 0; i < preapproved.length; i++) {
+      expect(taskPreapprovedAcceptanceEvents[i].args.taskId).to.be.equal(taskId);
+      expect(taskPreapprovedAcceptanceEvents[i].args.applicationId).to.be.equal(BigInt(i));
+      expect(taskPreapprovedAcceptanceEvents[i].args.manager).to.be.equal(manager);
+      expect(taskPreapprovedAcceptanceEvents[i].args.applicant).to.be.equal(preapproved[i].applicant);
     }
 
     const reward: Reward[] = [

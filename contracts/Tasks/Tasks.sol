@@ -224,20 +224,18 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                     _preapprove[i].applicant
                 );
 
+                emit ApplicationAccepted(
+                    taskId,
+                    i,
+                    _manager,
+                    _preapprove[i].applicant
+                );
+
                 unchecked {
                     ++i;
                 }
             }
         }
-
-        emit TaskCreated(
-            taskId,
-            _metadata,
-            _deadline,
-            _budget,
-            _msgSender(),
-            _manager
-        );
     }
 
     /// @inheritdoc ITasks
