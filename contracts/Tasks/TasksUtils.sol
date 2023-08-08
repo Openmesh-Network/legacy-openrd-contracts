@@ -18,6 +18,7 @@ abstract contract TasksUtils is ITasks, Context {
         offchainTask.manager = task.manager;
         offchainTask.state = task.state;
         offchainTask.escrow = task.escrow;
+        offchainTask.nativeBudget = task.nativeBudget;
 
         offchainTask.budget = new ERC20Transfer[](task.budgetCount);
         for (uint8 i; i < offchainTask.budget.length; ) {
@@ -44,6 +45,8 @@ abstract contract TasksUtils is ITasks, Context {
                     ++j;
                 }
             }
+            offchainTask.applications[i].nativeReward = application
+                .nativeReward;
             unchecked {
                 ++i;
             }
@@ -71,7 +74,8 @@ abstract contract TasksUtils is ITasks, Context {
     function _increaseBudgetToReward(
         Task storage task,
         uint8 _length,
-        mapping(uint8 => Reward) storage _reward
+        mapping(uint8 => Reward) storage _reward,
+        uint256 nativeReward
     ) internal {
         uint8 j;
         ERC20Transfer memory erc20Transfer = task.budget[0];
@@ -102,12 +106,22 @@ abstract contract TasksUtils is ITasks, Context {
                 ++i;
             }
         }
+
+        if (nativeReward > task.nativeBudget) {
+            unchecked {
+                if (msg.value != nativeReward - task.nativeBudget) {
+                    revert IncorrectAmountOfNativeCurrencyAttached();
+                }
+            }
+            payable(address(task.escrow)).transfer(msg.value);
+        }
     }
 
     function _setRewardBellowBudget(
         Task storage task,
         Application storage application,
-        Reward[] calldata _reward
+        Reward[] calldata _reward,
+        uint256 _nativeReward
     ) internal {
         application.rewardCount = uint8(_reward.length);
 
@@ -135,6 +149,13 @@ abstract contract TasksUtils is ITasks, Context {
             unchecked {
                 ++i;
             }
+        }
+        // Gas optimization
+        if (_nativeReward != 0) {
+            if (_nativeReward > task.nativeBudget) {
+                revert RewardAboveBudget();
+            }
+            application.nativeReward = _nativeReward;
         }
     }
 
@@ -181,6 +202,14 @@ abstract contract TasksUtils is ITasks, Context {
             }
         }
 
+        // Gas optimzation
+        if (executor.nativeReward != 0) {
+            escrow.transferNative(
+                payable(executor.applicant),
+                executor.nativeReward
+            );
+        }
+
         task.state = TaskState.Closed;
     }
 
@@ -199,6 +228,11 @@ abstract contract TasksUtils is ITasks, Context {
             unchecked {
                 ++i;
             }
+        }
+
+        // Gas optimzation
+        if (task.nativeBudget != 0) {
+            escrow.transferNative(payable(creator), task.nativeBudget);
         }
 
         task.state = TaskState.Closed;

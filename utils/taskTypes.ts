@@ -1,3 +1,5 @@
+import { BigNumberish } from "ethers";
+
 export interface Resource {
   name: string;
   url: string;
@@ -17,6 +19,7 @@ export interface TaskMetadata {
 export interface PreapprovedApplication {
   applicant: string;
   reward: Reward[];
+  nativeReward: BigNumberish;
 }
 
 export enum TaskState {

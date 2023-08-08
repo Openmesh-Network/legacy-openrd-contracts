@@ -11,7 +11,7 @@ contract Escrow {
 
     /// @notice Initializes the Escrow with the sender of the transaction as owner.
     /// @dev This should be called in the same transaction as deploying the escrow, to prevent front running.
-    function __Escrow_init() external {
+    function __Escrow_init() external payable {
         if (owner != address(0)) {
             revert AlreadyInitialized();
         }
@@ -29,5 +29,16 @@ contract Escrow {
         }
 
         token.transfer(to, amount);
+    }
+
+    /// @notice Transfers a certain amount of native currency to a given address. Can only be called by the owner.
+    /// @param to The address to recieve the currency.
+    /// @param amount The amount of native currency to receive.
+    function transferNative(address payable to, uint256 amount) external {
+        if (msg.sender != owner) {
+            revert NotOwner();
+        }
+
+        to.transfer(amount);
     }
 }

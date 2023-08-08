@@ -13,7 +13,7 @@
 ### acceptApplications
 
 ```solidity
-function acceptApplications(uint256 _taskId, uint16[] _applicationIds) external nonpayable
+function acceptApplications(uint256 _taskId, uint16[] _applicationIds) external payable
 ```
 
 Accept application to allow them to take the task.
@@ -49,7 +49,7 @@ Accepts a request, executing the proposed action.
 ### applyForTask
 
 ```solidity
-function applyForTask(uint256 _taskId, string _metadata, ITasks.Reward[] _reward) external nonpayable returns (uint16 applicationId)
+function applyForTask(uint256 _taskId, string _metadata, ITasks.Reward[] _reward, uint256 _nativeReward) external nonpayable returns (uint16 applicationId)
 ```
 
 
@@ -63,6 +63,7 @@ function applyForTask(uint256 _taskId, string _metadata, ITasks.Reward[] _reward
 | _taskId | uint256 | undefined |
 | _metadata | string | undefined |
 | _reward | ITasks.Reward[] | undefined |
+| _nativeReward | uint256 | undefined |
 
 #### Returns
 
@@ -135,7 +136,7 @@ Create a submission.
 ### createTask
 
 ```solidity
-function createTask(string _metadata, uint64 _deadline, ITasks.ERC20Transfer[] _budget, address _manager, ITasks.PreapprovedApplication[] _preapprove) external nonpayable returns (uint256 taskId)
+function createTask(string _metadata, uint64 _deadline, ITasks.ERC20Transfer[] _budget, address _manager, ITasks.PreapprovedApplication[] _preapprove) external payable returns (uint256 taskId)
 ```
 
 
@@ -257,7 +258,7 @@ Retrieves multiple tasks.
 ### increaseBudget
 
 ```solidity
-function increaseBudget(uint256 _taskId, uint96[] _increase) external nonpayable
+function increaseBudget(uint256 _taskId, uint96[] _increase) external payable
 ```
 
 Increase the budget of the task.
@@ -364,7 +365,7 @@ event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId)
 ### ApplicationCreated
 
 ```solidity
-event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string metadata, ITasks.Reward[] reward)
+event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string metadata, ITasks.Reward[] reward, uint256 nativeReward)
 ```
 
 
@@ -379,11 +380,12 @@ event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string me
 | applicationId  | uint16 | undefined |
 | metadata  | string | undefined |
 | reward  | ITasks.Reward[] | undefined |
+| nativeReward  | uint256 | undefined |
 
 ### BudgetIncreased
 
 ```solidity
-event BudgetIncreased(uint256 indexed taskId, uint96[] increase)
+event BudgetIncreased(uint256 indexed taskId, uint96[] increase, uint256 nativeIncrease)
 ```
 
 
@@ -396,6 +398,7 @@ event BudgetIncreased(uint256 indexed taskId, uint96[] increase)
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
 | increase  | uint96[] | undefined |
+| nativeIncrease  | uint256 | undefined |
 
 ### CancelTaskRequested
 
@@ -559,7 +562,7 @@ event TaskCompleted(uint256 indexed taskId, enum ITasks.TaskCompletion source)
 ### TaskCreated
 
 ```solidity
-event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITasks.ERC20Transfer[] budget, address creator, address manager)
+event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITasks.ERC20Transfer[] budget, uint256 nativeBudget, address creator, address manager)
 ```
 
 
@@ -574,6 +577,7 @@ event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITas
 | metadata  | string | undefined |
 | deadline  | uint64 | undefined |
 | budget  | ITasks.ERC20Transfer[] | undefined |
+| nativeBudget  | uint256 | undefined |
 | creator  | address | undefined |
 | manager  | address | undefined |
 
@@ -613,6 +617,17 @@ error ApplicationDoesNotExist()
 
 ```solidity
 error ApplicationNotAccepted()
+```
+
+
+
+
+
+
+### IncorrectAmountOfNativeCurrencyAttached
+
+```solidity
+error IncorrectAmountOfNativeCurrencyAttached()
 ```
 
 

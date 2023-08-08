@@ -71,17 +71,21 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         ERC20Transfer[] calldata _budget,
         address _manager,
         PreapprovedApplication[] calldata _preapprove
-    ) external returns (uint256 taskId) {
+    ) external payable returns (uint256 taskId) {
         _ensureNotDisabled();
         taskId = taskCounter++;
 
         Task storage task = tasks[taskId];
         task.metadata = _metadata;
         task.deadline = _deadline;
-        task.budgetCount = uint8(_budget.length);
         Escrow escrow = Escrow(Clones.clone(escrowImplementation));
-        escrow.__Escrow_init();
+        escrow.__Escrow_init{value: msg.value}();
         task.escrow = escrow;
+        // Gas optimization
+        if (msg.value != 0) {
+            task.nativeBudget = msg.value;
+        }
+        task.budgetCount = uint8(_budget.length);
         for (uint8 i; i < uint8(_budget.length); ) {
             _budget[i].tokenContract.transferFrom(
                 _msgSender(),
@@ -105,6 +109,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             _metadata,
             _deadline,
             _budget,
+            msg.value,
             _msgSender(),
             _manager
         );
@@ -120,10 +125,17 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 _setRewardBellowBudget(
                     task,
                     application,
-                    _preapprove[i].reward
+                    _preapprove[i].reward,
+                    _preapprove[i].nativeReward
                 );
 
-                emit ApplicationCreated(taskId, i, "", _preapprove[i].reward);
+                emit ApplicationCreated(
+                    taskId,
+                    i,
+                    "",
+                    _preapprove[i].reward,
+                    _preapprove[i].nativeReward
+                );
 
                 emit ApplicationAccepted(taskId, i);
 
@@ -138,7 +150,8 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
     function applyForTask(
         uint256 _taskId,
         string calldata _metadata,
-        Reward[] calldata _reward
+        Reward[] calldata _reward,
+        uint256 _nativeReward
     ) external returns (uint16 applicationId) {
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
@@ -157,17 +170,24 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 ++i;
             }
         }
+        application.nativeReward = _nativeReward;
 
         applicationId = task.applicationCount++;
 
-        emit ApplicationCreated(_taskId, applicationId, _metadata, _reward);
+        emit ApplicationCreated(
+            _taskId,
+            applicationId,
+            _metadata,
+            _reward,
+            _nativeReward
+        );
     }
 
     /// @inheritdoc ITasks
     function acceptApplications(
         uint256 _taskId,
         uint16[] calldata _applicationIds
-    ) external {
+    ) external payable {
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsOpen(task);
@@ -183,7 +203,8 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             _increaseBudgetToReward(
                 task,
                 application.rewardCount,
-                application.reward
+                application.reward,
+                application.nativeReward
             );
             emit ApplicationAccepted(_taskId, _applicationIds[i]);
 
@@ -371,7 +392,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
     function increaseBudget(
         uint256 _taskId,
         uint96[] calldata _increase
-    ) external {
+    ) external payable {
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureSenderIsManager(task);
@@ -391,8 +412,12 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 ++i;
             }
         }
+        // Gas optimization
+        if (msg.value != 0) {
+            task.nativeBudget += msg.value;
+        }
 
-        emit BudgetIncreased(_taskId, _increase);
+        emit BudgetIncreased(_taskId, _increase, msg.value);
     }
 
     /// @inheritdoc ITasks

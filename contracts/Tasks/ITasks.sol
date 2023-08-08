@@ -16,6 +16,7 @@ interface ITasks {
 
     error RewardAboveBudget();
     error RewardDoesntEndWithNewToken();
+    error IncorrectAmountOfNativeCurrencyAttached();
     error ApplicationDoesNotExist();
     error NotYourApplication();
     error ApplicationNotAccepted();
@@ -33,6 +34,7 @@ interface ITasks {
         string metadata,
         uint64 deadline,
         ERC20Transfer[] budget,
+        uint256 nativeBudget,
         address creator,
         address manager
     );
@@ -40,7 +42,8 @@ interface ITasks {
         uint256 indexed taskId,
         uint16 applicationId,
         string metadata,
-        Reward[] reward
+        Reward[] reward,
+        uint256 nativeReward
     );
     event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId);
     event TaskTaken(uint256 indexed taskId, uint16 applicationId);
@@ -76,7 +79,11 @@ interface ITasks {
     );
 
     event DeadlineExtended(uint256 indexed taskId, uint64 extension);
-    event BudgetIncreased(uint256 indexed taskId, uint96[] increase);
+    event BudgetIncreased(
+        uint256 indexed taskId,
+        uint96[] increase,
+        uint256 nativeIncrease
+    );
     event MetadataEditted(uint256 indexed taskId, string newMetadata);
 
     /// @notice A container for ERC20 transfer information.
@@ -104,12 +111,14 @@ interface ITasks {
     /// @param applicant Who has submitted this application.
     /// @param accepted If the application has been accepted by the manager.
     /// @param reward How much rewards the applicant wants for completion.
+    /// @param nativeReward How much native currency the applicant wants for completion.
     struct Application {
         string metadata;
         address applicant;
         bool accepted;
         uint8 rewardCount;
         mapping(uint8 => Reward) reward;
+        uint256 nativeReward;
     }
 
     struct OffChainApplication {
@@ -117,12 +126,14 @@ interface ITasks {
         address applicant;
         bool accepted;
         Reward[] reward;
+        uint256 nativeReward;
     }
 
     /// @notice For approving people on task creation (they are not required to make an application)
     struct PreapprovedApplication {
         address applicant;
         Reward[] reward;
+        uint256 nativeReward;
     }
 
     enum SubmissionJudgement {
@@ -169,17 +180,22 @@ interface ITasks {
     /// @param metadata Metadata of the task. (IPFS hash)
     /// @param deadline Block timestamp at which the task expires if not completed.
     /// @param budget Maximum ERC20 rewards that can be earned by completing the task.
+    /// @param nativeBudget Maximum native currency reward that can be earned by completing the task.
     /// @param manager Who has created the task.
     /// @param state Current state the task is in.
     /// @param applications Applications to take the job.
     /// @param executorApplication Index of the application that will execture the task.
     /// @param submissions Submission made to finish the task.
-    /// @dev Storage blocks seperated by newlines.
     struct Task {
         string metadata;
+        // Storage block seperator
         uint64 deadline;
         Escrow escrow;
+        // Storage block seperator
+        uint256 nativeBudget;
+        // Storage block seperator
         address creator;
+        // Storage block seperator
         address manager;
         TaskState state;
         uint16 executorApplication;
@@ -187,6 +203,7 @@ interface ITasks {
         uint16 applicationCount;
         uint8 submissionCount;
         uint8 cancelTaskRequestCount;
+        // Storage block seperator
         mapping(uint8 => ERC20Transfer) budget;
         mapping(uint16 => Application) applications;
         mapping(uint8 => Submission) submissions;
@@ -201,6 +218,7 @@ interface ITasks {
         address manager;
         TaskState state;
         Escrow escrow;
+        uint256 nativeBudget;
         ERC20Transfer[] budget;
         OffChainApplication[] applications;
         Submission[] submissions;
@@ -239,16 +257,18 @@ interface ITasks {
         ERC20Transfer[] calldata _budget,
         address _manager,
         PreapprovedApplication[] calldata _preapprove
-    ) external returns (uint256 taskId);
+    ) external payable returns (uint256 taskId);
 
     /// @notice Apply to take the task.
     /// @param _taskId Id of the task.
     /// @param _metadata Metadata of your application.
     /// @param _reward Wanted rewards for completing the task.
+    /// @param _nativeReward Wanted native currency for completing the task.
     function applyForTask(
         uint256 _taskId,
         string calldata _metadata,
-        Reward[] calldata _reward
+        Reward[] calldata _reward,
+        uint256 _nativeReward
     ) external returns (uint16 applicationId);
 
     /// @notice Accept application to allow them to take the task.
@@ -257,7 +277,7 @@ interface ITasks {
     function acceptApplications(
         uint256 _taskId,
         uint16[] calldata _applicationIds
-    ) external;
+    ) external payable;
 
     /// @notice Take the task after your application has been accepted.
     /// @param _taskId Id of the task.
@@ -325,7 +345,7 @@ interface ITasks {
     function increaseBudget(
         uint256 _taskId,
         uint96[] calldata _increase
-    ) external;
+    ) external payable;
 
     /// @notice Edit the metadata of a task.
     /// @param _taskId Id of the task.

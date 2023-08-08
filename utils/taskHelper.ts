@@ -1,13 +1,12 @@
 import { FromBlockchainDate, ToBlockchainDate, days, now } from "./timeUnits";
 import { ITasks, Tasks } from "../typechain-types";
-import { ContractTransactionReceipt, ContractTransactionResponse, Signer } from "ethers";
+import { ContractTransactionReceipt, ContractTransactionResponse, Signer, BigNumberish } from "ethers";
 import {
   Application,
   ApplicationMetadata,
   BudgetItem,
   CancelTaskRequest,
   CancelTaskRequestMetadata,
-  PreapprovedApplication,
   RequestType,
   Reward,
   Submission,
@@ -28,7 +27,11 @@ export interface CreateTaskSettings {
   deadline?: Date;
   budget?: BudgetItem[];
   manager?: string;
-  preapproved?: PreapprovedApplication[];
+  preapproved?: {
+    applicant: string;
+    reward?: Reward[];
+    nativeReward?: BigNumberish;
+  }[];
 }
 export async function createTaskTransaction(settings: CreateTaskSettings): Promise<ContractTransactionResponse> {
   const metadata: TaskMetadata = {
@@ -40,7 +43,13 @@ export async function createTaskTransaction(settings: CreateTaskSettings): Promi
   const deadline = settings.deadline ? ToBlockchainDate(settings.deadline) : now() + 1 * days;
   const budget = settings.budget ?? [];
   const manager = settings.manager ?? (await (settings.tasks.runner as Signer).getAddress());
-  const preapproved = settings.preapproved ?? [];
+  const preapproved = (settings.preapproved ?? []).map(p => {
+    return {
+      applicant: p.applicant,
+      reward: p.reward ?? [],
+      nativeReward: p.nativeReward ?? 0,
+    };
+  });
   return settings.tasks.createTask(metadataHash, deadline, budget, manager, preapproved);
 }
 
@@ -120,7 +129,7 @@ export async function applyForTask(settings: ApplyForTaskSettings) {
   };
   const metadataHash = await addToIpfs(JSON.stringify(settings.metadata ?? metadata));
   const reward = settings.reward ?? [];
-  return settings.tasks.applyForTask(settings.taskId, metadataHash, reward);
+  return settings.tasks.applyForTask(settings.taskId, metadataHash, reward, 0);
 }
 
 export interface AcceptApplicationsSettings {

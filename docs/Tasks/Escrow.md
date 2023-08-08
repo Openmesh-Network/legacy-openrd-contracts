@@ -13,7 +13,7 @@
 ### __Escrow_init
 
 ```solidity
-function __Escrow_init() external nonpayable
+function __Escrow_init() external payable
 ```
 
 Initializes the Escrow with the sender of the transaction as owner.
@@ -38,6 +38,23 @@ Transfers a certain amount of ERC20 token to a given address. Can only be called
 | token | contract IERC20 | The ERC20 contract address. |
 | to | address | The address to recieve the tokens. |
 | amount | uint256 | The amount of ERC20 token to receive. |
+
+### transferNative
+
+```solidity
+function transferNative(address payable to, uint256 amount) external nonpayable
+```
+
+Transfers a certain amount of native currency to a given address. Can only be called by the owner.
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| to | address payable | The address to recieve the currency. |
+| amount | uint256 | The amount of native currency to receive. |
 
 
 
