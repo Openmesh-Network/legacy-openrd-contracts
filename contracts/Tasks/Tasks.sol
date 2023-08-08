@@ -23,9 +23,15 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
     error NotDisabled();
     error NotDisabler();
 
-    constructor() {
+    /// @notice This address has the power to handle disputes. It can complete any taken task without permission of the manager.
+    /// @dev This should be a smart contract obviously.
+    address private disputeManager;
+    error NotDisputeManager();
+
+    constructor(address _disputeManager) {
         escrowImplementation = address(new Escrow());
         disabler = _msgSender();
+        disputeManager = _disputeManager;
     }
 
     /// @inheritdoc ITasks
@@ -242,7 +248,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         if (_judgement == SubmissionJudgement.Accepted) {
             _payoutTask(task);
-            emit TaskCompleted(_taskId);
+            emit TaskCompleted(_taskId, TaskCompletion.SubmissionAccepted);
         }
 
         emit SubmissionReviewed(_taskId, _submissionId, _judgement, _feedback);
@@ -404,8 +410,26 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         emit MetadataEditted(_taskId, _newMetadata);
     }
 
+    /// @inheritdoc ITasks
+    function completeByDispute(uint256 _taskId) external {
+        _ensureNotDisabled();
+        Task storage task = _getTask(_taskId);
+        _ensureSenderIsDisputeManager();
+
+        _ensureTaskIsTaken(task);
+
+        _payoutTask(task);
+        emit TaskCompleted(_taskId, TaskCompletion.Dispute);
+    }
+
+    /// @inheritdoc ITasks
+    function transferDisputeManagement(address _newManager) external {
+        _ensureSenderIsDisputeManager();
+        disputeManager = _newManager;
+    }
+
     function disable() external {
-        _ensureDisabler();
+        _ensureSenderIsDisabler();
         disabler = address(0);
     }
 
@@ -428,6 +452,12 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         task = tasks[_taskId];
     }
 
+    function _ensureSenderIsDisputeManager() internal view {
+        if (_msgSender() != disputeManager) {
+            revert NotDisputeManager();
+        }
+    }
+
     function _ensureNotDisabled() internal view {
         if (disabler == address(0)) {
             revert Disabled();
@@ -440,7 +470,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         }
     }
 
-    function _ensureDisabler() internal view {
+    function _ensureSenderIsDisabler() internal view {
         if (_msgSender() != disabler) {
             revert NotDisabler();
         }

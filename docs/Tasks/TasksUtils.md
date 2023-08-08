@@ -93,6 +93,22 @@ Cancels a task. This can be used to close a task and receive back the budget.
 |---|---|---|
 | cancelTaskRequestId | uint8 | undefined |
 
+### completeByDispute
+
+```solidity
+function completeByDispute(uint256 _taskId) external nonpayable
+```
+
+Completes the task through dispute resolution.
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _taskId | uint256 | Id of the task. |
+
 ### createSubmission
 
 ```solidity
@@ -308,6 +324,22 @@ Retrieves the current amount of created tasks.
 |---|---|---|
 | _0 | uint256 | undefined |
 
+### transferDisputeManagement
+
+```solidity
+function transferDisputeManagement(address _newManager) external nonpayable
+```
+
+Allows the dispute manager to appoint a new dispute manager.
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _newManager | address | The new dispute manager. |
+
 
 
 ## Events
@@ -510,7 +542,7 @@ event TaskCancelled(uint256 indexed taskId)
 ### TaskCompleted
 
 ```solidity
-event TaskCompleted(uint256 indexed taskId)
+event TaskCompleted(uint256 indexed taskId, enum ITasks.TaskCompletion source)
 ```
 
 
@@ -522,6 +554,7 @@ event TaskCompleted(uint256 indexed taskId)
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
+| source  | enum ITasks.TaskCompletion | undefined |
 
 ### TaskCreated
 

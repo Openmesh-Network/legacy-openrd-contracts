@@ -7,7 +7,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   await deployments.deploy("Tasks", {
     from: deployer,
+    args: [(await deployments.get("dispute_dao")).address],
   });
 };
 export default func;
 func.tags = ["Tasks"];
+func.dependencies = ["DisputeDAO"];

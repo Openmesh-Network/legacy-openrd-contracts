@@ -55,7 +55,7 @@ interface ITasks {
         SubmissionJudgement judgement,
         string feedback
     );
-    event TaskCompleted(uint256 indexed taskId);
+    event TaskCompleted(uint256 indexed taskId, TaskCompletion source);
 
     event CancelTaskRequested(
         uint256 indexed taskId,
@@ -207,6 +207,11 @@ interface ITasks {
         CancelTaskRequest[] cancelTaskRequests;
     }
 
+    enum TaskCompletion {
+        SubmissionAccepted,
+        Dispute
+    }
+
     /// @notice Retrieves the current amount of created tasks.
     function taskCount() external view returns (uint256);
 
@@ -330,4 +335,12 @@ interface ITasks {
         uint256 _taskId,
         string calldata _newMetadata
     ) external;
+
+    /// @notice Completes the task through dispute resolution.
+    /// @param _taskId Id of the task.
+    function completeByDispute(uint256 _taskId) external;
+
+    /// @notice Allows the dispute manager to appoint a new dispute manager.
+    /// @param _newManager The new dispute manager.
+    function transferDisputeManagement(address _newManager) external;
 }
