@@ -4,19 +4,6 @@ pragma solidity ^0.8.0;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Escrow} from "./Escrow.sol";
 
-/*
-  Some of the functionality in this contract will be removed in the next version.
-  This functionality will be provided by off-chain indexing instead.
-  Therefore this functionality might be implemented in a more dirty way to make it easier to remove.
-  This is true for:
-  - taskStatistics
-  - getManagingTasks
-  - getExecutingTasks
-  - manager and executor/applicant in all events (except first introduction)
-
-  Seperation of manager and creator is also a recent change. The frontend will currently use creator == manager.
-  Hence there is also no getCreatedTasks.
-*/
 interface ITasks {
     error TaskDoesNotExist();
     error TaskNotOpen();
@@ -53,87 +40,44 @@ interface ITasks {
         uint256 indexed taskId,
         uint16 applicationId,
         string metadata,
-        Reward[] reward,
-        address manager,
-        address applicant
+        Reward[] reward
     );
-    event ApplicationAccepted(
-        uint256 indexed taskId,
-        uint16 applicationId,
-        address manager,
-        address applicant
-    );
-    event TaskTaken(
-        uint256 indexed taskId,
-        uint16 applicationId,
-        address manager,
-        address executor
-    );
+    event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId);
+    event TaskTaken(uint256 indexed taskId, uint16 applicationId);
     event SubmissionCreated(
         uint256 indexed taskId,
         uint8 submissionId,
-        string metadata,
-        address manager,
-        address executor
+        string metadata
     );
     event SubmissionReviewed(
         uint256 indexed taskId,
         uint8 submissionId,
         SubmissionJudgement judgement,
-        string feedback,
-        address manager,
-        address executor
+        string feedback
     );
-    event TaskCompleted(
-        uint256 indexed taskId,
-        address manager,
-        address executor
-    );
+    event TaskCompleted(uint256 indexed taskId);
 
     event CancelTaskRequested(
         uint256 indexed taskId,
         uint8 requestId,
-        string explanation,
-        address manager,
-        address executor
+        string explanation
     );
-    event TaskCancelled(
-        uint256 indexed taskId,
-        address manager,
-        address executor
-    );
+    event TaskCancelled(uint256 indexed taskId);
     event RequestAccepted(
         uint256 indexed taskId,
         RequestType requestType,
-        uint8 requestId,
-        address manager,
-        address executor
+        uint8 requestId
     );
     event RequestExecuted(
         uint256 indexed taskId,
         RequestType requestType,
         uint8 requestId,
-        address by,
-        address manager,
-        address executor
+        address by
     );
 
-    event DeadlineExtended(
-        uint256 indexed taskId,
-        uint64 extension,
-        address manager,
-        address executor
-    );
-    event BudgetIncreased(
-        uint256 indexed taskId,
-        uint96[] increase,
-        address manager
-    );
-    event MetadataEditted(
-        uint256 indexed taskId,
-        string newMetadata,
-        address manager
-    );
+    event DeadlineExtended(uint256 indexed taskId, uint64 extension);
+    event BudgetIncreased(uint256 indexed taskId, uint96[] increase);
+    event MetadataEditted(uint256 indexed taskId, string newMetadata);
 
     /// @notice A container for ERC20 transfer information.
     /// @param tokenContract ERC20 token to transfer.
@@ -266,16 +210,6 @@ interface ITasks {
     /// @notice Retrieves the current amount of created tasks.
     function taskCount() external view returns (uint256);
 
-    /// @notice Retrieves the current statistics of created tasks.
-    function taskStatistics()
-        external
-        view
-        returns (
-            uint256 openTasks,
-            uint256 takenTasks,
-            uint256 successfulTasks
-        );
-
     /// @notice Retrieves all task information by id.
     /// @param _taskId Id of the task.
     function getTask(
@@ -286,26 +220,6 @@ interface ITasks {
     /// @param _taskIds Ids of the tasks.
     function getTasks(
         uint256[] calldata _taskIds
-    ) external view returns (OffChainTask[] memory);
-
-    /// @notice Retrieves all tasks of a manager. Most recent ones first.
-    /// @param _manager The manager to fetch tasks of.
-    /// @param _fromTaskId What taskId to start from. 0 for most recent task.
-    /// @param _max The maximum amount of tasks to return. 0 for no max.
-    function getManagingTasks(
-        address _manager,
-        uint256 _fromTaskId,
-        uint256 _max
-    ) external view returns (OffChainTask[] memory);
-
-    /// @notice Retrieves all tasks of an executor. Most recent ones first.
-    /// @param _executor The executor to fetch tasks of.
-    /// @param _fromTaskId What taskId to start from. 0 for most recent task.
-    /// @param _max The maximum amount of tasks to return. 0 for no max.
-    function getExecutingTasks(
-        address _executor,
-        uint256 _fromTaskId,
-        uint256 _max
     ) external view returns (OffChainTask[] memory);
 
     /// @notice Create a new task.

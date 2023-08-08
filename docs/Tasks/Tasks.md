@@ -205,54 +205,6 @@ Extend the deadline of a task.
 | _taskId | uint256 | Id of the task. |
 | _extension | uint64 | How much to extend the deadline by. |
 
-### getExecutingTasks
-
-```solidity
-function getExecutingTasks(address _executor, uint256 _fromTaskId, uint256 _max) external view returns (struct ITasks.OffChainTask[])
-```
-
-Retrieves all tasks of an executor. Most recent ones first.
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _executor | address | The executor to fetch tasks of. |
-| _fromTaskId | uint256 | What taskId to start from. 0 for most recent task. |
-| _max | uint256 | The maximum amount of tasks to return. 0 for no max. |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | ITasks.OffChainTask[] | undefined |
-
-### getManagingTasks
-
-```solidity
-function getManagingTasks(address _manager, uint256 _fromTaskId, uint256 _max) external view returns (struct ITasks.OffChainTask[])
-```
-
-Retrieves all tasks of a manager. Most recent ones first.
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _manager | address | The manager to fetch tasks of. |
-| _fromTaskId | uint256 | What taskId to start from. 0 for most recent task. |
-| _max | uint256 | The maximum amount of tasks to return. 0 for no max. |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | ITasks.OffChainTask[] | undefined |
-
 ### getTask
 
 ```solidity
@@ -383,25 +335,6 @@ Retrieves the current amount of created tasks.
 |---|---|---|
 | _0 | uint256 | undefined |
 
-### taskStatistics
-
-```solidity
-function taskStatistics() external view returns (uint256 open, uint256 taken, uint256 successful)
-```
-
-Retrieves the current statistics of created tasks.
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| open | uint256 | undefined |
-| taken | uint256 | undefined |
-| successful | uint256 | undefined |
-
 
 
 ## Events
@@ -409,7 +342,7 @@ Retrieves the current statistics of created tasks.
 ### ApplicationAccepted
 
 ```solidity
-event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId, address manager, address applicant)
+event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId)
 ```
 
 
@@ -422,13 +355,11 @@ event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId, address 
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
 | applicationId  | uint16 | undefined |
-| manager  | address | undefined |
-| applicant  | address | undefined |
 
 ### ApplicationCreated
 
 ```solidity
-event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string metadata, ITasks.Reward[] reward, address manager, address applicant)
+event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string metadata, ITasks.Reward[] reward)
 ```
 
 
@@ -443,13 +374,11 @@ event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string me
 | applicationId  | uint16 | undefined |
 | metadata  | string | undefined |
 | reward  | ITasks.Reward[] | undefined |
-| manager  | address | undefined |
-| applicant  | address | undefined |
 
 ### BudgetIncreased
 
 ```solidity
-event BudgetIncreased(uint256 indexed taskId, uint96[] increase, address manager)
+event BudgetIncreased(uint256 indexed taskId, uint96[] increase)
 ```
 
 
@@ -462,12 +391,11 @@ event BudgetIncreased(uint256 indexed taskId, uint96[] increase, address manager
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
 | increase  | uint96[] | undefined |
-| manager  | address | undefined |
 
 ### CancelTaskRequested
 
 ```solidity
-event CancelTaskRequested(uint256 indexed taskId, uint8 requestId, string explanation, address manager, address executor)
+event CancelTaskRequested(uint256 indexed taskId, uint8 requestId, string explanation)
 ```
 
 
@@ -481,13 +409,11 @@ event CancelTaskRequested(uint256 indexed taskId, uint8 requestId, string explan
 | taskId `indexed` | uint256 | undefined |
 | requestId  | uint8 | undefined |
 | explanation  | string | undefined |
-| manager  | address | undefined |
-| executor  | address | undefined |
 
 ### DeadlineExtended
 
 ```solidity
-event DeadlineExtended(uint256 indexed taskId, uint64 extension, address manager, address executor)
+event DeadlineExtended(uint256 indexed taskId, uint64 extension)
 ```
 
 
@@ -500,13 +426,11 @@ event DeadlineExtended(uint256 indexed taskId, uint64 extension, address manager
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
 | extension  | uint64 | undefined |
-| manager  | address | undefined |
-| executor  | address | undefined |
 
 ### MetadataEditted
 
 ```solidity
-event MetadataEditted(uint256 indexed taskId, string newMetadata, address manager)
+event MetadataEditted(uint256 indexed taskId, string newMetadata)
 ```
 
 
@@ -519,12 +443,11 @@ event MetadataEditted(uint256 indexed taskId, string newMetadata, address manage
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
 | newMetadata  | string | undefined |
-| manager  | address | undefined |
 
 ### RequestAccepted
 
 ```solidity
-event RequestAccepted(uint256 indexed taskId, enum ITasks.RequestType requestType, uint8 requestId, address manager, address executor)
+event RequestAccepted(uint256 indexed taskId, enum ITasks.RequestType requestType, uint8 requestId)
 ```
 
 
@@ -538,13 +461,11 @@ event RequestAccepted(uint256 indexed taskId, enum ITasks.RequestType requestTyp
 | taskId `indexed` | uint256 | undefined |
 | requestType  | enum ITasks.RequestType | undefined |
 | requestId  | uint8 | undefined |
-| manager  | address | undefined |
-| executor  | address | undefined |
 
 ### RequestExecuted
 
 ```solidity
-event RequestExecuted(uint256 indexed taskId, enum ITasks.RequestType requestType, uint8 requestId, address by, address manager, address executor)
+event RequestExecuted(uint256 indexed taskId, enum ITasks.RequestType requestType, uint8 requestId, address by)
 ```
 
 
@@ -559,13 +480,11 @@ event RequestExecuted(uint256 indexed taskId, enum ITasks.RequestType requestTyp
 | requestType  | enum ITasks.RequestType | undefined |
 | requestId  | uint8 | undefined |
 | by  | address | undefined |
-| manager  | address | undefined |
-| executor  | address | undefined |
 
 ### SubmissionCreated
 
 ```solidity
-event SubmissionCreated(uint256 indexed taskId, uint8 submissionId, string metadata, address manager, address executor)
+event SubmissionCreated(uint256 indexed taskId, uint8 submissionId, string metadata)
 ```
 
 
@@ -579,13 +498,11 @@ event SubmissionCreated(uint256 indexed taskId, uint8 submissionId, string metad
 | taskId `indexed` | uint256 | undefined |
 | submissionId  | uint8 | undefined |
 | metadata  | string | undefined |
-| manager  | address | undefined |
-| executor  | address | undefined |
 
 ### SubmissionReviewed
 
 ```solidity
-event SubmissionReviewed(uint256 indexed taskId, uint8 submissionId, enum ITasks.SubmissionJudgement judgement, string feedback, address manager, address executor)
+event SubmissionReviewed(uint256 indexed taskId, uint8 submissionId, enum ITasks.SubmissionJudgement judgement, string feedback)
 ```
 
 
@@ -600,13 +517,11 @@ event SubmissionReviewed(uint256 indexed taskId, uint8 submissionId, enum ITasks
 | submissionId  | uint8 | undefined |
 | judgement  | enum ITasks.SubmissionJudgement | undefined |
 | feedback  | string | undefined |
-| manager  | address | undefined |
-| executor  | address | undefined |
 
 ### TaskCancelled
 
 ```solidity
-event TaskCancelled(uint256 indexed taskId, address manager, address executor)
+event TaskCancelled(uint256 indexed taskId)
 ```
 
 
@@ -618,13 +533,11 @@ event TaskCancelled(uint256 indexed taskId, address manager, address executor)
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| manager  | address | undefined |
-| executor  | address | undefined |
 
 ### TaskCompleted
 
 ```solidity
-event TaskCompleted(uint256 indexed taskId, address manager, address executor)
+event TaskCompleted(uint256 indexed taskId)
 ```
 
 
@@ -636,8 +549,6 @@ event TaskCompleted(uint256 indexed taskId, address manager, address executor)
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| manager  | address | undefined |
-| executor  | address | undefined |
 
 ### TaskCreated
 
@@ -663,7 +574,7 @@ event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITas
 ### TaskTaken
 
 ```solidity
-event TaskTaken(uint256 indexed taskId, uint16 applicationId, address manager, address executor)
+event TaskTaken(uint256 indexed taskId, uint16 applicationId)
 ```
 
 
@@ -676,8 +587,6 @@ event TaskTaken(uint256 indexed taskId, uint16 applicationId, address manager, a
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
 | applicationId  | uint16 | undefined |
-| manager  | address | undefined |
-| executor  | address | undefined |
 
 
 

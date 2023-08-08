@@ -11,11 +11,6 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
     /// @notice The incremental ID for tasks.
     uint256 private taskCounter;
 
-    /// @notice Various statistics about total tasks.
-    uint256 private openTasks;
-    uint256 private takenTasks;
-    uint256 private successfulTasks;
-
     /// @notice A mapping between task IDs and task information.
     mapping(uint256 => Task) internal tasks;
 
@@ -36,15 +31,6 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
     /// @inheritdoc ITasks
     function taskCount() external view returns (uint256) {
         return taskCounter;
-    }
-
-    /// @inheritdoc ITasks
-    function taskStatistics()
-        external
-        view
-        returns (uint256 open, uint256 taken, uint256 successful)
-    {
-        (open, taken, successful) = (openTasks, takenTasks, successfulTasks);
     }
 
     /// @inheritdoc ITasks
@@ -70,86 +56,6 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             }
         }
         return offchainTasks;
-    }
-
-    /// @inheritdoc ITasks
-    function getManagingTasks(
-        address _manager,
-        uint256 _fromTaskId,
-        uint256 _max
-    ) external view returns (OffChainTask[] memory) {
-        uint256 totalTasks = taskCounter;
-        uint256[] memory taskIndexes = new uint256[](totalTasks);
-        uint256 managerTasksCount;
-        if (_fromTaskId == 0) {
-            _fromTaskId = totalTasks - 1;
-        }
-        for (uint256 i = _fromTaskId; i != type(uint256).max; ) {
-            if (tasks[i].manager == _manager) {
-                taskIndexes[managerTasksCount] = i;
-                unchecked {
-                    ++managerTasksCount;
-                }
-                if (managerTasksCount == _max) {
-                    // _max == 0 never triggering is on purpose
-                    break;
-                }
-            }
-
-            unchecked {
-                --i;
-            }
-        }
-        // decrease length of array to match real entries
-        assembly {
-            mstore(
-                taskIndexes,
-                sub(mload(taskIndexes), sub(totalTasks, managerTasksCount))
-            )
-        }
-        return getTasks(taskIndexes);
-    }
-
-    /// @inheritdoc ITasks
-    function getExecutingTasks(
-        address _executor,
-        uint256 _fromTaskId,
-        uint256 _max
-    ) external view returns (OffChainTask[] memory) {
-        uint256 totalTasks = taskCounter;
-        uint256[] memory taskIndexes = new uint256[](totalTasks);
-        uint256 executorTasksCount;
-        if (_fromTaskId == 0) {
-            _fromTaskId = totalTasks - 1;
-        }
-        for (uint256 i = _fromTaskId; i != type(uint256).max; ) {
-            if (
-                tasks[i].state != TaskState.Open &&
-                tasks[i].applications[tasks[i].executorApplication].applicant ==
-                _executor
-            ) {
-                taskIndexes[executorTasksCount] = i;
-                unchecked {
-                    ++executorTasksCount;
-                }
-                if (executorTasksCount == _max) {
-                    // _max == 0 never triggering is on purpose
-                    break;
-                }
-            }
-
-            unchecked {
-                --i;
-            }
-        }
-        // decrease length of array to match real entries
-        assembly {
-            mstore(
-                taskIndexes,
-                sub(mload(taskIndexes), sub(totalTasks, executorTasksCount))
-            )
-        }
-        return getTasks(taskIndexes);
     }
 
     /// @inheritdoc ITasks
@@ -187,10 +93,6 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         // Default values are already correct (save gas)
         // task.state = TaskState.Open;
-        unchecked {
-            // Impossible to overflow due to openTasks <= taskCounter
-            ++openTasks;
-        }
 
         emit TaskCreated(
             taskId,
@@ -215,21 +117,9 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                     _preapprove[i].reward
                 );
 
-                emit ApplicationCreated(
-                    taskId,
-                    i,
-                    "",
-                    _preapprove[i].reward,
-                    _manager,
-                    _preapprove[i].applicant
-                );
+                emit ApplicationCreated(taskId, i, "", _preapprove[i].reward);
 
-                emit ApplicationAccepted(
-                    taskId,
-                    i,
-                    _manager,
-                    _preapprove[i].applicant
-                );
+                emit ApplicationAccepted(taskId, i);
 
                 unchecked {
                     ++i;
@@ -264,14 +154,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         applicationId = task.applicationCount++;
 
-        emit ApplicationCreated(
-            _taskId,
-            applicationId,
-            _metadata,
-            _reward,
-            task.manager,
-            _msgSender()
-        );
+        emit ApplicationCreated(_taskId, applicationId, _metadata, _reward);
     }
 
     /// @inheritdoc ITasks
@@ -296,12 +179,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 application.rewardCount,
                 application.reward
             );
-            emit ApplicationAccepted(
-                _taskId,
-                _applicationIds[i],
-                _msgSender(),
-                application.applicant
-            );
+            emit ApplicationAccepted(_taskId, _applicationIds[i]);
 
             unchecked {
                 ++i;
@@ -321,14 +199,9 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         _ensureApplicationIsAccepted(application);
 
         task.executorApplication = _applicationId;
-
-        unchecked {
-            --openTasks;
-            ++takenTasks;
-        }
         task.state = TaskState.Taken;
 
-        emit TaskTaken(_taskId, _applicationId, task.manager, _msgSender());
+        emit TaskTaken(_taskId, _applicationId);
     }
 
     /// @inheritdoc ITasks
@@ -345,13 +218,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         submission.metadata = _metadata;
         submissionId = task.submissionCount++;
 
-        emit SubmissionCreated(
-            _taskId,
-            submissionId,
-            _metadata,
-            task.manager,
-            _msgSender()
-        );
+        emit SubmissionCreated(_taskId, submissionId, _metadata);
     }
 
     /// @inheritdoc ITasks
@@ -374,27 +241,11 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         submission.feedback = _feedback;
 
         if (_judgement == SubmissionJudgement.Accepted) {
-            unchecked {
-                --takenTasks;
-                ++successfulTasks;
-            }
             _payoutTask(task);
-
-            emit TaskCompleted(
-                _taskId,
-                _msgSender(),
-                task.applications[task.executorApplication].applicant
-            );
+            emit TaskCompleted(_taskId);
         }
 
-        emit SubmissionReviewed(
-            _taskId,
-            _submissionId,
-            _judgement,
-            _feedback,
-            _msgSender(),
-            task.applications[task.executorApplication].applicant
-        );
+        emit SubmissionReviewed(_taskId, _submissionId, _judgement, _feedback);
     }
 
     /// @inheritdoc ITasks
@@ -413,25 +264,10 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             task.deadline <= uint64(block.timestamp)
         ) {
             // Task is open or deadline past
-            if (task.state == TaskState.Open) {
-                unchecked {
-                    --openTasks;
-                }
-            } else {
-                // if (task.state == TaskState.Taken) {
-                unchecked {
-                    --takenTasks;
-                }
-            }
             _refundCreator(task);
 
-            emit TaskCancelled(
-                _taskId,
-                _msgSender(),
-                task.state == TaskState.Open
-                    ? address(0)
-                    : task.applications[task.executorApplication].applicant
-            );
+            emit TaskCancelled(_taskId);
+
             // Max means no request
             cancelTaskRequestId = type(uint8).max;
         } else {
@@ -445,9 +281,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             emit CancelTaskRequested(
                 _taskId,
                 cancelTaskRequestId,
-                _explanation,
-                _msgSender(),
-                task.applications[task.executorApplication].applicant
+                _explanation
             );
         }
     }
@@ -474,25 +308,16 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
             if (_execute) {
                 // use executeRequest in the body instead? (more gas due to all the checks, but less code duplication)
-                unchecked {
-                    --takenTasks;
-                }
                 _refundCreator(task);
+                emit TaskCancelled(_taskId);
 
-                emit TaskCancelled(_taskId, task.manager, _msgSender());
                 cancelTaskRequest.request.executed = true;
             }
 
             cancelTaskRequest.request.accepted = true;
         }
 
-        emit RequestAccepted(
-            _taskId,
-            _requestType,
-            _requestId,
-            task.manager,
-            _msgSender()
-        );
+        emit RequestAccepted(_taskId, _requestType, _requestId);
     }
 
     /// @inheritdoc ITasks
@@ -514,27 +339,13 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             _ensureRequestAccepted(cancelTaskRequest.request);
             _ensureRequestNotExecuted(cancelTaskRequest.request);
 
-            unchecked {
-                --takenTasks;
-            }
             _refundCreator(task);
 
-            emit TaskCancelled(
-                _taskId,
-                task.manager,
-                task.applications[task.executorApplication].applicant
-            );
+            emit TaskCancelled(_taskId);
             cancelTaskRequest.request.executed = true;
         }
 
-        emit RequestExecuted(
-            _taskId,
-            _requestType,
-            _requestId,
-            _msgSender(),
-            task.manager,
-            task.applications[task.executorApplication].applicant
-        );
+        emit RequestExecuted(_taskId, _requestType, _requestId, _msgSender());
     }
 
     /// @inheritdoc ITasks
@@ -547,14 +358,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         task.deadline += _extension;
 
-        emit DeadlineExtended(
-            _taskId,
-            _extension,
-            _msgSender(),
-            task.state == TaskState.Open
-                ? address(0)
-                : task.applications[task.executorApplication].applicant
-        );
+        emit DeadlineExtended(_taskId, _extension);
     }
 
     /// @inheritdoc ITasks
@@ -582,7 +386,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
             }
         }
 
-        emit BudgetIncreased(_taskId, _increase, _msgSender());
+        emit BudgetIncreased(_taskId, _increase);
     }
 
     /// @inheritdoc ITasks
@@ -597,7 +401,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         _ensureTaskIsOpen(task);
 
         task.metadata = _newMetadata;
-        emit MetadataEditted(_taskId, _newMetadata, _msgSender());
+        emit MetadataEditted(_taskId, _newMetadata);
     }
 
     function disable() external {
@@ -611,7 +415,6 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         _ensureDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskNotClosed(task);
-        // oficially should update taskOpen / Taken here, but as the contract will cease operations, no point
         _refundCreator(task);
     }
 

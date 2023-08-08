@@ -280,15 +280,11 @@ describe("Manual complicated", function () {
         expect(taskPreapprovedApplicationEvents[i].args.reward[j].to).to.be.equal(preapproved[i].reward[j].to);
         expect(taskPreapprovedApplicationEvents[i].args.reward[j].amount).to.be.equal(preapproved[i].reward[j].amount);
       }
-      expect(taskPreapprovedApplicationEvents[i].args.manager).to.be.equal(manager);
-      expect(taskPreapprovedApplicationEvents[i].args.applicant).to.be.equal(preapproved[i].applicant);
     }
     const taskPreapprovedAcceptanceEvents = getEventsFromReceipt(taskCreation.receipt, TasksManager.interface, "ApplicationAccepted");
     for (let i = 0; i < preapproved.length; i++) {
       expect(taskPreapprovedAcceptanceEvents[i].args.taskId).to.be.equal(taskId);
       expect(taskPreapprovedAcceptanceEvents[i].args.applicationId).to.be.equal(BigInt(i));
-      expect(taskPreapprovedAcceptanceEvents[i].args.manager).to.be.equal(manager);
-      expect(taskPreapprovedAcceptanceEvents[i].args.applicant).to.be.equal(preapproved[i].applicant);
     }
 
     const reward: Reward[] = [
@@ -339,8 +335,6 @@ describe("Manual complicated", function () {
       expect(taskApplicationEvents[0].args.reward[i].to).to.be.equal(reward[i].to);
       expect(taskApplicationEvents[0].args.reward[i].amount).to.be.equal(reward[i].amount);
     }
-    expect(taskApplicationEvents[0].args.manager).to.be.equal(manager);
-    expect(taskApplicationEvents[0].args.applicant).to.be.equal(executor);
 
     const applicationAcceptance = await acceptApplications({
       tasks: TasksManager,
@@ -355,12 +349,8 @@ describe("Manual complicated", function () {
     expect(applicationAcceptanceEvents).to.be.lengthOf(2);
     expect(applicationAcceptanceEvents[0].args.taskId).to.be.equal(taskId);
     expect(applicationAcceptanceEvents[0].args.applicationId).to.be.equal(BigInt(0));
-    expect(applicationAcceptanceEvents[0].args.manager).to.be.equal(manager);
-    expect(applicationAcceptanceEvents[0].args.applicant).to.be.equal(preapprovedGuy);
     expect(applicationAcceptanceEvents[1].args.taskId).to.be.equal(taskId);
     expect(applicationAcceptanceEvents[1].args.applicationId).to.be.equal(BigInt(1));
-    expect(applicationAcceptanceEvents[1].args.manager).to.be.equal(manager);
-    expect(applicationAcceptanceEvents[1].args.applicant).to.be.equal(executor);
 
     const taskTake = await takeTask({
       tasks: TasksExecutor,
@@ -375,8 +365,6 @@ describe("Manual complicated", function () {
     expect(taskTakeEvents).to.be.lengthOf(1);
     expect(taskTakeEvents[0].args.taskId).to.be.equal(taskId);
     expect(taskTakeEvents[0].args.applicationId).to.be.equal(BigInt(1));
-    expect(taskTakeEvents[0].args.manager).to.be.equal(manager);
-    expect(taskTakeEvents[0].args.executor).to.be.equal(executor);
 
     const submission: SubmissionMetadata = {
       fileName: "submision",
@@ -397,8 +385,6 @@ describe("Manual complicated", function () {
     expect(taskSubmisissionEvents[0].args.taskId).to.be.equal(taskId);
     expect(taskSubmisissionEvents[0].args.submissionId).to.be.equal(BigInt(0));
     expect(await getFromIpfs(taskSubmisissionEvents[0].args.metadata)).to.be.deep.equal(submission);
-    expect(taskSubmisissionEvents[0].args.manager).to.be.equal(manager);
-    expect(taskSubmisissionEvents[0].args.executor).to.be.equal(executor);
 
     const judgementMetadata: SubmissionJudgementMetadata = {
       feedback: "Do better lol",
@@ -420,8 +406,6 @@ describe("Manual complicated", function () {
     expect(submissionReviewEvents[0].args.submissionId).to.be.equal(BigInt(0));
     expect(submissionReviewEvents[0].args.judgement).to.be.equal(BigInt(SubmissionJudgement.Rejected));
     expect(await getFromIpfs(submissionReviewEvents[0].args.feedback)).to.be.deep.equal(judgementMetadata);
-    expect(submissionReviewEvents[0].args.manager).to.be.equal(manager);
-    expect(submissionReviewEvents[0].args.executor).to.be.equal(executor);
 
     const cancelReason: CancelTaskRequestMetadata = {
       explanation: "No faith",
@@ -440,8 +424,6 @@ describe("Manual complicated", function () {
     expect(taskCancelEvents[0].args.taskId).to.be.equal(taskId);
     expect(taskCancelEvents[0].args.requestId).to.be.equal(BigInt(0));
     expect(await getFromIpfs(taskCancelEvents[0].args.explanation)).to.be.deep.equal(cancelReason);
-    expect(taskCancelEvents[0].args.manager).to.be.equal(manager);
-    expect(taskCancelEvents[0].args.executor).to.be.equal(executor);
 
     const requestAccept = await acceptRequest({
       tasks: TasksExecutor,
@@ -459,8 +441,6 @@ describe("Manual complicated", function () {
     expect(requestAcceptEvents[0].args.taskId).to.be.equal(taskId);
     expect(requestAcceptEvents[0].args.requestType).to.be.equal(BigInt(RequestType.CancelTask));
     expect(requestAcceptEvents[0].args.requestId).to.be.equal(BigInt(0));
-    expect(requestAcceptEvents[0].args.manager).to.be.equal(manager);
-    expect(requestAcceptEvents[0].args.executor).to.be.equal(executor);
 
     const requestExecute = await executeRequest({
       tasks: TasksManager.connect(funderSigner),
@@ -478,12 +458,8 @@ describe("Manual complicated", function () {
     expect(requestExecuteEvents[0].args.requestType).to.be.equal(BigInt(RequestType.CancelTask));
     expect(requestExecuteEvents[0].args.requestId).to.be.equal(BigInt(0));
     expect(requestExecuteEvents[0].args.by).to.be.equal(funder);
-    expect(requestExecuteEvents[0].args.manager).to.be.equal(manager);
-    expect(requestExecuteEvents[0].args.executor).to.be.equal(executor);
     const taskCancelledEvents = getEventsFromReceipt(requestExecuteReceipt, TasksManager.interface, "TaskCancelled");
     expect(taskCancelledEvents).to.be.lengthOf(1);
     expect(taskCancelledEvents[0].args.taskId).to.be.equal(taskId);
-    expect(taskCancelledEvents[0].args.manager).to.be.equal(manager);
-    expect(taskCancelledEvents[0].args.executor).to.be.equal(executor);
   });
 });
