@@ -82,4 +82,27 @@ Updates the Tasks and governance plugin contract addresses.
 
 
 
+## Events
+
+### TaskDraftCreated
+
+```solidity
+event TaskDraftCreated(uint256 proposalId, bytes metadata, uint64 startDate, uint64 endDate, ITaskDrafts.CreateTaskInfo taskInfo)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| proposalId  | uint256 | undefined |
+| metadata  | bytes | undefined |
+| startDate  | uint64 | undefined |
+| endDate  | uint64 | undefined |
+| taskInfo  | ITaskDrafts.CreateTaskInfo | undefined |
+
+
 

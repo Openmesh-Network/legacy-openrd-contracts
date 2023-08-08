@@ -9,6 +9,14 @@ bytes32 constant UPDATE_ADDRESSES_PERMISSION_ID = keccak256(
 );
 
 interface ITaskDrafts {
+    event TaskDraftCreated(
+        uint256 proposalId,
+        bytes metadata,
+        uint64 startDate,
+        uint64 endDate,
+        CreateTaskInfo taskInfo
+    );
+
     struct CreateTaskInfo {
         string metadata;
         uint64 deadline;

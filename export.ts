@@ -2654,7 +2654,7 @@ export default {
       ]
     },
     "TaskDraftsImplementation": {
-      "address": "0xc185B032C39544060D57E3304bE0fFb0c235118e",
+      "address": "0x6C58EF7c427117C2eb62ba0E15Cb5171eC0Aec58",
       "abi": [
         {
           "inputs": [
@@ -2725,6 +2725,111 @@ export default {
             }
           ],
           "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "endDate",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "contract IERC20",
+                      "name": "tokenContract",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.ERC20Transfer[]",
+                  "name": "budget",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "manager",
+                  "type": "address"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "applicant",
+                      "type": "address"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "bool",
+                          "name": "nextToken",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "to",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "uint88",
+                          "name": "amount",
+                          "type": "uint88"
+                        }
+                      ],
+                      "internalType": "struct ITasks.Reward[]",
+                      "name": "reward",
+                      "type": "tuple[]"
+                    }
+                  ],
+                  "internalType": "struct ITasks.PreapprovedApplication[]",
+                  "name": "preapproved",
+                  "type": "tuple[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct ITaskDrafts.CreateTaskInfo",
+              "name": "taskInfo",
+              "type": "tuple"
+            }
+          ],
+          "name": "TaskDraftCreated",
           "type": "event"
         },
         {
@@ -3021,7 +3126,7 @@ export default {
       ]
     },
     "TaskDraftsRepo": {
-      "address": "0xb0b1630cf954Bf62dE29Bf98159875d7Bd459aAB",
+      "address": "0x02861f56BB60777f9DEFB603191fd091E23B66ad",
       "abi": [
         {
           "inputs": [],
@@ -3957,7 +4062,7 @@ export default {
       ]
     },
     "TaskDraftsSetup": {
-      "address": "0x4f7d3B7d3E09941fb256323fB995F577d4E872cc",
+      "address": "0xD546BAC538fCda4F20cC7138e26eA7A5221B9a89",
       "abi": [
         {
           "inputs": [],
@@ -8424,7 +8529,7 @@ export default {
       ]
     },
     "blockchain_dao": {
-      "address": "0x9954BFcc77d2E2120bA700f7B3136c6B4aC34550",
+      "address": "0xc20a93aE7e7aaF6F546b357B76B07809Fed2B3aD",
       "abi": [
         {
           "inputs": [],
@@ -9585,7 +9690,7 @@ export default {
       ]
     },
     "blockchain_taskDrafts": {
-      "address": "0xB6070f39c7d9Ffc66af8203cFC9893715e7D3759",
+      "address": "0xb81994913544249F7DB7b9b16414B21FF5d9A12c",
       "abi": [
         {
           "inputs": [
@@ -9656,6 +9761,111 @@ export default {
             }
           ],
           "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "endDate",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "contract IERC20",
+                      "name": "tokenContract",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.ERC20Transfer[]",
+                  "name": "budget",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "manager",
+                  "type": "address"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "applicant",
+                      "type": "address"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "bool",
+                          "name": "nextToken",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "to",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "uint88",
+                          "name": "amount",
+                          "type": "uint88"
+                        }
+                      ],
+                      "internalType": "struct ITasks.Reward[]",
+                      "name": "reward",
+                      "type": "tuple[]"
+                    }
+                  ],
+                  "internalType": "struct ITasks.PreapprovedApplication[]",
+                  "name": "preapproved",
+                  "type": "tuple[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct ITaskDrafts.CreateTaskInfo",
+              "name": "taskInfo",
+              "type": "tuple"
+            }
+          ],
+          "name": "TaskDraftCreated",
           "type": "event"
         },
         {
@@ -9952,7 +10162,7 @@ export default {
       ]
     },
     "blockchain_tokenListGovernance": {
-      "address": "0xD173de758D5570D24A3E0433C22Ae9a2150579a4",
+      "address": "0x4c4c68a829b273e8e9A6272E2B5fd467FcE3aC2c",
       "abi": [
         {
           "inputs": [
@@ -11231,7 +11441,7 @@ export default {
       ]
     },
     "cloud_dao": {
-      "address": "0x1C3A475450FA7a7bA8023d596a83Daf202b65497",
+      "address": "0xb39d2FDA74EBe44F092E0a68fE91aB8BAD78eF1f",
       "abi": [
         {
           "inputs": [],
@@ -12392,7 +12602,7 @@ export default {
       ]
     },
     "cloud_taskDrafts": {
-      "address": "0x0A9EcE5A442D7b9508D40474b86602af416478C8",
+      "address": "0xdC88D36F4a53735E72FAa1468031b82b014528Aa",
       "abi": [
         {
           "inputs": [
@@ -12463,6 +12673,111 @@ export default {
             }
           ],
           "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "endDate",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "contract IERC20",
+                      "name": "tokenContract",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.ERC20Transfer[]",
+                  "name": "budget",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "manager",
+                  "type": "address"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "applicant",
+                      "type": "address"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "bool",
+                          "name": "nextToken",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "to",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "uint88",
+                          "name": "amount",
+                          "type": "uint88"
+                        }
+                      ],
+                      "internalType": "struct ITasks.Reward[]",
+                      "name": "reward",
+                      "type": "tuple[]"
+                    }
+                  ],
+                  "internalType": "struct ITasks.PreapprovedApplication[]",
+                  "name": "preapproved",
+                  "type": "tuple[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct ITaskDrafts.CreateTaskInfo",
+              "name": "taskInfo",
+              "type": "tuple"
+            }
+          ],
+          "name": "TaskDraftCreated",
           "type": "event"
         },
         {
@@ -12759,7 +13074,7 @@ export default {
       ]
     },
     "cloud_tokenListGovernance": {
-      "address": "0x054e2f5A826EE6053e5556E997C6C776eE7BAdD6",
+      "address": "0x4149c51869DAac1eE8b7b5FC65E9301655c563f8",
       "abi": [
         {
           "inputs": [
@@ -14038,7 +14353,7 @@ export default {
       ]
     },
     "community_dao": {
-      "address": "0xb2170F68Fde309155195D741f2B6dF69BDdb4eaf",
+      "address": "0x76fa24Cd8f17ef4FdE7d496EB1593d0a77e78c98",
       "abi": [
         {
           "inputs": [],
@@ -15199,7 +15514,7 @@ export default {
       ]
     },
     "community_tokenListGovernance": {
-      "address": "0xf9D431d4Daaf66fD74Cd56a8E66aa6BDce5AD20a",
+      "address": "0xAc3cff5FCAEE427798e4eFB50CE4af232BecbcAc",
       "abi": [
         {
           "inputs": [
@@ -16478,7 +16793,7 @@ export default {
       ]
     },
     "data_dao": {
-      "address": "0x424bd6E60A5C8D0Cf1278612b1dE2610911C5496",
+      "address": "0x61E26e290d72502b41898170bbDC1BbCB65E6736",
       "abi": [
         {
           "inputs": [],
@@ -17639,7 +17954,7 @@ export default {
       ]
     },
     "data_taskDrafts": {
-      "address": "0xF1FA3539b47f25a0B211F0e8a4D47F767e5398eD",
+      "address": "0xc6d00aDAa8928492D814751ef0eBd9ddc9DF098D",
       "abi": [
         {
           "inputs": [
@@ -17710,6 +18025,111 @@ export default {
             }
           ],
           "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "endDate",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "contract IERC20",
+                      "name": "tokenContract",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.ERC20Transfer[]",
+                  "name": "budget",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "manager",
+                  "type": "address"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "applicant",
+                      "type": "address"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "bool",
+                          "name": "nextToken",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "to",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "uint88",
+                          "name": "amount",
+                          "type": "uint88"
+                        }
+                      ],
+                      "internalType": "struct ITasks.Reward[]",
+                      "name": "reward",
+                      "type": "tuple[]"
+                    }
+                  ],
+                  "internalType": "struct ITasks.PreapprovedApplication[]",
+                  "name": "preapproved",
+                  "type": "tuple[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct ITaskDrafts.CreateTaskInfo",
+              "name": "taskInfo",
+              "type": "tuple"
+            }
+          ],
+          "name": "TaskDraftCreated",
           "type": "event"
         },
         {
@@ -18006,7 +18426,7 @@ export default {
       ]
     },
     "data_tokenListGovernance": {
-      "address": "0x841EeFAdd56DaCAb44E101E5F77C97741207bEb4",
+      "address": "0x76c73FD43dDA393Ef04820E02D1386B94245A47c",
       "abi": [
         {
           "inputs": [
@@ -19285,7 +19705,7 @@ export default {
       ]
     },
     "frontend_dao": {
-      "address": "0x2525462118Abb45f2649b7b63041901bca5986Aa",
+      "address": "0x23Ba0533F4Ac9EF8A86ac1eD8be38bE0AAcbCc9f",
       "abi": [
         {
           "inputs": [],
@@ -20446,7 +20866,7 @@ export default {
       ]
     },
     "frontend_taskDrafts": {
-      "address": "0xec8542b1fc999CFF04C8B7735f3E6f4baa3F6072",
+      "address": "0x2495C0ae2E79B2808Ab75fa6814153a1309724A5",
       "abi": [
         {
           "inputs": [
@@ -20517,6 +20937,111 @@ export default {
             }
           ],
           "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "endDate",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "contract IERC20",
+                      "name": "tokenContract",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.ERC20Transfer[]",
+                  "name": "budget",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "manager",
+                  "type": "address"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "applicant",
+                      "type": "address"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "bool",
+                          "name": "nextToken",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "to",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "uint88",
+                          "name": "amount",
+                          "type": "uint88"
+                        }
+                      ],
+                      "internalType": "struct ITasks.Reward[]",
+                      "name": "reward",
+                      "type": "tuple[]"
+                    }
+                  ],
+                  "internalType": "struct ITasks.PreapprovedApplication[]",
+                  "name": "preapproved",
+                  "type": "tuple[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct ITaskDrafts.CreateTaskInfo",
+              "name": "taskInfo",
+              "type": "tuple"
+            }
+          ],
+          "name": "TaskDraftCreated",
           "type": "event"
         },
         {
@@ -20813,7 +21338,7 @@ export default {
       ]
     },
     "frontend_tokenListGovernance": {
-      "address": "0x6396b373C6CF40E57Fb475affa79BDfF885155A4",
+      "address": "0xB399066a16B13985c2FF92053c2da27056d29aD6",
       "abi": [
         {
           "inputs": [
@@ -22092,7 +22617,7 @@ export default {
       ]
     },
     "management_dao": {
-      "address": "0x974cA45321d0a76B41d869046618beF721A887B2",
+      "address": "0x1dAb41958f5389a096175f0F363C749e9b4f27b9",
       "abi": [
         {
           "inputs": [],
@@ -23253,7 +23778,7 @@ export default {
       ]
     },
     "management_tokenListGovernance": {
-      "address": "0x98446363ac1A267EE9E0869194Cc90F1d105F08c",
+      "address": "0xC33dC432Bd0E717b25a89978Dd8b20909bc1AA0E",
       "abi": [
         {
           "inputs": [
@@ -24532,7 +25057,7 @@ export default {
       ]
     },
     "parent_dao": {
-      "address": "0x7F573D57c9C2c369d5bf22AF0B3eb4bCEaa7Ee9C",
+      "address": "0x54Bf8Ea7c54CA02b4080945D81Ed2aE617C15075",
       "abi": [
         {
           "inputs": [],
@@ -25693,7 +26218,7 @@ export default {
       ]
     },
     "parent_tokenListGovernance": {
-      "address": "0xFc9c539CD301707d9ff04fDb04c4723D5110B28D",
+      "address": "0xEe996B0df0B4F6cc94f7adFd34A4957c797A9F48",
       "abi": [
         {
           "inputs": [
