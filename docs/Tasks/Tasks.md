@@ -49,7 +49,7 @@ Accepts a request, executing the proposed action.
 ### applyForTask
 
 ```solidity
-function applyForTask(uint256 _taskId, string _metadata, ITasks.Reward[] _reward, uint256 _nativeReward) external nonpayable returns (uint16 applicationId)
+function applyForTask(uint256 _taskId, string _metadata, ITasks.Reward[] _reward, ITasks.NativeReward[] _nativeReward) external nonpayable returns (uint16 applicationId)
 ```
 
 
@@ -63,7 +63,7 @@ function applyForTask(uint256 _taskId, string _metadata, ITasks.Reward[] _reward
 | _taskId | uint256 | undefined |
 | _metadata | string | undefined |
 | _reward | ITasks.Reward[] | undefined |
-| _nativeReward | uint256 | undefined |
+| _nativeReward | ITasks.NativeReward[] | undefined |
 
 #### Returns
 
@@ -274,7 +274,7 @@ function increaseBudget(uint256 _taskId, uint96[] _increase) external payable
 
 Increase the budget of the task.
 
-
+*Any attached native reward will also be used to increase the budget.*
 
 #### Parameters
 
@@ -392,7 +392,7 @@ event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId)
 ### ApplicationCreated
 
 ```solidity
-event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string metadata, ITasks.Reward[] reward, uint256 nativeReward)
+event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string metadata, ITasks.Reward[] reward, ITasks.NativeReward[] nativeReward)
 ```
 
 
@@ -407,7 +407,7 @@ event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string me
 | applicationId  | uint16 | undefined |
 | metadata  | string | undefined |
 | reward  | ITasks.Reward[] | undefined |
-| nativeReward  | uint256 | undefined |
+| nativeReward  | ITasks.NativeReward[] | undefined |
 
 ### BudgetIncreased
 

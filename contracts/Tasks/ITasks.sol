@@ -43,7 +43,7 @@ interface ITasks {
         uint16 applicationId,
         string metadata,
         Reward[] reward,
-        uint256 nativeReward
+        NativeReward[] nativeReward
     );
     event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId);
     event TaskTaken(uint256 indexed taskId, uint16 applicationId);
@@ -106,6 +106,14 @@ interface ITasks {
         uint88 amount;
     }
 
+    /// @notice A container for a native reward payout.
+    /// @param to Whom the native reward should be transfered to.
+    /// @param amount How much native reward should be transfered.
+    struct NativeReward {
+        address to;
+        uint96 amount;
+    }
+
     /// @notice A container for a task application.
     /// @param metadata Metadata of the application. (IPFS hash)
     /// @param applicant Who has submitted this application.
@@ -117,8 +125,9 @@ interface ITasks {
         address applicant;
         bool accepted;
         uint8 rewardCount;
+        uint8 nativeRewardCount;
         mapping(uint8 => Reward) reward;
-        uint256 nativeReward;
+        mapping(uint8 => NativeReward) nativeReward;
     }
 
     struct OffChainApplication {
@@ -126,14 +135,14 @@ interface ITasks {
         address applicant;
         bool accepted;
         Reward[] reward;
-        uint256 nativeReward;
+        NativeReward[] nativeReward;
     }
 
     /// @notice For approving people on task creation (they are not required to make an application)
     struct PreapprovedApplication {
         address applicant;
         Reward[] reward;
-        uint256 nativeReward;
+        NativeReward[] nativeReward;
     }
 
     enum SubmissionJudgement {
@@ -268,7 +277,7 @@ interface ITasks {
         uint256 _taskId,
         string calldata _metadata,
         Reward[] calldata _reward,
-        uint256 _nativeReward
+        NativeReward[] calldata _nativeReward
     ) external returns (uint16 applicationId);
 
     /// @notice Accept application to allow them to take the task.
@@ -342,6 +351,7 @@ interface ITasks {
     /// @notice Increase the budget of the task.
     /// @param _taskId Id of the task.
     /// @param _increase How much to increase each tokens amount by.
+    /// @dev Any attached native reward will also be used to increase the budget.
     function increaseBudget(
         uint256 _taskId,
         uint96[] calldata _increase

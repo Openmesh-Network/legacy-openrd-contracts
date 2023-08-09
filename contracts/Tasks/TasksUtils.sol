@@ -36,6 +36,7 @@ abstract contract TasksUtils is ITasks, Context {
             offchainTask.applications[i].metadata = application.metadata;
             offchainTask.applications[i].applicant = application.applicant;
             offchainTask.applications[i].accepted = application.accepted;
+
             offchainTask.applications[i].reward = new Reward[](
                 application.rewardCount
             );
@@ -45,8 +46,21 @@ abstract contract TasksUtils is ITasks, Context {
                     ++j;
                 }
             }
-            offchainTask.applications[i].nativeReward = application
-                .nativeReward;
+            offchainTask.applications[i].nativeReward = new NativeReward[](
+                application.nativeRewardCount
+            );
+
+            for (
+                uint8 j;
+                j < offchainTask.applications[i].nativeReward.length;
+
+            ) {
+                offchainTask.applications[i].nativeReward[j] = application
+                    .nativeReward[j];
+                unchecked {
+                    ++j;
+                }
+            }
             unchecked {
                 ++i;
             }
@@ -75,45 +89,59 @@ abstract contract TasksUtils is ITasks, Context {
         Task storage task,
         uint8 _length,
         mapping(uint8 => Reward) storage _reward,
-        uint256 nativeReward
+        uint8 _nativeLength,
+        mapping(uint8 => NativeReward) storage _nativeReward
     ) internal {
-        uint8 j;
-        ERC20Transfer memory erc20Transfer = task.budget[0];
-        uint256 needed;
-        for (uint8 i; i < _length; ) {
-            unchecked {
-                needed += _reward[i].amount;
-            }
-
-            if (_reward[i].nextToken) {
-                if (needed > erc20Transfer.amount) {
-                    // Existing budget in escrow doesnt cover the needed reward
-                    erc20Transfer.tokenContract.transferFrom(
-                        _msgSender(),
-                        address(task.escrow),
-                        needed - erc20Transfer.amount
-                    );
-                    task.budget[j].amount = uint96(needed);
-                }
-
-                needed = 0;
+        // Gas optimzation
+        if (_length != 0) {
+            uint8 j;
+            ERC20Transfer memory erc20Transfer = task.budget[0];
+            uint256 needed;
+            for (uint8 i; i < _length; ) {
                 unchecked {
-                    erc20Transfer = task.budget[++j];
+                    needed += _reward[i].amount;
                 }
-            }
 
-            unchecked {
-                ++i;
+                if (_reward[i].nextToken) {
+                    if (needed > erc20Transfer.amount) {
+                        // Existing budget in escrow doesnt cover the needed reward
+                        erc20Transfer.tokenContract.transferFrom(
+                            _msgSender(),
+                            address(task.escrow),
+                            needed - erc20Transfer.amount
+                        );
+                        task.budget[j].amount = uint96(needed);
+                    }
+
+                    needed = 0;
+                    unchecked {
+                        erc20Transfer = task.budget[++j];
+                    }
+                }
+
+                unchecked {
+                    ++i;
+                }
             }
         }
 
-        if (nativeReward > task.nativeBudget) {
-            unchecked {
-                if (msg.value != nativeReward - task.nativeBudget) {
-                    revert IncorrectAmountOfNativeCurrencyAttached();
+        if (_nativeLength != 0) {
+            uint256 nativeNeeded;
+            for (uint8 i; i < _nativeLength; ) {
+                nativeNeeded += _nativeReward[i].amount;
+                unchecked {
+                    ++i;
                 }
             }
-            payable(address(task.escrow)).transfer(msg.value);
+
+            if (nativeNeeded > task.nativeBudget) {
+                unchecked {
+                    if (msg.value != nativeNeeded - task.nativeBudget) {
+                        revert IncorrectAmountOfNativeCurrencyAttached();
+                    }
+                }
+                payable(address(task.escrow)).transfer(msg.value);
+            }
         }
     }
 
@@ -121,41 +149,57 @@ abstract contract TasksUtils is ITasks, Context {
         Task storage task,
         Application storage application,
         Reward[] calldata _reward,
-        uint256 _nativeReward
+        NativeReward[] calldata _nativeReward
     ) internal {
-        application.rewardCount = uint8(_reward.length);
+        // Gas optimzation
+        if (_reward.length != 0) {
+            application.rewardCount = uint8(_reward.length);
 
-        uint8 j;
-        ERC20Transfer memory erc20Transfer = task.budget[0];
-        uint256 alreadyReserved;
-        for (uint8 i; i < uint8(_reward.length); ) {
-            // erc20Transfer.amount -= _reward[i].amount (underflow error, but that is not a nice custom once)
-            unchecked {
-                alreadyReserved += _reward[i].amount;
-            }
-            if (alreadyReserved > erc20Transfer.amount) {
-                revert RewardAboveBudget();
-            }
-
-            application.reward[i] = _reward[i];
-
-            if (_reward[i].nextToken) {
-                alreadyReserved = 0;
+            uint8 j;
+            ERC20Transfer memory erc20Transfer = task.budget[0];
+            uint256 alreadyReserved;
+            for (uint8 i; i < uint8(_reward.length); ) {
                 unchecked {
-                    erc20Transfer = task.budget[++j];
+                    alreadyReserved += _reward[i].amount;
+                }
+
+                application.reward[i] = _reward[i];
+
+                if (_reward[i].nextToken) {
+                    if (alreadyReserved > erc20Transfer.amount) {
+                        revert RewardAboveBudget();
+                    }
+                    alreadyReserved = 0;
+                    unchecked {
+                        erc20Transfer = task.budget[++j];
+                    }
+                }
+
+                unchecked {
+                    ++i;
+                }
+            }
+        }
+
+        // Gas optimzation
+        if (_nativeReward.length != 0) {
+            application.nativeRewardCount = uint8(_nativeReward.length);
+            uint256 nativeReserved;
+            for (uint8 i; i < uint8(_nativeReward.length); ) {
+                unchecked {
+                    nativeReserved += _nativeReward[i].amount;
+                }
+
+                application.nativeReward[i] = _nativeReward[i];
+
+                unchecked {
+                    ++i;
                 }
             }
 
-            unchecked {
-                ++i;
-            }
-        }
-        // Gas optimization
-        if (_nativeReward != 0) {
-            if (_nativeReward > task.nativeBudget) {
+            if (nativeReserved > task.nativeBudget) {
                 revert RewardAboveBudget();
             }
-            application.nativeReward = _nativeReward;
         }
     }
 
@@ -166,67 +210,94 @@ abstract contract TasksUtils is ITasks, Context {
         address creator = task.creator;
         Escrow escrow = task.escrow;
 
-        uint8 j;
+        // Gas optimzation
         uint8 rewardCount = executor.rewardCount;
-        uint8 budgetCount = task.budgetCount;
-        for (uint8 i; i < budgetCount; ) {
-            ERC20Transfer memory erc20Transfer = task.budget[i];
-            while (j < rewardCount) {
-                Reward memory reward = executor.reward[j];
-                escrow.transfer(
-                    erc20Transfer.tokenContract,
-                    reward.to,
-                    reward.amount
-                );
+        if (rewardCount != 0) {
+            uint8 j;
+            uint8 budgetCount = task.budgetCount;
+            for (uint8 i; i < budgetCount; ) {
+                ERC20Transfer memory erc20Transfer = task.budget[i];
+                while (j < rewardCount) {
+                    Reward memory reward = executor.reward[j];
+                    escrow.transfer(
+                        erc20Transfer.tokenContract,
+                        reward.to,
+                        reward.amount
+                    );
+                    unchecked {
+                        erc20Transfer.amount -= reward.amount;
+                        ++j;
+                    }
+
+                    if (reward.nextToken) {
+                        break;
+                    }
+                }
+
+                // Gas optimization
+                if (erc20Transfer.amount != 0) {
+                    escrow.transfer(
+                        erc20Transfer.tokenContract,
+                        creator,
+                        erc20Transfer.amount
+                    );
+                }
+
                 unchecked {
-                    erc20Transfer.amount -= reward.amount;
-                    ++j;
+                    ++i;
                 }
-
-                if (reward.nextToken) {
-                    break;
-                }
-            }
-
-            // Gas optimization
-            if (erc20Transfer.amount != 0) {
-                escrow.transfer(
-                    erc20Transfer.tokenContract,
-                    creator,
-                    erc20Transfer.amount
-                );
-            }
-
-            unchecked {
-                ++i;
             }
         }
 
         // Gas optimzation
-        if (executor.nativeReward != 0) {
-            escrow.transferNative(
-                payable(executor.applicant),
-                executor.nativeReward
-            );
+        uint8 nativeRewardCount = executor.nativeRewardCount;
+        if (nativeRewardCount != 0) {
+            uint256 paidOut;
+            for (uint8 i; i < nativeRewardCount; ) {
+                escrow.transferNative(
+                    payable(executor.nativeReward[i].to),
+                    executor.nativeReward[i].amount
+                );
+                unchecked {
+                    paidOut += executor.nativeReward[i].amount;
+                }
+
+                unchecked {
+                    ++i;
+                }
+            }
+
+            // Gas optimzation
+            if (paidOut < task.nativeBudget) {
+                unchecked {
+                    escrow.transferNative(
+                        payable(task.creator),
+                        task.nativeBudget - paidOut
+                    );
+                }
+            }
         }
 
         task.state = TaskState.Closed;
     }
 
     function _refundCreator(Task storage task) internal {
-        uint8 budgetCount = task.budgetCount;
-        address creator = task.creator;
         Escrow escrow = task.escrow;
-        for (uint8 i; i < budgetCount; ) {
-            ERC20Transfer memory erc20Transfer = task.budget[i];
-            escrow.transfer(
-                erc20Transfer.tokenContract,
-                creator,
-                erc20Transfer.amount
-            );
+        address creator = task.creator;
 
-            unchecked {
-                ++i;
+        uint8 budgetCount = task.budgetCount;
+        if (budgetCount != 0) {
+            for (uint8 i; i < budgetCount; ) {
+                ERC20Transfer memory erc20Transfer = task.budget[i];
+                escrow.transfer(
+                    erc20Transfer.tokenContract,
+                    creator,
+                    erc20Transfer.amount
+                );
+
+                unchecked {
+                    ++i;
+                }
             }
         }
 

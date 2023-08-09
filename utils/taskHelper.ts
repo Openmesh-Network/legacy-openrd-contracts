@@ -7,6 +7,7 @@ import {
   BudgetItem,
   CancelTaskRequest,
   CancelTaskRequestMetadata,
+  NativeReward,
   RequestType,
   Reward,
   Submission,
@@ -30,7 +31,7 @@ export interface CreateTaskSettings {
   preapproved?: {
     applicant: string;
     reward?: Reward[];
-    nativeReward?: BigNumberish;
+    nativeReward?: NativeReward[];
   }[];
 }
 export async function createTaskTransaction(settings: CreateTaskSettings): Promise<ContractTransactionResponse> {
@@ -47,7 +48,7 @@ export async function createTaskTransaction(settings: CreateTaskSettings): Promi
     return {
       applicant: p.applicant,
       reward: p.reward ?? [],
-      nativeReward: p.nativeReward ?? 0,
+      nativeReward: p.nativeReward ?? [],
     };
   });
   return settings.tasks.createTask(metadataHash, deadline, budget, manager, preapproved);
@@ -78,6 +79,7 @@ export async function getTask(settings: GetTaskSettings): Promise<Task> {
     metadata: await getFromIpfs(rawTask.metadata),
     deadline: FromBlockchainDate(rawTask.deadline),
     budget: rawTask.budget,
+    nativeBudget: rawTask.nativeBudget,
     creator: rawTask.creator,
     manager: rawTask.manager,
     state: Number(rawTask.state),
@@ -97,6 +99,7 @@ export async function toApplication(application: ITasks.OffChainApplicationStruc
     applicant: application.applicant,
     accepted: application.accepted,
     reward: application.reward,
+    nativeReward: application.nativeReward,
   };
 }
 
@@ -120,6 +123,7 @@ export interface ApplyForTaskSettings {
   taskId: bigint;
   metadata?: ApplicationMetadata;
   reward?: Reward[];
+  nativeReward?: NativeReward[];
 }
 export async function applyForTask(settings: ApplyForTaskSettings) {
   const metadata: ApplicationMetadata = {
@@ -129,7 +133,8 @@ export async function applyForTask(settings: ApplyForTaskSettings) {
   };
   const metadataHash = await addToIpfs(JSON.stringify(settings.metadata ?? metadata));
   const reward = settings.reward ?? [];
-  return settings.tasks.applyForTask(settings.taskId, metadataHash, reward, 0);
+  const nativeReward = settings.nativeReward ?? [];
+  return settings.tasks.applyForTask(settings.taskId, metadataHash, reward, nativeReward);
 }
 
 export interface AcceptApplicationsSettings {

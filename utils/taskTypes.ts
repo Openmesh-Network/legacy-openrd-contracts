@@ -19,7 +19,7 @@ export interface TaskMetadata {
 export interface PreapprovedApplication {
   applicant: string;
   reward: Reward[];
-  nativeReward: BigNumberish;
+  nativeReward: NativeReward[];
 }
 
 export enum TaskState {
@@ -31,6 +31,7 @@ export interface Task {
   metadata: TaskMetadata;
   deadline: Date;
   budget: BudgetItem[];
+  nativeBudget: BigInt;
   creator: string;
   manager: string;
   state: TaskState;
@@ -47,6 +48,11 @@ export interface Reward {
   amount: bigint;
 }
 
+export interface NativeReward {
+  to: string;
+  amount: bigint;
+}
+
 export interface ApplicationMetadata {
   title: string;
   description: string;
@@ -58,6 +64,7 @@ export interface Application {
   applicant: string;
   accepted: boolean;
   reward: Reward[];
+  nativeReward: NativeReward[];
 }
 
 export interface SubmissionMetadata {

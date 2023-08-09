@@ -151,7 +151,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         uint256 _taskId,
         string calldata _metadata,
         Reward[] calldata _reward,
-        uint256 _nativeReward
+        NativeReward[] calldata _nativeReward
     ) external returns (uint16 applicationId) {
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
@@ -170,7 +170,13 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 ++i;
             }
         }
-        application.nativeReward = _nativeReward;
+        application.nativeRewardCount = uint8(_nativeReward.length);
+        for (uint8 i; i < uint8(_nativeReward.length); ) {
+            application.nativeReward[i] = _nativeReward[i];
+            unchecked {
+                ++i;
+            }
+        }
 
         applicationId = task.applicationCount++;
 
@@ -204,6 +210,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 task,
                 application.rewardCount,
                 application.reward,
+                application.nativeRewardCount,
                 application.nativeReward
             );
             emit ApplicationAccepted(_taskId, _applicationIds[i]);

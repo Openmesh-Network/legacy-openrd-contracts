@@ -89,7 +89,7 @@ describe("Manual complicated", function () {
             amount: Ether(1),
           },
         ],
-        nativeReward: 0,
+        nativeReward: [],
       },
     ];
 
@@ -237,7 +237,7 @@ describe("Manual complicated", function () {
             amount: Ether(1),
           },
         ],
-        nativeReward: 0,
+        nativeReward: [],
       },
     ];
 
