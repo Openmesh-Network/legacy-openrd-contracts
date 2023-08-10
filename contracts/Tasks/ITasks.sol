@@ -28,6 +28,7 @@ interface ITasks {
     error RequestAlreadyAccepted();
     error RequestNotAccepted();
     error RequestAlreadyExecuted();
+    error PartialRewardAboveFullReward();
 
     event TaskCreated(
         uint256 indexed taskId,
@@ -85,6 +86,11 @@ interface ITasks {
         uint256 nativeIncrease
     );
     event MetadataEditted(uint256 indexed taskId, string newMetadata);
+    event PartialPayment(
+        uint256 indexed taskId,
+        uint88[] partialReward,
+        uint96[] partialNativeReward
+    );
 
     /// @notice A container for ERC20 transfer information.
     /// @param tokenContract ERC20 token to transfer.
@@ -373,4 +379,14 @@ interface ITasks {
     /// @notice Allows the dispute manager to appoint a new dispute manager.
     /// @param _newManager The new dispute manager.
     function transferDisputeManagement(address _newManager) external;
+
+    /// @notice Releases a part of the reward to the executor without marking the task as complete.
+    /// @param _taskId Id of the task.
+    /// @param _partialReward How much of each ERC20 reward should be paid out.
+    /// @param _partialNativeReward How much of each native reward should be paid out.
+    function partialPayment(
+        uint256 _taskId,
+        uint88[] calldata _partialReward,
+        uint96[] calldata _partialNativeReward
+    ) external;
 }

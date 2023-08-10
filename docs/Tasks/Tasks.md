@@ -283,6 +283,24 @@ Increase the budget of the task.
 | _taskId | uint256 | Id of the task. |
 | _increase | uint96[] | How much to increase each tokens amount by. |
 
+### partialPayment
+
+```solidity
+function partialPayment(uint256 _taskId, uint88[] _partialReward, uint96[] _partialNativeReward) external nonpayable
+```
+
+Releases a part of the reward to the executor without marking the task as complete.
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _taskId | uint256 | Id of the task. |
+| _partialReward | uint88[] | How much of each ERC20 reward should be paid out. |
+| _partialNativeReward | uint96[] | How much of each native reward should be paid out. |
+
 ### refund
 
 ```solidity
@@ -478,6 +496,24 @@ event MetadataEditted(uint256 indexed taskId, string newMetadata)
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
 | newMetadata  | string | undefined |
+
+### PartialPayment
+
+```solidity
+event PartialPayment(uint256 indexed taskId, uint88[] partialReward, uint96[] partialNativeReward)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| taskId `indexed` | uint256 | undefined |
+| partialReward  | uint88[] | undefined |
+| partialNativeReward  | uint96[] | undefined |
 
 ### RequestAccepted
 
@@ -743,6 +779,17 @@ error NotManager()
 
 ```solidity
 error NotYourApplication()
+```
+
+
+
+
+
+
+### PartialRewardAboveFullReward
+
+```solidity
+error PartialRewardAboveFullReward()
 ```
 
 

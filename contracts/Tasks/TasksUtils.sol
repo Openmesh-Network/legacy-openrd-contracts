@@ -224,6 +224,7 @@ abstract contract TasksUtils is ITasks, Context {
                         reward.to,
                         reward.amount
                     );
+
                     unchecked {
                         erc20Transfer.amount -= reward.amount;
                         ++j;
@@ -304,6 +305,85 @@ abstract contract TasksUtils is ITasks, Context {
         // Gas optimzation
         if (task.nativeBudget != 0) {
             escrow.transferNative(payable(creator), task.nativeBudget);
+        }
+
+        task.state = TaskState.Closed;
+    }
+
+    function _payoutTaskPartially(
+        Task storage task,
+        uint88[] calldata _partialReward,
+        uint96[] calldata _partialNativeReward
+    ) internal {
+        Application storage executor = task.applications[
+            task.executorApplication
+        ];
+        Escrow escrow = task.escrow;
+
+        // Gas optimzation
+        uint8 rewardCount = executor.rewardCount;
+        if (rewardCount != 0) {
+            uint8 j;
+            uint8 budgetCount = task.budgetCount;
+            for (uint8 i; i < budgetCount; ) {
+                ERC20Transfer memory erc20Transfer = task.budget[i];
+                while (j < rewardCount) {
+                    Reward memory reward = executor.reward[j];
+                    if (_partialReward[j] > reward.amount) {
+                        revert PartialRewardAboveFullReward();
+                    }
+
+                    escrow.transfer(
+                        erc20Transfer.tokenContract,
+                        reward.to,
+                        _partialReward[j]
+                    );
+
+                    unchecked {
+                        executor.reward[j].amount =
+                            reward.amount -
+                            _partialReward[j];
+                        erc20Transfer.amount -= _partialReward[j];
+                        ++j;
+                    }
+
+                    if (reward.nextToken) {
+                        break;
+                    }
+                }
+
+                task.budget[i].amount = erc20Transfer.amount;
+
+                unchecked {
+                    ++i;
+                }
+            }
+        }
+
+        // Gas optimzation
+        uint8 nativeRewardCount = executor.nativeRewardCount;
+        if (nativeRewardCount != 0) {
+            uint256 paidOut;
+            for (uint8 i; i < nativeRewardCount; ) {
+                if (_partialNativeReward[i] > executor.nativeReward[i].amount) {
+                    revert PartialRewardAboveFullReward();
+                }
+
+                escrow.transferNative(
+                    payable(executor.nativeReward[i].to),
+                    _partialNativeReward[i]
+                );
+
+                unchecked {
+                    paidOut += _partialNativeReward[i];
+                    executor.nativeReward[i].amount -= _partialNativeReward[i];
+                    ++i;
+                }
+            }
+
+            unchecked {
+                task.nativeBudget -= paidOut;
+            }
         }
 
         task.state = TaskState.Closed;

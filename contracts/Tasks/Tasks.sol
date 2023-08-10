@@ -460,6 +460,22 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         disputeManager = _newManager;
     }
 
+    /// @inheritdoc ITasks
+    function partialPayment(
+        uint256 _taskId,
+        uint88[] calldata _partialReward,
+        uint96[] calldata _partialNativeReward
+    ) external {
+        _ensureNotDisabled();
+        Task storage task = _getTask(_taskId);
+        _ensureSenderIsManager(task);
+
+        _ensureTaskIsTaken(task);
+
+        _payoutTaskPartially(task, _partialReward, _partialNativeReward);
+        emit PartialPayment(_taskId, _partialReward, _partialNativeReward);
+    }
+
     function disable() external {
         _ensureSenderIsDisabler();
         disabler = address(0);
