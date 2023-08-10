@@ -514,7 +514,7 @@ export default {
       ]
     },
     "NFT": {
-      "address": "0x31a87d676781C18F08b1ACDdfa598f2ee06be809",
+      "address": "0x285252410bC33B824Eee9559f37dd383087749a8",
       "abi": [
         {
           "inputs": [
@@ -2654,7 +2654,7 @@ export default {
       ]
     },
     "TaskDraftsImplementation": {
-      "address": "0x6C58EF7c427117C2eb62ba0E15Cb5171eC0Aec58",
+      "address": "0x233B40AFf244E69F4c8f0b719e3A9b96612adC60",
       "abi": [
         {
           "inputs": [
@@ -3126,7 +3126,7 @@ export default {
       ]
     },
     "TaskDraftsRepo": {
-      "address": "0x02861f56BB60777f9DEFB603191fd091E23B66ad",
+      "address": "0x0B5b8aaAfF60449ea9259159ab3e3059c498005A",
       "abi": [
         {
           "inputs": [],
@@ -4062,7 +4062,7 @@ export default {
       ]
     },
     "TaskDraftsSetup": {
-      "address": "0xD546BAC538fCda4F20cC7138e26eA7A5221B9a89",
+      "address": "0x50890Bc1EC888F6BdE489c1D12cEF79e04aEb71e",
       "abi": [
         {
           "inputs": [],
@@ -4330,7 +4330,7 @@ export default {
       ]
     },
     "Tasks": {
-      "address": "0x78634FcD688e40765ff46B531133cc4BBf1c90d3",
+      "address": "0x39E5e231D0A8e4e5b7Db9682E4d7B4dd4359D8b1",
       "abi": [
         {
           "inputs": [],
@@ -6046,7 +6046,7 @@ export default {
       ]
     },
     "TokenListGovernanceImplementation": {
-      "address": "0x01b543FcFCAcffD424Bc3dD4275801850b1E4E6C",
+      "address": "0x07b6DA57A20913fcce9fbB6e18ec68BF5e3E2099",
       "abi": [
         {
           "inputs": [
@@ -7325,7 +7325,7 @@ export default {
       ]
     },
     "TokenListGovernanceRepo": {
-      "address": "0xFF59C14cf5a8a0374C6E0B3aAEeb9321dBab57F3",
+      "address": "0x35Cb0b8aB38B65b6bf79dE7799813000D7D335f4",
       "abi": [
         {
           "inputs": [],
@@ -8261,7 +8261,7 @@ export default {
       ]
     },
     "TokenListGovernanceSetup": {
-      "address": "0xE35d411B9571FCE9C3185F979BbEc3a75810eB5a",
+      "address": "0x447dD7Ce33B1E891C81d80F66d592312996f2827",
       "abi": [
         {
           "inputs": [],
@@ -8529,7 +8529,7 @@ export default {
       ]
     },
     "blockchain_dao": {
-      "address": "0xc20a93aE7e7aaF6F546b357B76B07809Fed2B3aD",
+      "address": "0x11dF7E88E2FE64c5f7656c1311609Cc838D544DF",
       "abi": [
         {
           "inputs": [],
@@ -9690,7 +9690,7 @@ export default {
       ]
     },
     "blockchain_taskDrafts": {
-      "address": "0xb81994913544249F7DB7b9b16414B21FF5d9A12c",
+      "address": "0x8c10bC4673d4f0B46cb565Bb565A5054368BC0E4",
       "abi": [
         {
           "inputs": [
@@ -10162,7 +10162,7 @@ export default {
       ]
     },
     "blockchain_tokenListGovernance": {
-      "address": "0x4c4c68a829b273e8e9A6272E2B5fd467FcE3aC2c",
+      "address": "0x2cda520aAD302836b3110F20B48163f96869383B",
       "abi": [
         {
           "inputs": [
@@ -11441,7 +11441,7 @@ export default {
       ]
     },
     "cloud_dao": {
-      "address": "0xb39d2FDA74EBe44F092E0a68fE91aB8BAD78eF1f",
+      "address": "0x7b92f0E65cCAeF6F8e259ABcFD5C87E3f0969Ddc",
       "abi": [
         {
           "inputs": [],
@@ -12602,7 +12602,7 @@ export default {
       ]
     },
     "cloud_taskDrafts": {
-      "address": "0xdC88D36F4a53735E72FAa1468031b82b014528Aa",
+      "address": "0x68Aaa9f0b989214C4a20831234A2b65F89e6846f",
       "abi": [
         {
           "inputs": [
@@ -13074,7 +13074,7 @@ export default {
       ]
     },
     "cloud_tokenListGovernance": {
-      "address": "0x4149c51869DAac1eE8b7b5FC65E9301655c563f8",
+      "address": "0xE80bC76b61C39f9DD012541d972A39AaC9CBCFAe",
       "abi": [
         {
           "inputs": [
@@ -14353,7 +14353,7 @@ export default {
       ]
     },
     "community_dao": {
-      "address": "0x76fa24Cd8f17ef4FdE7d496EB1593d0a77e78c98",
+      "address": "0xF8a18236172219012CF73CeB3A49a229fdcaBe18",
       "abi": [
         {
           "inputs": [],
@@ -15514,7 +15514,7 @@ export default {
       ]
     },
     "community_tokenListGovernance": {
-      "address": "0xAc3cff5FCAEE427798e4eFB50CE4af232BecbcAc",
+      "address": "0x4715e04e2954e885F38802fF6654aedd9Afc48af",
       "abi": [
         {
           "inputs": [
@@ -16793,7 +16793,7 @@ export default {
       ]
     },
     "data_dao": {
-      "address": "0x61E26e290d72502b41898170bbDC1BbCB65E6736",
+      "address": "0x10C93ee6962edfCE77f1ad1f04E86235e2bf96d2",
       "abi": [
         {
           "inputs": [],
@@ -17954,7 +17954,7 @@ export default {
       ]
     },
     "data_taskDrafts": {
-      "address": "0xc6d00aDAa8928492D814751ef0eBd9ddc9DF098D",
+      "address": "0x104D58217F1184548fEeC388640e9a6aD38C35c1",
       "abi": [
         {
           "inputs": [
@@ -18426,7 +18426,7 @@ export default {
       ]
     },
     "data_tokenListGovernance": {
-      "address": "0x76c73FD43dDA393Ef04820E02D1386B94245A47c",
+      "address": "0xdbf68eF0876A96A9A13D6D82279aAF2228E1fF9E",
       "abi": [
         {
           "inputs": [
@@ -19705,7 +19705,7 @@ export default {
       ]
     },
     "frontend_dao": {
-      "address": "0x23Ba0533F4Ac9EF8A86ac1eD8be38bE0AAcbCc9f",
+      "address": "0x8c8C9331c0550C3Dc492f6A11fC9b891F3AbFe62",
       "abi": [
         {
           "inputs": [],
@@ -20866,7 +20866,7 @@ export default {
       ]
     },
     "frontend_taskDrafts": {
-      "address": "0x2495C0ae2E79B2808Ab75fa6814153a1309724A5",
+      "address": "0xbD6CdE02D09f0a59e9E83f38EbA47c60Fa402921",
       "abi": [
         {
           "inputs": [
@@ -21338,7 +21338,7 @@ export default {
       ]
     },
     "frontend_tokenListGovernance": {
-      "address": "0xB399066a16B13985c2FF92053c2da27056d29aD6",
+      "address": "0x8248db7F95ec6CA2818A73E7CA95de1c0CC77310",
       "abi": [
         {
           "inputs": [
@@ -22617,7 +22617,7 @@ export default {
       ]
     },
     "management_dao": {
-      "address": "0x1dAb41958f5389a096175f0F363C749e9b4f27b9",
+      "address": "0x80a44C3B513e7f7E0Bb690a00BC0618626f6A708",
       "abi": [
         {
           "inputs": [],
@@ -23778,7 +23778,7 @@ export default {
       ]
     },
     "management_tokenListGovernance": {
-      "address": "0xC33dC432Bd0E717b25a89978Dd8b20909bc1AA0E",
+      "address": "0x1bbcF619ed73de6917aB21d24b9342c9644e94c0",
       "abi": [
         {
           "inputs": [
@@ -25057,7 +25057,7 @@ export default {
       ]
     },
     "parent_dao": {
-      "address": "0x54Bf8Ea7c54CA02b4080945D81Ed2aE617C15075",
+      "address": "0xC3f406D0ba11c0eC10DfC130A7D1cb25229274af",
       "abi": [
         {
           "inputs": [],
@@ -26218,7 +26218,7 @@ export default {
       ]
     },
     "parent_tokenListGovernance": {
-      "address": "0xEe996B0df0B4F6cc94f7adFd34A4957c797A9F48",
+      "address": "0x524Ec9Ab9ef495a1db103ee7dcd7711bF6Dde7c7",
       "abi": [
         {
           "inputs": [
