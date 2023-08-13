@@ -3,6 +3,8 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { getTokenListGovernanceSettings } from "../utils/PluginSettings";
 import { createDAO } from "../utils/DAODeployer";
 import { getBool, getVar } from "../../../utils/globalVars";
+import { ethers } from "hardhat";
+import { Ownable } from "../../../typechain-types";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (!(await getBool("NewTokenListGovernance")) && !(await getBool("NewNFT"))) {
@@ -19,8 +21,28 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const dao = await createDAO(deployer, subdomain, [tokenListGovernanceSettings], deployments);
 
-  await deployments.save("management_dao", { address: dao.daoAddress, ...(await deployments.getArtifact("DAO")) });
-  await deployments.save("management_tokenListGovernance", { address: dao.pluginAddresses[0], ...(await deployments.getArtifact("TokenListGovernance")) });
+  await deployments.save("management_dao", {
+    address: dao.daoAddress,
+    ...(await deployments.getArtifact("DAO")),
+  });
+  await deployments.save("management_tokenListGovernance", {
+    address: dao.pluginAddresses[0],
+    ...(await deployments.getArtifact("TokenListGovernance")),
+  });
+
+  try {
+    const erc20Collection = (await ethers.getContract("ERC20", deployer)) as Ownable;
+    await erc20Collection.transferOwnership(dao.daoAddress);
+  } catch {
+    console.warn("ERC20 collection could not be transfered to new management DAO");
+  }
+
+  try {
+    const nftCollection = (await ethers.getContract("NFT", deployer)) as Ownable;
+    await nftCollection.transferOwnership(dao.daoAddress);
+  } catch {
+    console.warn("NFT collection could not be transfered to new management DAO");
+  }
 };
 export default func;
 func.tags = ["ManagementDAO"];

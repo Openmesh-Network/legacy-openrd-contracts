@@ -57,5 +57,48 @@ export async function geTaskDraftsSettings(tasks: string, governancePlugin: stri
   return taskDraftsSettings;
 }
 
+export async function getTokenVotingSettings(erc20Collection: string) {
+  const tokenVotingFormat = [
+    "tuple(uint8 votingMode, uint64 supportThreshold, uint64 minParticipation, uint64 minDuration, uint256 minProposerVotingPower) votingSettings",
+    "tuple(address addr, string name, string symbol)",
+    "tuple(address[] receivers, uint256[] amounts)",
+  ];
+  enum VotingMode {
+    Standard,
+    EarlyExecution,
+    VoteReplacement,
+  }
+  const tokenVotingValues: any[] = [
+    {
+      votingMode: VotingMode.EarlyExecution,
+      supportThreshold: 50 * 10 ** 4, // % * 10**4 (ppm)
+      minParticipation: 20 * 10 ** 4, // % * 10**4 (ppm)
+      minDuration: 3600, // seconds
+      minProposerVotingPower: 1, // require people to be a member to create proposals (this is a boolean in disguise)
+    },
+    {
+      addr: erc20Collection,
+      name: "",
+      symbol: "",
+    },
+    {
+      receivers: [],
+      amounts: [],
+    },
+  ];
+  const tokenVotingBytes = ethers.AbiCoder.defaultAbiCoder().encode(tokenVotingFormat, tokenVotingValues);
+  const tokenVotingSettings = {
+    pluginSetupRef: {
+      versionTag: {
+        release: 1, //get latest ?
+        build: 1,
+      },
+      pluginSetupRepo: (await deployments.get("token-voting-repo")).address,
+    },
+    data: tokenVotingBytes,
+  };
+  return tokenVotingSettings;
+}
+
 // exports dummy function for hardhat-deploy. Otherwise we would have to move this file
 export default function () {}

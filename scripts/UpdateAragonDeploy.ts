@@ -9,7 +9,13 @@ async function main() {
   const contracts = ["DAORegistry", "PluginRepoRegistry", "PluginRepoFactory", "PluginSetupProcessor", "DAOFactory"];
   for (let i = 0; i < contracts.length; i++) {
     const artifact = await artifacts.readArtifact(contracts[i]);
-    deployments.save(contracts[i], { address: contractInfo[contracts[i]], abi: artifact.abi });
+    deployments.save(contracts[i], { address: contractInfo[contracts[i]], ...artifact });
+  }
+  
+  const repos = ["token-voting-repo"];
+  const repoContract = await deployments.getArtifact("PluginRepo");
+  for (let i = 0; i < repos.length; i++) {
+    deployments.save(repos[i], { address: contractInfo[repos[i]], ...repoContract });
   }
 }
 
