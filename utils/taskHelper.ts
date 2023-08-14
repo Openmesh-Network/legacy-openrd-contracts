@@ -44,7 +44,7 @@ export async function createTaskTransaction(settings: CreateTaskSettings): Promi
   const deadline = settings.deadline ? ToBlockchainDate(settings.deadline) : now() + 1 * days;
   const budget = settings.budget ?? [];
   const manager = settings.manager ?? (await (settings.tasks.runner as Signer).getAddress());
-  const preapproved = (settings.preapproved ?? []).map(p => {
+  const preapproved = (settings.preapproved ?? []).map((p) => {
     return {
       applicant: p.applicant,
       reward: p.reward ?? [],
@@ -87,8 +87,6 @@ export async function getTask(settings: GetTaskSettings): Promise<Task> {
     applications: await asyncMap(rawTask.applications, toApplication),
     executorApplication: Number(rawTask.executorApplication),
     submissions: await asyncMap(rawTask.submissions, toSubmission),
-    // changeScopeRequests: await asyncMap(rawTask.changeScopeRequests, toChangeScopeRequest),
-    // dropExecutorRequests: await asyncMap(rawTask.dropExecutorRequests, toDropExecutorRequest),
     cancelTaskRequests: await asyncMap(rawTask.cancelTaskRequests, toCancelTaskRequest),
   };
 }

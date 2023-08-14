@@ -90,7 +90,7 @@ describe("Review Submission", function () {
     }
   });
 
-  it("should have be in closed state after accept", async function () {
+  it("should be in closed state after accept", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
     await reviewSubmission({
       tasks: task.TasksManager,
@@ -117,7 +117,7 @@ describe("Review Submission", function () {
     }
   });
 
-  it("should have be in taken state after reject", async function () {
+  it("should be in taken state after reject", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
     await reviewSubmission({
       tasks: task.TasksManager,

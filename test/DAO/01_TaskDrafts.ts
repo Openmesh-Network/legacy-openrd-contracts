@@ -1,6 +1,6 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { days, now } from "../../utils/timeUnits";
-import { getDAO } from "./00_Governance";
+import { getDAO } from "./00_TokenListGovernance";
 import { ethers, getUnnamedAccounts } from "hardhat";
 import { expect } from "chai";
 import { TaskMetadata } from "../../utils/taskTypes";
