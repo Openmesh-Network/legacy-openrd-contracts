@@ -8,6 +8,18 @@ import {Context} from "@openzeppelin/contracts/utils/Context.sol";
   Functions to ensure a certain precondition is met.
 */
 abstract contract TasksEnsure is ITasks, Context {
+    function _ensureValidTimestamp(uint64 timestamp) internal pure {
+        if (timestamp == 0) {
+            revert InvalidTimestamp();
+        }
+    }
+
+    function _ensureValidAddress(address addr) internal pure {
+        if (addr == address(0)) {
+            revert InvalidAddress();
+        }
+    }
+
     function _ensureTaskIsOpen(Task storage task) internal view {
         if (task.state != TaskState.Open) {
             revert TaskNotOpen();

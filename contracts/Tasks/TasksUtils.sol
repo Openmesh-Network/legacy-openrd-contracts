@@ -89,6 +89,17 @@ abstract contract TasksUtils is ITasks, Context {
                         address(task.escrow),
                         needed - erc20Transfer.amount
                     );
+
+                    if (
+                        erc20Transfer.tokenContract.balanceOf(
+                            address(task.escrow)
+                        ) < needed
+                    ) {
+                        // transferFrom returns less funds than send, use increaseBudget to increase balance to wanted reward.
+                        revert ManualBudgetIncreaseRequired();
+                    }
+
+                    // (2^88-1) * 2^8 = 2^96-2^8, needed cannot be more than 2^96-1, so fits in uint96
                     task.budget[j].amount = uint96(needed);
                 }
 
@@ -109,6 +120,9 @@ abstract contract TasksUtils is ITasks, Context {
         Application storage application,
         Reward[] calldata _reward
     ) internal {
+        if (_reward.length >= type(uint8).max) {
+            revert ArrayLargerThanSupported();
+        }
         application.rewardCount = uint8(_reward.length);
 
         uint8 j;

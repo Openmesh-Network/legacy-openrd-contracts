@@ -678,10 +678,54 @@ error ApplicationNotAccepted()
 
 
 
+### ArrayLargerThanSupported
+
+```solidity
+error ArrayLargerThanSupported()
+```
+
+
+
+
+
+
+### InvalidAddress
+
+```solidity
+error InvalidAddress()
+```
+
+
+
+
+
+
+### InvalidTimestamp
+
+```solidity
+error InvalidTimestamp()
+```
+
+
+
+
+
+
 ### JudgementNone
 
 ```solidity
 error JudgementNone()
+```
+
+
+
+
+
+
+### ManualBudgetIncreaseRequired
+
+```solidity
+error ManualBudgetIncreaseRequired()
 ```
 
 
@@ -715,6 +759,17 @@ error NotManager()
 
 ```solidity
 error NotYourApplication()
+```
+
+
+
+
+
+
+### PointlessOperation
+
+```solidity
+error PointlessOperation()
 ```
 
 

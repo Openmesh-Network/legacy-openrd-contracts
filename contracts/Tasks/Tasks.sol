@@ -6,6 +6,7 @@ import {TasksEnsure} from "./TasksEnsure.sol";
 import {TasksUtils} from "./TasksUtils.sol";
 import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Tasks is Context, TasksEnsure, TasksUtils {
     /// @notice The incremental ID for tasks.
@@ -20,7 +21,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
     mapping(uint256 => Task) internal tasks;
 
     /// @notice The base escrow contract that will be cloned for every task.
-    address private escrowImplementation;
+    address private immutable escrowImplementation;
 
     /// @notice This address has the power to disable the contract, in case an exploit is discovered.
     address private disabler;
@@ -160,6 +161,15 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         address _manager,
         PreapprovedApplication[] calldata _preapprove
     ) external returns (uint256 taskId) {
+        _ensureValidTimestamp(_deadline);
+        _ensureValidAddress(_manager);
+        if (_budget.length >= type(uint8).max) {
+            revert ArrayLargerThanSupported();
+        }
+        if (_preapprove.length >= type(uint16).max) {
+            revert ArrayLargerThanSupported();
+        }
+
         _ensureNotDisabled();
         taskId = taskCounter++;
 
@@ -176,7 +186,13 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 address(escrow),
                 _budget[i].amount
             );
-            task.budget[i] = _budget[i];
+
+            // use balanceOf in case there is a fee asoosiated with the transfer
+            task.budget[i] = ERC20Transfer(
+                _budget[i].tokenContract,
+                uint96(_budget[i].tokenContract.balanceOf(address(escrow)))
+            );
+
             unchecked {
                 ++i;
             }
@@ -244,6 +260,10 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         string calldata _metadata,
         Reward[] calldata _reward
     ) external returns (uint16 applicationId) {
+        if (_reward.length >= type(uint8).max) {
+            revert ArrayLargerThanSupported();
+        }
+
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsOpen(task);
@@ -545,6 +565,9 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         _ensureTaskNotClosed(task);
 
+        if (_extension == 0) {
+            revert PointlessOperation();
+        }
         task.deadline += _extension;
 
         emit DeadlineExtended(
@@ -575,7 +598,11 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 address(task.escrow),
                 _increase[i]
             );
-            transfer.amount += _increase[i];
+
+            // Use balanceOf as there could be a fee in transferFrom
+            transfer.amount = uint96(
+                transfer.tokenContract.balanceOf(address(task.escrow))
+            );
 
             unchecked {
                 ++i;
@@ -596,6 +623,9 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         _ensureTaskIsOpen(task);
 
+        if (Strings.equal(task.metadata, _newMetadata)) {
+            revert PointlessOperation();
+        }
         task.metadata = _newMetadata;
         emit MetadataEditted(_taskId, _newMetadata, _msgSender());
     }

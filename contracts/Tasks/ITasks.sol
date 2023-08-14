@@ -18,6 +18,11 @@ import {Escrow} from "./Escrow.sol";
   Hence there is also no getCreatedTasks.
 */
 interface ITasks {
+    error InvalidTimestamp();
+    error InvalidAddress();
+    error PointlessOperation();
+    error ArrayLargerThanSupported();
+
     error TaskDoesNotExist();
     error TaskNotOpen();
     error TaskNotTaken();
@@ -40,6 +45,8 @@ interface ITasks {
     error RequestAlreadyAccepted();
     error RequestNotAccepted();
     error RequestAlreadyExecuted();
+
+    error ManualBudgetIncreaseRequired();
 
     event TaskCreated(
         uint256 indexed taskId,
