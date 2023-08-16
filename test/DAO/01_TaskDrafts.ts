@@ -7,7 +7,8 @@ import { TaskMetadata } from "../../utils/taskTypes";
 import { addToIpfs } from "../../utils/ipfsHelper";
 import { getTask } from "../../utils/taskHelper";
 import { asyncMap, getInferfaceId } from "../../utils/utils";
-import { ether } from "../../utils/ethersUnits";
+import { asDAO } from "../Helpers/ImpersonatedDAO";
+import { TaskDrafts } from "../../typechain-types";
 
 describe("Department DAO Task Drafts", function () {
   it("should allow creation of draft task proposals by anyone", async function () {
@@ -58,26 +59,27 @@ describe("Department DAO Task Drafts", function () {
 
   it("should allow the DAO to update the addresses", async function () {
     const dao = await loadFixture(getDAO);
-    const newGovernance = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length - 1) + "1";
-    const newTasks = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length - 1) + "2";
+    const newGovernance = ethers.Wallet.createRandom().address;
+    const newTasks = ethers.Wallet.createRandom().address;
 
-    const DAO = await dao.DAO.getAddress();
-    (await ethers.getSigners())[0].sendTransaction({
-      to: DAO,
-      value: ether,
-    });
-    await dao.TaskDrafts.connect(await ethers.getImpersonatedSigner(DAO)).updateAddresses(newTasks, newGovernance);
+    const TasksDAO = await asDAO<TaskDrafts>(dao.TaskDrafts, dao.department);
+    await TasksDAO.updateGovernanceContract(newGovernance);
+    await TasksDAO.updateTasksContract(newTasks);
+
     expect(await dao.TaskDrafts.getGovernanceContract()).to.be.equal(newGovernance);
     expect(await dao.TaskDrafts.getTasksContract()).to.be.equal(newTasks);
   });
 
   it("should not allow other addresses to update the addresses", async function () {
     const dao = await loadFixture(getDAO);
-    const newGovernance = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length - 1) + "1";
-    const newTasks = ethers.ZeroAddress.substring(0, ethers.ZeroAddress.length - 1) + "2";
+    const newGovernance = ethers.Wallet.createRandom().address;
+    const newTasks = ethers.Wallet.createRandom().address;
 
-    const tx = dao.TaskDrafts.updateAddresses(newTasks, newGovernance);
-    await expect(tx).to.be.reverted;
+    const tx1 = dao.TaskDrafts.updateGovernanceContract(newGovernance);
+    const tx2 = dao.TaskDrafts.updateTasksContract(newTasks);
+
+    await expect(tx1).to.be.reverted;
+    await expect(tx2).to.be.reverted;
   });
 
   it("should not allow second init", async function () {

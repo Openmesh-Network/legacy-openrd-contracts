@@ -25,13 +25,15 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
     /// @notice This address has the power to handle disputes. It can complete any taken task without permission of the manager.
     /// @dev This should be a smart contract obviously.
-    address private disputeManager;
+    address public disputeManager;
     error NotDisputeManager();
+    event NewDisputeManager(address disputeManager);
 
-    constructor(address _disputeManager) {
+    constructor(address _disabler, address _disputeManager) {
         escrowImplementation = address(new Escrow());
-        disabler = _msgSender();
+        disabler = _disabler;
         disputeManager = _disputeManager;
+        emit NewDisputeManager(_disputeManager);
     }
 
     /// @inheritdoc ITasks
@@ -458,6 +460,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
     function transferDisputeManagement(address _newManager) external {
         _ensureSenderIsDisputeManager();
         disputeManager = _newManager;
+        emit NewDisputeManager(_newManager);
     }
 
     /// @inheritdoc ITasks

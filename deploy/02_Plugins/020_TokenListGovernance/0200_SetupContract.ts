@@ -19,7 +19,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [],
   });
 
-  await setBool("NewTokenListGovernance", deployResult.newlyDeployed);
+  await setBool("NewTokenListGovernanceSetup", deployResult.newlyDeployed);
 };
 export default func;
 func.tags = ["TokenListGovernanceSetup"];

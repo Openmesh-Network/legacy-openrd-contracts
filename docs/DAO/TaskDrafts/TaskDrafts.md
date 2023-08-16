@@ -188,13 +188,29 @@ Checks if an interface is supported by this or its parent contract.
 |---|---|---|
 | _0 | bool | Returns `true` if the interface is supported. |
 
-### updateAddresses
+### updateGovernanceContract
 
 ```solidity
-function updateAddresses(contract ITasks _tasks, contract IPluginProposals _governancePlugin) external nonpayable
+function updateGovernanceContract(contract IPluginProposals _governancePlugin) external nonpayable
 ```
 
-Updates the Tasks and governance plugin contract addresses.
+Updates the governance plugin contract address.
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _governancePlugin | contract IPluginProposals | The new governance plugin contract address. |
+
+### updateTasksContract
+
+```solidity
+function updateTasksContract(contract ITasks _tasks) external nonpayable
+```
+
+Updates the tasks contract address.
 
 
 
@@ -203,7 +219,6 @@ Updates the Tasks and governance plugin contract addresses.
 | Name | Type | Description |
 |---|---|---|
 | _tasks | contract ITasks | The new Tasks contract address. |
-| _governancePlugin | contract IPluginProposals | The new governance plugin contract address. |
 
 ### upgradeTo
 

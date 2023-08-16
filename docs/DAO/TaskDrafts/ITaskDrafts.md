@@ -63,13 +63,29 @@ The Tasks contract where tasks are created.
 |---|---|---|
 | _0 | contract ITasks | undefined |
 
-### updateAddresses
+### updateGovernanceContract
 
 ```solidity
-function updateAddresses(contract ITasks _tasks, contract IPluginProposals _governancePlugin) external nonpayable
+function updateGovernanceContract(contract IPluginProposals _governancePlugin) external nonpayable
 ```
 
-Updates the Tasks and governance plugin contract addresses.
+Updates the governance plugin contract address.
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _governancePlugin | contract IPluginProposals | The new governance plugin contract address. |
+
+### updateTasksContract
+
+```solidity
+function updateTasksContract(contract ITasks _tasks) external nonpayable
+```
+
+Updates the tasks contract address.
 
 
 
@@ -78,7 +94,6 @@ Updates the Tasks and governance plugin contract addresses.
 | Name | Type | Description |
 |---|---|---|
 | _tasks | contract ITasks | The new Tasks contract address. |
-| _governancePlugin | contract IPluginProposals | The new governance plugin contract address. |
 
 
 

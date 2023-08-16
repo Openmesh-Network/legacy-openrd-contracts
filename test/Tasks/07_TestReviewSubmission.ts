@@ -40,9 +40,13 @@ describe("Review Submission", function () {
       submissionId: BigInt(0),
       judgement: SubmissionJudgement.Accepted,
     });
-    for (let i = 0; i < task.budget.length; i++) {
-      const ERC20 = await ethers.getContractAt("ERC20", task.budget[i].tokenContract);
-      expect(await ERC20.balanceOf(task.executor)).to.be.equal(task.reward[i].amount);
+    let j = 0;
+    for (let i = 0; i < task.reward.length; i++) {
+      const ERC20 = await ethers.getContractAt("ERC20", task.budget[j].tokenContract);
+      expect(await ERC20.balanceOf(task.reward[i].to)).to.be.equal(task.reward[i].amount);
+      if (task.reward[i].nextToken) {
+        j++;
+      }
     }
   });
 

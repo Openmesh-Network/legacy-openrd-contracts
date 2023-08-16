@@ -170,6 +170,23 @@ function disable() external nonpayable
 
 
 
+### disputeManager
+
+```solidity
+function disputeManager() external view returns (address)
+```
+
+This address has the power to handle disputes. It can complete any taken task without permission of the manager.
+
+*This should be a smart contract obviously.*
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | address | undefined |
+
 ### editMetadata
 
 ```solidity
@@ -496,6 +513,22 @@ event MetadataEditted(uint256 indexed taskId, string newMetadata)
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
 | newMetadata  | string | undefined |
+
+### NewDisputeManager
+
+```solidity
+event NewDisputeManager(address disputeManager)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| disputeManager  | address | undefined |
 
 ### PartialPayment
 

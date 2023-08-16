@@ -5,6 +5,7 @@ import { getTask } from "../../utils/taskHelper";
 import { ethers } from "hardhat";
 import { MockERC20 } from "../../typechain-types";
 import { asyncMap } from "../../utils/utils";
+import { Gwei } from "../../utils/ethersUnits";
 
 describe("Increase Budget", function () {
   it("should increase the budget", async function () {
@@ -24,6 +25,15 @@ describe("Increase Budget", function () {
     for (let i = 0; i < taskInfo.budget.length; i++) {
       expect(taskInfo.budget[i].amount).to.be.equal(taskInfoBefore.budget[i].amount + increase[i]);
     }
+  });
+
+  it("should increase the native budget", async function () {
+    const task = await loadFixture(createBudgetTaskFixture);
+    const taskInfoBefore = await getTask({ tasks: task.TasksManager, taskId: task.taskId });
+    const increase = Gwei(250);
+    await task.TasksManager.increaseBudget(task.taskId, [], { value: increase });
+    const taskInfo = await getTask({ tasks: task.TasksManager, taskId: task.taskId });
+    expect(taskInfo.nativeBudget).to.be.equal(taskInfoBefore.nativeBudget + increase);
   });
 
   it("should take the funds", async function () {

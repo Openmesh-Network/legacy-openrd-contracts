@@ -2,10 +2,12 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { getTokenVotingSettings } from "../utils/PluginSettings";
 import { createDAO } from "../utils/DAODeployer";
-import { getBool, getVar } from "../../../utils/globalVars";
+import { getVar, setBool } from "../../../utils/globalVars";
+import { redeployedDependencies } from "../../utils";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  if (!(await getBool("NewERC20"))) {
+  const run = await redeployedDependencies(func.dependencies);
+  if (!run) {
     return;
   }
 
@@ -26,6 +28,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     address: dao.pluginAddresses[0],
     ...(await deployments.getArtifact("TokenVoting")),
   });
+
+  await setBool("NewCommunityDAO", true);
 };
 export default func;
 func.tags = ["CommunityDAO"];

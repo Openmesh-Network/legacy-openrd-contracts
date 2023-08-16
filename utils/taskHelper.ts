@@ -19,6 +19,7 @@ import {
 } from "./taskTypes";
 import { asyncMap, getEventsFromReceipt } from "./utils";
 import { addToIpfs, getFromIpfs } from "./ipfsHelper";
+import { Wei } from "./ethersUnits";
 
 // Helper to interact with the tasks contract
 
@@ -27,6 +28,7 @@ export interface CreateTaskSettings {
   metadata?: TaskMetadata;
   deadline?: Date;
   budget?: BudgetItem[];
+  nativeBudget?: bigint;
   manager?: string;
   preapproved?: {
     applicant: string;
@@ -43,6 +45,7 @@ export async function createTaskTransaction(settings: CreateTaskSettings): Promi
   const metadataHash = await addToIpfs(JSON.stringify(settings.metadata ?? metadata));
   const deadline = settings.deadline ? ToBlockchainDate(settings.deadline) : now() + 1 * days;
   const budget = settings.budget ?? [];
+  const nativeBudget = settings.nativeBudget ?? Wei(0);
   const manager = settings.manager ?? (await (settings.tasks.runner as Signer).getAddress());
   const preapproved = (settings.preapproved ?? []).map((p) => {
     return {
@@ -51,7 +54,7 @@ export async function createTaskTransaction(settings: CreateTaskSettings): Promi
       nativeReward: p.nativeReward ?? [],
     };
   });
-  return settings.tasks.createTask(metadataHash, deadline, budget, manager, preapproved);
+  return settings.tasks.createTask(metadataHash, deadline, budget, manager, preapproved, { value: nativeBudget });
 }
 
 export interface CreateTaskResult {

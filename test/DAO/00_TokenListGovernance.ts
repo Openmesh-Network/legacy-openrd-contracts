@@ -9,14 +9,15 @@ import { asDAO } from "../Helpers/ImpersonatedDAO";
 export async function getDAO() {
   await loadFixture(TestSetup);
   const { deployer } = await getNamedAccounts();
+  const department = "blockchain";
 
-  const DAO = (await ethers.getContract("blockchain_dao", deployer)) as DAO;
-  const TokenListGovernance = (await ethers.getContract("blockchain_tokenListGovernance", deployer)) as TokenListGovernance;
-  const TaskDrafts = (await ethers.getContract("blockchain_taskDrafts", deployer)) as TaskDrafts;
+  const DAO = (await ethers.getContract(department + "_dao", deployer)) as DAO;
+  const TokenListGovernance = (await ethers.getContract(department + "_tokenListGovernance", deployer)) as TokenListGovernance;
+  const TaskDrafts = (await ethers.getContract(department + "_taskDrafts", deployer)) as TaskDrafts;
   const NFT = await asDAO<OwnableERC721Enumerable>(await ethers.getContract("NFT", deployer), "management");
   const Tasks = (await ethers.getContract("Tasks", deployer)) as Tasks;
 
-  return { DAO, TokenListGovernance, TaskDrafts, NFT, deployer, Tasks };
+  return { DAO, TokenListGovernance, TaskDrafts, NFT, deployer, Tasks, department };
 }
 
 describe("Department DAO Governance", function () {

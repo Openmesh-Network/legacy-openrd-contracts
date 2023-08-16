@@ -1,12 +1,14 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction, DeploymentsExtension } from "hardhat-deploy/types";
 import { ethers } from "hardhat";
-import { getBool, getVar, setBool } from "../../../utils/globalVars";
+import { getVar, setBool } from "../../../utils/globalVars";
 import { createDAO } from "../utils/DAODeployer";
 import { geTaskDraftsSettings, getTokenListGovernanceSettings } from "../utils/PluginSettings";
+import { redeployedDependencies } from "../../utils";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  if (!(await getBool("NewTokenListGovernance")) && !(await getBool("NewDraftsSetup")) && !(await getBool("NewNFT"))) {
+  const run = await redeployedDependencies(func.dependencies);
+  if (!run) {
     return;
   }
 

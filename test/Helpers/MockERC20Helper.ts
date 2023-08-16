@@ -1,6 +1,7 @@
 import { ethers, getNamedAccounts } from "hardhat";
 import { MockERC20, Tasks } from "../../typechain-types";
 import { BudgetItem } from "../../utils/taskTypes";
+import { Signer } from "ethers";
 
 export async function DeployMockERC20(namedAccount?: string): Promise<MockERC20> {
   const { deployer } = await getNamedAccounts();

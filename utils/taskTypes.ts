@@ -31,7 +31,7 @@ export interface Task {
   metadata: TaskMetadata;
   deadline: Date;
   budget: BudgetItem[];
-  nativeBudget: BigInt;
+  nativeBudget: bigint;
   creator: string;
   manager: string;
   state: TaskState;

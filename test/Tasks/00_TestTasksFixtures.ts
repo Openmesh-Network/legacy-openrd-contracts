@@ -77,11 +77,13 @@ export async function createBudgetTaskFixture() {
   const TasksExecutor = (await ethers.getContract("Tasks", executor)) as Tasks;
   const amounts = [Wei(1), Wei(10), Gwei(1), Gwei(5), Ether(1), Ether(20), Ether(100), Ether(1337), Ether(1_000_000)];
   const budget = await asyncMap(amounts, (a) => GetBudgetItem(TasksManager, a, manager));
+  const nativeBudget = Ether(1_000);
   const { taskId } = await createTask({
     tasks: TasksManager,
     budget: budget,
+    nativeBudget: nativeBudget,
   });
-  return { manager, executor, TasksManager, TasksExecutor, taskId, budget };
+  return { manager, executor, TasksManager, TasksExecutor, taskId, budget, nativeBudget };
 }
 
 export async function createApplicationsTaskFixture() {
@@ -114,12 +116,18 @@ export async function createApprovedApplicationsTaskFixture() {
 export async function createBudgetTaskWithExecutorAndSubmissionFixture() {
   const task = await loadFixture(createBudgetTaskFixture);
   const reward = task.budget.map((_, i) => {
-    return { nextToken: true, to: task.executor, amount: BigInt(i) };
+    return { nextToken: true, to: ethers.Wallet.createRandom().address, amount: BigInt(i) };
   });
+  const nativeReward = Array(5)
+    .fill(0)
+    .map((_, i) => {
+      return { to: ethers.Wallet.createRandom().address, amount: task.nativeBudget / BigInt(2 ** (i + 1)) };
+    });
   await applyForTask({
     tasks: task.TasksExecutor,
     taskId: task.taskId,
     reward: reward,
+    nativeReward: nativeReward,
   });
   await acceptApplications({
     tasks: task.TasksManager,
@@ -135,7 +143,7 @@ export async function createBudgetTaskWithExecutorAndSubmissionFixture() {
     tasks: task.TasksExecutor,
     taskId: task.taskId,
   });
-  return { ...task, reward };
+  return { ...task, reward, nativeReward };
 }
 
 export async function createBudgetTaskWithExecutorAndSubmissionFullRewardFixture() {
@@ -146,6 +154,11 @@ export async function createBudgetTaskWithExecutorAndSubmissionFullRewardFixture
     reward: task.budget.map((b) => {
       return { nextToken: true, to: task.executor, amount: b.amount };
     }),
+    nativeReward: Array(5)
+      .fill(0)
+      .map((_, i) => {
+        return { to: task.executor, amount: task.nativeBudget / BigInt(2 ** (i + 1)) };
+      }),
   });
   await acceptApplications({
     tasks: task.TasksManager,
@@ -167,7 +180,7 @@ export async function createBudgetTaskWithExecutorAndSubmissionFullRewardFixture
 export async function createBudgetTaskWithExecutorAndSubmissionIncompleteRewardFixture() {
   const task = await loadFixture(createBudgetTaskFixture);
   const reward = task.budget.map((b) => {
-    return { nextToken: true, to: task.executor, amount: b.amount };
+    return { nextToken: true, to: ethers.Wallet.createRandom().address, amount: b.amount };
   });
   reward.pop();
   await applyForTask({
@@ -199,15 +212,22 @@ export async function createPreapprovedBudgetTaskFixture() {
   const TasksExecutor = (await ethers.getContract("Tasks", executor)) as Tasks;
   const amounts = [Wei(1), Wei(10), Gwei(1), Gwei(5), Ether(1), Ether(20), Ether(100), Ether(1337), Ether(1_000_000)];
   const budget = await asyncMap(amounts, (a) => GetBudgetItem(TasksManager, a, manager));
+  const nativeBudget = Ether(1_000);
   const { taskId } = await createTask({
     tasks: TasksManager,
     budget: budget,
+    nativeBudget: nativeBudget,
     preapproved: [
       {
         applicant: executor,
         reward: amounts.map((b) => {
-          return { nextToken: true, to: executor, amount: b };
+          return { nextToken: true, to: ethers.Wallet.createRandom().address, amount: b };
         }),
+        nativeReward: Array(5)
+          .fill(0)
+          .map((_, i) => {
+            return { to: ethers.Wallet.createRandom().address, amount: nativeBudget / BigInt(2 ** (i + 1)) };
+          }),
       },
     ],
   });

@@ -5,15 +5,15 @@ import { ethers } from "hardhat";
 import { getBool, getVar, setBool } from "../../../utils/globalVars";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  if (!(await getBool("NewTaskDraftsSetup"))) {
+  if (!(await getBool("NewTaskDisputesSetup"))) {
     return;
   }
 
   const { deployments, getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
 
-  const taskDrafts = await deployments.get("TaskDraftsSetup");
-  const subdomain = "taskdraft-test-" + (await getVar("ENSCounter"));
+  const taskDrafts = await deployments.get("TaskDisputesSetup");
+  const subdomain = "taskdispute-test-" + (await getVar("ENSCounter"));
 
   const receipt = await deployments.execute(
     "PluginRepoFactory",
@@ -30,10 +30,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const pluginRepoRegistry = await ethers.getContract("PluginRepoRegistry");
   const repo = getEventsFromLogs(receipt.logs, pluginRepoRegistry.interface, "PluginRepoRegistered")[0].args.pluginRepo;
-  await deployments.save("TaskDraftsRepo", { address: repo, ...(await deployments.getArtifact("PluginRepo")) });
+  await deployments.save("TaskDisputesRepo", { address: repo, ...(await deployments.getArtifact("PluginRepo")) });
 
-  await setBool("NewTaskDrafts", true);
+  await setBool("NewTaskDisputes", true);
 };
 export default func;
-func.tags = ["TaskDrafts"];
-func.dependencies = ["TaskDraftsSetup"];
+func.tags = ["TaskDisputes"];
+func.dependencies = ["TaskDisputesSetup"];

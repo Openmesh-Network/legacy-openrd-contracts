@@ -8,20 +8,25 @@ bytes32 constant UPDATE_ADDRESSES_PERMISSION_ID = keccak256(
     "UPDATE_ADDRESSES_PERMISSION"
 );
 
-interface ITaskDrafts {
-    struct CreateTaskInfo {
-        string metadata;
-        uint64 deadline;
-        ITasks.ERC20Transfer[] budget;
-        address manager;
-        ITasks.PreapprovedApplication[] preapproved;
-    }
+bytes32 constant UPDATE_DISPUTE_COST_PERMISSION_ID = keccak256(
+    "UPDATE_DISPUTE_COST_PERMISSION"
+);
+
+interface ITaskDisputes {
+    error Underpaying();
+
+    /// @notice The minimum amount of native currency that has to be attached to create a dispute.
+    function getDisputeCost() external view returns (uint256);
 
     /// @notice The Tasks contract where tasks are created.
     function getTasksContract() external view returns (ITasks);
 
     /// @notice The governance plugin (instance) contract where proposals are created.
     function getGovernanceContract() external view returns (IPluginProposals);
+
+    /// @notice Updates the dispute cost.
+    /// @param _disputeCost The new dispute cost.
+    function updateDisputeCost(uint256 _disputeCost) external;
 
     /// @notice Updates the tasks contract address.
     /// @param _tasks The new Tasks contract address.
@@ -33,15 +38,11 @@ interface ITaskDrafts {
         IPluginProposals _governancePlugin
     ) external;
 
-    /// @notice Create a proposal to create a task.
-    /// @param _metadata The metadata of the proposal.
-    /// @param _startDate The start date of the proposal.
-    /// @param _endDate The end date of the proposal.
-    /// @param _taskInfo The task to be created if the proposal passes.
-    function createDraftTask(
+    /// @notice Create a dispute for a task
+    function createDispute(
         bytes calldata _metadata,
         uint64 _startDate,
         uint64 _endDate,
-        CreateTaskInfo calldata _taskInfo
-    ) external;
+        uint256 _taskId
+    ) external payable;
 }

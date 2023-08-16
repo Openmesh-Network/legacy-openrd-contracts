@@ -31,4 +31,11 @@ describe("Escrow", function () {
     const EscrowEve = EscrowOwner.connect(await ethers.getSigner(accounts[1]));
     expect(EscrowEve.transfer(ethers.ZeroAddress, ethers.ZeroAddress, BigInt(0))).to.be.revertedWithCustomError(EscrowOwner, "NotOwner");
   });
+
+  it("should not allow anyone else to take native funds", async function () {
+    const EscrowOwner = await loadFixture(deployInitedEscrow);
+    const accounts = await getUnnamedAccounts();
+    const EscrowEve = EscrowOwner.connect(await ethers.getSigner(accounts[1]));
+    expect(EscrowEve.transferNative(ethers.ZeroAddress, BigInt(0))).to.be.revertedWithCustomError(EscrowOwner, "NotOwner");
+  });
 });

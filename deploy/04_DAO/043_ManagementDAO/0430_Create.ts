@@ -2,12 +2,12 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { getTokenListGovernanceSettings } from "../utils/PluginSettings";
 import { createDAO } from "../utils/DAODeployer";
-import { getBool, getVar } from "../../../utils/globalVars";
-import { ethers } from "hardhat";
-import { Ownable } from "../../../typechain-types";
+import { getVar, setBool } from "../../../utils/globalVars";
+import { redeployedDependencies } from "../../utils";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  if (!(await getBool("NewTokenListGovernance")) && !(await getBool("NewNFT"))) {
+  const run = await redeployedDependencies(func.dependencies);
+  if (!run) {
     return;
   }
 
@@ -30,20 +30,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ...(await deployments.getArtifact("TokenListGovernance")),
   });
 
-  try {
-    const erc20Collection = (await ethers.getContract("ERC20", deployer)) as Ownable;
-    await erc20Collection.transferOwnership(dao.daoAddress);
-  } catch {
-    console.warn("ERC20 collection could not be transfered to new management DAO");
-  }
-
-  try {
-    const nftCollection = (await ethers.getContract("NFT", deployer)) as Ownable;
-    await nftCollection.transferOwnership(dao.daoAddress);
-  } catch {
-    console.warn("NFT collection could not be transfered to new management DAO");
-  }
+  await setBool("NewManagementDAO", true);
 };
 export default func;
-func.tags = ["ManagementDAO"];
+func.tags = ["ManagementDAOCreation"];
 func.dependencies = ["TokenListGovernance", "NFT", "CommunityDAO"];

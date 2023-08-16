@@ -343,7 +343,9 @@ abstract contract TasksUtils is ITasks, Context {
                         executor.reward[j].amount =
                             reward.amount -
                             _partialReward[j];
+
                         erc20Transfer.amount -= _partialReward[j];
+
                         ++j;
                     }
 
@@ -385,7 +387,5 @@ abstract contract TasksUtils is ITasks, Context {
                 task.nativeBudget -= paidOut;
             }
         }
-
-        task.state = TaskState.Closed;
     }
 }

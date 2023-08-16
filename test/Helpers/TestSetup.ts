@@ -3,7 +3,7 @@ import { Tasks } from "../../typechain-types";
 import { acceptApplications, applyForTask, takeTask } from "../../utils/taskHelper";
 
 export async function TestSetup() {
-  await deployments.fixture(["Tasks", "DepartmentDAO"]);
+  await deployments.fixture(["Tasks", "DisputeDAO", "DepartmentDAO"]);
 }
 
 export interface FastForwardTakeTaskSettings {

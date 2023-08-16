@@ -4,24 +4,27 @@ pragma solidity ^0.8.0;
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {PluginUUPSUpgradeable, IDAO} from "@aragon/osx/core/plugin/PluginUUPSUpgradeable.sol";
 
-import {ITaskDrafts, ITasks, IPluginProposals, UPDATE_ADDRESSES_PERMISSION_ID} from "./ITaskDrafts.sol";
+import {ITaskDisputes, ITasks, IPluginProposals, UPDATE_ADDRESSES_PERMISSION_ID, UPDATE_DISPUTE_COST_PERMISSION_ID} from "./ITaskDisputes.sol";
 
-contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
+contract TaskDisputes is Initializable, PluginUUPSUpgradeable, ITaskDisputes {
     ITasks private tasks;
     IPluginProposals private governancePlugin;
+    uint256 private disputeCost;
 
-    /// @notice Initialize the TaskDrafts plugin.
+    /// @notice Initialize the TaskDisputes plugin.
     /// @param _dao The dao where this plugin is installed.
     /// @param _tasks The tasks contract to create tasks.
     /// @param _governancePlugin The governance plugin contract to create proposals.
     function initialize(
         IDAO _dao,
         ITasks _tasks,
-        IPluginProposals _governancePlugin
+        IPluginProposals _governancePlugin,
+        uint256 _disputeCost
     ) external initializer {
         __PluginUUPSUpgradeable_init(_dao);
         tasks = _tasks;
         governancePlugin = _governancePlugin;
+        disputeCost = _disputeCost;
     }
 
     /// @inheritdoc PluginUUPSUpgradeable
@@ -29,53 +32,64 @@ contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
         bytes4 _interfaceId
     ) public view virtual override returns (bool) {
         return
-            _interfaceId == type(ITaskDrafts).interfaceId ||
+            _interfaceId == type(ITaskDisputes).interfaceId ||
             super.supportsInterface(_interfaceId);
     }
 
-    /// @inheritdoc ITaskDrafts
+    /// @inheritdoc ITaskDisputes
+    function getDisputeCost() external view returns (uint256) {
+        return disputeCost;
+    }
+
+    /// @inheritdoc ITaskDisputes
     function getTasksContract() external view returns (ITasks) {
         return tasks;
     }
 
-    /// @inheritdoc ITaskDrafts
+    /// @inheritdoc ITaskDisputes
     function getGovernanceContract() external view returns (IPluginProposals) {
         return governancePlugin;
     }
 
-    /// @inheritdoc ITaskDrafts
+    /// @inheritdoc ITaskDisputes
+    function updateDisputeCost(
+        uint256 _disputeCost
+    ) external auth(UPDATE_DISPUTE_COST_PERMISSION_ID) {
+        disputeCost = _disputeCost;
+    }
+
+    /// @inheritdoc ITaskDisputes
     function updateTasksContract(
         ITasks _tasks
     ) external auth(UPDATE_ADDRESSES_PERMISSION_ID) {
         tasks = _tasks;
     }
 
-    /// @inheritdoc ITaskDrafts
+    /// @inheritdoc ITaskDisputes
     function updateGovernanceContract(
         IPluginProposals _governancePlugin
     ) external auth(UPDATE_ADDRESSES_PERMISSION_ID) {
         governancePlugin = _governancePlugin;
     }
 
-    /// @inheritdoc ITaskDrafts
-    function createDraftTask(
+    /// @inheritdoc ITaskDisputes
+    function createDispute(
         bytes calldata _metadata,
         uint64 _startDate,
         uint64 _endDate,
-        CreateTaskInfo calldata _taskInfo
-    ) external {
-        // Could also add approve ERC20's of budget here
-        // Currently the DAO should approve select ERC20's in advance (once) for unlimited spending
+        uint256 _taskId
+    ) external payable {
+        // Dispute cost is required to make a dispute proposal. It is sent to the DAO.
+        if (msg.value < disputeCost) {
+            revert Underpaying();
+        }
+        payable(address(dao())).transfer(msg.value);
 
         IDAO.Action[] memory actions = new IDAO.Action[](1);
         {
             bytes memory callData = abi.encodeWithSelector(
-                tasks.createTask.selector,
-                _taskInfo.metadata,
-                _taskInfo.deadline,
-                _taskInfo.budget,
-                _taskInfo.manager,
-                _taskInfo.preapproved
+                tasks.completeByDispute.selector,
+                _taskId
             );
             actions[0] = IDAO.Action(address(tasks), 0, callData);
         }

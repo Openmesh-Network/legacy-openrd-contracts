@@ -57,6 +57,23 @@ export async function geTaskDraftsSettings(tasks: string, governancePlugin: stri
   return taskDraftsSettings;
 }
 
+export async function geTaskDisputesSettings(tasks: string, governancePlugin: string, disputeCost: bigint) {
+  const taskDisputeFormat = ["address tasks", "address governancePlugin", "uint256 disputeCost"];
+  const taskDisputeValues: any[] = [tasks, governancePlugin, disputeCost];
+  const taskDisputeBytes = ethers.AbiCoder.defaultAbiCoder().encode(taskDisputeFormat, taskDisputeValues);
+  const taskDisputeSettings = {
+    pluginSetupRef: {
+      versionTag: {
+        release: 1,
+        build: 1,
+      },
+      pluginSetupRepo: (await deployments.get("TaskDisputesRepo")).address,
+    },
+    data: taskDisputeBytes,
+  };
+  return taskDisputeSettings;
+}
+
 export async function getTokenVotingSettings(erc20Collection: string) {
   const tokenVotingFormat = [
     "tuple(uint8 votingMode, uint64 supportThreshold, uint64 minParticipation, uint64 minDuration, uint256 minProposerVotingPower) votingSettings",

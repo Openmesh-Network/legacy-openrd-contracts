@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { ethers, getUnnamedAccounts } from "hardhat";
-import { reviewSubmission, getTask } from "../../utils/taskHelper";
+import { ethers, getNamedAccounts, getUnnamedAccounts } from "hardhat";
+import { getTask } from "../../utils/taskHelper";
 import {
   createBudgetTaskWithExecutorAndSubmissionFixture,
   createBudgetTaskWithExecutorAndSubmissionFullRewardFixture,
@@ -10,7 +10,7 @@ import {
   createTakenTaskWithSubmissionFixture,
   createTaskFixture,
 } from "./00_TestTasksFixtures";
-import { SubmissionJudgement, TaskState } from "../../utils/taskTypes";
+import { TaskState } from "../../utils/taskTypes";
 import { asDAO } from "../Helpers/ImpersonatedDAO";
 import { Tasks } from "../../typechain-types";
 
@@ -19,9 +19,13 @@ describe("Disputes", function () {
     const task = await loadFixture(createBudgetTaskWithExecutorAndSubmissionFixture);
     const TasksDipsuteDAO = await asDAO<Tasks>(task.TasksManager, "dispute");
     await TasksDipsuteDAO.completeByDispute(task.taskId);
+    let j = 0;
     for (let i = 0; i < task.budget.length; i++) {
-      const ERC20 = await ethers.getContractAt("ERC20", task.budget[i].tokenContract);
-      expect(await ERC20.balanceOf(task.executor)).to.be.equal(task.reward[i].amount);
+      const ERC20 = await ethers.getContractAt("ERC20", task.budget[j].tokenContract);
+      expect(await ERC20.balanceOf(task.reward[i].to)).to.be.equal(task.reward[i].amount);
+      if (task.reward[i].nextToken) {
+        j++;
+      }
     }
   });
 
@@ -65,6 +69,14 @@ describe("Disputes", function () {
     expect(taskInfo.state).to.be.equal(TaskState.Closed);
   });
 
+  it("should be possible to transfer dispute management", async function () {
+    const task = await loadFixture(createTakenTaskWithSubmissionFixture);
+    const { deployer } = await getNamedAccounts();
+    const TasksDipsuteDAO = await asDAO<Tasks>(task.TasksManager, "dispute");
+    await TasksDipsuteDAO.transferDisputeManagement(deployer);
+    expect(await TasksDipsuteDAO.disputeManager()).to.be.equal(deployer);
+  });
+
   //Check for exploits
   it("should not be allowed on a task id that does not exist", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
@@ -99,5 +111,12 @@ describe("Disputes", function () {
     const tasks = task.TasksExecutor.connect(await ethers.getSigner(accounts[0]));
     const tx = tasks.completeByDispute(task.taskId);
     await expect(tx).to.be.revertedWithCustomError(tasks, "NotDisputeManager");
+  });
+
+  it("should be possible for others to transfer dispute management", async function () {
+    const task = await loadFixture(createTakenTaskWithSubmissionFixture);
+    const { deployer } = await getNamedAccounts();
+    const tx = task.TasksManager.transferDisputeManagement(deployer);
+    await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "NotDisputeManager");
   });
 });
