@@ -2,12 +2,11 @@
 pragma solidity ^0.8.0;
 
 import {ITasks, IERC20, Escrow} from "./ITasks.sol";
-import {TasksEnsure} from "./TasksEnsure.sol";
 import {TasksUtils} from "./TasksUtils.sol";
 import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 
-contract Tasks is Context, TasksEnsure, TasksUtils {
+contract Tasks is Context, TasksUtils {
     /// @notice The incremental ID for tasks.
     uint256 private taskCounter;
 
@@ -80,21 +79,24 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         Task storage task = tasks[taskId];
         task.metadata = _metadata;
         task.deadline = _deadline;
-        Escrow escrow = Escrow(Clones.clone(escrowImplementation));
+        Escrow escrow = Escrow(payable(Clones.clone(escrowImplementation)));
         escrow.__Escrow_init{value: msg.value}();
         task.escrow = escrow;
         // Gas optimization
         if (msg.value != 0) {
             task.nativeBudget = msg.value;
         }
-        task.budgetCount = uint8(_budget.length);
+        task.budgetCount = _toUint8(_budget.length);
         for (uint8 i; i < uint8(_budget.length); ) {
             _budget[i].tokenContract.transferFrom(
                 _msgSender(),
                 address(escrow),
                 _budget[i].amount
             );
-            task.budget[i] = _budget[i];
+            task.budget[i] = ERC20Transfer(
+                _budget[i].tokenContract,
+                _toUint96(_budget[i].tokenContract.balanceOf(address(escrow)))
+            );
             unchecked {
                 ++i;
             }
@@ -118,7 +120,7 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
 
         // Gas optimization
         if (_preapprove.length > 0) {
-            task.applicationCount = uint16(_preapprove.length);
+            task.applicationCount = _toUint16(_preapprove.length);
             for (uint16 i; i < uint16(_preapprove.length); ) {
                 Application storage application = task.applications[i];
                 application.applicant = _preapprove[i].applicant;
@@ -165,18 +167,26 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
         ];
         application.metadata = _metadata;
         application.applicant = _msgSender();
-        application.rewardCount = uint8(_reward.length);
-        for (uint8 i; i < uint8(_reward.length); ) {
-            application.reward[i] = _reward[i];
-            unchecked {
-                ++i;
+
+        // Gas optimization
+        if (_reward.length != 0) {
+            application.rewardCount = _toUint8(_reward.length);
+            for (uint8 i; i < uint8(_reward.length); ) {
+                application.reward[i] = _reward[i];
+                unchecked {
+                    ++i;
+                }
             }
         }
-        application.nativeRewardCount = uint8(_nativeReward.length);
-        for (uint8 i; i < uint8(_nativeReward.length); ) {
-            application.nativeReward[i] = _nativeReward[i];
-            unchecked {
-                ++i;
+
+        // Gas optimization
+        if (_nativeReward.length != 0) {
+            application.nativeRewardCount = _toUint8(_nativeReward.length);
+            for (uint8 i; i < uint8(_nativeReward.length); ) {
+                application.nativeReward[i] = _nativeReward[i];
+                unchecked {
+                    ++i;
+                }
             }
         }
 
@@ -415,12 +425,16 @@ contract Tasks is Context, TasksEnsure, TasksUtils {
                 address(task.escrow),
                 _increase[i]
             );
-            transfer.amount += _increase[i];
+
+            transfer.amount = _toUint96(
+                transfer.tokenContract.balanceOf(address(task.escrow))
+            );
 
             unchecked {
                 ++i;
             }
         }
+
         // Gas optimization
         if (msg.value != 0) {
             task.nativeBudget += msg.value;

@@ -15,6 +15,7 @@ import {
   ApplicationMetadata,
   BudgetItem,
   CancelTaskRequestMetadata,
+  NativeReward,
   PreapprovedApplication,
   RequestType,
   Reward,
@@ -27,7 +28,7 @@ import { TestSetup } from "../Helpers/TestSetup";
 import { ethers, getNamedAccounts, getUnnamedAccounts } from "hardhat";
 import { Tasks } from "../../typechain-types";
 import { DeployMockERC20 } from "../Helpers/MockERC20Helper";
-import { Ether } from "../../utils/ethersUnits";
+import { Ether, Gwei } from "../../utils/ethersUnits";
 import { ToBlockchainDate, days } from "../../utils/timeUnits";
 import { getEventsFromReceipt } from "../../utils/utils";
 import { getFromIpfs } from "../../utils/ipfsHelper";
@@ -164,6 +165,12 @@ describe("Manual complicated", function () {
       taskId: taskId,
     });
 
+    await TasksManager.partialPayment(taskId, [Gwei(25), Gwei(50), Gwei(100), Gwei(200)], []);
+    expect(await USDT.balanceOf(executor)).to.be.equal(Ether(100) + Gwei(25));
+    expect(await USDT.balanceOf(teamMember)).to.be.equal(Ether(0) + Gwei(50));
+    expect(await WETH.balanceOf(teamMember)).to.be.equal(Ether(500) + Gwei(100));
+    expect(await WETH.balanceOf(executor)).to.be.equal(Ether(0) + Gwei(200));
+
     await reviewSubmission({
       tasks: TasksManager,
       taskId: taskId,
@@ -210,6 +217,7 @@ describe("Manual complicated", function () {
         amount: Ether(1),
       },
     ];
+    const nativeBudget = Ether(500);
     const funderSigner = await ethers.getSigner(funder);
     await USDT.connect(funderSigner).approve(await TasksManager.getAddress(), Ether(200));
     await WETH.connect(funderSigner).approve(await TasksManager.getAddress(), Ether(1));
@@ -237,7 +245,16 @@ describe("Manual complicated", function () {
             amount: Ether(1),
           },
         ],
-        nativeReward: [],
+        nativeReward: [
+          {
+            to: preapprovedGuy,
+            amount: Ether(5),
+          },
+          {
+            to: manager,
+            amount: Ether(95),
+          },
+        ],
       },
     ];
 
@@ -256,6 +273,7 @@ describe("Manual complicated", function () {
       tasks: TasksManager.connect(funderSigner),
       deadline: deadline,
       budget: budget,
+      nativeBudget: nativeBudget,
       manager: manager,
       preapproved: preapproved,
       metadata: metadata,
@@ -270,6 +288,7 @@ describe("Manual complicated", function () {
       expect(taskCreationEvents[0].args.budget[i].tokenContract).to.be.equal(budget[i].tokenContract);
       expect(taskCreationEvents[0].args.budget[i].amount).to.be.equal(budget[i].amount);
     }
+    expect(taskCreationEvents[0].args.nativeBudget).to.be.equal(nativeBudget);
     expect(taskCreationEvents[0].args.creator).to.be.equal(funder);
     expect(taskCreationEvents[0].args.manager).to.be.equal(manager);
     const taskPreapprovedApplicationEvents = getEventsFromReceipt(taskCreation.receipt, TasksManager.interface, "ApplicationCreated");
@@ -281,6 +300,10 @@ describe("Manual complicated", function () {
         expect(taskPreapprovedApplicationEvents[i].args.reward[j].nextToken).to.be.equal(preapproved[i].reward[j].nextToken);
         expect(taskPreapprovedApplicationEvents[i].args.reward[j].to).to.be.equal(preapproved[i].reward[j].to);
         expect(taskPreapprovedApplicationEvents[i].args.reward[j].amount).to.be.equal(preapproved[i].reward[j].amount);
+      }
+      for (let j = 0; j < preapproved[i].nativeReward.length; j++) {
+        expect(taskPreapprovedApplicationEvents[i].args.nativeReward[j].to).to.be.equal(preapproved[i].nativeReward[j].to);
+        expect(taskPreapprovedApplicationEvents[i].args.nativeReward[j].amount).to.be.equal(preapproved[i].nativeReward[j].amount);
       }
     }
     const taskPreapprovedAcceptanceEvents = getEventsFromReceipt(taskCreation.receipt, TasksManager.interface, "ApplicationAccepted");
@@ -311,6 +334,16 @@ describe("Manual complicated", function () {
         amount: Ether(1) / BigInt(4),
       },
     ];
+    const nativeReward: NativeReward[] = [
+      {
+        to: executor,
+        amount: Ether(99),
+      },
+      {
+        to: teamMember,
+        amount: Ether(50),
+      },
+    ];
     const applicationMetadata: ApplicationMetadata = {
       title: "Application",
       description: "I am the best",
@@ -321,6 +354,7 @@ describe("Manual complicated", function () {
       tasks: TasksExecutor,
       taskId: taskId,
       reward: reward,
+      nativeReward: nativeReward,
       metadata: applicationMetadata,
     });
     const taskApplicationReceipt = await taskApplication.wait();
@@ -336,6 +370,10 @@ describe("Manual complicated", function () {
       expect(taskApplicationEvents[0].args.reward[i].nextToken).to.be.equal(reward[i].nextToken);
       expect(taskApplicationEvents[0].args.reward[i].to).to.be.equal(reward[i].to);
       expect(taskApplicationEvents[0].args.reward[i].amount).to.be.equal(reward[i].amount);
+    }
+    for (let i = 0; i < nativeReward.length; i++) {
+      expect(taskApplicationEvents[0].args.nativeReward[i].to).to.be.equal(nativeReward[i].to);
+      expect(taskApplicationEvents[0].args.nativeReward[i].amount).to.be.equal(nativeReward[i].amount);
     }
 
     const applicationAcceptance = await acceptApplications({

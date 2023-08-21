@@ -128,4 +128,25 @@ abstract contract TasksEnsure is ITasks, Context {
             revert RequestAlreadyExecuted();
         }
     }
+
+    function _toUint8(uint256 value) internal pure returns (uint8) {
+        if (value > type(uint8).max) {
+            revert Overflow();
+        }
+        return uint8(value);
+    }
+
+    function _toUint16(uint256 value) internal pure returns (uint16) {
+        if (value > type(uint16).max) {
+            revert Overflow();
+        }
+        return uint16(value);
+    }
+
+    function _toUint96(uint256 value) internal pure returns (uint96) {
+        if (value > type(uint96).max) {
+            revert Overflow();
+        }
+        return uint96(value);
+    }
 }

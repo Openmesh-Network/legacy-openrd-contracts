@@ -28,7 +28,11 @@ interface ITasks {
     error RequestAlreadyAccepted();
     error RequestNotAccepted();
     error RequestAlreadyExecuted();
+
+    error Overflow();
+    error ManualBudgetIncreaseNeeded();
     error PartialRewardAboveFullReward();
+    error NativeTransferFailed();
 
     event TaskCreated(
         uint256 indexed taskId,

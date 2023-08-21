@@ -130,6 +130,26 @@ describe("Create Task", function () {
     expect(task.state).to.be.equal(TaskState.Open);
   });
 
+  it("should have the correct preapproved", async function () {
+    await loadFixture(TestSetup);
+    const { manager, executor } = await getNamedAccounts();
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
+      preapproved: [
+        {
+          applicant: executor,
+        },
+      ],
+    };
+    const { taskId } = await createTask(createTaskSettings);
+    const task = await getTask({ tasks: TasksManager, taskId: taskId });
+    expect(task.state).to.be.equal(TaskState.Open);
+    expect(task.applications).to.be.lengthOf(1);
+    expect(task.applications[0].accepted).to.be.true;
+    expect(task.applications[0].applicant).to.be.equal(executor);
+  });
+
   //Check if variables are unset
   it("should have no applications", async function () {
     await loadFixture(TestSetup);
@@ -232,6 +252,30 @@ describe("Create Task", function () {
           reward: [
             {
               nextToken: true,
+              to: executor,
+              amount: amount + BigInt(1),
+            },
+          ],
+        },
+      ],
+    };
+    const tx = createTaskTransaction(createTaskSettings);
+    await expect(tx).to.be.revertedWithCustomError(TasksManager, "RewardAboveBudget");
+  });
+
+  it("should revert if preapproved higher than native budget", async function () {
+    await loadFixture(TestSetup);
+    const { manager, executor } = await getNamedAccounts();
+    const TasksManager = (await ethers.getContract("Tasks", manager)) as Tasks;
+    const amount = Ether(100);
+    const createTaskSettings: CreateTaskSettings = {
+      tasks: TasksManager,
+      nativeBudget: amount,
+      preapproved: [
+        {
+          applicant: executor,
+          nativeReward: [
+            {
               to: executor,
               amount: amount + BigInt(1),
             },

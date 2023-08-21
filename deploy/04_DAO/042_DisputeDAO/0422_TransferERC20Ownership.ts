@@ -3,14 +3,14 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { getBool } from "../../../utils/globalVars";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  if (!(await getBool("NewManagementDAO"))) {
+  if (!(await getBool("NewDisputeDAO"))) {
     return;
   }
 
   const { deployments, getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
 
-  const managementDAO = await deployments.get("management_dao");
+  const disputeDAO = await deployments.get("dispute_dao");
 
   await deployments.execute(
     "ERC20",
@@ -18,16 +18,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       from: deployer,
     },
     "transferOwnership",
-    managementDAO.address
-  );
-
-  await deployments.execute(
-    "NFT",
-    {
-      from: deployer,
-    },
-    "transferOwnership",
-    managementDAO.address
+    disputeDAO.address
   );
 };
 export default func;

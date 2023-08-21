@@ -190,6 +190,7 @@ describe("Accept Applications", function () {
       return { nextToken: true, to: task.executor, amount: b.amount };
     });
     reward[0].amount += increase;
+    const nativeReward = [{ to: task.executor, amount: task.nativeBudget + increase }];
     const ERC20 = (await ethers.getContractAt("MockERC20", task.budget[0].tokenContract, await ethers.getSigner(task.manager))) as any as MockERC20;
     await ERC20.increaseBalance(task.manager, increase);
     await ERC20.approve(await task.TasksManager.getAddress(), increase);
@@ -197,14 +198,35 @@ describe("Accept Applications", function () {
       tasks: task.TasksExecutor,
       taskId: task.taskId,
       reward: reward,
+      nativeReward: nativeReward,
     });
     await acceptApplications({
       tasks: task.TasksManager,
       taskId: task.taskId,
       applications: [BigInt(0)],
+      value: increase,
     });
     const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     expect(taskInfo.budget[0].amount).to.be.equal(taskInfoBefore.budget[0].amount + increase);
+    expect(taskInfo.nativeBudget).to.be.equal(taskInfoBefore.nativeBudget + increase);
     expect(await ERC20.balanceOf(task.manager)).to.be.be.equal(BigInt(0));
+  });
+
+  it("should revert with not enough native currency attached", async function () {
+    const task = await loadFixture(createBudgetTaskFixture);
+    const increase = Wei(1);
+    const nativeReward = [{ to: task.executor, amount: task.nativeBudget + increase }];
+    await applyForTask({
+      tasks: task.TasksExecutor,
+      taskId: task.taskId,
+      nativeReward: nativeReward,
+    });
+    const tx = acceptApplications({
+      tasks: task.TasksManager,
+      taskId: task.taskId,
+      applications: [BigInt(0)],
+      value: increase - Wei(1),
+    });
+    await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "IncorrectAmountOfNativeCurrencyAttached");
   });
 });

@@ -19,7 +19,7 @@ const config: HardhatUserConfig = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 1_000_000, // Higher is not allowed by Etherscan verification
+        //runs: 1_000_000, // Higher is not allowed by Etherscan verification
       },
     },
   },
@@ -56,7 +56,7 @@ const config: HardhatUserConfig = {
       "mocks/",
       "ERC20",
       "ERC721",
-      "DAO",
+      "DAO.sol", // name clash with DAO folder
       "DAOFactory",
       "ENSRegistry",
       "PluginRepoFactory",

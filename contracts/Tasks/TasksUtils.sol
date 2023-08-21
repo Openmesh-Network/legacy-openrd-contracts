@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: None
 pragma solidity ^0.8.0;
 
-import {ITasks, Escrow} from "./ITasks.sol";
-import {Context} from "@openzeppelin/contracts/utils/Context.sol";
+import {Escrow, TasksEnsure} from "./TasksEnsure.sol";
 
 /*
   Higher level functions to allow the Tasks file to be more readable.
 */
-abstract contract TasksUtils is ITasks, Context {
+abstract contract TasksUtils is TasksEnsure {
     function _toOffchainTask(
         Task storage task
     ) internal view returns (OffChainTask memory offchainTask) {
@@ -110,7 +109,17 @@ abstract contract TasksUtils is ITasks, Context {
                             address(task.escrow),
                             needed - erc20Transfer.amount
                         );
-                        task.budget[j].amount = uint96(needed);
+
+                        uint256 got = erc20Transfer.tokenContract.balanceOf(
+                            address(task.escrow)
+                        );
+
+                        if (got < needed) {
+                            // Apparently there is a tax / fee on the token transfer
+                            revert ManualBudgetIncreaseNeeded();
+                        }
+
+                        task.budget[j].amount = _toUint96(got);
                     }
 
                     needed = 0;
@@ -140,7 +149,15 @@ abstract contract TasksUtils is ITasks, Context {
                         revert IncorrectAmountOfNativeCurrencyAttached();
                     }
                 }
-                payable(address(task.escrow)).transfer(msg.value);
+
+                (bool success, ) = address(task.escrow).call{value: msg.value}(
+                    ""
+                );
+                if (!success) {
+                    revert NativeTransferFailed();
+                }
+
+                task.nativeBudget = nativeNeeded;
             }
         }
     }
@@ -153,7 +170,7 @@ abstract contract TasksUtils is ITasks, Context {
     ) internal {
         // Gas optimzation
         if (_reward.length != 0) {
-            application.rewardCount = uint8(_reward.length);
+            application.rewardCount = _toUint8(_reward.length);
 
             uint8 j;
             ERC20Transfer memory erc20Transfer = task.budget[0];
@@ -183,7 +200,7 @@ abstract contract TasksUtils is ITasks, Context {
 
         // Gas optimzation
         if (_nativeReward.length != 0) {
-            application.nativeRewardCount = uint8(_nativeReward.length);
+            application.nativeRewardCount = _toUint8(_nativeReward.length);
             uint256 nativeReserved;
             for (uint8 i; i < uint8(_nativeReward.length); ) {
                 unchecked {
@@ -344,8 +361,6 @@ abstract contract TasksUtils is ITasks, Context {
                             reward.amount -
                             _partialReward[j];
 
-                        erc20Transfer.amount -= _partialReward[j];
-
                         ++j;
                     }
 
@@ -354,7 +369,9 @@ abstract contract TasksUtils is ITasks, Context {
                     }
                 }
 
-                task.budget[i].amount = erc20Transfer.amount;
+                task.budget[i].amount = _toUint96(
+                    erc20Transfer.tokenContract.balanceOf(address(escrow))
+                );
 
                 unchecked {
                     ++i;

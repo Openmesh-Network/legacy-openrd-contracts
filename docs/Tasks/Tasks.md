@@ -753,6 +753,28 @@ error JudgementNone()
 
 
 
+### ManualBudgetIncreaseNeeded
+
+```solidity
+error ManualBudgetIncreaseNeeded()
+```
+
+
+
+
+
+
+### NativeTransferFailed
+
+```solidity
+error NativeTransferFailed()
+```
+
+
+
+
+
+
 ### NotDisabled
 
 ```solidity
@@ -812,6 +834,17 @@ error NotManager()
 
 ```solidity
 error NotYourApplication()
+```
+
+
+
+
+
+
+### Overflow
+
+```solidity
+error Overflow()
 ```
 
 

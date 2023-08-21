@@ -9,6 +9,7 @@ import {
   createTaskFixture,
 } from "./00_TestTasksFixtures";
 import { TaskState } from "../../utils/taskTypes";
+import { Wei } from "../../utils/ethersUnits";
 
 describe("Partial Payment", function () {
   it("should have transfered the partial reward from the escrow", async function () {
@@ -78,5 +79,23 @@ describe("Partial Payment", function () {
     const tasks = task.TasksExecutor.connect(await ethers.getSigner(accounts[0]));
     const tx = tasks.partialPayment(task.taskId, [], []);
     await expect(tx).to.be.revertedWithCustomError(tasks, "NotManager");
+  });
+
+  it("should revert if partial reward above budget", async function () {
+    const task = await loadFixture(createBudgetTaskWithExecutorAndSubmissionFixture);
+    let partialPayment = task.reward.map((r) => r.amount);
+    partialPayment[0] += Wei(1);
+    const nativePartialPayment = task.nativeReward.map((r) => r.amount);
+    const tx = task.TasksManager.partialPayment(task.taskId, partialPayment, nativePartialPayment);
+    await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "PartialRewardAboveFullReward");
+  });
+
+  it("should revert if partial reward above native budget", async function () {
+    const task = await loadFixture(createBudgetTaskWithExecutorAndSubmissionFixture);
+    const partialPayment = task.reward.map((r) => r.amount);
+    let nativePartialPayment = task.nativeReward.map((r) => r.amount);
+    nativePartialPayment[0] += Wei(1);
+    const tx = task.TasksManager.partialPayment(task.taskId, partialPayment, nativePartialPayment);
+    await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "PartialRewardAboveFullReward");
   });
 });

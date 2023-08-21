@@ -83,7 +83,12 @@ contract TaskDisputes is Initializable, PluginUUPSUpgradeable, ITaskDisputes {
         if (msg.value < disputeCost) {
             revert Underpaying();
         }
-        payable(address(dao())).transfer(msg.value);
+
+        // Normal address.transfer does not work with gas estimation
+        (bool succes, ) = address(dao()).call{value: msg.value}("");
+        if (!succes) {
+            revert TransferToDAOError();
+        }
 
         IDAO.Action[] memory actions = new IDAO.Action[](1);
         {

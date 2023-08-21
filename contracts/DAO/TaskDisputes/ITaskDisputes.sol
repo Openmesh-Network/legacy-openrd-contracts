@@ -14,6 +14,7 @@ bytes32 constant UPDATE_DISPUTE_COST_PERMISSION_ID = keccak256(
 
 interface ITaskDisputes {
     error Underpaying();
+    error TransferToDAOError();
 
     /// @notice The minimum amount of native currency that has to be attached to create a dispute.
     function getDisputeCost() external view returns (uint256);

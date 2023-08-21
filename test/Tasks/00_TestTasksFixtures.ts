@@ -154,11 +154,7 @@ export async function createBudgetTaskWithExecutorAndSubmissionFullRewardFixture
     reward: task.budget.map((b) => {
       return { nextToken: true, to: task.executor, amount: b.amount };
     }),
-    nativeReward: Array(5)
-      .fill(0)
-      .map((_, i) => {
-        return { to: task.executor, amount: task.nativeBudget / BigInt(2 ** (i + 1)) };
-      }),
+    nativeReward: [{ to: task.executor, amount: task.nativeBudget }],
   });
   await acceptApplications({
     tasks: task.TasksManager,

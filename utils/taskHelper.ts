@@ -142,9 +142,12 @@ export interface AcceptApplicationsSettings {
   tasks: Tasks;
   taskId: bigint;
   applications: bigint[];
+  value?: bigint;
 }
 export async function acceptApplications(settings: AcceptApplicationsSettings) {
-  return settings.tasks.acceptApplications(settings.taskId, settings.applications);
+  return settings.tasks.acceptApplications(settings.taskId, settings.applications, {
+    value: settings.value,
+  });
 }
 
 export interface TakeTaskSettings {
