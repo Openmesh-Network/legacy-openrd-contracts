@@ -204,6 +204,23 @@ Edit the metadata of a task.
 | _taskId | uint256 | Id of the task. |
 | _newMetadata | string | New metadata of the task. |
 
+### escrowImplementation
+
+```solidity
+function escrowImplementation() external view returns (address)
+```
+
+The base escrow contract that will be cloned for every task.
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | address | undefined |
+
 ### executeRequest
 
 ```solidity
@@ -444,10 +461,10 @@ event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string me
 | reward  | ITasks.Reward[] | undefined |
 | nativeReward  | ITasks.NativeReward[] | undefined |
 
-### BudgetIncreased
+### BudgetChanged
 
 ```solidity
-event BudgetIncreased(uint256 indexed taskId, uint96[] increase, uint256 nativeIncrease)
+event BudgetChanged(uint256 indexed taskId)
 ```
 
 
@@ -459,8 +476,6 @@ event BudgetIncreased(uint256 indexed taskId, uint96[] increase, uint256 nativeI
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| increase  | uint96[] | undefined |
-| nativeIncrease  | uint256 | undefined |
 
 ### CancelTaskRequested
 
@@ -480,10 +495,10 @@ event CancelTaskRequested(uint256 indexed taskId, uint8 requestId, string explan
 | requestId  | uint8 | undefined |
 | explanation  | string | undefined |
 
-### DeadlineExtended
+### DeadlineChanged
 
 ```solidity
-event DeadlineExtended(uint256 indexed taskId, uint64 extension)
+event DeadlineChanged(uint256 indexed taskId, uint64 newDeadline)
 ```
 
 
@@ -495,12 +510,12 @@ event DeadlineExtended(uint256 indexed taskId, uint64 extension)
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| extension  | uint64 | undefined |
+| newDeadline  | uint64 | undefined |
 
-### MetadataEditted
+### MetadataChanged
 
 ```solidity
-event MetadataEditted(uint256 indexed taskId, string newMetadata)
+event MetadataChanged(uint256 indexed taskId, string newMetadata)
 ```
 
 

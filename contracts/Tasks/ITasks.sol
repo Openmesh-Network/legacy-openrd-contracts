@@ -83,13 +83,9 @@ interface ITasks {
         address by
     );
 
-    event DeadlineExtended(uint256 indexed taskId, uint64 extension);
-    event BudgetIncreased(
-        uint256 indexed taskId,
-        uint96[] increase,
-        uint256 nativeIncrease
-    );
-    event MetadataEditted(uint256 indexed taskId, string newMetadata);
+    event DeadlineChanged(uint256 indexed taskId, uint64 newDeadline);
+    event BudgetChanged(uint256 indexed taskId); // Quite expensive to transfer budget into a datastructure to emit
+    event MetadataChanged(uint256 indexed taskId, string newMetadata);
     event PartialPayment(
         uint256 indexed taskId,
         uint88[] partialReward,

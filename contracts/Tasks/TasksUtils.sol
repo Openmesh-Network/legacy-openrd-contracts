@@ -90,7 +90,7 @@ abstract contract TasksUtils is TasksEnsure {
         mapping(uint8 => Reward) storage _reward,
         uint8 _nativeLength,
         mapping(uint8 => NativeReward) storage _nativeReward
-    ) internal {
+    ) internal returns (bool increasedBudget) {
         // Gas optimzation
         if (_length != 0) {
             uint8 j;
@@ -120,6 +120,7 @@ abstract contract TasksUtils is TasksEnsure {
                         }
 
                         task.budget[j].amount = _toUint96(got);
+                        increasedBudget = true;
                     }
 
                     needed = 0;
@@ -158,6 +159,7 @@ abstract contract TasksUtils is TasksEnsure {
                 }
 
                 task.nativeBudget = nativeNeeded;
+                increasedBudget = true;
             }
         }
     }

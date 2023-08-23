@@ -14,7 +14,7 @@ contract Tasks is Context, TasksUtils {
     mapping(uint256 => Task) internal tasks;
 
     /// @notice The base escrow contract that will be cloned for every task.
-    address private escrowImplementation;
+    address public immutable escrowImplementation;
 
     /// @notice This address has the power to disable the contract, in case an exploit is discovered.
     address private disabler;
@@ -218,13 +218,16 @@ contract Tasks is Context, TasksUtils {
                 _applicationIds[i]
             ];
             application.accepted = true;
-            _increaseBudgetToReward(
+            bool budgetIncreased = _increaseBudgetToReward(
                 task,
                 application.rewardCount,
                 application.reward,
                 application.nativeRewardCount,
                 application.nativeReward
             );
+            if (budgetIncreased) {
+                emit BudgetChanged(_taskId);
+            }
             emit ApplicationAccepted(_taskId, _applicationIds[i]);
 
             unchecked {
@@ -404,7 +407,7 @@ contract Tasks is Context, TasksUtils {
 
         task.deadline += _extension;
 
-        emit DeadlineExtended(_taskId, _extension);
+        emit DeadlineChanged(_taskId, task.deadline);
     }
 
     /// @inheritdoc ITasks
@@ -440,7 +443,7 @@ contract Tasks is Context, TasksUtils {
             task.nativeBudget += msg.value;
         }
 
-        emit BudgetIncreased(_taskId, _increase, msg.value);
+        emit BudgetChanged(_taskId);
     }
 
     /// @inheritdoc ITasks
@@ -455,7 +458,7 @@ contract Tasks is Context, TasksUtils {
         _ensureTaskIsOpen(task);
 
         task.metadata = _newMetadata;
-        emit MetadataEditted(_taskId, _newMetadata);
+        emit MetadataChanged(_taskId, _newMetadata);
     }
 
     /// @inheritdoc ITasks
@@ -490,6 +493,7 @@ contract Tasks is Context, TasksUtils {
         _ensureTaskIsTaken(task);
 
         _payoutTaskPartially(task, _partialReward, _partialNativeReward);
+        emit BudgetChanged(_taskId);
         emit PartialPayment(_taskId, _partialReward, _partialNativeReward);
     }
 
