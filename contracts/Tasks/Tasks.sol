@@ -5,6 +5,7 @@ import {ITasks, IERC20, Escrow} from "./ITasks.sol";
 import {TasksUtils} from "./TasksUtils.sol";
 import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Tasks is Context, TasksUtils {
     /// @notice The incremental ID for tasks.
@@ -73,6 +74,9 @@ contract Tasks is Context, TasksUtils {
         address _manager,
         PreapprovedApplication[] calldata _preapprove
     ) external payable returns (uint256 taskId) {
+        _ensureValidTimestamp(_deadline);
+        _ensureValidAddress(_manager);
+
         _ensureNotDisabled();
         taskId = taskCounter++;
 
@@ -93,6 +97,7 @@ contract Tasks is Context, TasksUtils {
                 address(escrow),
                 _budget[i].amount
             );
+            // use balanceOf in case there is a fee asoosiated with the transfer
             task.budget[i] = ERC20Transfer(
                 _budget[i].tokenContract,
                 _toUint96(_budget[i].tokenContract.balanceOf(address(escrow)))
@@ -405,6 +410,9 @@ contract Tasks is Context, TasksUtils {
 
         _ensureTaskNotClosed(task);
 
+        if (_extension == 0) {
+            revert PointlessOperation();
+        }
         task.deadline += _extension;
 
         emit DeadlineChanged(_taskId, task.deadline);
@@ -428,6 +436,7 @@ contract Tasks is Context, TasksUtils {
                 address(task.escrow),
                 _increase[i]
             );
+            // Use balanceOf as there could be a fee in transferFrom
 
             transfer.amount = _toUint96(
                 transfer.tokenContract.balanceOf(address(task.escrow))
@@ -457,6 +466,9 @@ contract Tasks is Context, TasksUtils {
 
         _ensureTaskIsOpen(task);
 
+        if (Strings.equal(task.metadata, _newMetadata)) {
+            revert PointlessOperation();
+        }
         task.metadata = _newMetadata;
         emit MetadataChanged(_taskId, _newMetadata);
     }

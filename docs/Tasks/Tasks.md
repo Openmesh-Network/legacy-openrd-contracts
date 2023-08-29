@@ -757,6 +757,28 @@ error IncorrectAmountOfNativeCurrencyAttached()
 
 
 
+### InvalidAddress
+
+```solidity
+error InvalidAddress()
+```
+
+
+
+
+
+
+### InvalidTimestamp
+
+```solidity
+error InvalidTimestamp()
+```
+
+
+
+
+
+
 ### JudgementNone
 
 ```solidity
@@ -871,6 +893,17 @@ error Overflow()
 
 ```solidity
 error PartialRewardAboveFullReward()
+```
+
+
+
+
+
+
+### PointlessOperation
+
+```solidity
+error PointlessOperation()
 ```
 
 

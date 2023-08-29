@@ -80,12 +80,20 @@ contract TaskDrafts is Initializable, PluginUUPSUpgradeable, ITaskDrafts {
             actions[0] = IDAO.Action(address(tasks), 0, callData);
         }
 
-        governancePlugin.createPluginProposal(
+        uint256 _proposalId = governancePlugin.createPluginProposal(
             _metadata,
             actions,
             0,
             _startDate,
             _endDate
+        );
+
+        emit TaskDraftCreated(
+            _proposalId,
+            _metadata,
+            _startDate,
+            _endDate,
+            _taskInfo
         );
     }
 }

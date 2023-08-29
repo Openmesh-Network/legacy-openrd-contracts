@@ -514,7 +514,7 @@ export default {
       ]
     },
     "NFT": {
-      "address": "0x31a87d676781C18F08b1ACDdfa598f2ee06be809",
+      "address": "0x285252410bC33B824Eee9559f37dd383087749a8",
       "abi": [
         {
           "inputs": [
@@ -2654,7 +2654,7 @@ export default {
       ]
     },
     "TaskDraftsImplementation": {
-      "address": "0xc185B032C39544060D57E3304bE0fFb0c235118e",
+      "address": "0x233B40AFf244E69F4c8f0b719e3A9b96612adC60",
       "abi": [
         {
           "inputs": [
@@ -2725,6 +2725,111 @@ export default {
             }
           ],
           "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "endDate",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "contract IERC20",
+                      "name": "tokenContract",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.ERC20Transfer[]",
+                  "name": "budget",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "manager",
+                  "type": "address"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "applicant",
+                      "type": "address"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "bool",
+                          "name": "nextToken",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "to",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "uint88",
+                          "name": "amount",
+                          "type": "uint88"
+                        }
+                      ],
+                      "internalType": "struct ITasks.Reward[]",
+                      "name": "reward",
+                      "type": "tuple[]"
+                    }
+                  ],
+                  "internalType": "struct ITasks.PreapprovedApplication[]",
+                  "name": "preapproved",
+                  "type": "tuple[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct ITaskDrafts.CreateTaskInfo",
+              "name": "taskInfo",
+              "type": "tuple"
+            }
+          ],
+          "name": "TaskDraftCreated",
           "type": "event"
         },
         {
@@ -3021,7 +3126,7 @@ export default {
       ]
     },
     "TaskDraftsRepo": {
-      "address": "0xb0b1630cf954Bf62dE29Bf98159875d7Bd459aAB",
+      "address": "0x0B5b8aaAfF60449ea9259159ab3e3059c498005A",
       "abi": [
         {
           "inputs": [],
@@ -3957,7 +4062,7 @@ export default {
       ]
     },
     "TaskDraftsSetup": {
-      "address": "0x4f7d3B7d3E09941fb256323fB995F577d4E872cc",
+      "address": "0x50890Bc1EC888F6BdE489c1D12cEF79e04aEb71e",
       "abi": [
         {
           "inputs": [],
@@ -4225,7 +4330,7 @@ export default {
       ]
     },
     "Tasks": {
-      "address": "0x78634FcD688e40765ff46B531133cc4BBf1c90d3",
+      "address": "0x39E5e231D0A8e4e5b7Db9682E4d7B4dd4359D8b1",
       "abi": [
         {
           "inputs": [],
@@ -5941,7 +6046,7 @@ export default {
       ]
     },
     "TokenListGovernanceImplementation": {
-      "address": "0x01b543FcFCAcffD424Bc3dD4275801850b1E4E6C",
+      "address": "0x07b6DA57A20913fcce9fbB6e18ec68BF5e3E2099",
       "abi": [
         {
           "inputs": [
@@ -7220,7 +7325,7 @@ export default {
       ]
     },
     "TokenListGovernanceRepo": {
-      "address": "0xFF59C14cf5a8a0374C6E0B3aAEeb9321dBab57F3",
+      "address": "0x35Cb0b8aB38B65b6bf79dE7799813000D7D335f4",
       "abi": [
         {
           "inputs": [],
@@ -8156,7 +8261,7 @@ export default {
       ]
     },
     "TokenListGovernanceSetup": {
-      "address": "0xE35d411B9571FCE9C3185F979BbEc3a75810eB5a",
+      "address": "0x447dD7Ce33B1E891C81d80F66d592312996f2827",
       "abi": [
         {
           "inputs": [],
@@ -8424,7 +8529,7 @@ export default {
       ]
     },
     "blockchain_dao": {
-      "address": "0x9954BFcc77d2E2120bA700f7B3136c6B4aC34550",
+      "address": "0x11dF7E88E2FE64c5f7656c1311609Cc838D544DF",
       "abi": [
         {
           "inputs": [],
@@ -9585,7 +9690,7 @@ export default {
       ]
     },
     "blockchain_taskDrafts": {
-      "address": "0xB6070f39c7d9Ffc66af8203cFC9893715e7D3759",
+      "address": "0x8c10bC4673d4f0B46cb565Bb565A5054368BC0E4",
       "abi": [
         {
           "inputs": [
@@ -9656,6 +9761,111 @@ export default {
             }
           ],
           "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "endDate",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "contract IERC20",
+                      "name": "tokenContract",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.ERC20Transfer[]",
+                  "name": "budget",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "manager",
+                  "type": "address"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "applicant",
+                      "type": "address"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "bool",
+                          "name": "nextToken",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "to",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "uint88",
+                          "name": "amount",
+                          "type": "uint88"
+                        }
+                      ],
+                      "internalType": "struct ITasks.Reward[]",
+                      "name": "reward",
+                      "type": "tuple[]"
+                    }
+                  ],
+                  "internalType": "struct ITasks.PreapprovedApplication[]",
+                  "name": "preapproved",
+                  "type": "tuple[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct ITaskDrafts.CreateTaskInfo",
+              "name": "taskInfo",
+              "type": "tuple"
+            }
+          ],
+          "name": "TaskDraftCreated",
           "type": "event"
         },
         {
@@ -9952,7 +10162,7 @@ export default {
       ]
     },
     "blockchain_tokenListGovernance": {
-      "address": "0xD173de758D5570D24A3E0433C22Ae9a2150579a4",
+      "address": "0x2cda520aAD302836b3110F20B48163f96869383B",
       "abi": [
         {
           "inputs": [
@@ -11231,7 +11441,7 @@ export default {
       ]
     },
     "cloud_dao": {
-      "address": "0x1C3A475450FA7a7bA8023d596a83Daf202b65497",
+      "address": "0x7b92f0E65cCAeF6F8e259ABcFD5C87E3f0969Ddc",
       "abi": [
         {
           "inputs": [],
@@ -12392,7 +12602,7 @@ export default {
       ]
     },
     "cloud_taskDrafts": {
-      "address": "0x0A9EcE5A442D7b9508D40474b86602af416478C8",
+      "address": "0x68Aaa9f0b989214C4a20831234A2b65F89e6846f",
       "abi": [
         {
           "inputs": [
@@ -12463,6 +12673,111 @@ export default {
             }
           ],
           "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "endDate",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "contract IERC20",
+                      "name": "tokenContract",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.ERC20Transfer[]",
+                  "name": "budget",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "manager",
+                  "type": "address"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "applicant",
+                      "type": "address"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "bool",
+                          "name": "nextToken",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "to",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "uint88",
+                          "name": "amount",
+                          "type": "uint88"
+                        }
+                      ],
+                      "internalType": "struct ITasks.Reward[]",
+                      "name": "reward",
+                      "type": "tuple[]"
+                    }
+                  ],
+                  "internalType": "struct ITasks.PreapprovedApplication[]",
+                  "name": "preapproved",
+                  "type": "tuple[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct ITaskDrafts.CreateTaskInfo",
+              "name": "taskInfo",
+              "type": "tuple"
+            }
+          ],
+          "name": "TaskDraftCreated",
           "type": "event"
         },
         {
@@ -12759,7 +13074,7 @@ export default {
       ]
     },
     "cloud_tokenListGovernance": {
-      "address": "0x054e2f5A826EE6053e5556E997C6C776eE7BAdD6",
+      "address": "0xE80bC76b61C39f9DD012541d972A39AaC9CBCFAe",
       "abi": [
         {
           "inputs": [
@@ -14038,7 +14353,7 @@ export default {
       ]
     },
     "community_dao": {
-      "address": "0xb2170F68Fde309155195D741f2B6dF69BDdb4eaf",
+      "address": "0xF8a18236172219012CF73CeB3A49a229fdcaBe18",
       "abi": [
         {
           "inputs": [],
@@ -15199,7 +15514,7 @@ export default {
       ]
     },
     "community_tokenListGovernance": {
-      "address": "0xf9D431d4Daaf66fD74Cd56a8E66aa6BDce5AD20a",
+      "address": "0x4715e04e2954e885F38802fF6654aedd9Afc48af",
       "abi": [
         {
           "inputs": [
@@ -16478,7 +16793,7 @@ export default {
       ]
     },
     "data_dao": {
-      "address": "0x424bd6E60A5C8D0Cf1278612b1dE2610911C5496",
+      "address": "0x10C93ee6962edfCE77f1ad1f04E86235e2bf96d2",
       "abi": [
         {
           "inputs": [],
@@ -17639,7 +17954,7 @@ export default {
       ]
     },
     "data_taskDrafts": {
-      "address": "0xF1FA3539b47f25a0B211F0e8a4D47F767e5398eD",
+      "address": "0x104D58217F1184548fEeC388640e9a6aD38C35c1",
       "abi": [
         {
           "inputs": [
@@ -17710,6 +18025,111 @@ export default {
             }
           ],
           "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "endDate",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "contract IERC20",
+                      "name": "tokenContract",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.ERC20Transfer[]",
+                  "name": "budget",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "manager",
+                  "type": "address"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "applicant",
+                      "type": "address"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "bool",
+                          "name": "nextToken",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "to",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "uint88",
+                          "name": "amount",
+                          "type": "uint88"
+                        }
+                      ],
+                      "internalType": "struct ITasks.Reward[]",
+                      "name": "reward",
+                      "type": "tuple[]"
+                    }
+                  ],
+                  "internalType": "struct ITasks.PreapprovedApplication[]",
+                  "name": "preapproved",
+                  "type": "tuple[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct ITaskDrafts.CreateTaskInfo",
+              "name": "taskInfo",
+              "type": "tuple"
+            }
+          ],
+          "name": "TaskDraftCreated",
           "type": "event"
         },
         {
@@ -18006,7 +18426,7 @@ export default {
       ]
     },
     "data_tokenListGovernance": {
-      "address": "0x841EeFAdd56DaCAb44E101E5F77C97741207bEb4",
+      "address": "0xdbf68eF0876A96A9A13D6D82279aAF2228E1fF9E",
       "abi": [
         {
           "inputs": [
@@ -19285,7 +19705,7 @@ export default {
       ]
     },
     "frontend_dao": {
-      "address": "0x2525462118Abb45f2649b7b63041901bca5986Aa",
+      "address": "0x8c8C9331c0550C3Dc492f6A11fC9b891F3AbFe62",
       "abi": [
         {
           "inputs": [],
@@ -20446,7 +20866,7 @@ export default {
       ]
     },
     "frontend_taskDrafts": {
-      "address": "0xec8542b1fc999CFF04C8B7735f3E6f4baa3F6072",
+      "address": "0xbD6CdE02D09f0a59e9E83f38EbA47c60Fa402921",
       "abi": [
         {
           "inputs": [
@@ -20517,6 +20937,111 @@ export default {
             }
           ],
           "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "proposalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "endDate",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "contract IERC20",
+                      "name": "tokenContract",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.ERC20Transfer[]",
+                  "name": "budget",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "manager",
+                  "type": "address"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "applicant",
+                      "type": "address"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "bool",
+                          "name": "nextToken",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "to",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "uint88",
+                          "name": "amount",
+                          "type": "uint88"
+                        }
+                      ],
+                      "internalType": "struct ITasks.Reward[]",
+                      "name": "reward",
+                      "type": "tuple[]"
+                    }
+                  ],
+                  "internalType": "struct ITasks.PreapprovedApplication[]",
+                  "name": "preapproved",
+                  "type": "tuple[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct ITaskDrafts.CreateTaskInfo",
+              "name": "taskInfo",
+              "type": "tuple"
+            }
+          ],
+          "name": "TaskDraftCreated",
           "type": "event"
         },
         {
@@ -20813,7 +21338,7 @@ export default {
       ]
     },
     "frontend_tokenListGovernance": {
-      "address": "0x6396b373C6CF40E57Fb475affa79BDfF885155A4",
+      "address": "0x8248db7F95ec6CA2818A73E7CA95de1c0CC77310",
       "abi": [
         {
           "inputs": [
@@ -22092,7 +22617,7 @@ export default {
       ]
     },
     "management_dao": {
-      "address": "0x974cA45321d0a76B41d869046618beF721A887B2",
+      "address": "0x80a44C3B513e7f7E0Bb690a00BC0618626f6A708",
       "abi": [
         {
           "inputs": [],
@@ -23253,7 +23778,7 @@ export default {
       ]
     },
     "management_tokenListGovernance": {
-      "address": "0x98446363ac1A267EE9E0869194Cc90F1d105F08c",
+      "address": "0x1bbcF619ed73de6917aB21d24b9342c9644e94c0",
       "abi": [
         {
           "inputs": [
@@ -24532,7 +25057,7 @@ export default {
       ]
     },
     "parent_dao": {
-      "address": "0x7F573D57c9C2c369d5bf22AF0B3eb4bCEaa7Ee9C",
+      "address": "0xC3f406D0ba11c0eC10DfC130A7D1cb25229274af",
       "abi": [
         {
           "inputs": [],
@@ -25693,7 +26218,7 @@ export default {
       ]
     },
     "parent_tokenListGovernance": {
-      "address": "0xFc9c539CD301707d9ff04fDb04c4723D5110B28D",
+      "address": "0x524Ec9Ab9ef495a1db103ee7dcd7711bF6Dde7c7",
       "abi": [
         {
           "inputs": [
@@ -26967,6 +27492,942 @@ export default {
             }
           ],
           "stateMutability": "view",
+          "type": "function"
+        }
+      ]
+    },
+    "token-voting-repo": {
+      "address": "0xaCa70D8c462940B839DE386BcDD4CACf745632cA",
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [],
+          "name": "AnyAddressDisallowedForWhoAndWhere",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "contract IPermissionCondition",
+              "name": "condition",
+              "type": "address"
+            }
+          ],
+          "name": "ConditionInterfacNotSupported",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "contract IPermissionCondition",
+              "name": "condition",
+              "type": "address"
+            }
+          ],
+          "name": "ConditionNotAContract",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "EmptyReleaseMetadata",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "GrantWithConditionNotSupported",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "InvalidPluginSetupInterface",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "latestRelease",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "newRelease",
+              "type": "uint8"
+            }
+          ],
+          "name": "InvalidReleaseIncrement",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "where",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "permissionId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "address",
+              "name": "currentCondition",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "newCondition",
+              "type": "address"
+            }
+          ],
+          "name": "PermissionAlreadyGrantedForDifferentCondition",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "PermissionsForAnyAddressDisallowed",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "release",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint16",
+              "name": "build",
+              "type": "uint16"
+            },
+            {
+              "internalType": "address",
+              "name": "pluginSetup",
+              "type": "address"
+            }
+          ],
+          "name": "PluginSetupAlreadyInPreviousRelease",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "ReleaseDoesNotExist",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "ReleaseZeroNotAllowed",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "where",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "permissionId",
+              "type": "bytes32"
+            }
+          ],
+          "name": "Unauthorized",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "versionHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "VersionHashDoesNotExist",
+          "type": "error"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "previousAdmin",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "newAdmin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminChanged",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "beacon",
+              "type": "address"
+            }
+          ],
+          "name": "BeaconUpgraded",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "permissionId",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "here",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "where",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "condition",
+              "type": "address"
+            }
+          ],
+          "name": "Granted",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "version",
+              "type": "uint8"
+            }
+          ],
+          "name": "Initialized",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "release",
+              "type": "uint8"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "releaseMetadata",
+              "type": "bytes"
+            }
+          ],
+          "name": "ReleaseMetadataUpdated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "permissionId",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "here",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "where",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "who",
+              "type": "address"
+            }
+          ],
+          "name": "Revoked",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "implementation",
+              "type": "address"
+            }
+          ],
+          "name": "Upgraded",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "release",
+              "type": "uint8"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint16",
+              "name": "build",
+              "type": "uint16"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "pluginSetup",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "buildMetadata",
+              "type": "bytes"
+            }
+          ],
+          "name": "VersionCreated",
+          "type": "event"
+        },
+        {
+          "inputs": [],
+          "name": "MAINTAINER_PERMISSION_ID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "ROOT_PERMISSION_ID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "UPGRADE_REPO_PERMISSION_ID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "enum PermissionLib.Operation",
+                  "name": "operation",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "address",
+                  "name": "where",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "who",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "condition",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "permissionId",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct PermissionLib.MultiTargetPermission[]",
+              "name": "_items",
+              "type": "tuple[]"
+            }
+          ],
+          "name": "applyMultiTargetPermissions",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_where",
+              "type": "address"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "enum PermissionLib.Operation",
+                  "name": "operation",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "address",
+                  "name": "who",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "permissionId",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct PermissionLib.SingleTargetPermission[]",
+              "name": "items",
+              "type": "tuple[]"
+            }
+          ],
+          "name": "applySingleTargetPermissions",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "_release",
+              "type": "uint8"
+            }
+          ],
+          "name": "buildCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "_release",
+              "type": "uint8"
+            },
+            {
+              "internalType": "address",
+              "name": "_pluginSetup",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_buildMetadata",
+              "type": "bytes"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_releaseMetadata",
+              "type": "bytes"
+            }
+          ],
+          "name": "createVersion",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_pluginSetup",
+              "type": "address"
+            }
+          ],
+          "name": "getLatestVersion",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "components": [
+                    {
+                      "internalType": "uint8",
+                      "name": "release",
+                      "type": "uint8"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "build",
+                      "type": "uint16"
+                    }
+                  ],
+                  "internalType": "struct PluginRepo.Tag",
+                  "name": "tag",
+                  "type": "tuple"
+                },
+                {
+                  "internalType": "address",
+                  "name": "pluginSetup",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "buildMetadata",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct PluginRepo.Version",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "_release",
+              "type": "uint8"
+            }
+          ],
+          "name": "getLatestVersion",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "components": [
+                    {
+                      "internalType": "uint8",
+                      "name": "release",
+                      "type": "uint8"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "build",
+                      "type": "uint16"
+                    }
+                  ],
+                  "internalType": "struct PluginRepo.Tag",
+                  "name": "tag",
+                  "type": "tuple"
+                },
+                {
+                  "internalType": "address",
+                  "name": "pluginSetup",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "buildMetadata",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct PluginRepo.Version",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "_tagHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "getVersion",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "components": [
+                    {
+                      "internalType": "uint8",
+                      "name": "release",
+                      "type": "uint8"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "build",
+                      "type": "uint16"
+                    }
+                  ],
+                  "internalType": "struct PluginRepo.Tag",
+                  "name": "tag",
+                  "type": "tuple"
+                },
+                {
+                  "internalType": "address",
+                  "name": "pluginSetup",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "buildMetadata",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct PluginRepo.Version",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint8",
+                  "name": "release",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "build",
+                  "type": "uint16"
+                }
+              ],
+              "internalType": "struct PluginRepo.Tag",
+              "name": "_tag",
+              "type": "tuple"
+            }
+          ],
+          "name": "getVersion",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "components": [
+                    {
+                      "internalType": "uint8",
+                      "name": "release",
+                      "type": "uint8"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "build",
+                      "type": "uint16"
+                    }
+                  ],
+                  "internalType": "struct PluginRepo.Tag",
+                  "name": "tag",
+                  "type": "tuple"
+                },
+                {
+                  "internalType": "address",
+                  "name": "pluginSetup",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "buildMetadata",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct PluginRepo.Version",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_where",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_who",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "_permissionId",
+              "type": "bytes32"
+            }
+          ],
+          "name": "grant",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_where",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_who",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "_permissionId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "contract IPermissionCondition",
+              "name": "_condition",
+              "type": "address"
+            }
+          ],
+          "name": "grantWithCondition",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "initialOwner",
+              "type": "address"
+            }
+          ],
+          "name": "initialize",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_where",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_who",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "_permissionId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_data",
+              "type": "bytes"
+            }
+          ],
+          "name": "isGranted",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "latestRelease",
+          "outputs": [
+            {
+              "internalType": "uint8",
+              "name": "",
+              "type": "uint8"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "protocolVersion",
+          "outputs": [
+            {
+              "internalType": "uint8[3]",
+              "name": "",
+              "type": "uint8[3]"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "proxiableUUID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_where",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_who",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "_permissionId",
+              "type": "bytes32"
+            }
+          ],
+          "name": "revoke",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes4",
+              "name": "_interfaceId",
+              "type": "bytes4"
+            }
+          ],
+          "name": "supportsInterface",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "_release",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_releaseMetadata",
+              "type": "bytes"
+            }
+          ],
+          "name": "updateReleaseMetadata",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newImplementation",
+              "type": "address"
+            }
+          ],
+          "name": "upgradeTo",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newImplementation",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "upgradeToAndCall",
+          "outputs": [],
+          "stateMutability": "payable",
           "type": "function"
         }
       ]

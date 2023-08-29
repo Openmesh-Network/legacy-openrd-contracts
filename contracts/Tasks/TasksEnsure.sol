@@ -129,6 +129,18 @@ abstract contract TasksEnsure is ITasks, Context {
         }
     }
 
+    function _ensureValidTimestamp(uint64 timestamp) internal pure {
+        if (timestamp == 0) {
+            revert InvalidTimestamp();
+        }
+    }
+
+    function _ensureValidAddress(address addr) internal pure {
+        if (addr == address(0)) {
+            revert InvalidAddress();
+        }
+    }
+
     function _toUint8(uint256 value) internal pure returns (uint8) {
         if (value > type(uint8).max) {
             revert Overflow();

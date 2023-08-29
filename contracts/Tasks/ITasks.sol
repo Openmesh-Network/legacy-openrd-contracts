@@ -5,6 +5,10 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Escrow} from "./Escrow.sol";
 
 interface ITasks {
+    error InvalidTimestamp();
+    error InvalidAddress();
+    error PointlessOperation();
+
     error TaskDoesNotExist();
     error TaskNotOpen();
     error TaskNotTaken();
