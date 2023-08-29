@@ -658,6 +658,17 @@ error ApplicationNotAccepted()
 
 
 
+### ERC1167FailedCreateClone
+
+```solidity
+error ERC1167FailedCreateClone()
+```
+
+
+
+
+
+
 ### IncorrectAmountOfNativeCurrencyAttached
 
 ```solidity

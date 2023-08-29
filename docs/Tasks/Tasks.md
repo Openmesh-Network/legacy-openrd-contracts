@@ -746,6 +746,17 @@ error Disabled()
 
 
 
+### ERC1167FailedCreateClone
+
+```solidity
+error ERC1167FailedCreateClone()
+```
+
+
+
+
+
+
 ### IncorrectAmountOfNativeCurrencyAttached
 
 ```solidity

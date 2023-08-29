@@ -3,11 +3,8 @@ pragma solidity ^0.8.0;
 
 import {ITasks, IERC20, Escrow} from "./ITasks.sol";
 import {TasksUtils} from "./TasksUtils.sol";
-import {Context} from "@openzeppelin/contracts/utils/Context.sol";
-import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-contract Tasks is Context, TasksUtils {
+contract Tasks is TasksUtils {
     /// @notice The incremental ID for tasks.
     uint256 private taskCounter;
 
@@ -83,7 +80,7 @@ contract Tasks is Context, TasksUtils {
         Task storage task = tasks[taskId];
         task.metadata = _metadata;
         task.deadline = _deadline;
-        Escrow escrow = Escrow(payable(Clones.clone(escrowImplementation)));
+        Escrow escrow = Escrow(payable(clone(escrowImplementation)));
         escrow.__Escrow_init{value: msg.value}();
         task.escrow = escrow;
         // Gas optimization
@@ -93,7 +90,7 @@ contract Tasks is Context, TasksUtils {
         task.budgetCount = _toUint8(_budget.length);
         for (uint8 i; i < uint8(_budget.length); ) {
             _budget[i].tokenContract.transferFrom(
-                _msgSender(),
+                msg.sender,
                 address(escrow),
                 _budget[i].amount
             );
@@ -108,7 +105,7 @@ contract Tasks is Context, TasksUtils {
         }
 
         task.manager = _manager;
-        task.creator = _msgSender();
+        task.creator = msg.sender;
 
         // Default values are already correct (save gas)
         // task.state = TaskState.Open;
@@ -119,7 +116,7 @@ contract Tasks is Context, TasksUtils {
             _deadline,
             _budget,
             msg.value,
-            _msgSender(),
+            msg.sender,
             _manager
         );
 
@@ -171,7 +168,7 @@ contract Tasks is Context, TasksUtils {
             task.applicationCount
         ];
         application.metadata = _metadata;
-        application.applicant = _msgSender();
+        application.applicant = msg.sender;
 
         // Gas optimization
         if (_reward.length != 0) {
@@ -399,7 +396,7 @@ contract Tasks is Context, TasksUtils {
             cancelTaskRequest.request.executed = true;
         }
 
-        emit RequestExecuted(_taskId, _requestType, _requestId, _msgSender());
+        emit RequestExecuted(_taskId, _requestType, _requestId, msg.sender);
     }
 
     /// @inheritdoc ITasks
@@ -432,7 +429,7 @@ contract Tasks is Context, TasksUtils {
         for (uint8 i; i < uint8(_increase.length); ) {
             ERC20Transfer storage transfer = task.budget[i];
             transfer.tokenContract.transferFrom(
-                _msgSender(),
+                msg.sender,
                 address(task.escrow),
                 _increase[i]
             );
@@ -466,7 +463,7 @@ contract Tasks is Context, TasksUtils {
 
         _ensureTaskIsOpen(task);
 
-        if (Strings.equal(task.metadata, _newMetadata)) {
+        if (equal(task.metadata, _newMetadata)) {
             revert PointlessOperation();
         }
         task.metadata = _newMetadata;
@@ -534,7 +531,7 @@ contract Tasks is Context, TasksUtils {
     }
 
     function _ensureSenderIsDisputeManager() internal view {
-        if (_msgSender() != disputeManager) {
+        if (msg.sender != disputeManager) {
             revert NotDisputeManager();
         }
     }
@@ -552,7 +549,7 @@ contract Tasks is Context, TasksUtils {
     }
 
     function _ensureSenderIsDisabler() internal view {
-        if (_msgSender() != disabler) {
+        if (msg.sender != disabler) {
             revert NotDisabler();
         }
     }

@@ -37,6 +37,7 @@ interface ITasks {
     error ManualBudgetIncreaseNeeded();
     error PartialRewardAboveFullReward();
     error NativeTransferFailed();
+    error ERC1167FailedCreateClone();
 
     event TaskCreated(
         uint256 indexed taskId,

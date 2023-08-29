@@ -2,12 +2,11 @@
 pragma solidity ^0.8.0;
 
 import {ITasks, Escrow} from "./ITasks.sol";
-import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 
 /*
   Functions to ensure a certain precondition is met.
 */
-abstract contract TasksEnsure is ITasks, Context {
+abstract contract TasksEnsure is ITasks {
     function _ensureTaskIsOpen(Task storage task) internal view {
         if (task.state != TaskState.Open) {
             revert TaskNotOpen();
@@ -27,7 +26,7 @@ abstract contract TasksEnsure is ITasks, Context {
     }
 
     function _ensureSenderIsManager(Task storage task) internal view {
-        if (task.manager != _msgSender()) {
+        if (task.manager != msg.sender) {
             revert NotManager();
         }
     }
@@ -35,8 +34,7 @@ abstract contract TasksEnsure is ITasks, Context {
     ///@dev Should only be called is the task is not open!
     function _ensureSenderIsExecutor(Task storage task) internal view {
         if (
-            task.applications[task.executorApplication].applicant !=
-            _msgSender()
+            task.applications[task.executorApplication].applicant != msg.sender
         ) {
             revert NotExecutor();
         }
@@ -64,7 +62,7 @@ abstract contract TasksEnsure is ITasks, Context {
     function _ensureSenderIsApplicant(
         Application storage application
     ) internal view {
-        if (application.applicant != _msgSender()) {
+        if (application.applicant != msg.sender) {
             revert NotYourApplication();
         }
     }

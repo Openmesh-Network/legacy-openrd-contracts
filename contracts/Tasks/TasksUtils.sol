@@ -105,7 +105,7 @@ abstract contract TasksUtils is TasksEnsure {
                     if (needed > erc20Transfer.amount) {
                         // Existing budget in escrow doesnt cover the needed reward
                         erc20Transfer.tokenContract.transferFrom(
-                            _msgSender(),
+                            msg.sender,
                             address(task.escrow),
                             needed - erc20Transfer.amount
                         );
@@ -406,5 +406,38 @@ abstract contract TasksUtils is TasksEnsure {
                 task.nativeBudget -= paidOut;
             }
         }
+    }
+
+    // From: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/Clones.sol
+    function clone(address implementation) internal returns (address instance) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            // Cleans the upper 96 bits of the `implementation` word, then packs the first 3 bytes
+            // of the `implementation` address with the bytecode before the address.
+            mstore(
+                0x00,
+                or(
+                    shr(0xe8, shl(0x60, implementation)),
+                    0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000
+                )
+            )
+            // Packs the remaining 17 bytes of `implementation` with the bytecode after the address.
+            mstore(
+                0x20,
+                or(shl(0x78, implementation), 0x5af43d82803e903d91602b57fd5bf3)
+            )
+            instance := create(0, 0x09, 0x37)
+        }
+        if (instance == address(0)) {
+            revert ERC1167FailedCreateClone();
+        }
+    }
+
+    // From: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Strings.sol
+    function equal(
+        string memory a,
+        string memory b
+    ) internal pure returns (bool) {
+        return keccak256(bytes(a)) == keccak256(bytes(b));
     }
 }
