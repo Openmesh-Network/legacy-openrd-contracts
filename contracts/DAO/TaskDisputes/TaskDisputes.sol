@@ -1,12 +1,11 @@
-// SPDX-License-Identifier: None
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {PluginUUPSUpgradeable, IDAO} from "@aragon/osx/core/plugin/PluginUUPSUpgradeable.sol";
 
 import {ITaskDisputes, ITasks, IPluginProposals, UPDATE_ADDRESSES_PERMISSION_ID, UPDATE_DISPUTE_COST_PERMISSION_ID} from "./ITaskDisputes.sol";
 
-contract TaskDisputes is Initializable, PluginUUPSUpgradeable, ITaskDisputes {
+contract TaskDisputes is PluginUUPSUpgradeable, ITaskDisputes {
     ITasks private tasks;
     IPluginProposals private governancePlugin;
     uint256 private disputeCost;

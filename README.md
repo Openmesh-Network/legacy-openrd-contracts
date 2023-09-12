@@ -1,6 +1,6 @@
-# DAODEVT contracts
+# OpenR&D
 
-The smart contracts and deployment of daodevt.
+The smart contracts and deployment of [OpenR&D](https://openrd.l3a.xyz/tasks).
 
 ## Setup
 

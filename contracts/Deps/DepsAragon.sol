@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: None
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import {DAOFactory, DAO} from "@aragon/osx/framework/dao/DAOFactory.sol";

@@ -117,5 +117,22 @@ export async function getTokenVotingSettings(erc20Collection: string) {
   return tokenVotingSettings;
 }
 
+export async function getSharedAddressSettings(admin: string) {
+  const taskDisputeFormat = ["address admin"];
+  const taskDisputeValues: any[] = [admin];
+  const taskDisputeBytes = ethers.AbiCoder.defaultAbiCoder().encode(taskDisputeFormat, taskDisputeValues);
+  const taskDisputeSettings = {
+    pluginSetupRef: {
+      versionTag: {
+        release: 1,
+        build: 1,
+      },
+      pluginSetupRepo: (await deployments.get("SharedAddressRepo")).address,
+    },
+    data: taskDisputeBytes,
+  };
+  return taskDisputeSettings;
+}
+
 // exports dummy function for hardhat-deploy. Otherwise we would have to move this file
 export default function () {}

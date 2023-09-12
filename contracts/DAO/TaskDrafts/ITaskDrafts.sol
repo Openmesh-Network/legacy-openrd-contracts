@@ -1,8 +1,8 @@
-// SPDX-License-Identifier: None
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import {ITasks} from "../../Tasks/ITasks.sol";
-import {IPluginProposals} from "../Governance/IPluginProposals.sol";
+import {IPluginProposals} from "../TokenListGovernance/IPluginProposals.sol";
 
 bytes32 constant UPDATE_ADDRESSES_PERMISSION_ID = keccak256(
     "UPDATE_ADDRESSES_PERMISSION"

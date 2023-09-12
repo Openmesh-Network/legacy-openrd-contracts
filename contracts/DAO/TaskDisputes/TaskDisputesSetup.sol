@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: None
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
@@ -6,7 +6,7 @@ import {DAO} from "@aragon/osx/core/dao/DAO.sol";
 import {PermissionLib} from "@aragon/osx/core/permission/PermissionLib.sol";
 import {PluginSetup, IPluginSetup} from "@aragon/osx/framework/plugin/setup/PluginSetup.sol";
 import {TaskDisputes, IPluginProposals, ITasks, UPDATE_ADDRESSES_PERMISSION_ID, UPDATE_DISPUTE_COST_PERMISSION_ID} from "./TaskDisputes.sol";
-import {PLUGIN_PROPOSAL_PERMISSION_ID} from "../Governance/IPluginProposals.sol";
+import {PLUGIN_PROPOSAL_PERMISSION_ID} from "../TokenListGovernance/IPluginProposals.sol";
 
 contract TaskDisputesSetup is PluginSetup {
     /// @notice The address of `TaskDisputes` plugin logic contract to be used in creating proxy contracts.

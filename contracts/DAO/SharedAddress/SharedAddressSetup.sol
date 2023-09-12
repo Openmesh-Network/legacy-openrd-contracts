@@ -5,16 +5,15 @@ import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
 import {DAO} from "@aragon/osx/core/dao/DAO.sol";
 import {PermissionLib} from "@aragon/osx/core/permission/PermissionLib.sol";
 import {PluginSetup, IPluginSetup} from "@aragon/osx/framework/plugin/setup/PluginSetup.sol";
-import {TaskDrafts, IPluginProposals, ITasks, UPDATE_ADDRESSES_PERMISSION_ID} from "./TaskDrafts.sol";
-import {PLUGIN_PROPOSAL_PERMISSION_ID} from "../TokenListGovernance/IPluginProposals.sol";
+import {SharedAddress} from "./SharedAddress.sol";
 
-contract TaskDraftsSetup is PluginSetup {
-    /// @notice The address of `TaskDrafts` plugin logic contract to be used in creating proxy contracts.
-    TaskDrafts private immutable taskDraftsBase;
+contract SharedAddressSetup is PluginSetup {
+    /// @notice The address of `SharedAddress` plugin logic contract to be used in creating proxy contracts.
+    SharedAddress private immutable sharedAddressBase;
 
-    /// @notice The contract constructor, that deploys the `TaskDrafts` plugin logic contract.
+    /// @notice The contract constructor, that deploys the `SharedAddress` plugin logic contract.
     constructor() {
-        taskDraftsBase = new TaskDrafts();
+        sharedAddressBase = new SharedAddress();
     }
 
     /// @inheritdoc IPluginSetup
@@ -25,43 +24,32 @@ contract TaskDraftsSetup is PluginSetup {
         external
         returns (address plugin, PreparedSetupData memory preparedSetupData)
     {
-        // Decode `_data` to extract the params needed for deploying and initializing `TaskDrafts` plugin.
-        (ITasks tasks, IPluginProposals governancePlugin) = abi.decode(
-            _data,
-            (ITasks, IPluginProposals)
-        );
+        // Decode `_data` to extract the params needed for deploying and initializing `SharedAddress` plugin.
+        address admin = abi.decode(_data, (address));
 
         // Prepare and Deploy the plugin proxy.
         plugin = createERC1967Proxy(
-            address(taskDraftsBase),
+            address(sharedAddressBase),
             abi.encodeWithSelector(
-                TaskDrafts.initialize.selector,
+                SharedAddress.initialize.selector,
                 _dao,
-                tasks,
-                governancePlugin
+                admin
             )
         );
 
         // Prepare permissions
         PermissionLib.MultiTargetPermission[]
-            memory permissions = new PermissionLib.MultiTargetPermission[](2);
+            memory permissions = new PermissionLib.MultiTargetPermission[](1);
 
         // Set permissions to be granted.
         // Grant the list of permissions of the plugin to the DAO.
+        // Grant `EXECUTE_PERMISSION` of the DAO to the plugin.
         permissions[0] = PermissionLib.MultiTargetPermission(
             PermissionLib.Operation.Grant,
-            address(governancePlugin),
-            plugin,
-            PermissionLib.NO_CONDITION,
-            PLUGIN_PROPOSAL_PERMISSION_ID
-        );
-
-        permissions[1] = PermissionLib.MultiTargetPermission(
-            PermissionLib.Operation.Grant,
-            plugin,
             _dao,
+            plugin,
             PermissionLib.NO_CONDITION,
-            UPDATE_ADDRESSES_PERMISSION_ID
+            DAO(payable(_dao)).EXECUTE_PERMISSION_ID()
         );
 
         preparedSetupData.permissions = permissions;
@@ -77,28 +65,20 @@ contract TaskDraftsSetup is PluginSetup {
         returns (PermissionLib.MultiTargetPermission[] memory permissions)
     {
         // Prepare permissions
-        permissions = new PermissionLib.MultiTargetPermission[](2);
+        permissions = new PermissionLib.MultiTargetPermission[](1);
 
         // Set permissions to be Revoked.
         permissions[0] = PermissionLib.MultiTargetPermission(
             PermissionLib.Operation.Revoke,
-            address(TaskDrafts(_payload.plugin).getGovernanceContract()),
-            _payload.plugin,
-            PermissionLib.NO_CONDITION,
-            PLUGIN_PROPOSAL_PERMISSION_ID
-        );
-
-        permissions[1] = PermissionLib.MultiTargetPermission(
-            PermissionLib.Operation.Revoke,
-            _payload.plugin,
             _dao,
+            _payload.plugin,
             PermissionLib.NO_CONDITION,
-            UPDATE_ADDRESSES_PERMISSION_ID
+            DAO(payable(_dao)).EXECUTE_PERMISSION_ID()
         );
     }
 
     /// @inheritdoc IPluginSetup
     function implementation() external view returns (address) {
-        return address(taskDraftsBase);
+        return address(sharedAddressBase);
     }
 }
