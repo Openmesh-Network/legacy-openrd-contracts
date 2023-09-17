@@ -11,7 +11,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const { deployments, getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
-  const subdomain = "management-test-" + (await getVar("ENSCounter"));
+  const subdomain = "openrd-management-beta"; //"management-test-" + (await getVar("ENSCounter"));
 
   const nftCollection = await deployments.get("NFT");
   const communityDao = await deployments.get("community_dao");

@@ -6,6 +6,7 @@ import { ethers } from "hardhat";
 import { getBool, getVar } from "../../../utils/globalVars";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+  return; // This will just be a DAO created with the Aragon App
   if (!(await getBool("NewTokenListGovernance")) && !(await getBool("NewNFT"))) {
     return;
   }

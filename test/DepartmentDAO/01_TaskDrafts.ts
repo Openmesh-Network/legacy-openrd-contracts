@@ -1,7 +1,7 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { days, now } from "../../utils/timeUnits";
 import { getDAO } from "./00_Governance";
-import { ethers, getUnnamedAccounts } from "hardhat";
+import { deployments, ethers, getUnnamedAccounts } from "hardhat";
 import { expect } from "chai";
 import { TaskMetadata } from "../../utils/taskTypes";
 import { addToIpfs } from "../../utils/ipfsHelper";
@@ -25,8 +25,7 @@ describe("Department DAO Task Drafts", function () {
 
   it("should have the right metadata on the task after the proposal passes", async function () {
     const dao = await loadFixture(getDAO);
-    const NFTs = [0, 1, 2].map(BigInt);
-    await asyncMap(NFTs, async (n) => await dao.NFT.grantToken(dao.deployer, n));
+    const NFTs = [0].map(BigInt);
     const metadata: TaskMetadata = {
       title: "Draft Task",
       description: "Draft Description",

@@ -1,7 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction, DeploymentsExtension } from "hardhat-deploy/types";
 import { ethers } from "hardhat";
-import { getBool, getVar, setBool } from "../../../utils/globalVars";
+import { getBool, setBool } from "../../../utils/globalVars";
 import { createDAO } from "../utils/DAODeployer";
 import { geTaskDraftsSettings, getTokenListGovernanceSettings } from "../utils/PluginSettings";
 
@@ -13,10 +13,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
 
-  await createDepartment(deployer, "data", [0, 2, 6, 7], deployments);
-  await createDepartment(deployer, "frontend", [0, 4], deployments);
-  await createDepartment(deployer, "blockchain", [0, 1, 2, 3], deployments);
-  await createDepartment(deployer, "cloud", [0, 1, 5], deployments);
+  await createDepartment(deployer, "data", [0], deployments);
+  await createDepartment(deployer, "frontend", [0], deployments);
+  await createDepartment(deployer, "blockchain", [0], deployments);
+  await createDepartment(deployer, "cloud", [0], deployments);
 
   await setBool("NewDepartments", true);
 };
@@ -25,7 +25,7 @@ func.tags = ["DepartmentDAO"];
 func.dependencies = ["TokenListGovernance", "TaskDrafts", "NFT", "Tasks", "ManagementDAO"];
 
 async function createDepartment(deployer: string, departmentName: string, members: number[], deployments: DeploymentsExtension) {
-  const subdomain = "department-test-" + (await getVar("ENSCounter")) + "-" + departmentName;
+  const subdomain = "openrd-" + departmentName + "-beta"; //"department-test-" + (await getVar("ENSCounter")) + "-" + departmentName;
 
   const tasks = await deployments.get("Tasks");
   const nftCollection = await deployments.get("NFT");

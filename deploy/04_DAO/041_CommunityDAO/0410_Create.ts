@@ -12,7 +12,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const { deployments, getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
-  const subdomain = "community-test-" + (await getVar("ENSCounter"));
+  const subdomain = "openrd-beta"; //"community-test-" + (await getVar("ENSCounter"));
 
   const nftCollection = await deployments.get("NFT");
   const maxSupply = 50;

@@ -1,6 +1,6 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { deployments, ethers, getNamedAccounts } from "hardhat";
-import { DAO, IDAO, MockERC721, TaskDrafts, Tasks, TokenListGovernance } from "../../typechain-types";
+import { DAO, IDAO, TaskDrafts, Tasks, TokenListGovernance, VerifiedContributor } from "../../typechain-types";
 import { TestSetup } from "../Helpers/TestSetup";
 import { expect } from "chai";
 import { days, minutes, now } from "../../utils/timeUnits";
@@ -13,7 +13,7 @@ export async function getDAO() {
   const DAO = (await ethers.getContract("blockchain_dao", deployer)) as DAO;
   const TokenListGovernance = (await ethers.getContract("blockchain_tokenListGovernance", deployer)) as TokenListGovernance;
   const TaskDrafts = (await ethers.getContract("blockchain_taskDrafts", deployer)) as TaskDrafts;
-  const NFT = (await ethers.getContract("NFT", deployer)) as MockERC721;
+  const NFT = (await ethers.getContract("NFT", deployer)) as VerifiedContributor;
   const Tasks = (await ethers.getContract("Tasks", deployer)) as Tasks;
 
   return { DAO, TokenListGovernance, TaskDrafts, NFT, deployer, Tasks };
@@ -27,6 +27,12 @@ describe("Department DAO Governance", function () {
 
   it("reverts when no NFT", async function () {
     const dao = await loadFixture(getDAO);
+    const managementDAO = await deployments.get("management_dao");
+    (await ethers.getSigners())[0].sendTransaction({
+      to: managementDAO.address,
+      value: ether,
+    });
+    await dao.NFT.connect(await ethers.getImpersonatedSigner(managementDAO.address)).burn(0);
     const metadata = ethers.toUtf8Bytes("0x");
     const actions: IDAO.ActionStruct[] = [];
     const start = now() + 30 * minutes;
@@ -36,7 +42,7 @@ describe("Department DAO Governance", function () {
 
   it("allow when NFT", async function () {
     const dao = await loadFixture(getDAO);
-    await dao.NFT.grantToken(dao.deployer, 0);
+    //await dao.NFT.grantToken(dao.deployer, 0);
     const metadata = ethers.toUtf8Bytes("0x");
     const actions: IDAO.ActionStruct[] = [];
     const start = now() + 30 * minutes;
@@ -46,7 +52,7 @@ describe("Department DAO Governance", function () {
 
   it("reverts when wrong NFT", async function () {
     const dao = await loadFixture(getDAO);
-    await dao.NFT.grantToken(dao.deployer, 0);
+    //await dao.NFT.grantToken(dao.deployer, 0);
     const metadata = ethers.toUtf8Bytes("0x");
     const actions: IDAO.ActionStruct[] = [];
     const start = now() + 30 * minutes;
@@ -56,7 +62,13 @@ describe("Department DAO Governance", function () {
 
   it("reverts when not accepted NFT", async function () {
     const dao = await loadFixture(getDAO);
-    await dao.NFT.grantToken(dao.deployer, 5);
+    const managementDAO = await deployments.get("management_dao");
+    (await ethers.getSigners())[0].sendTransaction({
+      to: managementDAO.address,
+      value: ether,
+    });
+    await dao.NFT.connect(await ethers.getImpersonatedSigner(managementDAO.address)).mint(dao.deployer, 5);
+    //await dao.NFT.grantToken(dao.deployer, 5);
     const metadata = ethers.toUtf8Bytes("0x");
     const actions: IDAO.ActionStruct[] = [];
     const start = now() + 30 * minutes;
@@ -66,7 +78,7 @@ describe("Department DAO Governance", function () {
 
   it("allow when NFT accepted", async function () {
     const dao = await loadFixture(getDAO);
-    await dao.NFT.grantToken(dao.deployer, 5);
+    //await dao.NFT.grantToken(dao.deployer, 5);
 
     // Move this to a helper function (get DAO signer? execute as DAO?)
     const managementDAO = await deployments.get("management_dao");
@@ -74,6 +86,7 @@ describe("Department DAO Governance", function () {
       to: managementDAO.address,
       value: ether,
     });
+    await dao.NFT.connect(await ethers.getImpersonatedSigner(managementDAO.address)).mint(dao.deployer, 5);
     await dao.TokenListGovernance.connect(await ethers.getImpersonatedSigner(managementDAO.address)).addMembers([5]);
 
     const metadata = ethers.toUtf8Bytes("0x");

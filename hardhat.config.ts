@@ -27,7 +27,17 @@ const config: HardhatUserConfig = {
     mumbai: {
       accounts: [process.env.PRIV_KEY ?? fakePrivKey],
       url: "https://rpc.ankr.com/polygon_mumbai",
-      deploy: ["00_Tasks", "02_Plugins", "03_NFT", "04_DAO"].map((d) => `deploy/${d}`),
+      deploy: ["00_Tasks", "02_Plugins", "03_NFT", "04_DAO", "05_Finalize"].map((d) => `deploy/${d}`),
+      verify: {
+        etherscan: {
+          apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",
+        },
+      },
+    },
+    polygon: {
+      accounts: [process.env.PRIV_KEY ?? fakePrivKey],
+      url: "https://rpc.ankr.com/polygon",
+      deploy: ["00_Tasks", "02_Plugins", "03_NFT", "04_DAO", "05_Finalize"].map((d) => `deploy/${d}`),
       verify: {
         etherscan: {
           apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",
