@@ -506,6 +506,18 @@ contract Tasks is TasksUtils {
         emit PartialPayment(_taskId, _partialReward, _partialNativeReward);
     }
 
+    /// @inheritdoc ITasks
+    function transferManagement(uint256 _taskId, address _newManager) external {
+        _ensureNotDisabled();
+        Task storage task = _getTask(_taskId);
+        _ensureSenderIsManager(task);
+
+        _ensureTaskNotClosed(task);
+
+        task.manager = _newManager;
+        emit NewManager(_taskId, _newManager);
+    }
+
     function disable() external {
         _ensureSenderIsDisabler();
         disabler = address(0);

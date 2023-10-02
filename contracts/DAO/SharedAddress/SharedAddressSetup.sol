@@ -5,7 +5,7 @@ import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
 import {DAO} from "@aragon/osx/core/dao/DAO.sol";
 import {PermissionLib} from "@aragon/osx/core/permission/PermissionLib.sol";
 import {PluginSetup, IPluginSetup} from "@aragon/osx/framework/plugin/setup/PluginSetup.sol";
-import {SharedAddress} from "./SharedAddress.sol";
+import {SharedAddress, IHats, GRANT_ACCESS_PERMISSION_ID, REVOKE_ACCESS_PERMISSION_ID} from "./SharedAddress.sol";
 
 contract SharedAddressSetup is PluginSetup {
     /// @notice The address of `SharedAddress` plugin logic contract to be used in creating proxy contracts.
@@ -25,7 +25,7 @@ contract SharedAddressSetup is PluginSetup {
         returns (address plugin, PreparedSetupData memory preparedSetupData)
     {
         // Decode `_data` to extract the params needed for deploying and initializing `SharedAddress` plugin.
-        address admin = abi.decode(_data, (address));
+        IHats hats = abi.decode(_data, (IHats));
 
         // Prepare and Deploy the plugin proxy.
         plugin = createERC1967Proxy(
@@ -33,18 +33,34 @@ contract SharedAddressSetup is PluginSetup {
             abi.encodeWithSelector(
                 SharedAddress.initialize.selector,
                 _dao,
-                admin
+                hats
             )
         );
 
         // Prepare permissions
         PermissionLib.MultiTargetPermission[]
-            memory permissions = new PermissionLib.MultiTargetPermission[](1);
+            memory permissions = new PermissionLib.MultiTargetPermission[](3);
 
         // Set permissions to be granted.
         // Grant the list of permissions of the plugin to the DAO.
-        // Grant `EXECUTE_PERMISSION` of the DAO to the plugin.
         permissions[0] = PermissionLib.MultiTargetPermission(
+            PermissionLib.Operation.Grant,
+            plugin,
+            _dao,
+            PermissionLib.NO_CONDITION,
+            GRANT_ACCESS_PERMISSION_ID
+        );
+
+        permissions[1] = PermissionLib.MultiTargetPermission(
+            PermissionLib.Operation.Grant,
+            plugin,
+            _dao,
+            PermissionLib.NO_CONDITION,
+            REVOKE_ACCESS_PERMISSION_ID
+        );
+
+        // Grant `EXECUTE_PERMISSION` of the DAO to the plugin.
+        permissions[2] = PermissionLib.MultiTargetPermission(
             PermissionLib.Operation.Grant,
             _dao,
             plugin,
@@ -69,6 +85,22 @@ contract SharedAddressSetup is PluginSetup {
 
         // Set permissions to be Revoked.
         permissions[0] = PermissionLib.MultiTargetPermission(
+            PermissionLib.Operation.Revoke,
+            _payload.plugin,
+            _dao,
+            PermissionLib.NO_CONDITION,
+            GRANT_ACCESS_PERMISSION_ID
+        );
+
+        permissions[1] = PermissionLib.MultiTargetPermission(
+            PermissionLib.Operation.Revoke,
+            _payload.plugin,
+            _dao,
+            PermissionLib.NO_CONDITION,
+            REVOKE_ACCESS_PERMISSION_ID
+        );
+
+        permissions[2] = PermissionLib.MultiTargetPermission(
             PermissionLib.Operation.Revoke,
             _dao,
             _payload.plugin,

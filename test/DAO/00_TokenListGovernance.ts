@@ -4,7 +4,7 @@ import { DAO, IDAO, OwnableERC721Enumerable, TaskDrafts, Tasks, TokenListGoverna
 import { TestSetup } from "../Helpers/TestSetup";
 import { expect } from "chai";
 import { days, minutes, now } from "../../utils/timeUnits";
-import { asDAO } from "../Helpers/ImpersonatedDAO";
+import { asDepartment } from "../Helpers/ImpersonatedDAO";
 
 export async function getDAO() {
   await loadFixture(TestSetup);
@@ -14,7 +14,7 @@ export async function getDAO() {
   const DAO = (await ethers.getContract(department + "_dao", deployer)) as DAO;
   const TokenListGovernance = (await ethers.getContract(department + "_tokenListGovernance", deployer)) as TokenListGovernance;
   const TaskDrafts = (await ethers.getContract(department + "_taskDrafts", deployer)) as TaskDrafts;
-  const NFT = await asDAO<OwnableERC721Enumerable>(await ethers.getContract("NFT", deployer), "management");
+  const NFT = await asDepartment<OwnableERC721Enumerable>(await ethers.getContract("NFT", deployer), "management");
   const Tasks = (await ethers.getContract("Tasks", deployer)) as Tasks;
 
   return { DAO, TokenListGovernance, TaskDrafts, NFT, deployer, Tasks, department };
@@ -68,7 +68,7 @@ describe("Department DAO Governance", function () {
   it("allow when NFT accepted", async function () {
     const dao = await loadFixture(getDAO);
     await dao.NFT.mint(dao.deployer, 5);
-    const TokenListGovernanceManagement = await asDAO<TokenListGovernance>(dao.TokenListGovernance, "management");
+    const TokenListGovernanceManagement = await asDepartment<TokenListGovernance>(dao.TokenListGovernance, "management");
     await TokenListGovernanceManagement.addMembers([5]);
     const metadata = ethers.toUtf8Bytes("0x");
     const actions: IDAO.ActionStruct[] = [];

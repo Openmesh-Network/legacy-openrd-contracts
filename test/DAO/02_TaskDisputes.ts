@@ -5,7 +5,7 @@ import { expect } from "chai";
 import { TaskState } from "../../utils/taskTypes";
 import { getTask } from "../../utils/taskHelper";
 import { asyncMap, getInferfaceId } from "../../utils/utils";
-import { asDAO } from "../Helpers/ImpersonatedDAO";
+import { asDepartment } from "../Helpers/ImpersonatedDAO";
 import { DAO, OwnableERC721Enumerable, TaskDisputes, TokenListGovernance } from "../../typechain-types";
 import { createTakenTaskFixture } from "../Tasks/00_TestTasksFixtures";
 import { Gwei, Wei } from "../../utils/ethersUnits";
@@ -17,7 +17,7 @@ async function getDAO() {
   const DAO = (await ethers.getContract("dispute_dao", deployer)) as DAO;
   const TokenListGovernance = (await ethers.getContract("dispute_tokenListGovernance", deployer)) as TokenListGovernance;
   const TaskDisputes = (await ethers.getContract("dispute_taskDisputes", deployer)) as TaskDisputes;
-  const NFT = await asDAO<OwnableERC721Enumerable>(await ethers.getContract("NFT", deployer), "management");
+  const NFT = await asDepartment<OwnableERC721Enumerable>(await ethers.getContract("NFT", deployer), "management");
 
   return { task, DAO, TokenListGovernance, TaskDisputes, NFT, deployer };
 }
@@ -62,7 +62,7 @@ describe("Dispute DAO Task Disputes", function () {
     const newTasks = ethers.Wallet.createRandom().address;
     const newCost = Gwei(2700);
 
-    const TasksDAO = await asDAO<TaskDisputes>(dao.TaskDisputes, "dispute");
+    const TasksDAO = await asDepartment<TaskDisputes>(dao.TaskDisputes, "dispute");
     await TasksDAO.updateGovernanceContract(newGovernance);
     await TasksDAO.updateTasksContract(newTasks);
     await TasksDAO.updateDisputeCost(newCost);
@@ -87,6 +87,15 @@ describe("Dispute DAO Task Disputes", function () {
     await expect(tx3).to.be.reverted;
   });
 
+  it("should not allow creation of dispute proposals without paying", async function () {
+    const dao = await loadFixture(getDAO);
+    const accounts = await getUnnamedAccounts();
+    const tx = dao.TaskDisputes.connect(await ethers.getSigner(accounts[0])).createDispute("0x", 0, now() + 1 * days, dao.task.taskId, {
+      value: (await dao.TaskDisputes.getDisputeCost()) - Wei(1),
+    });
+    await expect(tx).to.be.revertedWithCustomError(dao.TaskDisputes, "Underpaying");
+  });
+
   it("should not allow second init", async function () {
     const dao = await loadFixture(getDAO);
     const tx = dao.TaskDisputes.initialize(dao.DAO, await dao.task.TasksManager.getAddress(), await dao.TokenListGovernance.getAddress(), 0);
@@ -102,14 +111,5 @@ describe("Dispute DAO Task Disputes", function () {
     expect(await dao.TaskDisputes.supportsInterface(getInferfaceId(IPlugin.interface))).to.be.true;
     const IERC165 = await ethers.getContractAt("IERC165", ethers.ZeroAddress);
     expect(await dao.TaskDisputes.supportsInterface(getInferfaceId(IERC165.interface))).to.be.true;
-  });
-
-  it("should not allow creation of dispute proposals without paying", async function () {
-    const dao = await loadFixture(getDAO);
-    const accounts = await getUnnamedAccounts();
-    const tx = dao.TaskDisputes.connect(await ethers.getSigner(accounts[0])).createDispute("0x", 0, now() + 1 * days, dao.task.taskId, {
-      value: (await dao.TaskDisputes.getDisputeCost()) - Wei(1),
-    });
-    await expect(tx).to.be.revertedWithCustomError(dao.TaskDisputes, "Underpaying");
   });
 });

@@ -32,13 +32,6 @@ contract OwnableERC20Votes is ERC20Votes, ERC165, Ownable {
         _mint(to, amount);
     }
 
-    /// @notice Burns tokens from an address.
-    /// @param from The address losing the tokens.
-    /// @param amount The amount of tokens to be burned.
-    function burn(address from, uint256 amount) external virtual onlyOwner {
-        _burn(from, amount);
-    }
-
     // https://forum.openzeppelin.com/t/self-delegation-in-erc20votes/17501/12?u=novaknole
     /// @inheritdoc ERC20Votes
     function _afterTokenTransfer(

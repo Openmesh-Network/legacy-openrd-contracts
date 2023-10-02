@@ -11,13 +11,13 @@ import {
   createTaskFixture,
 } from "./00_TestTasksFixtures";
 import { TaskState } from "../../utils/taskTypes";
-import { asDAO } from "../Helpers/ImpersonatedDAO";
+import { asDepartment } from "../Helpers/ImpersonatedDAO";
 import { Tasks } from "../../typechain-types";
 
 describe("Disputes", function () {
   it("should have transfered the reward after accept", async function () {
     const task = await loadFixture(createBudgetTaskWithExecutorAndSubmissionFixture);
-    const TasksDipsuteDAO = await asDAO<Tasks>(task.TasksManager, "dispute");
+    const TasksDipsuteDAO = await asDepartment<Tasks>(task.TasksManager, "dispute");
     await TasksDipsuteDAO.completeByDispute(task.taskId);
     let j = 0;
     for (let i = 0; i < task.budget.length; i++) {
@@ -31,7 +31,7 @@ describe("Disputes", function () {
 
   it("should have refunded left over budget after accept", async function () {
     const task = await loadFixture(createBudgetTaskWithExecutorAndSubmissionFixture);
-    const TasksDipsuteDAO = await asDAO<Tasks>(task.TasksManager, "dispute");
+    const TasksDipsuteDAO = await asDepartment<Tasks>(task.TasksManager, "dispute");
     await TasksDipsuteDAO.completeByDispute(task.taskId);
     for (let i = 0; i < task.budget.length; i++) {
       const ERC20 = await ethers.getContractAt("ERC20", task.budget[i].tokenContract);
@@ -41,7 +41,7 @@ describe("Disputes", function () {
 
   it("should have refunded left over budget after accept, when not all tokens are used as reward", async function () {
     const task = await loadFixture(createBudgetTaskWithExecutorAndSubmissionIncompleteRewardFixture);
-    const TasksDipsuteDAO = await asDAO<Tasks>(task.TasksManager, "dispute");
+    const TasksDipsuteDAO = await asDepartment<Tasks>(task.TasksManager, "dispute");
     await TasksDipsuteDAO.completeByDispute(task.taskId);
     for (let i = 0; i < task.budget.length; i++) {
       const ERC20 = await ethers.getContractAt("ERC20", task.budget[i].tokenContract);
@@ -52,7 +52,7 @@ describe("Disputes", function () {
 
   it("should not refund anything if reward equals budget after accept", async function () {
     const task = await loadFixture(createBudgetTaskWithExecutorAndSubmissionFullRewardFixture);
-    const TasksDipsuteDAO = await asDAO<Tasks>(task.TasksManager, "dispute");
+    const TasksDipsuteDAO = await asDepartment<Tasks>(task.TasksManager, "dispute");
     await TasksDipsuteDAO.completeByDispute(task.taskId);
     for (let i = 0; i < task.budget.length; i++) {
       const ERC20 = await ethers.getContractAt("ERC20", task.budget[i].tokenContract);
@@ -63,7 +63,7 @@ describe("Disputes", function () {
 
   it("should be in closed state after", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
-    const TasksDipsuteDAO = await asDAO<Tasks>(task.TasksManager, "dispute");
+    const TasksDipsuteDAO = await asDepartment<Tasks>(task.TasksManager, "dispute");
     await TasksDipsuteDAO.completeByDispute(task.taskId);
     const taskInfo = await getTask({ tasks: TasksDipsuteDAO, taskId: task.taskId });
     expect(taskInfo.state).to.be.equal(TaskState.Closed);
@@ -72,7 +72,7 @@ describe("Disputes", function () {
   it("should be possible to transfer dispute management", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
     const { deployer } = await getNamedAccounts();
-    const TasksDipsuteDAO = await asDAO<Tasks>(task.TasksManager, "dispute");
+    const TasksDipsuteDAO = await asDepartment<Tasks>(task.TasksManager, "dispute");
     await TasksDipsuteDAO.transferDisputeManagement(deployer);
     expect(await TasksDipsuteDAO.disputeManager()).to.be.equal(deployer);
   });
@@ -80,21 +80,21 @@ describe("Disputes", function () {
   //Check for exploits
   it("should not be allowed on a task id that does not exist", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
-    const TasksDipsuteDAO = await asDAO<Tasks>(task.TasksManager, "dispute");
+    const TasksDipsuteDAO = await asDepartment<Tasks>(task.TasksManager, "dispute");
     const tx = TasksDipsuteDAO.completeByDispute(task.taskId + BigInt(1));
     await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "TaskDoesNotExist");
   });
 
   it("should not be allowed on an open task", async function () {
     const task = await loadFixture(createTaskFixture);
-    const TasksDipsuteDAO = await asDAO<Tasks>(task.TasksManager, "dispute");
+    const TasksDipsuteDAO = await asDepartment<Tasks>(task.TasksManager, "dispute");
     const tx = TasksDipsuteDAO.completeByDispute(task.taskId);
     await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "TaskNotTaken");
   });
 
   it("should not be allowed on a closed task", async function () {
     const task = await loadFixture(createTakenTaskWithAcceptedSubmissionFixture);
-    const TasksDipsuteDAO = await asDAO<Tasks>(task.TasksManager, "dispute");
+    const TasksDipsuteDAO = await asDepartment<Tasks>(task.TasksManager, "dispute");
     const tx = TasksDipsuteDAO.completeByDispute(task.taskId);
     await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "TaskNotTaken");
   });

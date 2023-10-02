@@ -420,6 +420,23 @@ Allows the dispute manager to appoint a new dispute manager.
 |---|---|---|
 | _newManager | address | The new dispute manager. |
 
+### transferManagement
+
+```solidity
+function transferManagement(uint256 _taskId, address _newManager) external nonpayable
+```
+
+Transfers the manager role to a different address.
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _taskId | uint256 | Id of the task. |
+| _newManager | address | What address should become the manager. |
+
 
 
 ## Events
@@ -544,6 +561,23 @@ event NewDisputeManager(address disputeManager)
 | Name | Type | Description |
 |---|---|---|
 | disputeManager  | address | undefined |
+
+### NewManager
+
+```solidity
+event NewManager(uint256 indexed taskId, address manager)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| taskId `indexed` | uint256 | undefined |
+| manager  | address | undefined |
 
 ### PartialPayment
 

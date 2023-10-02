@@ -1,3 +1,4 @@
 module.exports = {
-  skipFiles: ["mocks/", "Deps/", "DAO/Governance/", "DAO/TokenMajorityVoting", "DAO/TokenMembership", "Token/"],
+  configureYulOptimizer: true,
+  skipFiles: ["mocks/", "Deps/", "DAO/TokenListGovernance", "DAO/TokenMajorityVoting", "DAO/TokenMembership", "Token/"],
 };

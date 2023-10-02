@@ -8,13 +8,13 @@ interface Log {
   data: string;
 }
 
-export function getEventsFromReceipt(receipt: TransactionReceipt, iface: Interface, eventName: string): LogDescription[] {
-  return getEventsFromLogs(
-    receipt.logs.map((l) => l),
-    iface,
-    eventName
-  );
-}
+// export function getEventsFromReceipt(receipt: TransactionReceipt, iface: Interface, eventName: string): LogDescription[] {
+//   return getEventsFromLogs(
+//     receipt.logs.map((l) => l),
+//     iface,
+//     eventName
+//   );
+// }
 
 export function getEventsFromLogs(logs: Log[] | undefined, iface: Interface, eventName: string): LogDescription[] {
   if (!logs) {

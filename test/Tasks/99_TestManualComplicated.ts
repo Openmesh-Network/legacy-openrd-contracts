@@ -30,8 +30,8 @@ import { Tasks } from "../../typechain-types";
 import { DeployMockERC20 } from "../Helpers/MockERC20Helper";
 import { Ether, Gwei } from "../../utils/ethersUnits";
 import { ToBlockchainDate, days } from "../../utils/timeUnits";
-import { getEventsFromReceipt } from "../../utils/utils";
 import { getFromIpfs } from "../../utils/ipfsHelper";
+import { getEventsFromLogs } from "../../utils/utils";
 
 describe("Manual complicated", function () {
   it("Budget", async function () {
@@ -279,7 +279,7 @@ describe("Manual complicated", function () {
       metadata: metadata,
     });
     const taskId = taskCreation.taskId;
-    const taskCreationEvents = getEventsFromReceipt(taskCreation.receipt, TasksManager.interface, "TaskCreated");
+    const taskCreationEvents = getEventsFromLogs(taskCreation.receipt?.logs, TasksManager.interface, "TaskCreated");
     expect(taskCreationEvents).to.be.lengthOf(1);
     expect(taskCreationEvents[0].args.taskId).to.be.equal(taskId);
     expect(await getFromIpfs(taskCreationEvents[0].args.metadata)).to.be.deep.equal(metadata);
@@ -291,7 +291,7 @@ describe("Manual complicated", function () {
     expect(taskCreationEvents[0].args.nativeBudget).to.be.equal(nativeBudget);
     expect(taskCreationEvents[0].args.creator).to.be.equal(funder);
     expect(taskCreationEvents[0].args.manager).to.be.equal(manager);
-    const taskPreapprovedApplicationEvents = getEventsFromReceipt(taskCreation.receipt, TasksManager.interface, "ApplicationCreated");
+    const taskPreapprovedApplicationEvents = getEventsFromLogs(taskCreation.receipt?.logs, TasksManager.interface, "ApplicationCreated");
     for (let i = 0; i < preapproved.length; i++) {
       expect(taskPreapprovedApplicationEvents[i].args.taskId).to.be.equal(taskId);
       expect(taskPreapprovedApplicationEvents[i].args.applicationId).to.be.equal(BigInt(i));
@@ -306,7 +306,7 @@ describe("Manual complicated", function () {
         expect(taskPreapprovedApplicationEvents[i].args.nativeReward[j].amount).to.be.equal(preapproved[i].nativeReward[j].amount);
       }
     }
-    const taskPreapprovedAcceptanceEvents = getEventsFromReceipt(taskCreation.receipt, TasksManager.interface, "ApplicationAccepted");
+    const taskPreapprovedAcceptanceEvents = getEventsFromLogs(taskCreation.receipt?.logs, TasksManager.interface, "ApplicationAccepted");
     for (let i = 0; i < preapproved.length; i++) {
       expect(taskPreapprovedAcceptanceEvents[i].args.taskId).to.be.equal(taskId);
       expect(taskPreapprovedAcceptanceEvents[i].args.applicationId).to.be.equal(BigInt(i));
@@ -358,10 +358,7 @@ describe("Manual complicated", function () {
       metadata: applicationMetadata,
     });
     const taskApplicationReceipt = await taskApplication.wait();
-    if (!taskApplicationReceipt) {
-      throw new Error();
-    }
-    const taskApplicationEvents = getEventsFromReceipt(taskApplicationReceipt, TasksManager.interface, "ApplicationCreated");
+    const taskApplicationEvents = getEventsFromLogs(taskApplicationReceipt?.logs, TasksManager.interface, "ApplicationCreated");
     expect(taskApplicationEvents).to.be.lengthOf(1);
     expect(taskApplicationEvents[0].args.taskId).to.be.equal(taskId);
     expect(taskApplicationEvents[0].args.applicationId).to.be.equal(BigInt(1));
@@ -382,10 +379,7 @@ describe("Manual complicated", function () {
       applications: [0, 1].map(BigInt),
     });
     const applicationAcceptanceReceipt = await applicationAcceptance.wait();
-    if (!applicationAcceptanceReceipt) {
-      throw new Error();
-    }
-    const applicationAcceptanceEvents = getEventsFromReceipt(applicationAcceptanceReceipt, TasksManager.interface, "ApplicationAccepted");
+    const applicationAcceptanceEvents = getEventsFromLogs(applicationAcceptanceReceipt?.logs, TasksManager.interface, "ApplicationAccepted");
     expect(applicationAcceptanceEvents).to.be.lengthOf(2);
     expect(applicationAcceptanceEvents[0].args.taskId).to.be.equal(taskId);
     expect(applicationAcceptanceEvents[0].args.applicationId).to.be.equal(BigInt(0));
@@ -398,10 +392,7 @@ describe("Manual complicated", function () {
       application: BigInt(1),
     });
     const taskTakeReceipt = await taskTake.wait();
-    if (!taskTakeReceipt) {
-      throw new Error();
-    }
-    const taskTakeEvents = getEventsFromReceipt(taskTakeReceipt, TasksManager.interface, "TaskTaken");
+    const taskTakeEvents = getEventsFromLogs(taskTakeReceipt?.logs, TasksManager.interface, "TaskTaken");
     expect(taskTakeEvents).to.be.lengthOf(1);
     expect(taskTakeEvents[0].args.taskId).to.be.equal(taskId);
     expect(taskTakeEvents[0].args.applicationId).to.be.equal(BigInt(1));
@@ -417,10 +408,7 @@ describe("Manual complicated", function () {
       metadata: submission,
     });
     const taskSubmisissionReceipt = await taskSubmisission.wait();
-    if (!taskSubmisissionReceipt) {
-      throw new Error();
-    }
-    const taskSubmisissionEvents = getEventsFromReceipt(taskSubmisissionReceipt, TasksManager.interface, "SubmissionCreated");
+    const taskSubmisissionEvents = getEventsFromLogs(taskSubmisissionReceipt?.logs, TasksManager.interface, "SubmissionCreated");
     expect(taskSubmisissionEvents).to.be.lengthOf(1);
     expect(taskSubmisissionEvents[0].args.taskId).to.be.equal(taskId);
     expect(taskSubmisissionEvents[0].args.submissionId).to.be.equal(BigInt(0));
@@ -437,10 +425,7 @@ describe("Manual complicated", function () {
       judgementMetadata: judgementMetadata,
     });
     const submissionReviewReceipt = await submissionReview.wait();
-    if (!submissionReviewReceipt) {
-      throw new Error();
-    }
-    const submissionReviewEvents = getEventsFromReceipt(submissionReviewReceipt, TasksManager.interface, "SubmissionReviewed");
+    const submissionReviewEvents = getEventsFromLogs(submissionReviewReceipt?.logs, TasksManager.interface, "SubmissionReviewed");
     expect(submissionReviewEvents).to.be.lengthOf(1);
     expect(submissionReviewEvents[0].args.taskId).to.be.equal(taskId);
     expect(submissionReviewEvents[0].args.submissionId).to.be.equal(BigInt(0));
@@ -456,10 +441,7 @@ describe("Manual complicated", function () {
       explanation: cancelReason,
     });
     const taskCancelReceipt = await taskCancel.wait();
-    if (!taskCancelReceipt) {
-      throw new Error();
-    }
-    const taskCancelEvents = getEventsFromReceipt(taskCancelReceipt, TasksManager.interface, "CancelTaskRequested");
+    const taskCancelEvents = getEventsFromLogs(taskCancelReceipt?.logs, TasksManager.interface, "CancelTaskRequested");
     expect(taskCancelEvents).to.be.lengthOf(1);
     expect(taskCancelEvents[0].args.taskId).to.be.equal(taskId);
     expect(taskCancelEvents[0].args.requestId).to.be.equal(BigInt(0));
@@ -473,10 +455,7 @@ describe("Manual complicated", function () {
       execute: false,
     });
     const requestAcceptReceipt = await requestAccept.wait();
-    if (!requestAcceptReceipt) {
-      throw new Error();
-    }
-    const requestAcceptEvents = getEventsFromReceipt(requestAcceptReceipt, TasksManager.interface, "RequestAccepted");
+    const requestAcceptEvents = getEventsFromLogs(requestAcceptReceipt?.logs, TasksManager.interface, "RequestAccepted");
     expect(requestAcceptEvents).to.be.lengthOf(1);
     expect(requestAcceptEvents[0].args.taskId).to.be.equal(taskId);
     expect(requestAcceptEvents[0].args.requestType).to.be.equal(BigInt(RequestType.CancelTask));
@@ -489,16 +468,13 @@ describe("Manual complicated", function () {
       requestId: BigInt(0),
     });
     const requestExecuteReceipt = await requestExecute.wait();
-    if (!requestExecuteReceipt) {
-      throw new Error();
-    }
-    const requestExecuteEvents = getEventsFromReceipt(requestExecuteReceipt, TasksManager.interface, "RequestExecuted");
+    const requestExecuteEvents = getEventsFromLogs(requestExecuteReceipt?.logs, TasksManager.interface, "RequestExecuted");
     expect(requestExecuteEvents).to.be.lengthOf(1);
     expect(requestExecuteEvents[0].args.taskId).to.be.equal(taskId);
     expect(requestExecuteEvents[0].args.requestType).to.be.equal(BigInt(RequestType.CancelTask));
     expect(requestExecuteEvents[0].args.requestId).to.be.equal(BigInt(0));
     expect(requestExecuteEvents[0].args.by).to.be.equal(funder);
-    const taskCancelledEvents = getEventsFromReceipt(requestExecuteReceipt, TasksManager.interface, "TaskCancelled");
+    const taskCancelledEvents = getEventsFromLogs(requestExecuteReceipt?.logs, TasksManager.interface, "TaskCancelled");
     expect(taskCancelledEvents).to.be.lengthOf(1);
     expect(taskCancelledEvents[0].args.taskId).to.be.equal(taskId);
   });

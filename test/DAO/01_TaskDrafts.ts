@@ -7,7 +7,7 @@ import { TaskMetadata } from "../../utils/taskTypes";
 import { addToIpfs } from "../../utils/ipfsHelper";
 import { getTask } from "../../utils/taskHelper";
 import { asyncMap, getInferfaceId } from "../../utils/utils";
-import { asDAO } from "../Helpers/ImpersonatedDAO";
+import { asDepartment } from "../Helpers/ImpersonatedDAO";
 import { TaskDrafts } from "../../typechain-types";
 
 describe("Department DAO Task Drafts", function () {
@@ -62,7 +62,7 @@ describe("Department DAO Task Drafts", function () {
     const newGovernance = ethers.Wallet.createRandom().address;
     const newTasks = ethers.Wallet.createRandom().address;
 
-    const TasksDAO = await asDAO<TaskDrafts>(dao.TaskDrafts, dao.department);
+    const TasksDAO = await asDepartment<TaskDrafts>(dao.TaskDrafts, dao.department);
     await TasksDAO.updateGovernanceContract(newGovernance);
     await TasksDAO.updateTasksContract(newTasks);
 

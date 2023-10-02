@@ -96,6 +96,7 @@ interface ITasks {
         uint88[] partialReward,
         uint96[] partialNativeReward
     );
+    event NewManager(uint256 indexed taskId, address manager);
 
     /// @notice A container for ERC20 transfer information.
     /// @param tokenContract ERC20 token to transfer.
@@ -394,4 +395,9 @@ interface ITasks {
         uint88[] calldata _partialReward,
         uint96[] calldata _partialNativeReward
     ) external;
+
+    /// @notice Transfers the manager role to a different address.
+    /// @param _taskId Id of the task.
+    /// @param _newManager What address should become the manager.
+    function transferManagement(uint256 _taskId, address _newManager) external;
 }

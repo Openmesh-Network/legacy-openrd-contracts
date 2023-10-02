@@ -745,7 +745,7 @@ event AdminChanged(address previousAdmin, address newAdmin)
 
 
 
-
+*Emitted when the admin account has changed.*
 
 #### Parameters
 
@@ -762,7 +762,7 @@ event BeaconUpgraded(address indexed beacon)
 
 
 
-
+*Emitted when the beacon is changed.*
 
 #### Parameters
 
@@ -778,7 +778,7 @@ event Initialized(uint8 version)
 
 
 
-
+*Triggered when the contract has been initialized or reinitialized.*
 
 #### Parameters
 
@@ -800,7 +800,7 @@ Emitted when members are added to the DAO plugin.
 
 | Name | Type | Description |
 |---|---|---|
-| members  | uint256[] | undefined |
+| members  | uint256[] | The list of new members being added. |
 
 ### MembersRemoved
 
@@ -816,7 +816,7 @@ Emitted when members are removed from the DAO plugin.
 
 | Name | Type | Description |
 |---|---|---|
-| members  | uint256[] | undefined |
+| members  | uint256[] | The list of existing members being removed. |
 
 ### MembershipContractAnnounced
 
@@ -832,7 +832,7 @@ Emitted to announce the membership being defined by a contract.
 
 | Name | Type | Description |
 |---|---|---|
-| definingContract `indexed` | address | undefined |
+| definingContract `indexed` | address | The contract defining the membership. |
 
 ### ProposalCreated
 
@@ -848,13 +848,13 @@ Emitted when a proposal is created.
 
 | Name | Type | Description |
 |---|---|---|
-| proposalId `indexed` | uint256 | undefined |
-| creator `indexed` | address | undefined |
-| startDate  | uint64 | undefined |
-| endDate  | uint64 | undefined |
-| metadata  | bytes | undefined |
-| actions  | IDAO.Action[] | undefined |
-| allowFailureMap  | uint256 | undefined |
+| proposalId `indexed` | uint256 | The ID of the proposal. |
+| creator `indexed` | address | The creator of the proposal. |
+| startDate  | uint64 | The start date of the proposal in seconds. |
+| endDate  | uint64 | The end date of the proposal in seconds. |
+| metadata  | bytes | The metadata of the proposal. |
+| actions  | IDAO.Action[] | The actions that will be executed if the proposal passes. |
+| allowFailureMap  | uint256 | A bitmap allowing the proposal to succeed, even if individual actions might revert. If the bit at index `i` is 1, the proposal succeeds even if the `i`th action reverts. A failure map value of 0 requires every action to not revert. |
 
 ### ProposalExecuted
 
@@ -870,7 +870,7 @@ Emitted when a proposal is executed.
 
 | Name | Type | Description |
 |---|---|---|
-| proposalId `indexed` | uint256 | undefined |
+| proposalId `indexed` | uint256 | The ID of the proposal. |
 
 ### TokensAdded
 
@@ -912,7 +912,7 @@ event Upgraded(address indexed implementation)
 
 
 
-
+*Emitted when the implementation is upgraded.*
 
 #### Parameters
 
@@ -934,10 +934,10 @@ Emitted when a vote is cast by a voter.
 
 | Name | Type | Description |
 |---|---|---|
-| proposalId `indexed` | uint256 | undefined |
-| voter `indexed` | uint256 | undefined |
-| voteOption  | enum ITokenMajorityVoting.VoteOption | undefined |
-| votingPower  | uint256 | undefined |
+| proposalId `indexed` | uint256 | The ID of the proposal. |
+| voter `indexed` | uint256 | The voter casting the vote. |
+| voteOption  | enum ITokenMajorityVoting.VoteOption | The casted vote option. |
+| votingPower  | uint256 | The voting power behind this vote. |
 
 ### VotingSettingsUpdated
 
@@ -953,11 +953,11 @@ Emitted when the voting settings are updated.
 
 | Name | Type | Description |
 |---|---|---|
-| votingMode  | enum TokenMajorityVotingBase.VotingMode | undefined |
-| supportThreshold  | uint32 | undefined |
-| minParticipation  | uint32 | undefined |
-| minDuration  | uint64 | undefined |
-| minProposerVotingPower  | uint256 | undefined |
+| votingMode  | enum TokenMajorityVotingBase.VotingMode | A parameter to select the vote mode. |
+| supportThreshold  | uint32 | The support threshold value. |
+| minParticipation  | uint32 | The minimum participation value. |
+| minDuration  | uint64 | The minimum duration of the proposal vote in seconds. |
+| minProposerVotingPower  | uint256 | The minimum voting power required to create a proposal. |
 
 
 

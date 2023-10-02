@@ -17,7 +17,7 @@ import {
   Task,
   TaskMetadata,
 } from "./taskTypes";
-import { asyncMap, getEventsFromReceipt } from "./utils";
+import { asyncMap, getEventsFromLogs } from "./utils";
 import { addToIpfs, getFromIpfs } from "./ipfsHelper";
 import { Wei } from "./ethersUnits";
 
@@ -67,7 +67,7 @@ export async function createTask(settings: CreateTaskSettings): Promise<CreateTa
   if (!receipt) {
     throw new Error();
   }
-  const taskCreationEvent = getEventsFromReceipt(receipt, settings.tasks.interface, "TaskCreated");
+  const taskCreationEvent = getEventsFromLogs(receipt.logs, settings.tasks.interface, "TaskCreated");
   const taskId = taskCreationEvent[0].args.taskId;
   return { taskId: taskId, receipt: receipt };
 }

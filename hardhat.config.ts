@@ -15,19 +15,34 @@ const fakePrivKey = "00000000000000000000000000000000000000000000000000000000000
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.17",
-    settings: {
-      optimizer: {
-        enabled: true,
-        //runs: 1_000_000, // Higher is not allowed by Etherscan verification
+    compilers: [
+      {
+        // Aragon OSx contracts
+        version: "0.8.17",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
       },
-    },
+      {
+        // Other contracts
+        version: "0.8.21",
+        settings: {
+          optimizer: {
+            enabled: true,
+            //runs: 1_000_000, // Higher is not allowed by Etherscan verification
+          },
+        },
+      },
+    ],
   },
   networks: {
     mumbai: {
       accounts: [process.env.PRIV_KEY ?? fakePrivKey],
       url: "https://rpc.ankr.com/polygon_mumbai",
-      deploy: ["00_Tasks", "02_Plugins", "03_NFT", "04_DAO"].map((d) => `deploy/${d}`),
+      deploy: ["00_Tasks", "02_Hats", "10_Plugins", "20_TOkenCollections", "80_DAO"].map((d) => `deploy/${d}`), // Hats is not on Polygon Mumbai
       verify: {
         etherscan: {
           apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",
@@ -79,7 +94,7 @@ const config: HardhatUserConfig = {
   dodoc: {
     runOnCompile: true,
     freshOutput: true,
-    include: ["TokenListGovernance", "TaskDrafts", "Tasks", "Escrow"],
+    include: ["TokenListGovernance", "TaskDrafts", "Tasks", "Escrow", "TaskDisputes", "SharedAddress", "SubDAO"],
   },
 };
 

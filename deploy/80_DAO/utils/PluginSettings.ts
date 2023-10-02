@@ -117,9 +117,10 @@ export async function getTokenVotingSettings(erc20Collection: string) {
   return tokenVotingSettings;
 }
 
-export async function getSharedAddressSettings(admin: string) {
-  const taskDisputeFormat = ["address admin"];
-  const taskDisputeValues: any[] = [admin];
+export async function getSharedAddressSettings() {
+  const taskDisputeFormat = ["address hats"];
+  const hats = await deployments.get("Hats");
+  const taskDisputeValues: any[] = [hats.address];
   const taskDisputeBytes = ethers.AbiCoder.defaultAbiCoder().encode(taskDisputeFormat, taskDisputeValues);
   const taskDisputeSettings = {
     pluginSetupRef: {
@@ -128,6 +129,23 @@ export async function getSharedAddressSettings(admin: string) {
         build: 1,
       },
       pluginSetupRepo: (await deployments.get("SharedAddressRepo")).address,
+    },
+    data: taskDisputeBytes,
+  };
+  return taskDisputeSettings;
+}
+
+export async function getSubDAOSettings() {
+  const taskDisputeFormat: string[] = [];
+  const taskDisputeValues: any[] = [];
+  const taskDisputeBytes = ethers.AbiCoder.defaultAbiCoder().encode(taskDisputeFormat, taskDisputeValues);
+  const taskDisputeSettings = {
+    pluginSetupRef: {
+      versionTag: {
+        release: 1,
+        build: 1,
+      },
+      pluginSetupRepo: (await deployments.get("SubDAORepo")).address,
     },
     data: taskDisputeBytes,
   };
