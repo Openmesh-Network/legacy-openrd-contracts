@@ -1,5 +1,5 @@
 {
-  "address": "0x07b6DA57A20913fcce9fbB6e18ec68BF5e3E2099",
+  "address": "0x6feF86c45Dec64397D5231D556a509980aC7DA28",
   "abi": [
     {
       "inputs": [
@@ -1872,31 +1872,31 @@
         "type": "t_array(t_uint256)49_storage"
       },
       {
-        "astId": 24636,
+        "astId": 24749,
         "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
         "label": "proposals",
         "offset": 0,
         "slot": "351",
-        "type": "t_mapping(t_uint256,t_struct(Proposal)24573_storage)"
+        "type": "t_mapping(t_uint256,t_struct(Proposal)24686_storage)"
       },
       {
-        "astId": 24640,
+        "astId": 24753,
         "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
         "label": "votingSettings",
         "offset": 0,
         "slot": "352",
-        "type": "t_struct(VotingSettings)24553_storage"
+        "type": "t_struct(VotingSettings)24666_storage"
       },
       {
-        "astId": 24644,
+        "astId": 24757,
         "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
         "label": "tokenCollection",
         "offset": 0,
         "slot": "354",
-        "type": "t_contract(IERC721)20736"
+        "type": "t_contract(IERC721)20849"
       },
       {
-        "astId": 25463,
+        "astId": 25576,
         "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
         "label": "__gap",
         "offset": 0,
@@ -1904,7 +1904,7 @@
         "type": "t_array(t_uint256)47_storage"
       },
       {
-        "astId": 22745,
+        "astId": 22858,
         "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
         "label": "_tokenlistCheckpoints",
         "offset": 0,
@@ -1912,7 +1912,7 @@
         "type": "t_mapping(t_uint256,t_struct(History)13868_storage)"
       },
       {
-        "astId": 22749,
+        "astId": 22862,
         "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
         "label": "_tokenlistLengthCheckpoints",
         "offset": 0,
@@ -1920,7 +1920,7 @@
         "type": "t_struct(History)13868_storage"
       },
       {
-        "astId": 22932,
+        "astId": 23045,
         "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
         "label": "__gap",
         "offset": 0,
@@ -1928,7 +1928,7 @@
         "type": "t_array(t_uint256)48_storage"
       },
       {
-        "astId": 23580,
+        "astId": 23693,
         "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
         "label": "__gap",
         "offset": 0,
@@ -1993,27 +1993,27 @@
         "label": "contract IDAO",
         "numberOfBytes": "20"
       },
-      "t_contract(IERC721)20736": {
+      "t_contract(IERC721)20849": {
         "encoding": "inplace",
         "label": "contract IERC721",
         "numberOfBytes": "20"
       },
-      "t_enum(VoteOption)24401": {
+      "t_enum(VoteOption)24514": {
         "encoding": "inplace",
         "label": "enum ITokenMajorityVoting.VoteOption",
         "numberOfBytes": "1"
       },
-      "t_enum(VotingMode)24541": {
+      "t_enum(VotingMode)24654": {
         "encoding": "inplace",
         "label": "enum TokenMajorityVotingBase.VotingMode",
         "numberOfBytes": "1"
       },
-      "t_mapping(t_uint256,t_enum(VoteOption)24401)": {
+      "t_mapping(t_uint256,t_enum(VoteOption)24514)": {
         "encoding": "mapping",
         "key": "t_uint256",
         "label": "mapping(uint256 => enum ITokenMajorityVoting.VoteOption)",
         "numberOfBytes": "32",
-        "value": "t_enum(VoteOption)24401"
+        "value": "t_enum(VoteOption)24514"
       },
       "t_mapping(t_uint256,t_struct(History)13868_storage)": {
         "encoding": "mapping",
@@ -2022,12 +2022,12 @@
         "numberOfBytes": "32",
         "value": "t_struct(History)13868_storage"
       },
-      "t_mapping(t_uint256,t_struct(Proposal)24573_storage)": {
+      "t_mapping(t_uint256,t_struct(Proposal)24686_storage)": {
         "encoding": "mapping",
         "key": "t_uint256",
         "label": "mapping(uint256 => struct TokenMajorityVotingBase.Proposal)",
         "numberOfBytes": "32",
-        "value": "t_struct(Proposal)24573_storage"
+        "value": "t_struct(Proposal)24686_storage"
       },
       "t_struct(Action)867_storage": {
         "encoding": "inplace",
@@ -2113,12 +2113,12 @@
         ],
         "numberOfBytes": "32"
       },
-      "t_struct(Proposal)24573_storage": {
+      "t_struct(Proposal)24686_storage": {
         "encoding": "inplace",
         "label": "struct TokenMajorityVotingBase.Proposal",
         "members": [
           {
-            "astId": 24555,
+            "astId": 24668,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "executed",
             "offset": 0,
@@ -2126,31 +2126,31 @@
             "type": "t_bool"
           },
           {
-            "astId": 24558,
+            "astId": 24671,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "parameters",
             "offset": 0,
             "slot": "1",
-            "type": "t_struct(ProposalParameters)24587_storage"
+            "type": "t_struct(ProposalParameters)24700_storage"
           },
           {
-            "astId": 24561,
+            "astId": 24674,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "tally",
             "offset": 0,
             "slot": "3",
-            "type": "t_struct(Tally)24594_storage"
+            "type": "t_struct(Tally)24707_storage"
           },
           {
-            "astId": 24566,
+            "astId": 24679,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "voters",
             "offset": 0,
             "slot": "6",
-            "type": "t_mapping(t_uint256,t_enum(VoteOption)24401)"
+            "type": "t_mapping(t_uint256,t_enum(VoteOption)24514)"
           },
           {
-            "astId": 24570,
+            "astId": 24683,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "actions",
             "offset": 0,
@@ -2158,7 +2158,7 @@
             "type": "t_array(t_struct(Action)867_storage)dyn_storage"
           },
           {
-            "astId": 24572,
+            "astId": 24685,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "allowFailureMap",
             "offset": 0,
@@ -2168,20 +2168,20 @@
         ],
         "numberOfBytes": "288"
       },
-      "t_struct(ProposalParameters)24587_storage": {
+      "t_struct(ProposalParameters)24700_storage": {
         "encoding": "inplace",
         "label": "struct TokenMajorityVotingBase.ProposalParameters",
         "members": [
           {
-            "astId": 24576,
+            "astId": 24689,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "votingMode",
             "offset": 0,
             "slot": "0",
-            "type": "t_enum(VotingMode)24541"
+            "type": "t_enum(VotingMode)24654"
           },
           {
-            "astId": 24578,
+            "astId": 24691,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "supportThreshold",
             "offset": 1,
@@ -2189,7 +2189,7 @@
             "type": "t_uint32"
           },
           {
-            "astId": 24580,
+            "astId": 24693,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "startDate",
             "offset": 5,
@@ -2197,7 +2197,7 @@
             "type": "t_uint64"
           },
           {
-            "astId": 24582,
+            "astId": 24695,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "endDate",
             "offset": 13,
@@ -2205,7 +2205,7 @@
             "type": "t_uint64"
           },
           {
-            "astId": 24584,
+            "astId": 24697,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "snapshotBlock",
             "offset": 21,
@@ -2213,7 +2213,7 @@
             "type": "t_uint64"
           },
           {
-            "astId": 24586,
+            "astId": 24699,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "minVotingPower",
             "offset": 0,
@@ -2223,12 +2223,12 @@
         ],
         "numberOfBytes": "64"
       },
-      "t_struct(Tally)24594_storage": {
+      "t_struct(Tally)24707_storage": {
         "encoding": "inplace",
         "label": "struct TokenMajorityVotingBase.Tally",
         "members": [
           {
-            "astId": 24589,
+            "astId": 24702,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "abstain",
             "offset": 0,
@@ -2236,7 +2236,7 @@
             "type": "t_uint256"
           },
           {
-            "astId": 24591,
+            "astId": 24704,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "yes",
             "offset": 0,
@@ -2244,7 +2244,7 @@
             "type": "t_uint256"
           },
           {
-            "astId": 24593,
+            "astId": 24706,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "no",
             "offset": 0,
@@ -2254,20 +2254,20 @@
         ],
         "numberOfBytes": "96"
       },
-      "t_struct(VotingSettings)24553_storage": {
+      "t_struct(VotingSettings)24666_storage": {
         "encoding": "inplace",
         "label": "struct TokenMajorityVotingBase.VotingSettings",
         "members": [
           {
-            "astId": 24544,
+            "astId": 24657,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "votingMode",
             "offset": 0,
             "slot": "0",
-            "type": "t_enum(VotingMode)24541"
+            "type": "t_enum(VotingMode)24654"
           },
           {
-            "astId": 24546,
+            "astId": 24659,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "supportThreshold",
             "offset": 1,
@@ -2275,7 +2275,7 @@
             "type": "t_uint32"
           },
           {
-            "astId": 24548,
+            "astId": 24661,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "minParticipation",
             "offset": 5,
@@ -2283,7 +2283,7 @@
             "type": "t_uint32"
           },
           {
-            "astId": 24550,
+            "astId": 24663,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "minDuration",
             "offset": 9,
@@ -2291,7 +2291,7 @@
             "type": "t_uint64"
           },
           {
-            "astId": 24552,
+            "astId": 24665,
             "contract": "contracts/DAO/Governance/TokenListGovernance.sol:TokenListGovernance",
             "label": "minProposerVotingPower",
             "offset": 0,

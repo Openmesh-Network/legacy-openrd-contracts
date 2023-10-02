@@ -1,5 +1,5 @@
 {
-  "address": "0x285252410bC33B824Eee9559f37dd383087749a8",
+  "address": "0xCd4823e721c3B352078fdA685f94Fc7Db14240c7",
   "abi": [
     {
       "inputs": [
@@ -73,6 +73,25 @@
         {
           "indexed": true,
           "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
           "name": "from",
           "type": "address"
         },
@@ -137,7 +156,7 @@
           "type": "uint256"
         }
       ],
-      "name": "burnToken",
+      "name": "burn",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -165,24 +184,6 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "account",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "grantToken",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
           "name": "owner",
           "type": "address"
         },
@@ -204,6 +205,24 @@
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "mint",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "name",
       "outputs": [
@@ -211,6 +230,19 @@
           "internalType": "string",
           "name": "",
           "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -233,6 +265,13 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -377,37 +416,64 @@
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ],
-  "transactionHash": "0x95cb9b6ad880c797a09f10bf8f6e06927a3411400e708a7603a2b7e688bf41ea",
+  "transactionHash": "0x93e5ef0e3e1567faae34fa9e874a050a4833d0ae4b4742ac2498e2daa5d9f2b9",
   "receipt": {
     "to": null,
     "from": "0x6568322A7d8212236eA784bA0c7C2dEa1e6EAB0F",
-    "contractAddress": "0x285252410bC33B824Eee9559f37dd383087749a8",
-    "transactionIndex": 8,
-    "gasUsed": "1575992",
-    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000008000002000000000000000000000000000000000000000000000000000800000000000000000040102000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000010000000000000000000000000000000000000040000000004000000000000000000001000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000100000",
-    "blockHash": "0xc20a1847d50c0dd54410b23347b829752fec6bbfe6d71a638ef1d8c045cee365",
-    "transactionHash": "0x95cb9b6ad880c797a09f10bf8f6e06927a3411400e708a7603a2b7e688bf41ea",
+    "contractAddress": "0xCd4823e721c3B352078fdA685f94Fc7Db14240c7",
+    "transactionIndex": 2,
+    "gasUsed": "1727038",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000800010000000000000000400000020000000000000000000008000000000000000000000000000000000000000000000000000000000800001000000000000000102000000000000000000020000000000000000000800000000000000000080000000000000400000000000000000000000000000000000000000000000000000000000000000200000000200012000000000000000000000000000000000000000000000004000000000000000000001000000000000000000000000000000100000001020040000000000000000000000000000000000000000000000000000000000100000",
+    "blockHash": "0x7670e3d1eaa8ef9a192f90035dd6922e26e698c7b912b78bb30fb4e69567855d",
+    "transactionHash": "0x93e5ef0e3e1567faae34fa9e874a050a4833d0ae4b4742ac2498e2daa5d9f2b9",
     "logs": [
       {
-        "transactionIndex": 8,
-        "blockNumber": 38850552,
-        "transactionHash": "0x95cb9b6ad880c797a09f10bf8f6e06927a3411400e708a7603a2b7e688bf41ea",
+        "transactionIndex": 2,
+        "blockNumber": 40206447,
+        "transactionHash": "0x93e5ef0e3e1567faae34fa9e874a050a4833d0ae4b4742ac2498e2daa5d9f2b9",
+        "address": "0xCd4823e721c3B352078fdA685f94Fc7Db14240c7",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000006568322a7d8212236ea784ba0c7c2dea1e6eab0f"
+        ],
+        "data": "0x",
+        "logIndex": 12,
+        "blockHash": "0x7670e3d1eaa8ef9a192f90035dd6922e26e698c7b912b78bb30fb4e69567855d"
+      },
+      {
+        "transactionIndex": 2,
+        "blockNumber": 40206447,
+        "transactionHash": "0x93e5ef0e3e1567faae34fa9e874a050a4833d0ae4b4742ac2498e2daa5d9f2b9",
         "address": "0x0000000000000000000000000000000000001010",
         "topics": [
           "0x4dfe1bbbcf077ddc3e01291eea2d5c70c2b422b415d95645b9adcfd678cb1d63",
           "0x0000000000000000000000000000000000000000000000000000000000001010",
           "0x0000000000000000000000006568322a7d8212236ea784ba0c7c2dea1e6eab0f",
-          "0x000000000000000000000000c275dc8be39f50d12f66b6a63629c39da5bae5bd"
+          "0x000000000000000000000000f903ba9e006193c1527bfbe65fe2123704ea3f99"
         ],
-        "data": "0x00000000000000000000000000000000000000000000000000086608d8fe480000000000000000000000000000000000000000000000000013857579a54de6b5000000000000000000000000000000000000000000001282a1935e2aca828d41000000000000000000000000000000000000000000000000137d0f70cc4f9eb5000000000000000000000000000000000000000000001282a19bc433a380d541",
-        "logIndex": 25,
-        "blockHash": "0xc20a1847d50c0dd54410b23347b829752fec6bbfe6d71a638ef1d8c045cee365"
+        "data": "0x000000000000000000000000000000000000000000000000000bd451cd723a9000000000000000000000000000000000000000000000000027a19bd9fac063ff00000000000000000000000000000000000000000000113db9ccfe9658ccf2a30000000000000000000000000000000000000000000000002795c7882d4e296f00000000000000000000000000000000000000000000113db9d8d2e8263f2d33",
+        "logIndex": 13,
+        "blockHash": "0x7670e3d1eaa8ef9a192f90035dd6922e26e698c7b912b78bb30fb4e69567855d"
       }
     ],
-    "blockNumber": 38850552,
-    "cumulativeGasUsed": "2633250",
+    "blockNumber": 40206447,
+    "cumulativeGasUsed": "1989637",
     "status": 1,
     "byzantium": true
   },
@@ -435,8 +501,14 @@
       "name()": {
         "details": "See {IERC721Metadata-name}."
       },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
       "ownerOf(uint256)": {
         "details": "See {IERC721-ownerOf}."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
       },
       "safeTransferFrom(address,address,uint256)": {
         "details": "See {IERC721-safeTransferFrom}."
@@ -458,6 +530,9 @@
       },
       "transferFrom(address,address,uint256)": {
         "details": "See {IERC721-transferFrom}."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
       }
     },
     "version": 1
@@ -470,52 +545,60 @@
   "storageLayout": {
     "storage": [
       {
-        "astId": 19719,
-        "contract": "contracts/mocks/MockERC721.sol:MockERC721",
+        "astId": 19832,
+        "contract": "contracts/VerifiedContributor.sol:VerifiedContributor",
         "label": "_name",
         "offset": 0,
         "slot": "0",
         "type": "t_string_storage"
       },
       {
-        "astId": 19721,
-        "contract": "contracts/mocks/MockERC721.sol:MockERC721",
+        "astId": 19834,
+        "contract": "contracts/VerifiedContributor.sol:VerifiedContributor",
         "label": "_symbol",
         "offset": 0,
         "slot": "1",
         "type": "t_string_storage"
       },
       {
-        "astId": 19725,
-        "contract": "contracts/mocks/MockERC721.sol:MockERC721",
+        "astId": 19838,
+        "contract": "contracts/VerifiedContributor.sol:VerifiedContributor",
         "label": "_owners",
         "offset": 0,
         "slot": "2",
         "type": "t_mapping(t_uint256,t_address)"
       },
       {
-        "astId": 19729,
-        "contract": "contracts/mocks/MockERC721.sol:MockERC721",
+        "astId": 19842,
+        "contract": "contracts/VerifiedContributor.sol:VerifiedContributor",
         "label": "_balances",
         "offset": 0,
         "slot": "3",
         "type": "t_mapping(t_address,t_uint256)"
       },
       {
-        "astId": 19733,
-        "contract": "contracts/mocks/MockERC721.sol:MockERC721",
+        "astId": 19846,
+        "contract": "contracts/VerifiedContributor.sol:VerifiedContributor",
         "label": "_tokenApprovals",
         "offset": 0,
         "slot": "4",
         "type": "t_mapping(t_uint256,t_address)"
       },
       {
-        "astId": 19739,
-        "contract": "contracts/mocks/MockERC721.sol:MockERC721",
+        "astId": 19852,
+        "contract": "contracts/VerifiedContributor.sol:VerifiedContributor",
         "label": "_operatorApprovals",
         "offset": 0,
         "slot": "5",
         "type": "t_mapping(t_address,t_mapping(t_address,t_bool))"
+      },
+      {
+        "astId": 18361,
+        "contract": "contracts/VerifiedContributor.sol:VerifiedContributor",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "6",
+        "type": "t_address"
       }
     ],
     "types": {

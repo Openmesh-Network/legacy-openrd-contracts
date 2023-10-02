@@ -42,7 +42,17 @@ const config: HardhatUserConfig = {
     mumbai: {
       accounts: [process.env.PRIV_KEY ?? fakePrivKey],
       url: "https://rpc.ankr.com/polygon_mumbai",
-      deploy: ["00_Tasks", "02_Hats", "10_Plugins", "20_TOkenCollections", "80_DAO"].map((d) => `deploy/${d}`), // Hats is not on Polygon Mumbai
+      deploy: ["00_Tasks", "02_Hats", "10_Plugins", "20_TokenCollections", "80_DAO"].map((d) => `deploy/${d}`), // Hats is not on Polygon Mumbai
+      verify: {
+        etherscan: {
+          apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",
+        },
+      },
+    },
+    polygon: {
+      accounts: [process.env.PRIV_KEY ?? fakePrivKey],
+      url: "https://rpc.ankr.com/polygon",
+      deploy: ["00_Tasks", "10_Plugins", "20_TokenCollections", "80_DAO".map((d) => `deploy/${d}`),
       verify: {
         etherscan: {
           apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",

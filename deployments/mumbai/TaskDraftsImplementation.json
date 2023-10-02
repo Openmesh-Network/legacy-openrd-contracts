@@ -1,5 +1,5 @@
 {
-  "address": "0x233B40AFf244E69F4c8f0b719e3A9b96612adC60",
+  "address": "0x55F33E3302B3683E2e00403328Cc256dE0bc8e9D",
   "abi": [
     {
       "inputs": [
@@ -661,20 +661,20 @@
         "type": "t_array(t_uint256)50_storage"
       },
       {
-        "astId": 24002,
+        "astId": 24115,
         "contract": "contracts/DAO/TaskDrafts/TaskDrafts.sol:TaskDrafts",
         "label": "tasks",
         "offset": 0,
         "slot": "301",
-        "type": "t_contract(ITasks)26151"
+        "type": "t_contract(ITasks)26274"
       },
       {
-        "astId": 24005,
+        "astId": 24118,
         "contract": "contracts/DAO/TaskDrafts/TaskDrafts.sol:TaskDrafts",
         "label": "governancePlugin",
         "offset": 0,
         "slot": "302",
-        "type": "t_contract(IPluginProposals)22701"
+        "type": "t_contract(IPluginProposals)22814"
       }
     ],
     "types": {
@@ -700,12 +700,12 @@
         "label": "contract IDAO",
         "numberOfBytes": "20"
       },
-      "t_contract(IPluginProposals)22701": {
+      "t_contract(IPluginProposals)22814": {
         "encoding": "inplace",
         "label": "contract IPluginProposals",
         "numberOfBytes": "20"
       },
-      "t_contract(ITasks)26151": {
+      "t_contract(ITasks)26274": {
         "encoding": "inplace",
         "label": "contract ITasks",
         "numberOfBytes": "20"
