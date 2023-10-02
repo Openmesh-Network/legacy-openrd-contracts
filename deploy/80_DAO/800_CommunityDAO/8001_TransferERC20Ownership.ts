@@ -3,14 +3,14 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { getBool } from "../../../utils/globalVars";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  if (!(await getBool("NewDisputeDAO"))) {
+  if (!(await getBool("NewCommunityDAO"))) {
     return;
   }
 
   const { deployments, getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
 
-  const disputeDAO = await deployments.get("dispute_dao");
+  const disputeDAO = await deployments.get("community_dao");
 
   await deployments.execute(
     "ERC20",
@@ -22,5 +22,5 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   );
 };
 export default func;
-func.tags = ["ManagementDAO"];
-func.dependencies = ["ManagementDAOCreation"];
+func.tags = ["CommunityDAO"];
+func.dependencies = ["CommunityDAOCreation"];

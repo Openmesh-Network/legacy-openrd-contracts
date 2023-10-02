@@ -32,5 +32,5 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await setBool("NewCommunityDAO", true);
 };
 export default func;
-func.tags = ["CommunityDAO"];
+func.tags = ["CommunityDAOCreation"];
 func.dependencies = ["TokenVoting", "ERC20"];

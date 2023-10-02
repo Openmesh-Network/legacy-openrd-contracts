@@ -52,7 +52,7 @@ const config: HardhatUserConfig = {
     polygon: {
       accounts: [process.env.PRIV_KEY ?? fakePrivKey],
       url: "https://rpc.ankr.com/polygon",
-      deploy: ["00_Tasks", "10_Plugins", "20_TokenCollections", "80_DAO".map((d) => `deploy/${d}`),
+      deploy: ["00_Tasks", "10_Plugins", "20_TokenCollections", "80_DAO"].map((d) => `deploy/${d}`),
       verify: {
         etherscan: {
           apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",
