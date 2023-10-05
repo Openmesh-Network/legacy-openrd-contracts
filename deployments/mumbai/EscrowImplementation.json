@@ -1,0 +1,133 @@
+{
+  "address": "0x9DD9B7727D569cfdC4D5a23320c35093ff4F2997",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "AlreadyInitialized",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotOwner",
+      "type": "error"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "fallback"
+    },
+    {
+      "inputs": [],
+      "name": "__Escrow_init",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address payable",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferNative",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ],
+  "args": [],
+  "numDeployments": 2,
+  "solcInputHash": "2e71b4f5a4f54915fa586ca0c6f426c9",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.21+commit.d9974bed\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"AlreadyInitialized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotOwner\",\"type\":\"error\"},{\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"inputs\":[],\"name\":\"__Escrow_init\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IERC20\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transferNative\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"__Escrow_init()\":{\"details\":\"This should be called in the same transaction as deploying the escrow, to prevent front running.\"},\"transfer(address,address,uint256)\":{\"params\":{\"amount\":\"The amount of ERC20 token to receive.\",\"to\":\"The address to recieve the tokens.\",\"token\":\"The ERC20 contract address.\"}},\"transferNative(address,uint256)\":{\"params\":{\"amount\":\"The amount of native currency to receive.\",\"to\":\"The address to recieve the currency.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"__Escrow_init()\":{\"notice\":\"Initializes the Escrow with the sender of the transaction as owner.\"},\"transfer(address,address,uint256)\":{\"notice\":\"Transfers a certain amount of ERC20 token to a given address. Can only be called by the owner.\"},\"transferNative(address,uint256)\":{\"notice\":\"Transfers a certain amount of native currency to a given address. Can only be called by the owner.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Escrow.sol\":\"Escrow\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n\\n    /**\\n     * @dev Returns the amount of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves `amount` tokens from the caller's account to `to`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address to, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Moves `amount` tokens from `from` to `to` using the\\n     * allowance mechanism. `amount` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(address from, address to, uint256 amount) external returns (bool);\\n}\\n\",\"keccak256\":\"0x287b55befed2961a7eabd7d7b1b2839cbca8a5b80ef8dcbb25ed3d4c2002c305\",\"license\":\"MIT\"},\"contracts/Escrow.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.0;\\r\\n\\r\\nimport {IERC20} from \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\r\\n\\r\\ncontract Escrow {\\r\\n    error AlreadyInitialized();\\r\\n    error NotOwner();\\r\\n\\r\\n    address private owner;\\r\\n\\r\\n    receive() external payable {}\\r\\n\\r\\n    fallback() external payable {}\\r\\n\\r\\n    /// @notice Initializes the Escrow with the sender of the transaction as owner.\\r\\n    /// @dev This should be called in the same transaction as deploying the escrow, to prevent front running.\\r\\n    function __Escrow_init() external payable {\\r\\n        if (owner != address(0)) {\\r\\n            revert AlreadyInitialized();\\r\\n        }\\r\\n\\r\\n        owner = msg.sender;\\r\\n    }\\r\\n\\r\\n    /// @notice Transfers a certain amount of ERC20 token to a given address. Can only be called by the owner.\\r\\n    /// @param token The ERC20 contract address.\\r\\n    /// @param to The address to recieve the tokens.\\r\\n    /// @param amount The amount of ERC20 token to receive.\\r\\n    function transfer(IERC20 token, address to, uint256 amount) external {\\r\\n        if (msg.sender != owner) {\\r\\n            revert NotOwner();\\r\\n        }\\r\\n\\r\\n        token.transfer(to, amount);\\r\\n    }\\r\\n\\r\\n    /// @notice Transfers a certain amount of native currency to a given address. Can only be called by the owner.\\r\\n    /// @param to The address to recieve the currency.\\r\\n    /// @param amount The amount of native currency to receive.\\r\\n    function transferNative(address payable to, uint256 amount) external {\\r\\n        if (msg.sender != owner) {\\r\\n            revert NotOwner();\\r\\n        }\\r\\n\\r\\n        to.transfer(amount);\\r\\n    }\\r\\n}\\r\\n\",\"keccak256\":\"0x233ae9f23c9e55f5de562d63e9cb0b8c74e297bdc4aeaeb1958b0054a119424d\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506102b1806100206000396000f3fe6080604052600436106100355760003560e01c806365b145fb1461003e5780637d2e90c214610046578063beabacc81461006657005b3661003c57005b005b61003c610086565b34801561005257600080fd5b5061003c6100613660046101e5565b6100c3565b34801561007257600080fd5b5061003c610081366004610211565b610129565b6000546001600160a01b0316156100af5760405162dc149f60e41b815260040160405180910390fd5b600080546001600160a01b03191633179055565b6000546001600160a01b031633146100ee576040516330cd747160e01b815260040160405180910390fd5b6040516001600160a01b0383169082156108fc029083906000818181858888f19350505050158015610124573d6000803e3d6000fd5b505050565b6000546001600160a01b03163314610154576040516330cd747160e01b815260040160405180910390fd5b60405163a9059cbb60e01b81526001600160a01b0383811660048301526024820183905284169063a9059cbb906044016020604051808303816000875af11580156101a3573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101c79190610252565b50505050565b6001600160a01b03811681146101e257600080fd5b50565b600080604083850312156101f857600080fd5b8235610203816101cd565b946020939093013593505050565b60008060006060848603121561022657600080fd5b8335610231816101cd565b92506020840135610241816101cd565b929592945050506040919091013590565b60006020828403121561026457600080fd5b8151801515811461027457600080fd5b939250505056fea26469706673582212203321662ba87bb5393699e625f6ad760c1e8c1db77694232c7706003a346b336364736f6c63430008150033",
+  "deployedBytecode": "0x6080604052600436106100355760003560e01c806365b145fb1461003e5780637d2e90c214610046578063beabacc81461006657005b3661003c57005b005b61003c610086565b34801561005257600080fd5b5061003c6100613660046101e5565b6100c3565b34801561007257600080fd5b5061003c610081366004610211565b610129565b6000546001600160a01b0316156100af5760405162dc149f60e41b815260040160405180910390fd5b600080546001600160a01b03191633179055565b6000546001600160a01b031633146100ee576040516330cd747160e01b815260040160405180910390fd5b6040516001600160a01b0383169082156108fc029083906000818181858888f19350505050158015610124573d6000803e3d6000fd5b505050565b6000546001600160a01b03163314610154576040516330cd747160e01b815260040160405180910390fd5b60405163a9059cbb60e01b81526001600160a01b0383811660048301526024820183905284169063a9059cbb906044016020604051808303816000875af11580156101a3573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101c79190610252565b50505050565b6001600160a01b03811681146101e257600080fd5b50565b600080604083850312156101f857600080fd5b8235610203816101cd565b946020939093013593505050565b60008060006060848603121561022657600080fd5b8335610231816101cd565b92506020840135610241816101cd565b929592945050506040919091013590565b60006020828403121561026457600080fd5b8151801515811461027457600080fd5b939250505056fea26469706673582212203321662ba87bb5393699e625f6ad760c1e8c1db77694232c7706003a346b336364736f6c63430008150033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "__Escrow_init()": {
+        "details": "This should be called in the same transaction as deploying the escrow, to prevent front running."
+      },
+      "transfer(address,address,uint256)": {
+        "params": {
+          "amount": "The amount of ERC20 token to receive.",
+          "to": "The address to recieve the tokens.",
+          "token": "The ERC20 contract address."
+        }
+      },
+      "transferNative(address,uint256)": {
+        "params": {
+          "amount": "The amount of native currency to receive.",
+          "to": "The address to recieve the currency."
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "__Escrow_init()": {
+        "notice": "Initializes the Escrow with the sender of the transaction as owner."
+      },
+      "transfer(address,address,uint256)": {
+        "notice": "Transfers a certain amount of ERC20 token to a given address. Can only be called by the owner."
+      },
+      "transferNative(address,uint256)": {
+        "notice": "Transfers a certain amount of native currency to a given address. Can only be called by the owner."
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 34867,
+        "contract": "contracts/Escrow.sol:Escrow",
+        "label": "owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      }
+    }
+  }
+}

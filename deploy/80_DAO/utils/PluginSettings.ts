@@ -40,7 +40,7 @@ export async function getTokenListGovernanceSettings(nftCollection: string, toke
   return tokenListGovernanceSettings;
 }
 
-export async function geTaskDraftsSettings(tasks: string, governancePlugin: string) {
+export async function getTaskDraftsSettings(tasks: string, governancePlugin: string) {
   const taskDraftsFormat = ["address tasks", "address governancePlugin"];
   const taskDraftsValues: any[] = [tasks, governancePlugin];
   const taskDraftsBytes = ethers.AbiCoder.defaultAbiCoder().encode(taskDraftsFormat, taskDraftsValues);
@@ -57,7 +57,7 @@ export async function geTaskDraftsSettings(tasks: string, governancePlugin: stri
   return taskDraftsSettings;
 }
 
-export async function geTaskDisputesSettings(tasks: string, governancePlugin: string, disputeCost: bigint) {
+export async function getTaskDisputesSettings(tasks: string, governancePlugin: string, disputeCost: bigint) {
   const taskDisputeFormat = ["address tasks", "address governancePlugin", "uint256 disputeCost"];
   const taskDisputeValues: any[] = [tasks, governancePlugin, disputeCost];
   const taskDisputeBytes = ethers.AbiCoder.defaultAbiCoder().encode(taskDisputeFormat, taskDisputeValues);

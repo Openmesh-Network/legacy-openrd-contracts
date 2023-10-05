@@ -4,12 +4,12 @@ import { DAO, IDAO, OwnableERC721Enumerable, TaskDrafts, Tasks, TokenListGoverna
 import { TestSetup } from "../Helpers/TestSetup";
 import { expect } from "chai";
 import { days, minutes, now } from "../../utils/timeUnits";
-import { asDepartment } from "../Helpers/ImpersonatedDAO";
+import { asDAO, asDepartment } from "../Helpers/ImpersonatedDAO";
 
 export async function getDAO() {
   await loadFixture(TestSetup);
   const { deployer } = await getNamedAccounts();
-  const department = "blockchain";
+  const department = "blockchain"; // Or just deploy a new department
 
   const DAO = (await ethers.getContract(department + "_dao", deployer)) as DAO;
   const TokenListGovernance = (await ethers.getContract(department + "_tokenListGovernance", deployer)) as TokenListGovernance;
@@ -17,10 +17,13 @@ export async function getDAO() {
   const NFT = await asDepartment<OwnableERC721Enumerable>(await ethers.getContract("NFT", deployer), "management");
   const Tasks = (await ethers.getContract("Tasks", deployer)) as Tasks;
 
+  const management = await asDepartment<TokenListGovernance>(TokenListGovernance, "management");
+  await management.addMembers([0]);
+
   return { DAO, TokenListGovernance, TaskDrafts, NFT, deployer, Tasks, department };
 }
 
-describe("Department DAO Governance", function () {
+describe("Token List Governance", function () {
   it("has members", async function () {
     const dao = await loadFixture(getDAO);
     expect(await dao.TokenListGovernance.isMember(0)).to.be.true;

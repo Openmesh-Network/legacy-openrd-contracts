@@ -1,0 +1,1136 @@
+{
+  "address": "0xC5d5c68A96dfE6c2d9CDbe545bD3D19486b8Cc01",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract ITasks",
+          "name": "_tasks",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "ERC1167FailedCreateClone",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotManager",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "Overflow",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ProjectAlreadyAccepted",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ProjectDoesNotExist",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "RFPClosed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "RFPDoesNotExist",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "RewardDoesntEndWithNextToken",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "rfpId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint16",
+          "name": "projectId",
+          "type": "uint16"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "taskId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ProjectAccepted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "rfpId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint16",
+          "name": "projectId",
+          "type": "uint16"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "metadata",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "representative",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "deadline",
+          "type": "uint64"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "nextToken",
+              "type": "bool"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint88",
+              "name": "amount",
+              "type": "uint88"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct ITasks.Reward[]",
+          "name": "reward",
+          "type": "tuple[]"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "amount",
+              "type": "uint96"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct ITasks.NativeReward[]",
+          "name": "nativeReward",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "ProjectSubmitted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "rfpId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "metadata",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "deadline",
+          "type": "uint64"
+        },
+        {
+          "components": [
+            {
+              "internalType": "contract IERC20",
+              "name": "tokenContract",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "amount",
+              "type": "uint96"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct ITasks.ERC20Transfer[]",
+          "name": "budget",
+          "type": "tuple[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint96",
+          "name": "nativeBudget",
+          "type": "uint96"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "tasksManager",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "manager",
+          "type": "address"
+        }
+      ],
+      "name": "RFPCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "rfpId",
+          "type": "uint256"
+        }
+      ],
+      "name": "RFPEmptied",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_rfpId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint16",
+          "name": "_projectId",
+          "type": "uint16"
+        }
+      ],
+      "name": "acceptProject",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_metadata",
+          "type": "string"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_deadline",
+          "type": "uint64"
+        },
+        {
+          "components": [
+            {
+              "internalType": "contract IERC20",
+              "name": "tokenContract",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "amount",
+              "type": "uint96"
+            }
+          ],
+          "internalType": "struct ITasks.ERC20Transfer[]",
+          "name": "_budget",
+          "type": "tuple[]"
+        },
+        {
+          "internalType": "address",
+          "name": "_tasksManager",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_manager",
+          "type": "address"
+        }
+      ],
+      "name": "createRFP",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "rfpId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_rfpId",
+          "type": "uint256"
+        }
+      ],
+      "name": "emptyRFP",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "escrowImplementation",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_rfpId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRFP",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "metadata",
+              "type": "string"
+            },
+            {
+              "internalType": "uint64",
+              "name": "deadline",
+              "type": "uint64"
+            },
+            {
+              "internalType": "contract Escrow",
+              "name": "escrow",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "nativeBudget",
+              "type": "uint96"
+            },
+            {
+              "internalType": "address",
+              "name": "creator",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "tasksManager",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "manager",
+              "type": "address"
+            },
+            {
+              "internalType": "contract IERC20[]",
+              "name": "budget",
+              "type": "address[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "representative",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "accepted",
+                  "type": "bool"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "bool",
+                      "name": "nextToken",
+                      "type": "bool"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "to",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint88",
+                      "name": "amount",
+                      "type": "uint88"
+                    }
+                  ],
+                  "internalType": "struct ITasks.Reward[]",
+                  "name": "reward",
+                  "type": "tuple[]"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "to",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.NativeReward[]",
+                  "name": "nativeReward",
+                  "type": "tuple[]"
+                }
+              ],
+              "internalType": "struct IRFPs.OffchainProject[]",
+              "name": "projects",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct IRFPs.OffChainRFP",
+          "name": "offchainRFP",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "_rfpIds",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "getRFPs",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "metadata",
+              "type": "string"
+            },
+            {
+              "internalType": "uint64",
+              "name": "deadline",
+              "type": "uint64"
+            },
+            {
+              "internalType": "contract Escrow",
+              "name": "escrow",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "nativeBudget",
+              "type": "uint96"
+            },
+            {
+              "internalType": "address",
+              "name": "creator",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "tasksManager",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "manager",
+              "type": "address"
+            },
+            {
+              "internalType": "contract IERC20[]",
+              "name": "budget",
+              "type": "address[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "representative",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "deadline",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "accepted",
+                  "type": "bool"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "bool",
+                      "name": "nextToken",
+                      "type": "bool"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "to",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint88",
+                      "name": "amount",
+                      "type": "uint88"
+                    }
+                  ],
+                  "internalType": "struct ITasks.Reward[]",
+                  "name": "reward",
+                  "type": "tuple[]"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "to",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint96",
+                      "name": "amount",
+                      "type": "uint96"
+                    }
+                  ],
+                  "internalType": "struct ITasks.NativeReward[]",
+                  "name": "nativeReward",
+                  "type": "tuple[]"
+                }
+              ],
+              "internalType": "struct IRFPs.OffchainProject[]",
+              "name": "projects",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct IRFPs.OffChainRFP[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "rfpCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_rfpId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_metadata",
+          "type": "string"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_deadline",
+          "type": "uint64"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "nextToken",
+              "type": "bool"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint88",
+              "name": "amount",
+              "type": "uint88"
+            }
+          ],
+          "internalType": "struct ITasks.Reward[]",
+          "name": "_reward",
+          "type": "tuple[]"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "amount",
+              "type": "uint96"
+            }
+          ],
+          "internalType": "struct ITasks.NativeReward[]",
+          "name": "_nativeReward",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "submitProject",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "projectId",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ],
+  "transactionHash": "0x2fa42630b11461cac2707d6bee079eb4ee2330448d4d161eaf975df299298506",
+  "receipt": {
+    "to": null,
+    "from": "0x6568322A7d8212236eA784bA0c7C2dEa1e6EAB0F",
+    "contractAddress": "0xC5d5c68A96dfE6c2d9CDbe545bD3D19486b8Cc01",
+    "transactionIndex": 2,
+    "gasUsed": "2485288",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000008000000000000000000000000000000000000000000000000000000000800000000000000000000102000000004000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000080000000000000000000200000000000010000000000000000000000000000000000000000000000004000000000000000000001000000000000000000000000000000100040000000000000000000000000000000000000000000000000000000000000000000100000",
+    "blockHash": "0x15ef24f9afb23bec7a70214c0610a78449efa4261ebf96ba902e45f9ec548c5c",
+    "transactionHash": "0x2fa42630b11461cac2707d6bee079eb4ee2330448d4d161eaf975df299298506",
+    "logs": [
+      {
+        "transactionIndex": 2,
+        "blockNumber": 40866708,
+        "transactionHash": "0x2fa42630b11461cac2707d6bee079eb4ee2330448d4d161eaf975df299298506",
+        "address": "0x0000000000000000000000000000000000001010",
+        "topics": [
+          "0x4dfe1bbbcf077ddc3e01291eea2d5c70c2b422b415d95645b9adcfd678cb1d63",
+          "0x0000000000000000000000000000000000000000000000000000000000001010",
+          "0x0000000000000000000000006568322a7d8212236ea784ba0c7c2dea1e6eab0f",
+          "0x000000000000000000000000be188d6641e8b680743a4815dfa0f6208038960f"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000016466d402415a800000000000000000000000000000000000000000000000077b6949a48bebfd90000000000000000000000000000000000000000000034aa6cb8f82868c3fc9700000000000000000000000000000000000000000000000077a04e2d089aaa310000000000000000000000000000000000000000000034aa6ccf3e95a8e8123f",
+        "logIndex": 2,
+        "blockHash": "0x15ef24f9afb23bec7a70214c0610a78449efa4261ebf96ba902e45f9ec548c5c"
+      }
+    ],
+    "blockNumber": 40866708,
+    "cumulativeGasUsed": "3220305",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0x44653769398b4f5d0af8c45415f6cc8fff43ecb8"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "2e71b4f5a4f54915fa586ca0c6f426c9",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.21+commit.d9974bed\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract ITasks\",\"name\":\"_tasks\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"ERC1167FailedCreateClone\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Overflow\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ProjectAlreadyAccepted\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ProjectDoesNotExist\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"RFPClosed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"RFPDoesNotExist\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"RewardDoesntEndWithNextToken\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"rfpId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"projectId\",\"type\":\"uint16\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"taskId\",\"type\":\"uint256\"}],\"name\":\"ProjectAccepted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"rfpId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"projectId\",\"type\":\"uint16\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"representative\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"deadline\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"bool\",\"name\":\"nextToken\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint88\",\"name\":\"amount\",\"type\":\"uint88\"}],\"indexed\":false,\"internalType\":\"struct ITasks.Reward[]\",\"name\":\"reward\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"amount\",\"type\":\"uint96\"}],\"indexed\":false,\"internalType\":\"struct ITasks.NativeReward[]\",\"name\":\"nativeReward\",\"type\":\"tuple[]\"}],\"name\":\"ProjectSubmitted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"rfpId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"deadline\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"contract IERC20\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"amount\",\"type\":\"uint96\"}],\"indexed\":false,\"internalType\":\"struct ITasks.ERC20Transfer[]\",\"name\":\"budget\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"uint96\",\"name\":\"nativeBudget\",\"type\":\"uint96\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tasksManager\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"manager\",\"type\":\"address\"}],\"name\":\"RFPCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"rfpId\",\"type\":\"uint256\"}],\"name\":\"RFPEmptied\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rfpId\",\"type\":\"uint256\"},{\"internalType\":\"uint16\",\"name\":\"_projectId\",\"type\":\"uint16\"}],\"name\":\"acceptProject\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_metadata\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"_deadline\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"contract IERC20\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"amount\",\"type\":\"uint96\"}],\"internalType\":\"struct ITasks.ERC20Transfer[]\",\"name\":\"_budget\",\"type\":\"tuple[]\"},{\"internalType\":\"address\",\"name\":\"_tasksManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_manager\",\"type\":\"address\"}],\"name\":\"createRFP\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"rfpId\",\"type\":\"uint256\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rfpId\",\"type\":\"uint256\"}],\"name\":\"emptyRFP\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"escrowImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rfpId\",\"type\":\"uint256\"}],\"name\":\"getRFP\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"deadline\",\"type\":\"uint64\"},{\"internalType\":\"contract Escrow\",\"name\":\"escrow\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"nativeBudget\",\"type\":\"uint96\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tasksManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"manager\",\"type\":\"address\"},{\"internalType\":\"contract IERC20[]\",\"name\":\"budget\",\"type\":\"address[]\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"representative\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"deadline\",\"type\":\"uint64\"},{\"internalType\":\"bool\",\"name\":\"accepted\",\"type\":\"bool\"},{\"components\":[{\"internalType\":\"bool\",\"name\":\"nextToken\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint88\",\"name\":\"amount\",\"type\":\"uint88\"}],\"internalType\":\"struct ITasks.Reward[]\",\"name\":\"reward\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"amount\",\"type\":\"uint96\"}],\"internalType\":\"struct ITasks.NativeReward[]\",\"name\":\"nativeReward\",\"type\":\"tuple[]\"}],\"internalType\":\"struct IRFPs.OffchainProject[]\",\"name\":\"projects\",\"type\":\"tuple[]\"}],\"internalType\":\"struct IRFPs.OffChainRFP\",\"name\":\"offchainRFP\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256[]\",\"name\":\"_rfpIds\",\"type\":\"uint256[]\"}],\"name\":\"getRFPs\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"deadline\",\"type\":\"uint64\"},{\"internalType\":\"contract Escrow\",\"name\":\"escrow\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"nativeBudget\",\"type\":\"uint96\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tasksManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"manager\",\"type\":\"address\"},{\"internalType\":\"contract IERC20[]\",\"name\":\"budget\",\"type\":\"address[]\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"representative\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"deadline\",\"type\":\"uint64\"},{\"internalType\":\"bool\",\"name\":\"accepted\",\"type\":\"bool\"},{\"components\":[{\"internalType\":\"bool\",\"name\":\"nextToken\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint88\",\"name\":\"amount\",\"type\":\"uint88\"}],\"internalType\":\"struct ITasks.Reward[]\",\"name\":\"reward\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"amount\",\"type\":\"uint96\"}],\"internalType\":\"struct ITasks.NativeReward[]\",\"name\":\"nativeReward\",\"type\":\"tuple[]\"}],\"internalType\":\"struct IRFPs.OffchainProject[]\",\"name\":\"projects\",\"type\":\"tuple[]\"}],\"internalType\":\"struct IRFPs.OffChainRFP[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rfpCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rfpId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_metadata\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"_deadline\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"bool\",\"name\":\"nextToken\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint88\",\"name\":\"amount\",\"type\":\"uint88\"}],\"internalType\":\"struct ITasks.Reward[]\",\"name\":\"_reward\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"amount\",\"type\":\"uint96\"}],\"internalType\":\"struct ITasks.NativeReward[]\",\"name\":\"_nativeReward\",\"type\":\"tuple[]\"}],\"name\":\"submitProject\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"projectId\",\"type\":\"uint16\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"acceptProject(uint256,uint16)\":{\"params\":{\"_projectId\":\"Id of the project to accept.\",\"_rfpId\":\"Id of the RFP.\"}},\"createRFP(string,uint64,(address,uint96)[],address,address)\":{\"params\":{\"_budget\":\"Maximum ERC20 rewards avaliable for projects of the RFP.\",\"_deadline\":\"Block timestamp at which the RFP closes.\",\"_manager\":\"Who will manage the RFP (become the manager).\",\"_metadata\":\"Metadata of the RFP. (IPFS hash)\",\"_tasksManager\":\"Who will manage the project Tasks (become the OpenR&D manager).\"},\"returns\":{\"rfpId\":\"Id of the newly created RFP.\"}},\"emptyRFP(uint256)\":{\"params\":{\"_rfpId\":\"Id of the RFP.\"}},\"getRFP(uint256)\":{\"params\":{\"_rfpId\":\"Id of the RFP.\"}},\"getRFPs(uint256[])\":{\"params\":{\"_rfpIds\":\"Ids of the RFPs.\"}},\"submitProject(uint256,string,uint64,(bool,address,uint88)[],(address,uint96)[])\":{\"params\":{\"_deadline\":\"Before when the proposed project will be completed.\",\"_metadata\":\"Metadata of your project.\",\"_nativeReward\":\"Wanted native currency from the RFP for the project.\",\"_reward\":\"Wanted rewards from the RFP for the project.\",\"_rfpId\":\"Id of the RFP.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"acceptProject(uint256,uint16)\":{\"notice\":\"Accept project to be funnded by the RFP.\"},\"createRFP(string,uint64,(address,uint96)[],address,address)\":{\"notice\":\"Create a new RFP.\"},\"emptyRFP(uint256)\":{\"notice\":\"Refunds any leftover budget to the creator.\"},\"escrowImplementation()\":{\"notice\":\"The base escrow contract that will be cloned for every RFP.\"},\"getRFP(uint256)\":{\"notice\":\"Retrieves all RFP information by id.\"},\"getRFPs(uint256[])\":{\"notice\":\"Retrieves multiple RFPs.\"},\"rfpCount()\":{\"notice\":\"Retrieves the current amount of created RFPs.\"},\"submitProject(uint256,string,uint64,(bool,address,uint88)[],(address,uint96)[])\":{\"notice\":\"Propose a project to be funded by an RFP.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/RFP/RFPs.sol\":\"RFPs\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n\\n    /**\\n     * @dev Returns the amount of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves `amount` tokens from the caller's account to `to`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address to, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Moves `amount` tokens from `from` to `to` using the\\n     * allowance mechanism. `amount` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(address from, address to, uint256 amount) external returns (bool);\\n}\\n\",\"keccak256\":\"0x287b55befed2961a7eabd7d7b1b2839cbca8a5b80ef8dcbb25ed3d4c2002c305\",\"license\":\"MIT\"},\"contracts/Escrow.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.0;\\r\\n\\r\\nimport {IERC20} from \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\r\\n\\r\\ncontract Escrow {\\r\\n    error AlreadyInitialized();\\r\\n    error NotOwner();\\r\\n\\r\\n    address private owner;\\r\\n\\r\\n    receive() external payable {}\\r\\n\\r\\n    fallback() external payable {}\\r\\n\\r\\n    /// @notice Initializes the Escrow with the sender of the transaction as owner.\\r\\n    /// @dev This should be called in the same transaction as deploying the escrow, to prevent front running.\\r\\n    function __Escrow_init() external payable {\\r\\n        if (owner != address(0)) {\\r\\n            revert AlreadyInitialized();\\r\\n        }\\r\\n\\r\\n        owner = msg.sender;\\r\\n    }\\r\\n\\r\\n    /// @notice Transfers a certain amount of ERC20 token to a given address. Can only be called by the owner.\\r\\n    /// @param token The ERC20 contract address.\\r\\n    /// @param to The address to recieve the tokens.\\r\\n    /// @param amount The amount of ERC20 token to receive.\\r\\n    function transfer(IERC20 token, address to, uint256 amount) external {\\r\\n        if (msg.sender != owner) {\\r\\n            revert NotOwner();\\r\\n        }\\r\\n\\r\\n        token.transfer(to, amount);\\r\\n    }\\r\\n\\r\\n    /// @notice Transfers a certain amount of native currency to a given address. Can only be called by the owner.\\r\\n    /// @param to The address to recieve the currency.\\r\\n    /// @param amount The amount of native currency to receive.\\r\\n    function transferNative(address payable to, uint256 amount) external {\\r\\n        if (msg.sender != owner) {\\r\\n            revert NotOwner();\\r\\n        }\\r\\n\\r\\n        to.transfer(amount);\\r\\n    }\\r\\n}\\r\\n\",\"keccak256\":\"0x233ae9f23c9e55f5de562d63e9cb0b8c74e297bdc4aeaeb1958b0054a119424d\",\"license\":\"MIT\"},\"contracts/RFP/IRFPs.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.0;\\r\\n\\r\\nimport {IERC20} from \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\r\\nimport {Escrow} from \\\"../Escrow.sol\\\";\\r\\nimport {ITasks} from \\\"../Tasks/ITasks.sol\\\";\\r\\n\\r\\ninterface IRFPs {\\r\\n    error RFPDoesNotExist();\\r\\n    error RFPClosed();\\r\\n    error NotManager();\\r\\n    error ProjectDoesNotExist();\\r\\n    error ProjectAlreadyAccepted();\\r\\n    error RewardDoesntEndWithNextToken();\\r\\n\\r\\n    error Overflow();\\r\\n    error ERC1167FailedCreateClone();\\r\\n\\r\\n    event RFPCreated(\\r\\n        uint256 indexed rfpId,\\r\\n        string metadata,\\r\\n        uint64 deadline,\\r\\n        ITasks.ERC20Transfer[] budget,\\r\\n        uint96 nativeBudget,\\r\\n        address creator,\\r\\n        address tasksManager,\\r\\n        address manager\\r\\n    );\\r\\n    event ProjectSubmitted(\\r\\n        uint256 indexed rfpId,\\r\\n        uint16 projectId,\\r\\n        string metadata,\\r\\n        address representative,\\r\\n        uint64 deadline,\\r\\n        ITasks.Reward[] reward,\\r\\n        ITasks.NativeReward[] nativeReward\\r\\n    );\\r\\n    event ProjectAccepted(\\r\\n        uint256 indexed rfpId,\\r\\n        uint16 projectId,\\r\\n        uint256 taskId\\r\\n    );\\r\\n    event RFPEmptied(uint256 indexed rfpId);\\r\\n\\r\\n    /// @notice A container for a RFP project.\\r\\n    /// @param metadata Metadata of the project. (IPFS hash)\\r\\n    /// @param representative Who has submitted this project.\\r\\n    /// @param deadline The deadline after which the project should be completed.\\r\\n    /// @param accepted If the project has been accepted. To prevent 2 OpenR&D tasks from being created.\\r\\n    /// @param reward How much rewards the representative wants for completion.\\r\\n    /// @param nativeReward How much native currency the representative wants for completion.\\r\\n    struct Project {\\r\\n        string metadata;\\r\\n        address representative;\\r\\n        uint64 deadline;\\r\\n        bool accepted;\\r\\n        uint8 rewardCount;\\r\\n        uint8 nativeRewardCount;\\r\\n        mapping(uint8 => ITasks.Reward) reward;\\r\\n        mapping(uint8 => ITasks.NativeReward) nativeReward;\\r\\n    }\\r\\n\\r\\n    struct OffchainProject {\\r\\n        string metadata;\\r\\n        address representative;\\r\\n        uint64 deadline;\\r\\n        bool accepted;\\r\\n        ITasks.Reward[] reward;\\r\\n        ITasks.NativeReward[] nativeReward;\\r\\n    }\\r\\n\\r\\n    /// @notice A container for RFP-related information.\\r\\n    /// @param metadata Metadata of the RFP. (IPFS hash)\\r\\n    /// @param deadline Block timestamp at which the RFP closes.\\r\\n    /// @param budget The ERC20 contract that compose the budget.\\r\\n    /// @param nativeBudget Maximum native currency reward available for projects of the RFP.\\r\\n    /// @param creator Who has created the RFP.\\r\\n    /// @param tasksManager Who has the permission to manage the OpenR&D tasks.\\r\\n    /// @param manager Who has the permission to manage the RFP.\\r\\n    /// @param projects Projects that want to be funded by the RFP.\\r\\n    struct RFP {\\r\\n        string metadata;\\r\\n        // Storage block seperator\\r\\n        uint64 deadline;\\r\\n        Escrow escrow;\\r\\n        // Storage block seperator\\r\\n        uint96 nativeBudget;\\r\\n        address creator;\\r\\n        // Storage block seperator\\r\\n        address tasksManager;\\r\\n        // Storage block seperator\\r\\n        address manager;\\r\\n        uint8 budgetCount;\\r\\n        uint16 projectCount;\\r\\n        // Storage block seperator\\r\\n        mapping(uint8 => IERC20) budget;\\r\\n        mapping(uint16 => Project) projects;\\r\\n    }\\r\\n\\r\\n    struct OffChainRFP {\\r\\n        string metadata;\\r\\n        uint64 deadline;\\r\\n        Escrow escrow;\\r\\n        uint96 nativeBudget;\\r\\n        address creator;\\r\\n        address tasksManager;\\r\\n        address manager;\\r\\n        IERC20[] budget;\\r\\n        OffchainProject[] projects;\\r\\n    }\\r\\n\\r\\n    /// @notice Retrieves the current amount of created RFPs.\\r\\n    function rfpCount() external view returns (uint256);\\r\\n\\r\\n    /// @notice Retrieves all RFP information by id.\\r\\n    /// @param _rfpId Id of the RFP.\\r\\n    function getRFP(uint256 _rfpId) external view returns (OffChainRFP memory);\\r\\n\\r\\n    /// @notice Retrieves multiple RFPs.\\r\\n    /// @param _rfpIds Ids of the RFPs.\\r\\n    function getRFPs(\\r\\n        uint256[] calldata _rfpIds\\r\\n    ) external view returns (OffChainRFP[] memory);\\r\\n\\r\\n    /// @notice Create a new RFP.\\r\\n    /// @param _metadata Metadata of the RFP. (IPFS hash)\\r\\n    /// @param _deadline Block timestamp at which the RFP closes.\\r\\n    /// @param _budget Maximum ERC20 rewards avaliable for projects of the RFP.\\r\\n    /// @param _tasksManager Who will manage the project Tasks (become the OpenR&D manager).\\r\\n    /// @param _manager Who will manage the RFP (become the manager).\\r\\n    /// @return rfpId Id of the newly created RFP.\\r\\n    function createRFP(\\r\\n        string calldata _metadata,\\r\\n        uint64 _deadline,\\r\\n        ITasks.ERC20Transfer[] calldata _budget,\\r\\n        address _tasksManager,\\r\\n        address _manager\\r\\n    ) external payable returns (uint256 rfpId);\\r\\n\\r\\n    /// @notice Propose a project to be funded by an RFP.\\r\\n    /// @param _rfpId Id of the RFP.\\r\\n    /// @param _metadata Metadata of your project.\\r\\n    /// @param _deadline Before when the proposed project will be completed.\\r\\n    /// @param _reward Wanted rewards from the RFP for the project.\\r\\n    /// @param _nativeReward Wanted native currency from the RFP for the project.\\r\\n    function submitProject(\\r\\n        uint256 _rfpId,\\r\\n        string calldata _metadata,\\r\\n        uint64 _deadline,\\r\\n        ITasks.Reward[] calldata _reward,\\r\\n        ITasks.NativeReward[] calldata _nativeReward\\r\\n    ) external returns (uint16 projectId);\\r\\n\\r\\n    /// @notice Accept project to be funnded by the RFP.\\r\\n    /// @param _rfpId Id of the RFP.\\r\\n    /// @param _projectId Id of the project to accept.\\r\\n    function acceptProject(uint256 _rfpId, uint16 _projectId) external;\\r\\n\\r\\n    /// @notice Refunds any leftover budget to the creator.\\r\\n    /// @param _rfpId Id of the RFP.\\r\\n    function emptyRFP(uint256 _rfpId) external;\\r\\n}\\r\\n\",\"keccak256\":\"0xd6eb8f2d9c4e6a174415d9f205dbd84a6a9cf75d78b187afd911355de34ede92\",\"license\":\"MIT\"},\"contracts/RFP/RFPs.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.0;\\r\\n\\r\\nimport {IRFPs, IERC20, Escrow, ITasks} from \\\"./IRFPs.sol\\\";\\r\\n\\r\\ncontract RFPs is IRFPs {\\r\\n    /// @notice The Tasks deployment where accepted projects will be created.\\r\\n    ITasks private tasks;\\r\\n\\r\\n    /// @notice The incremental ID for RFPs.\\r\\n    uint256 private rfpCounter;\\r\\n\\r\\n    /// @notice A mapping between RFP IDs and RFP information.\\r\\n    mapping(uint256 => RFP) internal rfps;\\r\\n\\r\\n    /// @notice The base escrow contract that will be cloned for every RFP.\\r\\n    address public immutable escrowImplementation;\\r\\n\\r\\n    constructor(ITasks _tasks) {\\r\\n        tasks = _tasks;\\r\\n        escrowImplementation = address(new Escrow());\\r\\n    }\\r\\n\\r\\n    receive() external payable {}\\r\\n\\r\\n    /// @inheritdoc IRFPs\\r\\n    function rfpCount() external view returns (uint256) {\\r\\n        return rfpCounter;\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc IRFPs\\r\\n    function getRFP(\\r\\n        uint256 _rfpId\\r\\n    ) public view returns (OffChainRFP memory offchainRFP) {\\r\\n        RFP storage rfp = _getRFP(_rfpId);\\r\\n        offchainRFP = _toOffchainRFP(rfp);\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc IRFPs\\r\\n    function getRFPs(\\r\\n        uint256[] memory _rfpIds\\r\\n    ) public view returns (OffChainRFP[] memory) {\\r\\n        OffChainRFP[] memory offchainRFPs = new OffChainRFP[](_rfpIds.length);\\r\\n        for (uint i; i < _rfpIds.length; ) {\\r\\n            offchainRFPs[i] = getRFP(_rfpIds[i]);\\r\\n\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n        return offchainRFPs;\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc IRFPs\\r\\n    function createRFP(\\r\\n        string calldata _metadata,\\r\\n        uint64 _deadline,\\r\\n        ITasks.ERC20Transfer[] calldata _budget,\\r\\n        address _tasksManager,\\r\\n        address _manager\\r\\n    ) external payable returns (uint256 rfpId) {\\r\\n        rfpId = rfpCounter++;\\r\\n\\r\\n        RFP storage rfp = rfps[rfpId];\\r\\n        rfp.metadata = _metadata;\\r\\n        rfp.deadline = _deadline;\\r\\n        Escrow escrow = Escrow(payable(clone(escrowImplementation)));\\r\\n        escrow.__Escrow_init{value: msg.value}();\\r\\n        rfp.escrow = escrow;\\r\\n        // Gas optimization\\r\\n        if (msg.value != 0) {\\r\\n            rfp.nativeBudget = _toUint96(msg.value);\\r\\n        }\\r\\n        rfp.budgetCount = _toUint8(_budget.length);\\r\\n        for (uint8 i; i < uint8(_budget.length); ) {\\r\\n            _budget[i].tokenContract.transferFrom(\\r\\n                msg.sender,\\r\\n                address(escrow),\\r\\n                _budget[i].amount\\r\\n            );\\r\\n            // use balanceOf in case there is a fee asoosiated with the transfer\\r\\n            rfp.budget[i] = _budget[i].tokenContract;\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n\\r\\n        rfp.manager = _manager;\\r\\n        rfp.tasksManager = _tasksManager;\\r\\n        rfp.creator = msg.sender;\\r\\n\\r\\n        emit RFPCreated(\\r\\n            rfpId,\\r\\n            _metadata,\\r\\n            _deadline,\\r\\n            _budget,\\r\\n            _toUint96(msg.value),\\r\\n            msg.sender,\\r\\n            _tasksManager,\\r\\n            _manager\\r\\n        );\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc IRFPs\\r\\n    function submitProject(\\r\\n        uint256 _rfpId,\\r\\n        string calldata _metadata,\\r\\n        uint64 _deadline,\\r\\n        ITasks.Reward[] calldata _reward,\\r\\n        ITasks.NativeReward[] calldata _nativeReward\\r\\n    ) external returns (uint16 projectId) {\\r\\n        RFP storage rfp = _getRFP(_rfpId);\\r\\n\\r\\n        // Ensure not past deadline\\r\\n        if (rfp.deadline <= uint64(block.timestamp)) {\\r\\n            revert RFPClosed();\\r\\n        }\\r\\n        // Ensure reward ends with next token\\r\\n        unchecked {\\r\\n            if (_reward.length != 0 && !_reward[_reward.length - 1].nextToken) {\\r\\n                revert RewardDoesntEndWithNextToken();\\r\\n            }\\r\\n        }\\r\\n\\r\\n        Project storage project = rfp.projects[rfp.projectCount];\\r\\n        project.metadata = _metadata;\\r\\n        project.deadline = _deadline;\\r\\n        project.representative = msg.sender;\\r\\n\\r\\n        // Gas optimization\\r\\n        if (_reward.length != 0) {\\r\\n            project.rewardCount = _toUint8(_reward.length);\\r\\n            for (uint8 i; i < uint8(_reward.length); ) {\\r\\n                project.reward[i] = _reward[i];\\r\\n                unchecked {\\r\\n                    ++i;\\r\\n                }\\r\\n            }\\r\\n        }\\r\\n\\r\\n        // Gas optimization\\r\\n        if (_nativeReward.length != 0) {\\r\\n            project.nativeRewardCount = _toUint8(_nativeReward.length);\\r\\n            for (uint8 i; i < uint8(_nativeReward.length); ) {\\r\\n                project.nativeReward[i] = _nativeReward[i];\\r\\n                unchecked {\\r\\n                    ++i;\\r\\n                }\\r\\n            }\\r\\n        }\\r\\n\\r\\n        projectId = rfp.projectCount++;\\r\\n\\r\\n        emit ProjectSubmitted(\\r\\n            _rfpId,\\r\\n            projectId,\\r\\n            _metadata,\\r\\n            msg.sender,\\r\\n            _deadline,\\r\\n            _reward,\\r\\n            _nativeReward\\r\\n        );\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc IRFPs\\r\\n    function acceptProject(uint256 _rfpId, uint16 _projectId) external {\\r\\n        RFP storage rfp = _getRFP(_rfpId);\\r\\n\\r\\n        // Ensure sender is manager\\r\\n        if (rfp.manager != msg.sender) {\\r\\n            revert NotManager();\\r\\n        }\\r\\n        // Ensure project exists\\r\\n        if (_projectId >= rfp.projectCount) {\\r\\n            revert ProjectDoesNotExist();\\r\\n        }\\r\\n\\r\\n        Project storage project = rfp.projects[_projectId];\\r\\n\\r\\n        // Ensure project not accepted\\r\\n        if (project.accepted) {\\r\\n            revert ProjectAlreadyAccepted();\\r\\n        }\\r\\n\\r\\n        ITasks.ERC20Transfer[] memory taskBudget = new ITasks.ERC20Transfer[](\\r\\n            rfp.budgetCount\\r\\n        );\\r\\n        ITasks.Reward[] memory taskReward = new ITasks.Reward[](\\r\\n            project.rewardCount\\r\\n        );\\r\\n        uint8 j;\\r\\n        for (uint8 i; i < taskBudget.length; ) {\\r\\n            IERC20 erc20 = rfp.budget[i];\\r\\n            uint96 projectBudget;\\r\\n            while (j < taskReward.length) {\\r\\n                taskReward[j] = project.reward[j];\\r\\n                projectBudget += taskReward[j].amount;\\r\\n\\r\\n                unchecked {\\r\\n                    ++j;\\r\\n                }\\r\\n\\r\\n                if (taskReward[j - 1].nextToken) {\\r\\n                    break;\\r\\n                }\\r\\n            }\\r\\n\\r\\n            taskBudget[i] = ITasks.ERC20Transfer(erc20, projectBudget);\\r\\n            rfp.escrow.transfer(erc20, address(this), projectBudget);\\r\\n            erc20.approve(address(tasks), projectBudget);\\r\\n\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n\\r\\n        uint96 taskNativeBudget;\\r\\n        ITasks.NativeReward[]\\r\\n            memory taskNativeReward = new ITasks.NativeReward[](\\r\\n                project.nativeRewardCount\\r\\n            );\\r\\n        for (uint8 i; i < taskNativeReward.length; ) {\\r\\n            taskNativeReward[i] = project.nativeReward[i];\\r\\n            taskNativeBudget += taskNativeReward[i].amount;\\r\\n\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n        rfp.escrow.transferNative(payable(address(this)), taskNativeBudget);\\r\\n\\r\\n        ITasks.PreapprovedApplication[]\\r\\n            memory preapproved = new ITasks.PreapprovedApplication[](1);\\r\\n        preapproved[0] = ITasks.PreapprovedApplication(\\r\\n            project.representative,\\r\\n            taskReward,\\r\\n            taskNativeReward\\r\\n        );\\r\\n\\r\\n        uint256 taskId = tasks.createTask{value: taskNativeBudget}(\\r\\n            project.metadata,\\r\\n            project.deadline,\\r\\n            taskBudget,\\r\\n            rfp.tasksManager,\\r\\n            preapproved\\r\\n        );\\r\\n        project.accepted = true;\\r\\n        emit ProjectAccepted(_rfpId, _projectId, taskId);\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc IRFPs\\r\\n    function emptyRFP(uint256 _rfpId) external {\\r\\n        RFP storage rfp = _getRFP(_rfpId);\\r\\n\\r\\n        // Ensure sender is manager\\r\\n        if (rfp.manager != msg.sender) {\\r\\n            revert NotManager();\\r\\n        }\\r\\n\\r\\n        uint8 budgetCount = rfp.budgetCount;\\r\\n        for (uint8 i; i < budgetCount; ) {\\r\\n            IERC20 erc20 = rfp.budget[i];\\r\\n\\r\\n            rfp.escrow.transfer(\\r\\n                erc20,\\r\\n                rfp.creator,\\r\\n                erc20.balanceOf(address(rfp.escrow))\\r\\n            );\\r\\n\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n\\r\\n        rfp.escrow.transferNative(\\r\\n            payable(rfp.creator),\\r\\n            address(rfp.escrow).balance\\r\\n        );\\r\\n\\r\\n        emit RFPEmptied(_rfpId);\\r\\n    }\\r\\n\\r\\n    function _getRFP(uint256 _rfpId) internal view returns (RFP storage rfp) {\\r\\n        if (_rfpId >= rfpCounter) {\\r\\n            revert RFPDoesNotExist();\\r\\n        }\\r\\n\\r\\n        rfp = rfps[_rfpId];\\r\\n    }\\r\\n\\r\\n    function _toOffchainRFP(\\r\\n        RFP storage rfp\\r\\n    ) internal view returns (OffChainRFP memory offchainRFP) {\\r\\n        offchainRFP.metadata = rfp.metadata;\\r\\n        offchainRFP.deadline = rfp.deadline;\\r\\n        offchainRFP.creator = rfp.creator;\\r\\n        offchainRFP.tasksManager = rfp.tasksManager;\\r\\n        offchainRFP.manager = rfp.manager;\\r\\n        offchainRFP.escrow = rfp.escrow;\\r\\n        offchainRFP.nativeBudget = rfp.nativeBudget;\\r\\n\\r\\n        offchainRFP.budget = new IERC20[](rfp.budgetCount);\\r\\n        for (uint8 i; i < offchainRFP.budget.length; ) {\\r\\n            offchainRFP.budget[i] = rfp.budget[i];\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n\\r\\n        offchainRFP.projects = new OffchainProject[](rfp.projectCount);\\r\\n        for (uint8 i; i < offchainRFP.projects.length; ) {\\r\\n            Project storage project = rfp.projects[i];\\r\\n            offchainRFP.projects[i].metadata = project.metadata;\\r\\n            offchainRFP.projects[i].deadline = project.deadline;\\r\\n            offchainRFP.projects[i].representative = project.representative;\\r\\n            offchainRFP.projects[i].accepted = project.accepted;\\r\\n\\r\\n            offchainRFP.projects[i].reward = new ITasks.Reward[](\\r\\n                project.rewardCount\\r\\n            );\\r\\n            for (uint8 j; j < offchainRFP.projects[i].reward.length; ) {\\r\\n                offchainRFP.projects[i].reward[j] = project.reward[j];\\r\\n                unchecked {\\r\\n                    ++j;\\r\\n                }\\r\\n            }\\r\\n            offchainRFP.projects[i].nativeReward = new ITasks.NativeReward[](\\r\\n                project.nativeRewardCount\\r\\n            );\\r\\n\\r\\n            for (uint8 j; j < offchainRFP.projects[i].nativeReward.length; ) {\\r\\n                offchainRFP.projects[i].nativeReward[j] = project.nativeReward[\\r\\n                    j\\r\\n                ];\\r\\n                unchecked {\\r\\n                    ++j;\\r\\n                }\\r\\n            }\\r\\n            unchecked {\\r\\n                ++i;\\r\\n            }\\r\\n        }\\r\\n    }\\r\\n\\r\\n    // From: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/Clones.sol\\r\\n    function clone(address implementation) internal returns (address instance) {\\r\\n        /// @solidity memory-safe-assembly\\r\\n        assembly {\\r\\n            // Cleans the upper 96 bits of the `implementation` word, then packs the first 3 bytes\\r\\n            // of the `implementation` address with the bytecode before the address.\\r\\n            mstore(\\r\\n                0x00,\\r\\n                or(\\r\\n                    shr(0xe8, shl(0x60, implementation)),\\r\\n                    0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000\\r\\n                )\\r\\n            )\\r\\n            // Packs the remaining 17 bytes of `implementation` with the bytecode after the address.\\r\\n            mstore(\\r\\n                0x20,\\r\\n                or(shl(0x78, implementation), 0x5af43d82803e903d91602b57fd5bf3)\\r\\n            )\\r\\n            instance := create(0, 0x09, 0x37)\\r\\n        }\\r\\n        if (instance == address(0)) {\\r\\n            revert ERC1167FailedCreateClone();\\r\\n        }\\r\\n    }\\r\\n\\r\\n    function _toUint8(uint256 value) internal pure returns (uint8) {\\r\\n        if (value > type(uint8).max) {\\r\\n            revert Overflow();\\r\\n        }\\r\\n        return uint8(value);\\r\\n    }\\r\\n\\r\\n    function _toUint96(uint256 value) internal pure returns (uint96) {\\r\\n        if (value > type(uint96).max) {\\r\\n            revert Overflow();\\r\\n        }\\r\\n        return uint96(value);\\r\\n    }\\r\\n}\\r\\n\",\"keccak256\":\"0xe876291c2c2169b2b11bb24999966a4b52e2a0afc5c7212c26e8973186d5cd4a\",\"license\":\"MIT\"},\"contracts/Tasks/ITasks.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.0;\\r\\n\\r\\nimport {IERC20} from \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\r\\nimport {Escrow} from \\\"../Escrow.sol\\\";\\r\\n\\r\\ninterface ITasks {\\r\\n    error InvalidTimestamp();\\r\\n    error InvalidAddress();\\r\\n    error PointlessOperation();\\r\\n\\r\\n    error TaskDoesNotExist();\\r\\n    error TaskNotOpen();\\r\\n    error TaskNotTaken();\\r\\n    error TaskNotClosed();\\r\\n    error TaskClosed();\\r\\n\\r\\n    error NotManager();\\r\\n    error NotExecutor();\\r\\n\\r\\n    error RewardAboveBudget();\\r\\n    error RewardDoesntEndWithNextToken();\\r\\n    error IncorrectAmountOfNativeCurrencyAttached();\\r\\n    error ApplicationDoesNotExist();\\r\\n    error NotYourApplication();\\r\\n    error ApplicationNotAccepted();\\r\\n    error SubmissionDoesNotExist();\\r\\n    error SubmissionAlreadyJudged();\\r\\n    error JudgementNone();\\r\\n\\r\\n    error RequestDoesNotExist();\\r\\n    error RequestAlreadyAccepted();\\r\\n    error RequestNotAccepted();\\r\\n    error RequestAlreadyExecuted();\\r\\n\\r\\n    error Overflow();\\r\\n    error ManualBudgetIncreaseNeeded();\\r\\n    error PartialRewardAboveFullReward();\\r\\n    error NativeTransferFailed();\\r\\n    error ERC1167FailedCreateClone();\\r\\n\\r\\n    event TaskCreated(\\r\\n        uint256 indexed taskId,\\r\\n        string metadata,\\r\\n        uint64 deadline,\\r\\n        ERC20Transfer[] budget,\\r\\n        uint96 nativeBudget,\\r\\n        address creator,\\r\\n        address manager\\r\\n    );\\r\\n    event ApplicationCreated(\\r\\n        uint256 indexed taskId,\\r\\n        uint16 applicationId,\\r\\n        string metadata,\\r\\n        Reward[] reward,\\r\\n        NativeReward[] nativeReward\\r\\n    );\\r\\n    event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId);\\r\\n    event TaskTaken(uint256 indexed taskId, uint16 applicationId);\\r\\n    event SubmissionCreated(\\r\\n        uint256 indexed taskId,\\r\\n        uint8 submissionId,\\r\\n        string metadata\\r\\n    );\\r\\n    event SubmissionReviewed(\\r\\n        uint256 indexed taskId,\\r\\n        uint8 submissionId,\\r\\n        SubmissionJudgement judgement,\\r\\n        string feedback\\r\\n    );\\r\\n    event TaskCompleted(uint256 indexed taskId, TaskCompletion source);\\r\\n\\r\\n    event CancelTaskRequested(\\r\\n        uint256 indexed taskId,\\r\\n        uint8 requestId,\\r\\n        string explanation\\r\\n    );\\r\\n    event TaskCancelled(uint256 indexed taskId);\\r\\n    event RequestAccepted(\\r\\n        uint256 indexed taskId,\\r\\n        RequestType requestType,\\r\\n        uint8 requestId\\r\\n    );\\r\\n    event RequestExecuted(\\r\\n        uint256 indexed taskId,\\r\\n        RequestType requestType,\\r\\n        uint8 requestId,\\r\\n        address by\\r\\n    );\\r\\n\\r\\n    event DeadlineChanged(uint256 indexed taskId, uint64 newDeadline);\\r\\n    event BudgetChanged(uint256 indexed taskId); // Quite expensive to transfer budget into a datastructure to emit\\r\\n    event MetadataChanged(uint256 indexed taskId, string newMetadata);\\r\\n    event PartialPayment(\\r\\n        uint256 indexed taskId,\\r\\n        uint88[] partialReward,\\r\\n        uint96[] partialNativeReward\\r\\n    );\\r\\n    event NewManager(uint256 indexed taskId, address manager);\\r\\n\\r\\n    /// @notice A container for ERC20 transfer information.\\r\\n    /// @param tokenContract ERC20 token to transfer.\\r\\n    /// @param amount How much of this token should be transfered.\\r\\n    struct ERC20Transfer {\\r\\n        IERC20 tokenContract;\\r\\n        uint96 amount;\\r\\n    }\\r\\n\\r\\n    /// @notice A container for a reward payout.\\r\\n    /// @param nextToken If this reward is payed out in the next ERC20 token.\\r\\n    /// @dev IERC20 (address) is a lot of storage, rather just keep those only in budget.\\r\\n    /// @notice nextToken should always be true for the last entry\\r\\n    /// @param to Whom this token should be transfered to.\\r\\n    /// @param amount How much of this token should be transfered.\\r\\n    struct Reward {\\r\\n        bool nextToken;\\r\\n        address to;\\r\\n        uint88 amount;\\r\\n    }\\r\\n\\r\\n    /// @notice A container for a native reward payout.\\r\\n    /// @param to Whom the native reward should be transfered to.\\r\\n    /// @param amount How much native reward should be transfered.\\r\\n    struct NativeReward {\\r\\n        address to;\\r\\n        uint96 amount;\\r\\n    }\\r\\n\\r\\n    /// @notice A container for a task application.\\r\\n    /// @param metadata Metadata of the application. (IPFS hash)\\r\\n    /// @param applicant Who has submitted this application.\\r\\n    /// @param accepted If the application has been accepted by the manager.\\r\\n    /// @param reward How much rewards the applicant wants for completion.\\r\\n    /// @param nativeReward How much native currency the applicant wants for completion.\\r\\n    struct Application {\\r\\n        string metadata;\\r\\n        address applicant;\\r\\n        bool accepted;\\r\\n        uint8 rewardCount;\\r\\n        uint8 nativeRewardCount;\\r\\n        mapping(uint8 => Reward) reward;\\r\\n        mapping(uint8 => NativeReward) nativeReward;\\r\\n    }\\r\\n\\r\\n    struct OffChainApplication {\\r\\n        string metadata;\\r\\n        address applicant;\\r\\n        bool accepted;\\r\\n        Reward[] reward;\\r\\n        NativeReward[] nativeReward;\\r\\n    }\\r\\n\\r\\n    /// @notice For approving people on task creation (they are not required to make an application)\\r\\n    struct PreapprovedApplication {\\r\\n        address applicant;\\r\\n        Reward[] reward;\\r\\n        NativeReward[] nativeReward;\\r\\n    }\\r\\n\\r\\n    enum SubmissionJudgement {\\r\\n        None,\\r\\n        Accepted,\\r\\n        Rejected\\r\\n    }\\r\\n    /// @notice A container for a task submission.\\r\\n    /// @param metadata Metadata of the submission. (IPFS hash)\\r\\n    /// @param judgement Judgement cast on the submission.\\r\\n    /// @param feedback A response from the manager. (IPFS hash)\\r\\n    struct Submission {\\r\\n        string metadata;\\r\\n        string feedback;\\r\\n        SubmissionJudgement judgement;\\r\\n    }\\r\\n\\r\\n    enum RequestType {\\r\\n        CancelTask\\r\\n    }\\r\\n\\r\\n    /// @notice A container for shared request information.\\r\\n    /// @param accepted If the request was accepted.\\r\\n    /// @param executed If the request was executed.\\r\\n    struct Request {\\r\\n        bool accepted;\\r\\n        bool executed;\\r\\n    }\\r\\n\\r\\n    /// @notice A container for a request to cancel the task.\\r\\n    /// @param request Request information.\\r\\n    /// @param explanation Why the task should be cancelled.\\r\\n    struct CancelTaskRequest {\\r\\n        Request request;\\r\\n        string explanation;\\r\\n    }\\r\\n\\r\\n    enum TaskState {\\r\\n        Open,\\r\\n        Taken,\\r\\n        Closed\\r\\n    }\\r\\n    /// @notice A container for task-related information.\\r\\n    /// @param metadata Metadata of the task. (IPFS hash)\\r\\n    /// @param deadline Block timestamp at which the task expires if not completed.\\r\\n    /// @param budget Maximum ERC20 rewards that can be earned by completing the task.\\r\\n    /// @param nativeBudget Maximum native currency reward that can be earned by completing the task.\\r\\n    /// @param creator Who has created the task.\\r\\n    /// @param manager Who has the permission to manage the task.\\r\\n    /// @param state Current state the task is in.\\r\\n    /// @param applications Applications to take the job.\\r\\n    /// @param executorApplication Index of the application that will execture the task.\\r\\n    /// @param submissions Submission made to finish the task.\\r\\n    struct Task {\\r\\n        string metadata;\\r\\n        // Storage block seperator\\r\\n        uint64 deadline;\\r\\n        Escrow escrow;\\r\\n        // Storage block seperator\\r\\n        uint96 nativeBudget;\\r\\n        address creator;\\r\\n        // Storage block seperator\\r\\n        address manager;\\r\\n        TaskState state;\\r\\n        uint16 executorApplication;\\r\\n        uint8 budgetCount;\\r\\n        uint16 applicationCount;\\r\\n        uint8 submissionCount;\\r\\n        uint8 cancelTaskRequestCount;\\r\\n        // Storage block seperator\\r\\n        mapping(uint8 => ERC20Transfer) budget;\\r\\n        mapping(uint16 => Application) applications;\\r\\n        mapping(uint8 => Submission) submissions;\\r\\n        mapping(uint8 => CancelTaskRequest) cancelTaskRequests;\\r\\n    }\\r\\n\\r\\n    struct OffChainTask {\\r\\n        string metadata;\\r\\n        uint64 deadline;\\r\\n        uint16 executorApplication;\\r\\n        address creator;\\r\\n        address manager;\\r\\n        TaskState state;\\r\\n        Escrow escrow;\\r\\n        uint96 nativeBudget;\\r\\n        ERC20Transfer[] budget;\\r\\n        OffChainApplication[] applications;\\r\\n        Submission[] submissions;\\r\\n        CancelTaskRequest[] cancelTaskRequests;\\r\\n    }\\r\\n\\r\\n    enum TaskCompletion {\\r\\n        SubmissionAccepted,\\r\\n        Dispute\\r\\n    }\\r\\n\\r\\n    /// @notice Retrieves the current amount of created tasks.\\r\\n    function taskCount() external view returns (uint256);\\r\\n\\r\\n    /// @notice Retrieves all task information by id.\\r\\n    /// @param _taskId Id of the task.\\r\\n    function getTask(\\r\\n        uint256 _taskId\\r\\n    ) external view returns (OffChainTask memory);\\r\\n\\r\\n    /// @notice Retrieves multiple tasks.\\r\\n    /// @param _taskIds Ids of the tasks.\\r\\n    function getTasks(\\r\\n        uint256[] calldata _taskIds\\r\\n    ) external view returns (OffChainTask[] memory);\\r\\n\\r\\n    /// @notice Create a new task.\\r\\n    /// @param _metadata Metadata of the task. (IPFS hash)\\r\\n    /// @param _deadline Block timestamp at which the task expires if not completed.\\r\\n    /// @param _budget Maximum ERC20 rewards that can be earned by completing the task.\\r\\n    /// @param _manager Who will manage the task (become the manager).\\r\\n    /// @return taskId Id of the newly created task.\\r\\n    function createTask(\\r\\n        string calldata _metadata,\\r\\n        uint64 _deadline,\\r\\n        ERC20Transfer[] calldata _budget,\\r\\n        address _manager,\\r\\n        PreapprovedApplication[] calldata _preapprove\\r\\n    ) external payable returns (uint256 taskId);\\r\\n\\r\\n    /// @notice Apply to take the task.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _metadata Metadata of your application.\\r\\n    /// @param _reward Wanted rewards for completing the task.\\r\\n    /// @param _nativeReward Wanted native currency for completing the task.\\r\\n    /// @return applicationId Id of the newly created application.\\r\\n    function applyForTask(\\r\\n        uint256 _taskId,\\r\\n        string calldata _metadata,\\r\\n        Reward[] calldata _reward,\\r\\n        NativeReward[] calldata _nativeReward\\r\\n    ) external returns (uint16 applicationId);\\r\\n\\r\\n    /// @notice Accept application to allow them to take the task.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _applicationIds Indexes of the applications to accept.\\r\\n    function acceptApplications(\\r\\n        uint256 _taskId,\\r\\n        uint16[] calldata _applicationIds\\r\\n    ) external payable;\\r\\n\\r\\n    /// @notice Take the task after your application has been accepted.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _applicationId Index of application you made that has been accepted.\\r\\n    function takeTask(uint256 _taskId, uint16 _applicationId) external;\\r\\n\\r\\n    /// @notice Create a submission.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _metadata Metadata of the submission. (IPFS hash)\\r\\n    /// @return submissionId Id of the newly created submission.\\r\\n    function createSubmission(\\r\\n        uint256 _taskId,\\r\\n        string calldata _metadata\\r\\n    ) external returns (uint8 submissionId);\\r\\n\\r\\n    /// @notice Review a submission.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _submissionId Index of the submission that is reviewed.\\r\\n    /// @param _judgement Outcome of the review.\\r\\n    /// @param _feedback Reasoning of the reviewer. (IPFS hash)\\r\\n    function reviewSubmission(\\r\\n        uint256 _taskId,\\r\\n        uint8 _submissionId,\\r\\n        SubmissionJudgement _judgement,\\r\\n        string calldata _feedback\\r\\n    ) external;\\r\\n\\r\\n    /// @notice Cancels a task. This can be used to close a task and receive back the budget.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _explanation Why the task was cancelled. (IPFS hash)\\r\\n    /// @return cancelTaskRequestId Id of the newly created request for task cancellation.\\r\\n    function cancelTask(\\r\\n        uint256 _taskId,\\r\\n        string calldata _explanation\\r\\n    ) external returns (uint8 cancelTaskRequestId);\\r\\n\\r\\n    /// @notice Accepts a request, executing the proposed action.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _requestType What kind of request it is.\\r\\n    /// @param _requestId Id of the request.\\r\\n    /// @param _execute If the request should also be executed in this transaction.\\r\\n    function acceptRequest(\\r\\n        uint256 _taskId,\\r\\n        RequestType _requestType,\\r\\n        uint8 _requestId,\\r\\n        bool _execute\\r\\n    ) external;\\r\\n\\r\\n    /// @notice Exectued an accepted request, allows anyone to pay for the gas costs of the execution.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _requestType What kind of request it is.\\r\\n    /// @param _requestId Id of the request.\\r\\n    function executeRequest(\\r\\n        uint256 _taskId,\\r\\n        RequestType _requestType,\\r\\n        uint8 _requestId\\r\\n    ) external;\\r\\n\\r\\n    /// @notice Extend the deadline of a task.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _extension How much to extend the deadline by.\\r\\n    function extendDeadline(uint256 _taskId, uint64 _extension) external;\\r\\n\\r\\n    /// @notice Increase the budget of the task.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _increase How much to increase each tokens amount by.\\r\\n    /// @dev Any attached native reward will also be used to increase the budget.\\r\\n    function increaseBudget(\\r\\n        uint256 _taskId,\\r\\n        uint96[] calldata _increase\\r\\n    ) external payable;\\r\\n\\r\\n    /// @notice Edit the metadata of a task.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _newMetadata New metadata of the task.\\r\\n    /// @dev This metadata update might change the task completely. Show a warning to people who applied before the change.\\r\\n    function editMetadata(\\r\\n        uint256 _taskId,\\r\\n        string calldata _newMetadata\\r\\n    ) external;\\r\\n\\r\\n    /// @notice Completes the task through dispute resolution.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _partialReward How much of each ERC20 reward should be paid out.\\r\\n    /// @param _partialNativeReward How much of each native reward should be paid out.\\r\\n    function completeByDispute(\\r\\n        uint256 _taskId,\\r\\n        uint88[] calldata _partialReward,\\r\\n        uint96[] calldata _partialNativeReward\\r\\n    ) external;\\r\\n\\r\\n    /// @notice Allows the dispute manager to appoint a new dispute manager.\\r\\n    /// @param _newManager The new dispute manager.\\r\\n    function transferDisputeManagement(address _newManager) external;\\r\\n\\r\\n    /// @notice Releases a part of the reward to the executor without marking the task as complete.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _partialReward How much of each ERC20 reward should be paid out.\\r\\n    /// @param _partialNativeReward How much of each native reward should be paid out.\\r\\n    /// @dev Will fetch balanceOf to set the budget afterwards, can be used in case funds where sent manually to increase the budget.\\r\\n    function partialPayment(\\r\\n        uint256 _taskId,\\r\\n        uint88[] calldata _partialReward,\\r\\n        uint96[] calldata _partialNativeReward\\r\\n    ) external;\\r\\n\\r\\n    /// @notice Transfers the manager role to a different address.\\r\\n    /// @param _taskId Id of the task.\\r\\n    /// @param _newManager What address should become the manager.\\r\\n    function transferManagement(uint256 _taskId, address _newManager) external;\\r\\n}\\r\\n\",\"keccak256\":\"0x9ae0b81c2f92624bb2c51592c0c8c4b34954dbfdc5212de51749ce3b7f3214b3\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x60a06040523480156200001157600080fd5b5060405162002c0738038062002c0783398101604081905262000034916200009c565b600080546001600160a01b0319166001600160a01b0383161790556040516200005d906200008e565b604051809103906000f0801580156200007a573d6000803e3d6000fd5b506001600160a01b031660805250620000ce565b6102d1806200293683390190565b600060208284031215620000af57600080fd5b81516001600160a01b0381168114620000c757600080fd5b9392505050565b608051612845620000f1600039600081816101220152610f1501526128456000f3fe60806040526004361061007f5760003560e01c80635fec75321161004e5780635fec75321461015c57806375ca73761461017c578063af73f60a146101af578063dea8a591146101d057600080fd5b806303523a3c1461008b578063263daa0d146100c15780632f72af34146100e35780634ca8ff5a1461011057600080fd5b3661008657005b600080fd5b34801561009757600080fd5b506100ab6100a6366004611a6f565b6101e5565b6040516100b89190611e1f565b60405180910390f35b3480156100cd57600080fd5b506100e16100dc366004611e81565b610298565b005b3480156100ef57600080fd5b506101036100fe366004611e81565b6104b9565b6040516100b89190611e9a565b34801561011c57600080fd5b506101447f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b0390911681526020016100b8565b34801561016857600080fd5b506100e1610177366004611ead565b6104de565b34801561018857600080fd5b5061019c610197366004611f87565b610c2e565b60405161ffff90911681526020016100b8565b6101c26101bd366004612086565b610ebd565b6040519081526020016100b8565b3480156101dc57600080fd5b506001546101c2565b6060600082516001600160401b0381111561020257610202611a59565b60405190808252806020026020018201604052801561023b57816020015b610228611a0b565b8152602001906001900390816102205790505b50905060005b83518110156102915761026c84828151811061025f5761025f61212f565b60200260200101516104b9565b82828151811061027e5761027e61212f565b6020908102919091010152600101610241565b5092915050565b60006102a382611223565b60048101549091506001600160a01b031633146102d35760405163607e454560e11b815260040160405180910390fd5b6004810154600160a01b900460ff1660005b8160ff168160ff16101561040e5760ff8116600090815260058401602052604090819020546001850154600286015492516370a0823160e01b81526001600160a01b03600160401b9092048216600482018190529282169363beabacc8928592600160601b909204169082906370a0823190602401602060405180830381865afa158015610377573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061039b9190612145565b6040516001600160e01b031960e086901b1681526001600160a01b0393841660048201529290911660248301526044820152606401600060405180830381600087803b1580156103ea57600080fd5b505af11580156103fe573d6000803e3d6000fd5b50505050816001019150506102e5565b5060018201546002830154604051633e97486160e11b81526001600160a01b03600160601b90920482166004820152600160401b909204168031602483015290637d2e90c290604401600060405180830381600087803b15801561047157600080fd5b505af1158015610485573d6000803e3d6000fd5b50506040518592507fdc7e0409b742bc5f5999ed477fba8518523be3d07b41b9a67ce75191f490cab89150600090a2505050565b6104c1611a0b565b60006104cc83611223565b90506104d781611259565b9392505050565b60006104e983611223565b60048101549091506001600160a01b031633146105195760405163607e454560e11b815260040160405180910390fd5b600481015461ffff600160a81b90910481169083161061054c576040516338fde52b60e01b815260040160405180910390fd5b61ffff8216600090815260068201602052604090206001810154600160e01b900460ff161561058e5760405163087aeca360e41b815260040160405180910390fd5b6004820154600090600160a01b900460ff166001600160401b038111156105b7576105b7611a59565b6040519080825280602002602001820160405280156105fc57816020015b60408051808201909152600080825260208201528152602001906001900390816105d55790505b506001830154909150600090600160e81b900460ff166001600160401b0381111561062957610629611a59565b60405190808252806020026020018201604052801561067457816020015b60408051606081018252600080825260208083018290529282015282526000199092019101816106475790505b5090506000805b83518160ff1610156108e75760ff811660009081526005870160205260408120546001600160a01b0316905b84518460ff1610156107955760ff848116600081815260028a016020908152604091829020825160608101845290549485161515815261010085046001600160a01b031691810191909152600160a81b9093046001600160581b0316908301528651879190811061071a5761071a61212f565b6020026020010181905250848460ff168151811061073a5761073a61212f565b6020026020010151604001516001600160581b03168161075a9190612174565b9050836001019350846001856107709190612194565b60ff16815181106107835761078361212f565b602002602001015160000151156106a7575b6040518060400160405280836001600160a01b03168152602001826001600160601b0316815250868460ff16815181106107d1576107d161212f565b602090810291909101015260018801546040516317d5759960e31b81526001600160a01b0384811660048301523060248301526001600160601b0384166044830152600160401b9092049091169063beabacc890606401600060405180830381600087803b15801561084257600080fd5b505af1158015610856573d6000803e3d6000fd5b505060005460405163095ea7b360e01b81526001600160a01b0391821660048201526001600160601b0385166024820152908516925063095ea7b391506044016020604051808303816000875af11580156108b5573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906108d991906121c1565b50826001019250505061067b565b5060018401546000908190600160f01b900460ff166001600160401b0381111561091357610913611a59565b60405190808252806020026020018201604052801561095857816020015b60408051808201909152600080825260208201528152602001906001900390816109315790505b50905060005b81518160ff161015610a005760ff811660008181526003890160209081526040918290208251808401909352546001600160a01b0381168352600160a01b90046001600160601b03169082015283519091849181106109bf576109bf61212f565b6020026020010181905250818160ff16815181106109df576109df61212f565b602002602001015160200151836109f69190612174565b925060010161095e565b506001870154604051633e97486160e11b81523060048201526001600160601b0384166024820152600160401b9091046001600160a01b031690637d2e90c290604401600060405180830381600087803b158015610a5d57600080fd5b505af1158015610a71573d6000803e3d6000fd5b506000925060019150610a819050565b604051908082528060200260200182016040528015610adf57816020015b610acc604051806060016040528060006001600160a01b0316815260200160608152602001606081525090565b815260200190600190039081610a9f5790505b506040805160608101825260018a01546001600160a01b03168152602081018890529081018490528151919250908290600090610b1e57610b1e61212f565b602090810291909101015260008054600189015460038b0154604051631c5754af60e31b81526001600160a01b039384169363e2baa578936001600160601b038a1693610b87938f93600160a01b9093046001600160401b0316928f9216908a90600401612296565b60206040518083038185885af1158015610ba5573d6000803e3d6000fd5b50505050506040513d601f19601f82011682018060405250810190610bca9190612145565b60018901805460ff60e01b1916600160e01b1790556040805161ffff8d168152602081018390529192508c917f68db25dcdf79956bf3db0edfdffddb52d0905faac963b95124f977aafba2df77910160405180910390a25050505050505050505050565b600080610c3a8a611223565b60018101549091506001600160401b03428116911611610c6d57604051630ef7b67760e21b815260040160405180910390fd5b8415801590610ca5575085856000198101818110610c8d57610c8d61212f565b610ca39260206060909202019081019150612364565b155b15610cc357604051631006c52360e01b815260040160405180910390fd5b6004810154600160a81b900461ffff166000908152600682016020526040902080610cef8a8c836123d0565b506001810180546001600160a01b03196001600160401b038b16600160a01b02166001600160e01b031990911617331790558515610da857610d3086611947565b81600101601d6101000a81548160ff021916908360ff16021790555060005b60ff8088169082161015610da65787878260ff16818110610d7257610d7261212f565b60ff841660009081526002860160205260409020606090910292909201919050610d9c82826124a5565b5050600101610d4f565b505b8315610e2e57610db784611947565b81600101601e6101000a81548160ff021916908360ff16021790555060005b60ff8086169082161015610e2c5785858260ff16818110610df957610df961212f565b60ff8416600090815260038601602052604090819020910292909201919050610e228282612527565b5050600101610dd6565b505b600482018054600160a81b900461ffff16906015610e4b83612569565b91906101000a81548161ffff021916908361ffff16021790555092508a7fee976096ee69cd579daa38b35155cf3f284996e2717dba466c372934e64fe2d7848c8c338d8d8d8d8d604051610ea79998979695949392919061260e565b60405180910390a2505098975050505050505050565b6001805460009182610ece836126e2565b90915550600081815260026020526040902090915080610eef898b836123d0565b5060018101805467ffffffffffffffff19166001600160401b0389161790556000610f397f000000000000000000000000000000000000000000000000000000000000000061196f565b9050806001600160a01b03166365b145fb346040518263ffffffff1660e01b81526004016000604051808303818588803b158015610f7657600080fd5b505af1158015610f8a573d6000803e3d6000fd5b5050505060018301805468010000000000000000600160e01b031916600160401b6001600160a01b03851602179055503415610ff157610fc9346119e1565b6002830180546bffffffffffffffffffffffff19166001600160601b03929092169190911790555b610ffa86611947565b8260040160146101000a81548160ff021916908360ff16021790555060005b60ff80881690821610156111765787878260ff1681811061103c5761103c61212f565b61105292602060409092020190810191506126fb565b6001600160a01b03166323b872dd33848b8b8660ff168181106110775761107761212f565b905060400201602001602081019061108f9190612718565b6040516001600160e01b031960e086901b1681526001600160a01b0393841660048201529290911660248301526001600160601b031660448201526064016020604051808303816000875af11580156110ec573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061111091906121c1565b5087878260ff168181106111265761112661212f565b61113c92602060409092020190810191506126fb565b60ff82166000908152600585016020526040902080546001600160a01b0319166001600160a01b0392909216919091179055600101611019565b506004820180546001600160a01b038087166001600160a01b03199283161790925560038401805492881692909116919091179055600282018054600160601b33026001600160601b03909116179055827f109cbb120a63904af353450387c4894c2b2dbc99304e1279929be52341af5c758b8b8b8b8b6111f6346119e1565b338d8d60405161120e99989796959493929190612735565b60405180910390a25050979650505050505050565b600060015482106112475760405163184092c160e21b815260040160405180910390fd5b50600090815260026020526040902090565b611261611a0b565b8154829061126e906121de565b80601f016020809104026020016040519081016040528092919081815260200182805461129a906121de565b80156112e75780601f106112bc576101008083540402835291602001916112e7565b820191906000526020600020905b8154815290600101906020018083116112ca57829003601f168201915b505050918352505060018201546001600160401b0380821660208401526002840154600160601b81046001600160a01b0390811660808601526003860154811660a0860152600486015480821660c0870152600160401b9094041660408501526001600160601b03166060840152600160a01b90910460ff169081111561137057611370611a59565b604051908082528060200260200182016040528015611399578160200160208202803683370190505b5060e082015260005b8160e00151518160ff16101561140a5760ff8116600081815260058501602052604090205460e084015180516001600160a01b0390921692909181106113ea576113ea61212f565b6001600160a01b03909216602092830291909101909101526001016113a2565b506004820154600160a81b900461ffff166001600160401b0381111561143257611432611a59565b6040519080825280602002602001820160405280156114b057816020015b61149d6040518060c001604052806060815260200160006001600160a01b0316815260200160006001600160401b0316815260200160001515815260200160608152602001606081525090565b8152602001906001900390816114505790505b5061010082015260005b816101000151518160ff1610156119415760ff811660009081526006840160205260409020805481906114ec906121de565b80601f0160208091040260200160405190810160405280929190818152602001828054611518906121de565b80156115655780601f1061153a57610100808354040283529160200191611565565b820191906000526020600020905b81548152906001019060200180831161154857829003601f168201915b50505050508361010001518360ff16815181106115845761158461212f565b6020026020010151600001819052508060010160149054906101000a90046001600160401b03168361010001518360ff16815181106115c5576115c561212f565b60209081029190910101516001600160401b03909116604090910152600181015461010084015180516001600160a01b039092169160ff851690811061160d5761160d61212f565b6020908102919091018101516001600160a01b039092169101526001810154610100840151805160ff600160e01b90930483169285169081106116525761165261212f565b60209081029190910101519015156060909101526001810154600160e81b900460ff166001600160401b0381111561168c5761168c611a59565b6040519080825280602002602001820160405280156116d757816020015b60408051606081018252600080825260208083018290529282015282526000199092019101816116aa5790505b508361010001518360ff16815181106116f2576116f261212f565b60200260200101516080018190525060005b8361010001518360ff168151811061171e5761171e61212f565b602002602001015160800151518160ff1610156117da5760ff818116600090815260028401602090815260409182902082516060810184529054808516151582526101008082046001600160a01b031693830193909352600160a81b90046001600160581b0316928101929092528601518051919290919086169081106117a7576117a761212f565b6020026020010151608001518260ff16815181106117c7576117c761212f565b6020908102919091010152600101611704565b506001810154600160f01b900460ff166001600160401b0381111561180157611801611a59565b60405190808252806020026020018201604052801561184657816020015b604080518082019091526000808252602082015281526020019060019003908161181f5790505b508361010001518360ff16815181106118615761186161212f565b602002602001015160a0018190525060005b8361010001518360ff168151811061188d5761188d61212f565b602002602001015160a00151518160ff1610156119375760ff81811660009081526003840160209081526040918290208251808401909352546001600160a01b0381168352600160a01b90046001600160601b0316908201526101008601518051919290919086169081106119045761190461212f565b602002602001015160a001518260ff16815181106119245761192461212f565b6020908102919091010152600101611873565b50506001016114ba565b50919050565b600060ff82111561196b57604051631a93c68960e11b815260040160405180910390fd5b5090565b6000763d602d80600a3d3981f3363d3d373d3d3d363d730000008260601b60e81c176000526e5af43d82803e903d91602b57fd5bf38260781b17602052603760096000f090506001600160a01b0381166119dc576040516330be1a3d60e21b815260040160405180910390fd5b919050565b60006001600160601b0382111561196b57604051631a93c68960e11b815260040160405180910390fd5b604080516101208101825260608082526000602083018190529282018390528082018390526080820183905260a0820183905260c082019290925260e0810182905261010081019190915290565b634e487b7160e01b600052604160045260246000fd5b60006020808385031215611a8257600080fd5b82356001600160401b0380821115611a9957600080fd5b818501915085601f830112611aad57600080fd5b813581811115611abf57611abf611a59565b8060051b604051601f19603f83011681018181108582111715611ae457611ae4611a59565b604052918252848201925083810185019188831115611b0257600080fd5b938501935b82851015611b2057843584529385019392850192611b07565b98975050505050505050565b6000815180845260005b81811015611b5257602081850181015186830182015201611b36565b506000602082860101526020601f19601f83011685010191505092915050565b600081518084526020808501945080840160005b83811015611bab5781516001600160a01b031687529582019590820190600101611b86565b509495945050505050565b600081518084526020808501945080840160005b83811015611bab578151805115158852838101516001600160a01b0316848901526040908101516001600160581b03169088015260609096019590820190600101611bca565b600081518084526020808501945080840160005b83811015611bab57815180516001600160a01b031688528301516001600160601b03168388015260409096019590820190600101611c24565b600081518084526020808501808196508360051b8101915082860160005b85811015611d1b578284038952815160c08151818752611c9d82880182611b2c565b838901516001600160a01b0316888a01526040808501516001600160401b031690890152606080850151151590890152608080850151898303828b01529193509150611ce98382611bb6565b9250505060a08083015192508682038188015250611d078183611c10565b9a87019a9550505090840190600101611c7b565b5091979650505050505050565b60006101208251818552611d3e82860182611b2c565b9150506020830151611d5b60208601826001600160401b03169052565b506040830151611d7660408601826001600160a01b03169052565b506060830151611d9160608601826001600160601b03169052565b506080830151611dac60808601826001600160a01b03169052565b5060a0830151611dc760a08601826001600160a01b03169052565b5060c0830151611de260c08601826001600160a01b03169052565b5060e083015184820360e0860152611dfa8282611b72565b9150506101008084015185830382870152611e158382611c5d565b9695505050505050565b6000602080830181845280855180835260408601915060408160051b870101925083870160005b82811015611e7457603f19888603018452611e62858351611d28565b94509285019290850190600101611e46565b5092979650505050505050565b600060208284031215611e9357600080fd5b5035919050565b6020815260006104d76020830184611d28565b60008060408385031215611ec057600080fd5b82359150602083013561ffff81168114611ed957600080fd5b809150509250929050565b60008083601f840112611ef657600080fd5b5081356001600160401b03811115611f0d57600080fd5b602083019150836020828501011115611f2557600080fd5b9250929050565b80356001600160401b03811681146119dc57600080fd5b60008083601f840112611f5557600080fd5b5081356001600160401b03811115611f6c57600080fd5b6020830191508360208260061b8501011115611f2557600080fd5b60008060008060008060008060a0898b031215611fa357600080fd5b8835975060208901356001600160401b0380821115611fc157600080fd5b611fcd8c838d01611ee4565b9099509750879150611fe160408c01611f2c565b965060608b0135915080821115611ff757600080fd5b818b0191508b601f83011261200b57600080fd5b81358181111561201a57600080fd5b8c602060608302850101111561202f57600080fd5b6020830196508095505060808b013591508082111561204d57600080fd5b5061205a8b828c01611f43565b999c989b5096995094979396929594505050565b6001600160a01b038116811461208357600080fd5b50565b600080600080600080600060a0888a0312156120a157600080fd5b87356001600160401b03808211156120b857600080fd5b6120c48b838c01611ee4565b90995097508791506120d860208b01611f2c565b965060408a01359150808211156120ee57600080fd5b506120fb8a828b01611f43565b909550935050606088013561210f8161206e565b9150608088013561211f8161206e565b8091505092959891949750929550565b634e487b7160e01b600052603260045260246000fd5b60006020828403121561215757600080fd5b5051919050565b634e487b7160e01b600052601160045260246000fd5b6001600160601b038181168382160190808211156102915761029161215e565b60ff82811682821603908111156121ad576121ad61215e565b92915050565b801515811461208357600080fd5b6000602082840312156121d357600080fd5b81516104d7816121b3565b600181811c908216806121f257607f821691505b60208210810361194157634e487b7160e01b600052602260045260246000fd5b600081518084526020808501808196508360051b8101915082860160005b85811015611d1b578284038952815180516001600160a01b031685528581015160608787018190529061226582880182611bb6565b915050604080830151925086820381880152506122828183611c10565b9a87019a9550505090840190600101612230565b60a0815260008087546122a8816121de565b8060a086015260c06001808416600081146122ca57600181146122e457612315565b60ff1985168884015283151560051b880183019550612315565b8c60005260208060002060005b8681101561230c5781548b82018701529084019082016122f1565b8a018501975050505b505050505061232f60208401886001600160401b03169052565b82810360408401526123418187611c10565b6001600160a01b038616606085015290508281036080840152611b208185612212565b60006020828403121561237657600080fd5b81356104d7816121b3565b601f8211156123cb57600081815260208120601f850160051c810160208610156123a85750805b601f850160051c820191505b818110156123c7578281556001016123b4565b5050505b505050565b6001600160401b038311156123e7576123e7611a59565b6123fb836123f583546121de565b83612381565b6000601f84116001811461242f57600085156124175750838201355b600019600387901b1c1916600186901b178355612489565b600083815260209020601f19861690835b828110156124605786850135825560209485019460019092019101612440565b508682101561247d5760001960f88860031b161c19848701351681555b505060018560011b0183555b5050505050565b6001600160581b038116811461208357600080fd5b81356124b0816121b3565b815460ff19811691151560ff16918217835560208401356124d08161206e565b610100600160a81b0360089190911b166001600160a81b031991821683178117845560408501359161250183612490565b921760a89190911b90911617905550565b6001600160601b038116811461208357600080fd5b81356125328161206e565b81546001600160a01b03199081166001600160a01b03929092169182178355602084013561255f81612512565b60a01b1617905550565b600061ffff8083168181036125805761258061215e565b6001019392505050565b81835281816020850137506000828201602090810191909152601f909101601f19169091010190565b8183526000602080850194508260005b85811015611bab5781356125d68161206e565b6001600160a01b03168752818301356125ee81612512565b6001600160601b03168784015260409687019691909101906001016125c3565b61ffff8a1681526000602060c08184015261262d60c084018b8d61258a565b604060018060a01b03808c168287015260606001600160401b038c16818801528684036080880152838a855285850190508b945060005b8b8110156126b8578535612677816121b3565b15158252858701356126888161206e565b8416828801528585013561269b81612490565b6001600160581b0316828601529482019490820190600101612664565b5087810360a08901526126cc818a8c6125b3565b96505050505050509a9950505050505050505050565b6000600182016126f4576126f461215e565b5060010190565b60006020828403121561270d57600080fd5b81356104d78161206e565b60006020828403121561272a57600080fd5b81356104d781612512565b60e08152600061274960e083018b8d61258a565b60206001600160401b038b1681850152604084830381860152828a845282840190508b935060005b8b8110156127b95784356127848161206e565b6001600160a01b031682528484013561279c81612512565b6001600160601b0316828501529382019390820190600101612771565b506001600160601b038a16606087015293506127d492505050565b6001600160a01b03851660808301526001600160a01b03841660a08301526001600160a01b03831660c08301529a995050505050505050505056fea2646970667358221220ea0b8c3c70b7dd01d603e926ba46aa4641973985a1dba5dc89814c7537091aee64736f6c63430008150033608060405234801561001057600080fd5b506102b1806100206000396000f3fe6080604052600436106100355760003560e01c806365b145fb1461003e5780637d2e90c214610046578063beabacc81461006657005b3661003c57005b005b61003c610086565b34801561005257600080fd5b5061003c6100613660046101e5565b6100c3565b34801561007257600080fd5b5061003c610081366004610211565b610129565b6000546001600160a01b0316156100af5760405162dc149f60e41b815260040160405180910390fd5b600080546001600160a01b03191633179055565b6000546001600160a01b031633146100ee576040516330cd747160e01b815260040160405180910390fd5b6040516001600160a01b0383169082156108fc029083906000818181858888f19350505050158015610124573d6000803e3d6000fd5b505050565b6000546001600160a01b03163314610154576040516330cd747160e01b815260040160405180910390fd5b60405163a9059cbb60e01b81526001600160a01b0383811660048301526024820183905284169063a9059cbb906044016020604051808303816000875af11580156101a3573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101c79190610252565b50505050565b6001600160a01b03811681146101e257600080fd5b50565b600080604083850312156101f857600080fd5b8235610203816101cd565b946020939093013593505050565b60008060006060848603121561022657600080fd5b8335610231816101cd565b92506020840135610241816101cd565b929592945050506040919091013590565b60006020828403121561026457600080fd5b8151801515811461027457600080fd5b939250505056fea26469706673582212203321662ba87bb5393699e625f6ad760c1e8c1db77694232c7706003a346b336364736f6c63430008150033",
+  "deployedBytecode": "0x60806040526004361061007f5760003560e01c80635fec75321161004e5780635fec75321461015c57806375ca73761461017c578063af73f60a146101af578063dea8a591146101d057600080fd5b806303523a3c1461008b578063263daa0d146100c15780632f72af34146100e35780634ca8ff5a1461011057600080fd5b3661008657005b600080fd5b34801561009757600080fd5b506100ab6100a6366004611a6f565b6101e5565b6040516100b89190611e1f565b60405180910390f35b3480156100cd57600080fd5b506100e16100dc366004611e81565b610298565b005b3480156100ef57600080fd5b506101036100fe366004611e81565b6104b9565b6040516100b89190611e9a565b34801561011c57600080fd5b506101447f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b0390911681526020016100b8565b34801561016857600080fd5b506100e1610177366004611ead565b6104de565b34801561018857600080fd5b5061019c610197366004611f87565b610c2e565b60405161ffff90911681526020016100b8565b6101c26101bd366004612086565b610ebd565b6040519081526020016100b8565b3480156101dc57600080fd5b506001546101c2565b6060600082516001600160401b0381111561020257610202611a59565b60405190808252806020026020018201604052801561023b57816020015b610228611a0b565b8152602001906001900390816102205790505b50905060005b83518110156102915761026c84828151811061025f5761025f61212f565b60200260200101516104b9565b82828151811061027e5761027e61212f565b6020908102919091010152600101610241565b5092915050565b60006102a382611223565b60048101549091506001600160a01b031633146102d35760405163607e454560e11b815260040160405180910390fd5b6004810154600160a01b900460ff1660005b8160ff168160ff16101561040e5760ff8116600090815260058401602052604090819020546001850154600286015492516370a0823160e01b81526001600160a01b03600160401b9092048216600482018190529282169363beabacc8928592600160601b909204169082906370a0823190602401602060405180830381865afa158015610377573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061039b9190612145565b6040516001600160e01b031960e086901b1681526001600160a01b0393841660048201529290911660248301526044820152606401600060405180830381600087803b1580156103ea57600080fd5b505af11580156103fe573d6000803e3d6000fd5b50505050816001019150506102e5565b5060018201546002830154604051633e97486160e11b81526001600160a01b03600160601b90920482166004820152600160401b909204168031602483015290637d2e90c290604401600060405180830381600087803b15801561047157600080fd5b505af1158015610485573d6000803e3d6000fd5b50506040518592507fdc7e0409b742bc5f5999ed477fba8518523be3d07b41b9a67ce75191f490cab89150600090a2505050565b6104c1611a0b565b60006104cc83611223565b90506104d781611259565b9392505050565b60006104e983611223565b60048101549091506001600160a01b031633146105195760405163607e454560e11b815260040160405180910390fd5b600481015461ffff600160a81b90910481169083161061054c576040516338fde52b60e01b815260040160405180910390fd5b61ffff8216600090815260068201602052604090206001810154600160e01b900460ff161561058e5760405163087aeca360e41b815260040160405180910390fd5b6004820154600090600160a01b900460ff166001600160401b038111156105b7576105b7611a59565b6040519080825280602002602001820160405280156105fc57816020015b60408051808201909152600080825260208201528152602001906001900390816105d55790505b506001830154909150600090600160e81b900460ff166001600160401b0381111561062957610629611a59565b60405190808252806020026020018201604052801561067457816020015b60408051606081018252600080825260208083018290529282015282526000199092019101816106475790505b5090506000805b83518160ff1610156108e75760ff811660009081526005870160205260408120546001600160a01b0316905b84518460ff1610156107955760ff848116600081815260028a016020908152604091829020825160608101845290549485161515815261010085046001600160a01b031691810191909152600160a81b9093046001600160581b0316908301528651879190811061071a5761071a61212f565b6020026020010181905250848460ff168151811061073a5761073a61212f565b6020026020010151604001516001600160581b03168161075a9190612174565b9050836001019350846001856107709190612194565b60ff16815181106107835761078361212f565b602002602001015160000151156106a7575b6040518060400160405280836001600160a01b03168152602001826001600160601b0316815250868460ff16815181106107d1576107d161212f565b602090810291909101015260018801546040516317d5759960e31b81526001600160a01b0384811660048301523060248301526001600160601b0384166044830152600160401b9092049091169063beabacc890606401600060405180830381600087803b15801561084257600080fd5b505af1158015610856573d6000803e3d6000fd5b505060005460405163095ea7b360e01b81526001600160a01b0391821660048201526001600160601b0385166024820152908516925063095ea7b391506044016020604051808303816000875af11580156108b5573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906108d991906121c1565b50826001019250505061067b565b5060018401546000908190600160f01b900460ff166001600160401b0381111561091357610913611a59565b60405190808252806020026020018201604052801561095857816020015b60408051808201909152600080825260208201528152602001906001900390816109315790505b50905060005b81518160ff161015610a005760ff811660008181526003890160209081526040918290208251808401909352546001600160a01b0381168352600160a01b90046001600160601b03169082015283519091849181106109bf576109bf61212f565b6020026020010181905250818160ff16815181106109df576109df61212f565b602002602001015160200151836109f69190612174565b925060010161095e565b506001870154604051633e97486160e11b81523060048201526001600160601b0384166024820152600160401b9091046001600160a01b031690637d2e90c290604401600060405180830381600087803b158015610a5d57600080fd5b505af1158015610a71573d6000803e3d6000fd5b506000925060019150610a819050565b604051908082528060200260200182016040528015610adf57816020015b610acc604051806060016040528060006001600160a01b0316815260200160608152602001606081525090565b815260200190600190039081610a9f5790505b506040805160608101825260018a01546001600160a01b03168152602081018890529081018490528151919250908290600090610b1e57610b1e61212f565b602090810291909101015260008054600189015460038b0154604051631c5754af60e31b81526001600160a01b039384169363e2baa578936001600160601b038a1693610b87938f93600160a01b9093046001600160401b0316928f9216908a90600401612296565b60206040518083038185885af1158015610ba5573d6000803e3d6000fd5b50505050506040513d601f19601f82011682018060405250810190610bca9190612145565b60018901805460ff60e01b1916600160e01b1790556040805161ffff8d168152602081018390529192508c917f68db25dcdf79956bf3db0edfdffddb52d0905faac963b95124f977aafba2df77910160405180910390a25050505050505050505050565b600080610c3a8a611223565b60018101549091506001600160401b03428116911611610c6d57604051630ef7b67760e21b815260040160405180910390fd5b8415801590610ca5575085856000198101818110610c8d57610c8d61212f565b610ca39260206060909202019081019150612364565b155b15610cc357604051631006c52360e01b815260040160405180910390fd5b6004810154600160a81b900461ffff166000908152600682016020526040902080610cef8a8c836123d0565b506001810180546001600160a01b03196001600160401b038b16600160a01b02166001600160e01b031990911617331790558515610da857610d3086611947565b81600101601d6101000a81548160ff021916908360ff16021790555060005b60ff8088169082161015610da65787878260ff16818110610d7257610d7261212f565b60ff841660009081526002860160205260409020606090910292909201919050610d9c82826124a5565b5050600101610d4f565b505b8315610e2e57610db784611947565b81600101601e6101000a81548160ff021916908360ff16021790555060005b60ff8086169082161015610e2c5785858260ff16818110610df957610df961212f565b60ff8416600090815260038601602052604090819020910292909201919050610e228282612527565b5050600101610dd6565b505b600482018054600160a81b900461ffff16906015610e4b83612569565b91906101000a81548161ffff021916908361ffff16021790555092508a7fee976096ee69cd579daa38b35155cf3f284996e2717dba466c372934e64fe2d7848c8c338d8d8d8d8d604051610ea79998979695949392919061260e565b60405180910390a2505098975050505050505050565b6001805460009182610ece836126e2565b90915550600081815260026020526040902090915080610eef898b836123d0565b5060018101805467ffffffffffffffff19166001600160401b0389161790556000610f397f000000000000000000000000000000000000000000000000000000000000000061196f565b9050806001600160a01b03166365b145fb346040518263ffffffff1660e01b81526004016000604051808303818588803b158015610f7657600080fd5b505af1158015610f8a573d6000803e3d6000fd5b5050505060018301805468010000000000000000600160e01b031916600160401b6001600160a01b03851602179055503415610ff157610fc9346119e1565b6002830180546bffffffffffffffffffffffff19166001600160601b03929092169190911790555b610ffa86611947565b8260040160146101000a81548160ff021916908360ff16021790555060005b60ff80881690821610156111765787878260ff1681811061103c5761103c61212f565b61105292602060409092020190810191506126fb565b6001600160a01b03166323b872dd33848b8b8660ff168181106110775761107761212f565b905060400201602001602081019061108f9190612718565b6040516001600160e01b031960e086901b1681526001600160a01b0393841660048201529290911660248301526001600160601b031660448201526064016020604051808303816000875af11580156110ec573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061111091906121c1565b5087878260ff168181106111265761112661212f565b61113c92602060409092020190810191506126fb565b60ff82166000908152600585016020526040902080546001600160a01b0319166001600160a01b0392909216919091179055600101611019565b506004820180546001600160a01b038087166001600160a01b03199283161790925560038401805492881692909116919091179055600282018054600160601b33026001600160601b03909116179055827f109cbb120a63904af353450387c4894c2b2dbc99304e1279929be52341af5c758b8b8b8b8b6111f6346119e1565b338d8d60405161120e99989796959493929190612735565b60405180910390a25050979650505050505050565b600060015482106112475760405163184092c160e21b815260040160405180910390fd5b50600090815260026020526040902090565b611261611a0b565b8154829061126e906121de565b80601f016020809104026020016040519081016040528092919081815260200182805461129a906121de565b80156112e75780601f106112bc576101008083540402835291602001916112e7565b820191906000526020600020905b8154815290600101906020018083116112ca57829003601f168201915b505050918352505060018201546001600160401b0380821660208401526002840154600160601b81046001600160a01b0390811660808601526003860154811660a0860152600486015480821660c0870152600160401b9094041660408501526001600160601b03166060840152600160a01b90910460ff169081111561137057611370611a59565b604051908082528060200260200182016040528015611399578160200160208202803683370190505b5060e082015260005b8160e00151518160ff16101561140a5760ff8116600081815260058501602052604090205460e084015180516001600160a01b0390921692909181106113ea576113ea61212f565b6001600160a01b03909216602092830291909101909101526001016113a2565b506004820154600160a81b900461ffff166001600160401b0381111561143257611432611a59565b6040519080825280602002602001820160405280156114b057816020015b61149d6040518060c001604052806060815260200160006001600160a01b0316815260200160006001600160401b0316815260200160001515815260200160608152602001606081525090565b8152602001906001900390816114505790505b5061010082015260005b816101000151518160ff1610156119415760ff811660009081526006840160205260409020805481906114ec906121de565b80601f0160208091040260200160405190810160405280929190818152602001828054611518906121de565b80156115655780601f1061153a57610100808354040283529160200191611565565b820191906000526020600020905b81548152906001019060200180831161154857829003601f168201915b50505050508361010001518360ff16815181106115845761158461212f565b6020026020010151600001819052508060010160149054906101000a90046001600160401b03168361010001518360ff16815181106115c5576115c561212f565b60209081029190910101516001600160401b03909116604090910152600181015461010084015180516001600160a01b039092169160ff851690811061160d5761160d61212f565b6020908102919091018101516001600160a01b039092169101526001810154610100840151805160ff600160e01b90930483169285169081106116525761165261212f565b60209081029190910101519015156060909101526001810154600160e81b900460ff166001600160401b0381111561168c5761168c611a59565b6040519080825280602002602001820160405280156116d757816020015b60408051606081018252600080825260208083018290529282015282526000199092019101816116aa5790505b508361010001518360ff16815181106116f2576116f261212f565b60200260200101516080018190525060005b8361010001518360ff168151811061171e5761171e61212f565b602002602001015160800151518160ff1610156117da5760ff818116600090815260028401602090815260409182902082516060810184529054808516151582526101008082046001600160a01b031693830193909352600160a81b90046001600160581b0316928101929092528601518051919290919086169081106117a7576117a761212f565b6020026020010151608001518260ff16815181106117c7576117c761212f565b6020908102919091010152600101611704565b506001810154600160f01b900460ff166001600160401b0381111561180157611801611a59565b60405190808252806020026020018201604052801561184657816020015b604080518082019091526000808252602082015281526020019060019003908161181f5790505b508361010001518360ff16815181106118615761186161212f565b602002602001015160a0018190525060005b8361010001518360ff168151811061188d5761188d61212f565b602002602001015160a00151518160ff1610156119375760ff81811660009081526003840160209081526040918290208251808401909352546001600160a01b0381168352600160a01b90046001600160601b0316908201526101008601518051919290919086169081106119045761190461212f565b602002602001015160a001518260ff16815181106119245761192461212f565b6020908102919091010152600101611873565b50506001016114ba565b50919050565b600060ff82111561196b57604051631a93c68960e11b815260040160405180910390fd5b5090565b6000763d602d80600a3d3981f3363d3d373d3d3d363d730000008260601b60e81c176000526e5af43d82803e903d91602b57fd5bf38260781b17602052603760096000f090506001600160a01b0381166119dc576040516330be1a3d60e21b815260040160405180910390fd5b919050565b60006001600160601b0382111561196b57604051631a93c68960e11b815260040160405180910390fd5b604080516101208101825260608082526000602083018190529282018390528082018390526080820183905260a0820183905260c082019290925260e0810182905261010081019190915290565b634e487b7160e01b600052604160045260246000fd5b60006020808385031215611a8257600080fd5b82356001600160401b0380821115611a9957600080fd5b818501915085601f830112611aad57600080fd5b813581811115611abf57611abf611a59565b8060051b604051601f19603f83011681018181108582111715611ae457611ae4611a59565b604052918252848201925083810185019188831115611b0257600080fd5b938501935b82851015611b2057843584529385019392850192611b07565b98975050505050505050565b6000815180845260005b81811015611b5257602081850181015186830182015201611b36565b506000602082860101526020601f19601f83011685010191505092915050565b600081518084526020808501945080840160005b83811015611bab5781516001600160a01b031687529582019590820190600101611b86565b509495945050505050565b600081518084526020808501945080840160005b83811015611bab578151805115158852838101516001600160a01b0316848901526040908101516001600160581b03169088015260609096019590820190600101611bca565b600081518084526020808501945080840160005b83811015611bab57815180516001600160a01b031688528301516001600160601b03168388015260409096019590820190600101611c24565b600081518084526020808501808196508360051b8101915082860160005b85811015611d1b578284038952815160c08151818752611c9d82880182611b2c565b838901516001600160a01b0316888a01526040808501516001600160401b031690890152606080850151151590890152608080850151898303828b01529193509150611ce98382611bb6565b9250505060a08083015192508682038188015250611d078183611c10565b9a87019a9550505090840190600101611c7b565b5091979650505050505050565b60006101208251818552611d3e82860182611b2c565b9150506020830151611d5b60208601826001600160401b03169052565b506040830151611d7660408601826001600160a01b03169052565b506060830151611d9160608601826001600160601b03169052565b506080830151611dac60808601826001600160a01b03169052565b5060a0830151611dc760a08601826001600160a01b03169052565b5060c0830151611de260c08601826001600160a01b03169052565b5060e083015184820360e0860152611dfa8282611b72565b9150506101008084015185830382870152611e158382611c5d565b9695505050505050565b6000602080830181845280855180835260408601915060408160051b870101925083870160005b82811015611e7457603f19888603018452611e62858351611d28565b94509285019290850190600101611e46565b5092979650505050505050565b600060208284031215611e9357600080fd5b5035919050565b6020815260006104d76020830184611d28565b60008060408385031215611ec057600080fd5b82359150602083013561ffff81168114611ed957600080fd5b809150509250929050565b60008083601f840112611ef657600080fd5b5081356001600160401b03811115611f0d57600080fd5b602083019150836020828501011115611f2557600080fd5b9250929050565b80356001600160401b03811681146119dc57600080fd5b60008083601f840112611f5557600080fd5b5081356001600160401b03811115611f6c57600080fd5b6020830191508360208260061b8501011115611f2557600080fd5b60008060008060008060008060a0898b031215611fa357600080fd5b8835975060208901356001600160401b0380821115611fc157600080fd5b611fcd8c838d01611ee4565b9099509750879150611fe160408c01611f2c565b965060608b0135915080821115611ff757600080fd5b818b0191508b601f83011261200b57600080fd5b81358181111561201a57600080fd5b8c602060608302850101111561202f57600080fd5b6020830196508095505060808b013591508082111561204d57600080fd5b5061205a8b828c01611f43565b999c989b5096995094979396929594505050565b6001600160a01b038116811461208357600080fd5b50565b600080600080600080600060a0888a0312156120a157600080fd5b87356001600160401b03808211156120b857600080fd5b6120c48b838c01611ee4565b90995097508791506120d860208b01611f2c565b965060408a01359150808211156120ee57600080fd5b506120fb8a828b01611f43565b909550935050606088013561210f8161206e565b9150608088013561211f8161206e565b8091505092959891949750929550565b634e487b7160e01b600052603260045260246000fd5b60006020828403121561215757600080fd5b5051919050565b634e487b7160e01b600052601160045260246000fd5b6001600160601b038181168382160190808211156102915761029161215e565b60ff82811682821603908111156121ad576121ad61215e565b92915050565b801515811461208357600080fd5b6000602082840312156121d357600080fd5b81516104d7816121b3565b600181811c908216806121f257607f821691505b60208210810361194157634e487b7160e01b600052602260045260246000fd5b600081518084526020808501808196508360051b8101915082860160005b85811015611d1b578284038952815180516001600160a01b031685528581015160608787018190529061226582880182611bb6565b915050604080830151925086820381880152506122828183611c10565b9a87019a9550505090840190600101612230565b60a0815260008087546122a8816121de565b8060a086015260c06001808416600081146122ca57600181146122e457612315565b60ff1985168884015283151560051b880183019550612315565b8c60005260208060002060005b8681101561230c5781548b82018701529084019082016122f1565b8a018501975050505b505050505061232f60208401886001600160401b03169052565b82810360408401526123418187611c10565b6001600160a01b038616606085015290508281036080840152611b208185612212565b60006020828403121561237657600080fd5b81356104d7816121b3565b601f8211156123cb57600081815260208120601f850160051c810160208610156123a85750805b601f850160051c820191505b818110156123c7578281556001016123b4565b5050505b505050565b6001600160401b038311156123e7576123e7611a59565b6123fb836123f583546121de565b83612381565b6000601f84116001811461242f57600085156124175750838201355b600019600387901b1c1916600186901b178355612489565b600083815260209020601f19861690835b828110156124605786850135825560209485019460019092019101612440565b508682101561247d5760001960f88860031b161c19848701351681555b505060018560011b0183555b5050505050565b6001600160581b038116811461208357600080fd5b81356124b0816121b3565b815460ff19811691151560ff16918217835560208401356124d08161206e565b610100600160a81b0360089190911b166001600160a81b031991821683178117845560408501359161250183612490565b921760a89190911b90911617905550565b6001600160601b038116811461208357600080fd5b81356125328161206e565b81546001600160a01b03199081166001600160a01b03929092169182178355602084013561255f81612512565b60a01b1617905550565b600061ffff8083168181036125805761258061215e565b6001019392505050565b81835281816020850137506000828201602090810191909152601f909101601f19169091010190565b8183526000602080850194508260005b85811015611bab5781356125d68161206e565b6001600160a01b03168752818301356125ee81612512565b6001600160601b03168784015260409687019691909101906001016125c3565b61ffff8a1681526000602060c08184015261262d60c084018b8d61258a565b604060018060a01b03808c168287015260606001600160401b038c16818801528684036080880152838a855285850190508b945060005b8b8110156126b8578535612677816121b3565b15158252858701356126888161206e565b8416828801528585013561269b81612490565b6001600160581b0316828601529482019490820190600101612664565b5087810360a08901526126cc818a8c6125b3565b96505050505050509a9950505050505050505050565b6000600182016126f4576126f461215e565b5060010190565b60006020828403121561270d57600080fd5b81356104d78161206e565b60006020828403121561272a57600080fd5b81356104d781612512565b60e08152600061274960e083018b8d61258a565b60206001600160401b038b1681850152604084830381860152828a845282840190508b935060005b8b8110156127b95784356127848161206e565b6001600160a01b031682528484013561279c81612512565b6001600160601b0316828501529382019390820190600101612771565b506001600160601b038a16606087015293506127d492505050565b6001600160a01b03851660808301526001600160a01b03841660a08301526001600160a01b03831660c08301529a995050505050505050505056fea2646970667358221220ea0b8c3c70b7dd01d603e926ba46aa4641973985a1dba5dc89814c7537091aee64736f6c63430008150033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "acceptProject(uint256,uint16)": {
+        "params": {
+          "_projectId": "Id of the project to accept.",
+          "_rfpId": "Id of the RFP."
+        }
+      },
+      "createRFP(string,uint64,(address,uint96)[],address,address)": {
+        "params": {
+          "_budget": "Maximum ERC20 rewards avaliable for projects of the RFP.",
+          "_deadline": "Block timestamp at which the RFP closes.",
+          "_manager": "Who will manage the RFP (become the manager).",
+          "_metadata": "Metadata of the RFP. (IPFS hash)",
+          "_tasksManager": "Who will manage the project Tasks (become the OpenR&D manager)."
+        },
+        "returns": {
+          "rfpId": "Id of the newly created RFP."
+        }
+      },
+      "emptyRFP(uint256)": {
+        "params": {
+          "_rfpId": "Id of the RFP."
+        }
+      },
+      "getRFP(uint256)": {
+        "params": {
+          "_rfpId": "Id of the RFP."
+        }
+      },
+      "getRFPs(uint256[])": {
+        "params": {
+          "_rfpIds": "Ids of the RFPs."
+        }
+      },
+      "submitProject(uint256,string,uint64,(bool,address,uint88)[],(address,uint96)[])": {
+        "params": {
+          "_deadline": "Before when the proposed project will be completed.",
+          "_metadata": "Metadata of your project.",
+          "_nativeReward": "Wanted native currency from the RFP for the project.",
+          "_reward": "Wanted rewards from the RFP for the project.",
+          "_rfpId": "Id of the RFP."
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "acceptProject(uint256,uint16)": {
+        "notice": "Accept project to be funnded by the RFP."
+      },
+      "createRFP(string,uint64,(address,uint96)[],address,address)": {
+        "notice": "Create a new RFP."
+      },
+      "emptyRFP(uint256)": {
+        "notice": "Refunds any leftover budget to the creator."
+      },
+      "escrowImplementation()": {
+        "notice": "The base escrow contract that will be cloned for every RFP."
+      },
+      "getRFP(uint256)": {
+        "notice": "Retrieves all RFP information by id."
+      },
+      "getRFPs(uint256[])": {
+        "notice": "Retrieves multiple RFPs."
+      },
+      "rfpCount()": {
+        "notice": "Retrieves the current amount of created RFPs."
+      },
+      "submitProject(uint256,string,uint64,(bool,address,uint88)[],(address,uint96)[])": {
+        "notice": "Propose a project to be funded by an RFP."
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 35213,
+        "contract": "contracts/RFP/RFPs.sol:RFPs",
+        "label": "tasks",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_contract(ITasks)37010"
+      },
+      {
+        "astId": 35216,
+        "contract": "contracts/RFP/RFPs.sol:RFPs",
+        "label": "rfpCounter",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 35222,
+        "contract": "contracts/RFP/RFPs.sol:RFPs",
+        "label": "rfps",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_mapping(t_uint256,t_struct(RFP)35097_storage)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_contract(Escrow)34949": {
+        "encoding": "inplace",
+        "label": "contract Escrow",
+        "numberOfBytes": "20"
+      },
+      "t_contract(IERC20)19280": {
+        "encoding": "inplace",
+        "label": "contract IERC20",
+        "numberOfBytes": "20"
+      },
+      "t_contract(ITasks)37010": {
+        "encoding": "inplace",
+        "label": "contract ITasks",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_uint16,t_struct(Project)35049_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint16",
+        "label": "mapping(uint16 => struct IRFPs.Project)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Project)35049_storage"
+      },
+      "t_mapping(t_uint256,t_struct(RFP)35097_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => struct IRFPs.RFP)",
+        "numberOfBytes": "32",
+        "value": "t_struct(RFP)35097_storage"
+      },
+      "t_mapping(t_uint8,t_contract(IERC20)19280)": {
+        "encoding": "mapping",
+        "key": "t_uint8",
+        "label": "mapping(uint8 => contract IERC20)",
+        "numberOfBytes": "32",
+        "value": "t_contract(IERC20)19280"
+      },
+      "t_mapping(t_uint8,t_struct(NativeReward)36641_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint8",
+        "label": "mapping(uint8 => struct ITasks.NativeReward)",
+        "numberOfBytes": "32",
+        "value": "t_struct(NativeReward)36641_storage"
+      },
+      "t_mapping(t_uint8,t_struct(Reward)36635_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint8",
+        "label": "mapping(uint8 => struct ITasks.Reward)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Reward)36635_storage"
+      },
+      "t_string_storage": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      },
+      "t_struct(NativeReward)36641_storage": {
+        "encoding": "inplace",
+        "label": "struct ITasks.NativeReward",
+        "members": [
+          {
+            "astId": 36638,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "to",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 36640,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "amount",
+            "offset": 20,
+            "slot": "0",
+            "type": "t_uint96"
+          }
+        ],
+        "numberOfBytes": "32"
+      },
+      "t_struct(Project)35049_storage": {
+        "encoding": "inplace",
+        "label": "struct IRFPs.Project",
+        "members": [
+          {
+            "astId": 35028,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "metadata",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage"
+          },
+          {
+            "astId": 35030,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "representative",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address"
+          },
+          {
+            "astId": 35032,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "deadline",
+            "offset": 20,
+            "slot": "1",
+            "type": "t_uint64"
+          },
+          {
+            "astId": 35034,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "accepted",
+            "offset": 28,
+            "slot": "1",
+            "type": "t_bool"
+          },
+          {
+            "astId": 35036,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "rewardCount",
+            "offset": 29,
+            "slot": "1",
+            "type": "t_uint8"
+          },
+          {
+            "astId": 35038,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "nativeRewardCount",
+            "offset": 30,
+            "slot": "1",
+            "type": "t_uint8"
+          },
+          {
+            "astId": 35043,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "reward",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint8,t_struct(Reward)36635_storage)"
+          },
+          {
+            "astId": 35048,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "nativeReward",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_uint8,t_struct(NativeReward)36641_storage)"
+          }
+        ],
+        "numberOfBytes": "128"
+      },
+      "t_struct(RFP)35097_storage": {
+        "encoding": "inplace",
+        "label": "struct IRFPs.RFP",
+        "members": [
+          {
+            "astId": 35069,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "metadata",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage"
+          },
+          {
+            "astId": 35071,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "deadline",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint64"
+          },
+          {
+            "astId": 35074,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "escrow",
+            "offset": 8,
+            "slot": "1",
+            "type": "t_contract(Escrow)34949"
+          },
+          {
+            "astId": 35076,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "nativeBudget",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint96"
+          },
+          {
+            "astId": 35078,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "creator",
+            "offset": 12,
+            "slot": "2",
+            "type": "t_address"
+          },
+          {
+            "astId": 35080,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "tasksManager",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address"
+          },
+          {
+            "astId": 35082,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "manager",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address"
+          },
+          {
+            "astId": 35084,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "budgetCount",
+            "offset": 20,
+            "slot": "4",
+            "type": "t_uint8"
+          },
+          {
+            "astId": 35086,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "projectCount",
+            "offset": 21,
+            "slot": "4",
+            "type": "t_uint16"
+          },
+          {
+            "astId": 35091,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "budget",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_uint8,t_contract(IERC20)19280)"
+          },
+          {
+            "astId": 35096,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "projects",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_uint16,t_struct(Project)35049_storage)"
+          }
+        ],
+        "numberOfBytes": "224"
+      },
+      "t_struct(Reward)36635_storage": {
+        "encoding": "inplace",
+        "label": "struct ITasks.Reward",
+        "members": [
+          {
+            "astId": 36630,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "nextToken",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool"
+          },
+          {
+            "astId": 36632,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "to",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 36634,
+            "contract": "contracts/RFP/RFPs.sol:RFPs",
+            "label": "amount",
+            "offset": 21,
+            "slot": "0",
+            "type": "t_uint88"
+          }
+        ],
+        "numberOfBytes": "32"
+      },
+      "t_uint16": {
+        "encoding": "inplace",
+        "label": "uint16",
+        "numberOfBytes": "2"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      },
+      "t_uint64": {
+        "encoding": "inplace",
+        "label": "uint64",
+        "numberOfBytes": "8"
+      },
+      "t_uint8": {
+        "encoding": "inplace",
+        "label": "uint8",
+        "numberOfBytes": "1"
+      },
+      "t_uint88": {
+        "encoding": "inplace",
+        "label": "uint88",
+        "numberOfBytes": "11"
+      },
+      "t_uint96": {
+        "encoding": "inplace",
+        "label": "uint96",
+        "numberOfBytes": "12"
+      }
+    }
+  }
+}

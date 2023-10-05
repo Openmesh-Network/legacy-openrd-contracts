@@ -9,7 +9,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const deployResult = await deployments.deploy("NFT", {
     from: deployer,
     contract: "OwnableERC721Enumerable",
-    args: ["MembershipNFT", "MEMBER"],
+    args: ["Verified Contributor", "vCON"],
   });
 
   await setBool("NewNFT", deployResult.newlyDeployed);

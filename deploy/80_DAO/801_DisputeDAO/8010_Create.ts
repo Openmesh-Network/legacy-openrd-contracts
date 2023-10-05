@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { geTaskDisputesSettings, getTokenListGovernanceSettings } from "../utils/PluginSettings";
+import { getTaskDisputesSettings, getTokenListGovernanceSettings } from "../utils/PluginSettings";
 import { createDAO } from "../utils/DAODeployer";
 import { getVar, setBool } from "../../../utils/globalVars";
 import { ethers } from "hardhat";
@@ -21,14 +21,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const nftCollection = await deployments.get("NFT");
   const tokenListGovernanceSetup = await deployments.get("TokenListGovernanceSetup");
   const communityDao = await deployments.get("community_dao");
-  const tokenListGovernanceSettings = await getTokenListGovernanceSettings(nftCollection.address, [0], communityDao.address);
+  const tokenListGovernanceSettings = await getTokenListGovernanceSettings(nftCollection.address, [], communityDao.address);
   // In case there is a transaction in progress, either this one or that will get the wrong address, based on which one gets confirmed earlier
   // This is because the nonce has then increased by 1, however there is currently no other way to get the address as far as I know
   const expectedGovernanceAddress = await ethers.getCreateAddress({
     from: tokenListGovernanceSetup.address,
     nonce: await ethers.provider.getTransactionCount(tokenListGovernanceSetup.address),
   });
-  const taskDisputesSettings = await geTaskDisputesSettings(tasks.address, expectedGovernanceAddress, Ether(1));
+  const taskDisputesSettings = await getTaskDisputesSettings(tasks.address, expectedGovernanceAddress, Ether(1));
 
   const dao = await createDAO(deployer, subdomain, [tokenListGovernanceSettings, taskDisputesSettings], deployments);
 

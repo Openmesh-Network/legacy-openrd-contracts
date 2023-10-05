@@ -10,7 +10,7 @@ import { asyncMap, getInferfaceId } from "../../utils/utils";
 import { asDepartment } from "../Helpers/ImpersonatedDAO";
 import { TaskDrafts } from "../../typechain-types";
 
-describe("Department DAO Task Drafts", function () {
+describe("Task Drafts", function () {
   it("should allow creation of draft task proposals by anyone", async function () {
     const dao = await loadFixture(getDAO);
     const accounts = await getUnnamedAccounts();
@@ -26,7 +26,7 @@ describe("Department DAO Task Drafts", function () {
 
   it("should have the right metadata on the task after the proposal passes", async function () {
     const dao = await loadFixture(getDAO);
-    const NFTs = [0, 1, 2].map(BigInt);
+    const NFTs = [0].map(BigInt);
     await asyncMap(NFTs, async (n) => await dao.NFT.mint(dao.deployer, n));
     const metadata: TaskMetadata = {
       title: "Draft Task",

@@ -3,7 +3,7 @@ import { DeployFunction, DeploymentsExtension } from "hardhat-deploy/types";
 import { ethers } from "hardhat";
 import { getVar, setBool } from "../../../utils/globalVars";
 import { createDAO } from "../utils/DAODeployer";
-import { geTaskDraftsSettings, getTokenListGovernanceSettings } from "../utils/PluginSettings";
+import { getTaskDraftsSettings, getTokenListGovernanceSettings } from "../utils/PluginSettings";
 import { redeployedDependencies } from "../../utils";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
@@ -15,10 +15,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
 
-  await createDepartment(deployer, "data", [0, 2, 6, 7], deployments);
-  await createDepartment(deployer, "frontend", [0, 4], deployments);
-  await createDepartment(deployer, "blockchain", [0, 1, 2, 3], deployments);
-  await createDepartment(deployer, "cloud", [0, 1, 5], deployments);
+  await createDepartment(deployer, "data", [], deployments);
+  await createDepartment(deployer, "frontend", [], deployments);
+  await createDepartment(deployer, "blockchain", [], deployments);
+  await createDepartment(deployer, "cloud", [], deployments);
 
   await setBool("NewDepartments", true);
 };
@@ -40,7 +40,9 @@ async function createDepartment(deployer: string, departmentName: string, member
     from: tokenListGovernanceSetup.address,
     nonce: await ethers.provider.getTransactionCount(tokenListGovernanceSetup.address),
   });
-  const taskDraftsSettings = await geTaskDraftsSettings(tasks.address, expectedGovernanceAddress);
+  const taskDraftsSettings = await getTaskDraftsSettings(tasks.address, expectedGovernanceAddress);
+  // If wanted could add the SharedAddress plugin and remove the execute permission from TokenListGovernance
+  // Grant TokenListGoverance a hat to only be able to interact with OpenR&D (and management DAO to interact with SharedAddress)
 
   const dao = await createDAO(deployer, subdomain, [tokenListGovernanceSettings, taskDraftsSettings], deployments);
 

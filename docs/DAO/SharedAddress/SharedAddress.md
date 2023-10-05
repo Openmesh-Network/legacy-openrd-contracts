@@ -329,7 +329,7 @@ event AdminChanged(address previousAdmin, address newAdmin)
 
 
 
-*Emitted when the admin account has changed.*
+
 
 #### Parameters
 
@@ -346,7 +346,7 @@ event BeaconUpgraded(address indexed beacon)
 
 
 
-*Emitted when the beacon is changed.*
+
 
 #### Parameters
 
@@ -483,7 +483,7 @@ event Initialized(uint8 version)
 
 
 
-*Triggered when the contract has been initialized or reinitialized.*
+
 
 #### Parameters
 
@@ -499,7 +499,7 @@ event Upgraded(address indexed implementation)
 
 
 
-*Emitted when the implementation is upgraded.*
+
 
 #### Parameters
 

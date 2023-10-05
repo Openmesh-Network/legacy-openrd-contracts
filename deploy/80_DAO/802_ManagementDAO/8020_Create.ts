@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { getTokenListGovernanceSettings } from "../utils/PluginSettings";
+import { getSubDAOSettings, getTokenListGovernanceSettings } from "../utils/PluginSettings";
 import { createDAO } from "../utils/DAODeployer";
 import { getVar, setBool } from "../../../utils/globalVars";
 import { redeployedDependencies } from "../../utils";
@@ -13,13 +13,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const { deployments, getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
-  const subdomain = "openrd-management-beta"; //"management-test-" + (await getVar("ENSCounter"));
+  const subdomain = "management-test-" + (await getVar("ENSCounter"));
 
   const nftCollection = await deployments.get("NFT");
   const communityDao = await deployments.get("community_dao");
-  const tokenListGovernanceSettings = await getTokenListGovernanceSettings(nftCollection.address, [0], communityDao.address);
+  const tokenListGovernanceSettings = await getTokenListGovernanceSettings(nftCollection.address, [], communityDao.address);
+  const subDAO = await getSubDAOSettings();
 
-  const dao = await createDAO(deployer, subdomain, [tokenListGovernanceSettings], deployments);
+  const dao = await createDAO(deployer, subdomain, [tokenListGovernanceSettings, subDAO], deployments);
 
   await deployments.save("management_dao", {
     address: dao.daoAddress,
@@ -29,9 +30,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     address: dao.pluginAddresses[0],
     ...(await deployments.getArtifact("TokenListGovernance")),
   });
+  await deployments.save("management_subDAO", {
+    address: dao.pluginAddresses[0],
+    ...(await deployments.getArtifact("SubDAO")),
+  });
 
   await setBool("NewManagementDAO", true);
 };
 export default func;
 func.tags = ["ManagementDAOCreation"];
-func.dependencies = ["TokenListGovernance", "NFT", "CommunityDAO"];
+func.dependencies = ["TokenListGovernance", "NFT", "CommunityDAO", "SubDAO"];

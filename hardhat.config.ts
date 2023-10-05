@@ -22,7 +22,6 @@ const config: HardhatUserConfig = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200,
           },
         },
       },
@@ -41,8 +40,8 @@ const config: HardhatUserConfig = {
   networks: {
     mumbai: {
       accounts: [process.env.PRIV_KEY ?? fakePrivKey],
-      url: "https://rpc.ankr.com/polygon_mumbai",
-      deploy: ["00_Tasks", "02_Hats", "10_Plugins", "20_TokenCollections", "80_DAO"].map((d) => `deploy/${d}`), // Hats is not on Polygon Mumbai
+      url: process.env.RPC_MUMBAI ?? "https://rpc.ankr.com/polygon_mumbai",
+      deploy: ["00_Tasks", "02_Hats", "10_Plugins", "20_TokenCollections", "50_RFPs", "80_DAO"].map((d) => `deploy/${d}`), // Hats is not on Polygon Mumbai
       verify: {
         etherscan: {
           apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",
@@ -51,8 +50,8 @@ const config: HardhatUserConfig = {
     },
     polygon: {
       accounts: [process.env.PRIV_KEY ?? fakePrivKey],
-      url: "https://rpc.ankr.com/polygon",
-      deploy: ["00_Tasks", "10_Plugins", "20_TokenCollections", "80_DAO"].map((d) => `deploy/${d}`),
+      url: process.env.RPC_POLYGON ?? "https://rpc.ankr.com/polygon",
+      deploy: ["00_Tasks", "10_Plugins", "20_TokenCollections", "50_RFPs", "80_DAO"].map((d) => `deploy/${d}`),
       verify: {
         etherscan: {
           apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",
@@ -104,7 +103,7 @@ const config: HardhatUserConfig = {
   dodoc: {
     runOnCompile: true,
     freshOutput: true,
-    include: ["TokenListGovernance", "TaskDrafts", "Tasks", "Escrow", "TaskDisputes", "SharedAddress", "SubDAO"],
+    include: ["TokenListGovernance", "TaskDrafts", "Tasks", "Escrow", "TaskDisputes", "SharedAddress", "SubDAO", "RFPs"],
   },
 };
 

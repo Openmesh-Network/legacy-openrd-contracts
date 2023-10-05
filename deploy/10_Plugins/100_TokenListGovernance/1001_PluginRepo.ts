@@ -13,7 +13,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await getNamedAccounts();
 
   const tokenListGovernance = await deployments.get("TokenListGovernanceSetup");
-  const subdomain = "tokenlistgovernance-beta"; //"tokenlist-test-" + (await getVar("ENSCounter"));
+  const subdomain = "tokenlist-test-" + (await getVar("ENSCounter"));
 
   const receipt = await deployments.execute(
     "PluginRepoFactory",

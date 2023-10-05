@@ -9,7 +9,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const deployResult = await deployments.deploy("ERC20", {
     from: deployer,
     contract: "OwnableERC20Votes",
-    args: ["VotingCoin", "VOTE"],
+    args: ["Open Governance", "gOPEN"],
   });
 
   await setBool("NewERC20", deployResult.newlyDeployed);

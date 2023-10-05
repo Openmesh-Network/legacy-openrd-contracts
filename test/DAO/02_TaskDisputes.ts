@@ -19,10 +19,13 @@ async function getDAO() {
   const TaskDisputes = (await ethers.getContract("dispute_taskDisputes", deployer)) as TaskDisputes;
   const NFT = await asDepartment<OwnableERC721Enumerable>(await ethers.getContract("NFT", deployer), "management");
 
+  const community = await asDepartment<TokenListGovernance>(TokenListGovernance, "community");
+  await community.addMembers([0]);
+
   return { task, DAO, TokenListGovernance, TaskDisputes, NFT, deployer };
 }
 
-describe("Dispute DAO Task Disputes", function () {
+describe("Task Disputes", function () {
   it("should allow creation of dispute proposals by anyone", async function () {
     const dao = await loadFixture(getDAO);
     const accounts = await getUnnamedAccounts();
@@ -34,6 +37,7 @@ describe("Dispute DAO Task Disputes", function () {
 
   it("should have closed the task after the proposal passes", async function () {
     const dao = await loadFixture(getDAO);
+
     const NFTs = [0].map(BigInt);
     await asyncMap(NFTs, async (n) => await dao.NFT.mint(dao.deployer, n));
     await dao.TaskDisputes.createDispute("0x", 0, now() + 1 * days, dao.task.taskId, [], [], {

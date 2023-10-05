@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.17; // For verification, the setup contract (deployer) is fixed on 0.8.17
 
 import {PluginUUPSUpgradeable} from "@aragon/osx/core/plugin/PluginUUPSUpgradeable.sol";
 import {IHats} from "../../Deps/hats-protocol/Interfaces/IHats.sol";
@@ -7,7 +7,7 @@ import {ISharedAddress, IDAO, GRANT_ACCESS_PERMISSION_ID, REVOKE_ACCESS_PERMISSI
 
 contract SharedAddress is PluginUUPSUpgradeable, ISharedAddress {
     uint256 private daoNonce;
-    IHats private hats;
+    IHats private hats; // Should work for any ERC-1155 collection though
     mapping(uint256 => bool) private fullAccess;
     mapping(address => mapping(uint256 => bool)) private fullZoneAccess;
     mapping(uint256 => mapping(uint256 => bool)) private fullFunctionAccess;
