@@ -158,7 +158,7 @@ abstract contract TasksUtils is TasksEnsure {
                     revert NativeTransferFailed();
                 }
 
-                task.nativeBudget = nativeNeeded;
+                task.nativeBudget = _toUint96(nativeNeeded);
                 increasedBudget = true;
             }
         }
@@ -272,7 +272,7 @@ abstract contract TasksUtils is TasksEnsure {
         // Gas optimzation
         uint8 nativeRewardCount = executor.nativeRewardCount;
         if (nativeRewardCount != 0) {
-            uint256 paidOut;
+            uint96 paidOut;
             for (uint8 i; i < nativeRewardCount; ) {
                 escrow.transferNative(
                     payable(executor.nativeReward[i].to),
@@ -384,7 +384,6 @@ abstract contract TasksUtils is TasksEnsure {
         // Gas optimzation
         uint8 nativeRewardCount = executor.nativeRewardCount;
         if (nativeRewardCount != 0) {
-            uint256 paidOut;
             for (uint8 i; i < nativeRewardCount; ) {
                 if (_partialNativeReward[i] > executor.nativeReward[i].amount) {
                     revert PartialRewardAboveFullReward();
@@ -396,14 +395,13 @@ abstract contract TasksUtils is TasksEnsure {
                 );
 
                 unchecked {
-                    paidOut += _partialNativeReward[i];
                     executor.nativeReward[i].amount -= _partialNativeReward[i];
                     ++i;
                 }
             }
 
             unchecked {
-                task.nativeBudget -= paidOut;
+                task.nativeBudget -= _toUint96(address(escrow).balance);
             }
         }
     }

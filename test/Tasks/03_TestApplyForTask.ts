@@ -159,6 +159,6 @@ describe("Apply For Task", function () {
       taskId: task.taskId,
       reward: reward,
     });
-    await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "RewardDoesntEndWithNewToken");
+    await expect(tx).to.be.revertedWithCustomError(task.TasksExecutor, "RewardDoesntEndWithNextToken");
   });
 });

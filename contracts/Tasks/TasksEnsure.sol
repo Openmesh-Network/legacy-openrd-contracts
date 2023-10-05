@@ -45,7 +45,7 @@ abstract contract TasksEnsure is ITasks {
     ) internal pure {
         unchecked {
             if (reward.length != 0 && !reward[reward.length - 1].nextToken) {
-                revert RewardDoesntEndWithNewToken();
+                revert RewardDoesntEndWithNextToken();
             }
         }
     }

@@ -85,7 +85,7 @@ contract Tasks is TasksUtils {
         task.escrow = escrow;
         // Gas optimization
         if (msg.value != 0) {
-            task.nativeBudget = msg.value;
+            task.nativeBudget = _toUint96(msg.value);
         }
         task.budgetCount = _toUint8(_budget.length);
         for (uint8 i; i < uint8(_budget.length); ) {
@@ -115,7 +115,7 @@ contract Tasks is TasksUtils {
             _metadata,
             _deadline,
             _budget,
-            msg.value,
+            _toUint96(msg.value),
             msg.sender,
             _manager
         );
@@ -446,7 +446,7 @@ contract Tasks is TasksUtils {
 
         // Gas optimization
         if (msg.value != 0) {
-            task.nativeBudget += msg.value;
+            task.nativeBudget = _toUint96(task.nativeBudget + msg.value);
         }
 
         emit BudgetChanged(_taskId);

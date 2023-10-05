@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {Escrow} from "./Escrow.sol";
+import {Escrow} from "../Escrow.sol";
 
 interface ITasks {
     error InvalidTimestamp();
@@ -19,7 +19,7 @@ interface ITasks {
     error NotExecutor();
 
     error RewardAboveBudget();
-    error RewardDoesntEndWithNewToken();
+    error RewardDoesntEndWithNextToken();
     error IncorrectAmountOfNativeCurrencyAttached();
     error ApplicationDoesNotExist();
     error NotYourApplication();
@@ -44,7 +44,7 @@ interface ITasks {
         string metadata,
         uint64 deadline,
         ERC20Transfer[] budget,
-        uint256 nativeBudget,
+        uint96 nativeBudget,
         address creator,
         address manager
     );
@@ -202,7 +202,8 @@ interface ITasks {
     /// @param deadline Block timestamp at which the task expires if not completed.
     /// @param budget Maximum ERC20 rewards that can be earned by completing the task.
     /// @param nativeBudget Maximum native currency reward that can be earned by completing the task.
-    /// @param manager Who has created the task.
+    /// @param creator Who has created the task.
+    /// @param manager Who has the permission to manage the task.
     /// @param state Current state the task is in.
     /// @param applications Applications to take the job.
     /// @param executorApplication Index of the application that will execture the task.
@@ -213,8 +214,7 @@ interface ITasks {
         uint64 deadline;
         Escrow escrow;
         // Storage block seperator
-        uint256 nativeBudget;
-        // Storage block seperator
+        uint96 nativeBudget;
         address creator;
         // Storage block seperator
         address manager;
@@ -239,7 +239,7 @@ interface ITasks {
         address manager;
         TaskState state;
         Escrow escrow;
-        uint256 nativeBudget;
+        uint96 nativeBudget;
         ERC20Transfer[] budget;
         OffChainApplication[] applications;
         Submission[] submissions;
@@ -285,6 +285,7 @@ interface ITasks {
     /// @param _metadata Metadata of your application.
     /// @param _reward Wanted rewards for completing the task.
     /// @param _nativeReward Wanted native currency for completing the task.
+    /// @return applicationId Id of the newly created application.
     function applyForTask(
         uint256 _taskId,
         string calldata _metadata,
@@ -308,6 +309,7 @@ interface ITasks {
     /// @notice Create a submission.
     /// @param _taskId Id of the task.
     /// @param _metadata Metadata of the submission. (IPFS hash)
+    /// @return submissionId Id of the newly created submission.
     function createSubmission(
         uint256 _taskId,
         string calldata _metadata
@@ -328,6 +330,7 @@ interface ITasks {
     /// @notice Cancels a task. This can be used to close a task and receive back the budget.
     /// @param _taskId Id of the task.
     /// @param _explanation Why the task was cancelled. (IPFS hash)
+    /// @return cancelTaskRequestId Id of the newly created request for task cancellation.
     function cancelTask(
         uint256 _taskId,
         string calldata _explanation
@@ -390,6 +393,7 @@ interface ITasks {
     /// @param _taskId Id of the task.
     /// @param _partialReward How much of each ERC20 reward should be paid out.
     /// @param _partialNativeReward How much of each native reward should be paid out.
+    /// @dev Will fetch balanceOf to set the budget afterwards, can be used in case funds where sent manually to increase the budget.
     function partialPayment(
         uint256 _taskId,
         uint88[] calldata _partialReward,

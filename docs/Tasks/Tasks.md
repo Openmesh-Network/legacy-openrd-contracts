@@ -92,7 +92,7 @@ Cancels a task. This can be used to close a task and receive back the budget.
 
 | Name | Type | Description |
 |---|---|---|
-| cancelTaskRequestId | uint8 | undefined |
+| cancelTaskRequestId | uint8 | Id of the newly created request for task cancellation. |
 
 ### completeByDispute
 
@@ -131,7 +131,7 @@ Create a submission.
 
 | Name | Type | Description |
 |---|---|---|
-| submissionId | uint8 | undefined |
+| submissionId | uint8 | Id of the newly created submission. |
 
 ### createTask
 
@@ -325,7 +325,7 @@ function partialPayment(uint256 _taskId, uint88[] _partialReward, uint96[] _part
 
 Releases a part of the reward to the executor without marking the task as complete.
 
-
+*Will fetch balanceOf to set the budget afterwards, can be used in case funds where sent manually to increase the budget.*
 
 #### Parameters
 
@@ -707,7 +707,7 @@ event TaskCompleted(uint256 indexed taskId, enum ITasks.TaskCompletion source)
 ### TaskCreated
 
 ```solidity
-event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITasks.ERC20Transfer[] budget, uint256 nativeBudget, address creator, address manager)
+event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITasks.ERC20Transfer[] budget, uint96 nativeBudget, address creator, address manager)
 ```
 
 
@@ -722,7 +722,7 @@ event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITas
 | metadata  | string | undefined |
 | deadline  | uint64 | undefined |
 | budget  | ITasks.ERC20Transfer[] | undefined |
-| nativeBudget  | uint256 | undefined |
+| nativeBudget  | uint96 | undefined |
 | creator  | address | undefined |
 | manager  | address | undefined |
 
@@ -1011,10 +1011,10 @@ error RewardAboveBudget()
 
 
 
-### RewardDoesntEndWithNewToken
+### RewardDoesntEndWithNextToken
 
 ```solidity
-error RewardDoesntEndWithNewToken()
+error RewardDoesntEndWithNextToken()
 ```
 
 
