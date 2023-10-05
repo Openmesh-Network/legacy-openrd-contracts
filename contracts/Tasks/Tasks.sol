@@ -471,14 +471,21 @@ contract Tasks is TasksUtils {
     }
 
     /// @inheritdoc ITasks
-    function completeByDispute(uint256 _taskId) external {
+    function completeByDispute(
+        uint256 _taskId,
+        uint88[] calldata _partialReward,
+        uint96[] calldata _partialNativeReward
+    ) external {
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureSenderIsDisputeManager();
 
         _ensureTaskIsTaken(task);
 
-        _payoutTask(task);
+        _payoutTaskPartially(task, _partialReward, _partialNativeReward);
+        _refundCreator(task);
+
+        emit PartialPayment(_taskId, _partialReward, _partialNativeReward);
         emit TaskCompleted(_taskId, TaskCompletion.Dispute);
     }
 

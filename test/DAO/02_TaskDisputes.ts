@@ -26,7 +26,7 @@ describe("Dispute DAO Task Disputes", function () {
   it("should allow creation of dispute proposals by anyone", async function () {
     const dao = await loadFixture(getDAO);
     const accounts = await getUnnamedAccounts();
-    const tx = dao.TaskDisputes.connect(await ethers.getSigner(accounts[0])).createDispute("0x", 0, now() + 1 * days, dao.task.taskId, {
+    const tx = dao.TaskDisputes.connect(await ethers.getSigner(accounts[0])).createDispute("0x", 0, now() + 1 * days, dao.task.taskId, [], [], {
       value: await dao.TaskDisputes.getDisputeCost(),
     });
     await expect(tx).to.not.be.reverted;
@@ -36,7 +36,7 @@ describe("Dispute DAO Task Disputes", function () {
     const dao = await loadFixture(getDAO);
     const NFTs = [0].map(BigInt);
     await asyncMap(NFTs, async (n) => await dao.NFT.mint(dao.deployer, n));
-    await dao.TaskDisputes.createDispute("0x", 0, now() + 1 * days, dao.task.taskId, {
+    await dao.TaskDisputes.createDispute("0x", 0, now() + 1 * days, dao.task.taskId, [], [], {
       value: await dao.TaskDisputes.getDisputeCost(),
     });
     enum VoteOption {
@@ -90,7 +90,7 @@ describe("Dispute DAO Task Disputes", function () {
   it("should not allow creation of dispute proposals without paying", async function () {
     const dao = await loadFixture(getDAO);
     const accounts = await getUnnamedAccounts();
-    const tx = dao.TaskDisputes.connect(await ethers.getSigner(accounts[0])).createDispute("0x", 0, now() + 1 * days, dao.task.taskId, {
+    const tx = dao.TaskDisputes.connect(await ethers.getSigner(accounts[0])).createDispute("0x", 0, now() + 1 * days, dao.task.taskId, [], [], {
       value: (await dao.TaskDisputes.getDisputeCost()) - Wei(1),
     });
     await expect(tx).to.be.revertedWithCustomError(dao.TaskDisputes, "Underpaying");

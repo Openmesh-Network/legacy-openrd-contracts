@@ -76,7 +76,9 @@ contract TaskDisputes is PluginUUPSUpgradeable, ITaskDisputes {
         bytes calldata _metadata,
         uint64 _startDate,
         uint64 _endDate,
-        uint256 _taskId
+        uint256 _taskId,
+        uint88[] calldata _partialReward,
+        uint96[] calldata _partialNativeReward
     ) external payable {
         // Dispute cost is required to make a dispute proposal. It is sent to the DAO.
         if (msg.value < disputeCost) {
@@ -93,7 +95,9 @@ contract TaskDisputes is PluginUUPSUpgradeable, ITaskDisputes {
         {
             bytes memory callData = abi.encodeWithSelector(
                 tasks.completeByDispute.selector,
-                _taskId
+                _taskId,
+                _partialReward,
+                _partialNativeReward
             );
             actions[0] = IDAO.Action(address(tasks), 0, callData);
         }

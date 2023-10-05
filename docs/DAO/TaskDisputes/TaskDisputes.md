@@ -30,7 +30,7 @@ The ID of the permission required to call the `_authorizeUpgrade` function.
 ### createDispute
 
 ```solidity
-function createDispute(bytes _metadata, uint64 _startDate, uint64 _endDate, uint256 _taskId) external payable
+function createDispute(bytes _metadata, uint64 _startDate, uint64 _endDate, uint256 _taskId, uint88[] _partialReward, uint96[] _partialNativeReward) external payable
 ```
 
 Create a dispute for a task
@@ -41,10 +41,12 @@ Create a dispute for a task
 
 | Name | Type | Description |
 |---|---|---|
-| _metadata | bytes | undefined |
-| _startDate | uint64 | undefined |
-| _endDate | uint64 | undefined |
-| _taskId | uint256 | undefined |
+| _metadata | bytes | Metadata of the proposal. |
+| _startDate | uint64 | Start date of the proposal. |
+| _endDate | uint64 | End date of the proposal. |
+| _taskId | uint256 | The task wanting to complete by dispute. |
+| _partialReward | uint88[] | Complete with how much of the reward. |
+| _partialNativeReward | uint96[] | Complete with how much of the native reward. |
 
 ### dao
 

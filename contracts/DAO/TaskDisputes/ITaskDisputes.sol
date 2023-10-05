@@ -40,10 +40,18 @@ interface ITaskDisputes {
     ) external;
 
     /// @notice Create a dispute for a task
+    /// @param _metadata Metadata of the proposal.
+    /// @param _startDate Start date of the proposal.
+    /// @param _endDate End date of the proposal.
+    /// @param _taskId The task wanting to complete by dispute.
+    /// @param _partialReward Complete with how much of the reward.
+    /// @param _partialNativeReward Complete with how much of the native reward.
     function createDispute(
         bytes calldata _metadata,
         uint64 _startDate,
         uint64 _endDate,
-        uint256 _taskId
+        uint256 _taskId,
+        uint88[] calldata _partialReward,
+        uint96[] calldata _partialNativeReward
     ) external payable;
 }

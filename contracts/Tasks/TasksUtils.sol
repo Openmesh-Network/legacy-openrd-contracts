@@ -401,7 +401,7 @@ abstract contract TasksUtils is TasksEnsure {
             }
 
             unchecked {
-                task.nativeBudget -= _toUint96(address(escrow).balance);
+                task.nativeBudget = _toUint96(address(escrow).balance);
             }
         }
     }

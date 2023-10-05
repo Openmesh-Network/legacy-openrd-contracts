@@ -97,7 +97,7 @@ Cancels a task. This can be used to close a task and receive back the budget.
 ### completeByDispute
 
 ```solidity
-function completeByDispute(uint256 _taskId) external nonpayable
+function completeByDispute(uint256 _taskId, uint88[] _partialReward, uint96[] _partialNativeReward) external nonpayable
 ```
 
 Completes the task through dispute resolution.
@@ -109,6 +109,8 @@ Completes the task through dispute resolution.
 | Name | Type | Description |
 |---|---|---|
 | _taskId | uint256 | Id of the task. |
+| _partialReward | uint88[] | How much of each ERC20 reward should be paid out. |
+| _partialNativeReward | uint96[] | How much of each native reward should be paid out. |
 
 ### createSubmission
 

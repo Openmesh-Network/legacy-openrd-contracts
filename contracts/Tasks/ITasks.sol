@@ -383,7 +383,13 @@ interface ITasks {
 
     /// @notice Completes the task through dispute resolution.
     /// @param _taskId Id of the task.
-    function completeByDispute(uint256 _taskId) external;
+    /// @param _partialReward How much of each ERC20 reward should be paid out.
+    /// @param _partialNativeReward How much of each native reward should be paid out.
+    function completeByDispute(
+        uint256 _taskId,
+        uint88[] calldata _partialReward,
+        uint96[] calldata _partialNativeReward
+    ) external;
 
     /// @notice Allows the dispute manager to appoint a new dispute manager.
     /// @param _newManager The new dispute manager.
