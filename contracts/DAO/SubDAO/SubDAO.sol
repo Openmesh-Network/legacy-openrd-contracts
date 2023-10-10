@@ -74,6 +74,7 @@ contract SubDAO is PluginUUPSUpgradeable, ISubDAO {
     }
 
     function _addSubDAO(address _subDAO) internal {
+        emit SubDAOAdded(_subDAO);
         subDAOs[subDAOCount] = _subDAO;
         ++subDAOCount;
     }
@@ -83,6 +84,7 @@ contract SubDAO is PluginUUPSUpgradeable, ISubDAO {
             revert IndexOutOfBound(_index, subDAOCount);
         }
 
+        emit SubDAORemoved(subDAOs[_index]);
         --subDAOCount;
         if (_index != subDAOCount) {
             // No need to swap when removing last element

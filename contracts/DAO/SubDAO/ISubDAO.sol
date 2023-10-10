@@ -10,6 +10,9 @@ bytes32 constant MANAGE_SUBDAO_PERMISSION_ID = keccak256(
 interface ISubDAO {
     error IndexOutOfBound(uint256 index, uint256 count);
 
+    event SubDAOAdded(address subdao);
+    event SubDAORemoved(address subdao);
+
     /// @notice Creates a new DAO and adds it as sub DAO.
     /// @param _daoFactory The DAO factory to use to create the DAO.
     /// @param _daoSettings The settings for creating the new DAO.

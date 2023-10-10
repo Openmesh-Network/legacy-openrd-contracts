@@ -1,5 +1,5 @@
 import { ethers } from "hardhat";
-import { DAOFactory, SubDAO } from "../../../typechain-types";
+import { DAOFactory } from "../../../typechain-types";
 import { getEventsFromLogs } from "../../../utils/utils";
 import { DeploymentsExtension } from "hardhat-deploy/types";
 

@@ -118,11 +118,11 @@ export async function getTokenVotingSettings(erc20Collection: string) {
 }
 
 export async function getSharedAddressSettings() {
-  const taskDisputeFormat = ["address hats"];
+  const sharedAddressFormat = ["address hats"];
   const hats = await deployments.get("Hats");
-  const taskDisputeValues: any[] = [hats.address];
-  const taskDisputeBytes = ethers.AbiCoder.defaultAbiCoder().encode(taskDisputeFormat, taskDisputeValues);
-  const taskDisputeSettings = {
+  const sharedAddressValues: any[] = [hats.address];
+  const sharedAddressBytes = ethers.AbiCoder.defaultAbiCoder().encode(sharedAddressFormat, sharedAddressValues);
+  const sharedAddressSettings = {
     pluginSetupRef: {
       versionTag: {
         release: 1,
@@ -130,16 +130,16 @@ export async function getSharedAddressSettings() {
       },
       pluginSetupRepo: (await deployments.get("SharedAddressRepo")).address,
     },
-    data: taskDisputeBytes,
+    data: sharedAddressBytes,
   };
-  return taskDisputeSettings;
+  return sharedAddressSettings;
 }
 
 export async function getSubDAOSettings() {
-  const taskDisputeFormat: string[] = [];
-  const taskDisputeValues: any[] = [];
-  const taskDisputeBytes = ethers.AbiCoder.defaultAbiCoder().encode(taskDisputeFormat, taskDisputeValues);
-  const taskDisputeSettings = {
+  const subDAOFormat: string[] = [];
+  const subDAOValues: any[] = [];
+  const subDAOBytes = ethers.AbiCoder.defaultAbiCoder().encode(subDAOFormat, subDAOValues);
+  const subDAOSettings = {
     pluginSetupRef: {
       versionTag: {
         release: 1,
@@ -147,9 +147,9 @@ export async function getSubDAOSettings() {
       },
       pluginSetupRepo: (await deployments.get("SubDAORepo")).address,
     },
-    data: taskDisputeBytes,
+    data: subDAOBytes,
   };
-  return taskDisputeSettings;
+  return subDAOSettings;
 }
 
 // exports dummy function for hardhat-deploy. Otherwise we would have to move this file
