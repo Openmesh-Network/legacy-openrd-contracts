@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ERC721Enumerable, ERC721} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import {ERC721Enumerable, ERC721, IERC721} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract OwnableERC721Enumerable is ERC721Enumerable, Ownable {
+contract VerifiedContributor is ERC721Enumerable, Ownable {
+    error NotTransferable();
+
     constructor(
         string memory name_,
         string memory symbol_
@@ -21,5 +23,18 @@ contract OwnableERC721Enumerable is ERC721Enumerable, Ownable {
     /// @param tokenId The id of the token to be burned.
     function burn(uint256 tokenId) external virtual onlyOwner {
         _burn(tokenId);
+    }
+
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public override(ERC721, IERC721) {
+        if (from != address(0)) {
+            // Not a mint, token is non-transferable
+            revert NotTransferable();
+        }
+
+        super.transferFrom(from, to, tokenId);
     }
 }

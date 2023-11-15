@@ -6,7 +6,7 @@ import { TaskState } from "../../utils/taskTypes";
 import { getTask } from "../../utils/taskHelper";
 import { asyncMap, getInferfaceId } from "../../utils/utils";
 import { asDepartment } from "../Helpers/ImpersonatedDAO";
-import { DAO, OwnableERC721Enumerable, TaskDisputes, TokenListGovernance } from "../../typechain-types";
+import { DAO, VerifiedContributor, TaskDisputes, TokenListGovernance } from "../../typechain-types";
 import { createTakenTaskFixture } from "../Tasks/00_TestTasksFixtures";
 import { Gwei, Wei } from "../../utils/ethersUnits";
 
@@ -17,7 +17,7 @@ async function getDAO() {
   const DAO = (await ethers.getContract("dispute_dao", deployer)) as DAO;
   const TokenListGovernance = (await ethers.getContract("dispute_tokenListGovernance", deployer)) as TokenListGovernance;
   const TaskDisputes = (await ethers.getContract("dispute_taskDisputes", deployer)) as TaskDisputes;
-  const NFT = await asDepartment<OwnableERC721Enumerable>(await ethers.getContract("NFT", deployer), "management");
+  const NFT = await asDepartment<VerifiedContributor>(await ethers.getContract("NFT", deployer), "management");
 
   const community = await asDepartment<TokenListGovernance>(TokenListGovernance, "community");
   await community.addMembers([0]);

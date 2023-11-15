@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract OwnableERC20Votes is ERC20Votes, ERC165, Ownable {
+contract OpenGovernance is ERC20Votes, ERC165, Ownable {
     constructor(
         string memory name_,
         string memory symbol_

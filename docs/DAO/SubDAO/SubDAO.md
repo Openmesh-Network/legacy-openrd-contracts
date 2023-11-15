@@ -325,6 +325,38 @@ event Initialized(uint8 version)
 |---|---|---|
 | version  | uint8 | undefined |
 
+### SubDAOAdded
+
+```solidity
+event SubDAOAdded(address subdao)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| subdao  | address | undefined |
+
+### SubDAORemoved
+
+```solidity
+event SubDAORemoved(address subdao)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| subdao  | address | undefined |
+
 ### Upgraded
 
 ```solidity

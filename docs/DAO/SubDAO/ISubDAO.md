@@ -118,6 +118,41 @@ Removes an existing DAO as sub DAO.
 
 
 
+## Events
+
+### SubDAOAdded
+
+```solidity
+event SubDAOAdded(address subdao)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| subdao  | address | undefined |
+
+### SubDAORemoved
+
+```solidity
+event SubDAORemoved(address subdao)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| subdao  | address | undefined |
+
+
 
 ## Errors
 

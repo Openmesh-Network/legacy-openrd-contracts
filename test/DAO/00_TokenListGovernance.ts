@@ -1,10 +1,10 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { ethers, getNamedAccounts } from "hardhat";
-import { DAO, IDAO, OwnableERC721Enumerable, TaskDrafts, Tasks, TokenListGovernance } from "../../typechain-types";
+import { DAO, IDAO, VerifiedContributor, TaskDrafts, Tasks, TokenListGovernance } from "../../typechain-types";
 import { TestSetup } from "../Helpers/TestSetup";
 import { expect } from "chai";
 import { days, minutes, now } from "../../utils/timeUnits";
-import { asDAO, asDepartment } from "../Helpers/ImpersonatedDAO";
+import { asDepartment } from "../Helpers/ImpersonatedDAO";
 
 export async function getDAO() {
   await loadFixture(TestSetup);
@@ -14,7 +14,7 @@ export async function getDAO() {
   const DAO = (await ethers.getContract(department + "_dao", deployer)) as DAO;
   const TokenListGovernance = (await ethers.getContract(department + "_tokenListGovernance", deployer)) as TokenListGovernance;
   const TaskDrafts = (await ethers.getContract(department + "_taskDrafts", deployer)) as TaskDrafts;
-  const NFT = await asDepartment<OwnableERC721Enumerable>(await ethers.getContract("NFT", deployer), "management");
+  const NFT = await asDepartment<VerifiedContributor>(await ethers.getContract("NFT", deployer), "management");
   const Tasks = (await ethers.getContract("Tasks", deployer)) as Tasks;
 
   const management = await asDepartment<TokenListGovernance>(TokenListGovernance, "management");
