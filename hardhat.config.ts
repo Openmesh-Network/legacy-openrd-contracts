@@ -12,6 +12,7 @@ import { config as dotEnvConfig } from "dotenv";
 dotEnvConfig();
 
 const fakePrivKey = "0000000000000000000000000000000000000000000000000000000000000000";
+const useFrame = process.env.USE_FRAME === "y";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -39,8 +40,8 @@ const config: HardhatUserConfig = {
   },
   networks: {
     mumbai: {
-      accounts: [process.env.PRIV_KEY ?? fakePrivKey],
-      url: process.env.RPC_MUMBAI ?? "https://rpc.ankr.com/polygon_mumbai",
+      accounts: useFrame ? "remote" : [process.env.PRIV_KEY ?? fakePrivKey],
+      url: useFrame ? "http://127.0.0.1:1248" : process.env.RPC_MUMBAI ?? "https://rpc.ankr.com/polygon_mumbai",
       deploy: ["00_Tasks", "02_Hats", "10_Plugins", "20_TokenCollections", "50_RFPs", "80_DAO"].map((d) => `deploy/${d}`), // Hats is not on Polygon Mumbai
       verify: {
         etherscan: {
@@ -49,8 +50,8 @@ const config: HardhatUserConfig = {
       },
     },
     polygon: {
-      accounts: [process.env.PRIV_KEY ?? fakePrivKey],
-      url: process.env.RPC_POLYGON ?? "https://rpc.ankr.com/polygon",
+      accounts: useFrame ? "remote" : [process.env.PRIV_KEY ?? fakePrivKey],
+      url: useFrame ? "http://127.0.0.1:1248" : process.env.RPC_POLYGON ?? "https://rpc.ankr.com/polygon",
       deploy: ["00_Tasks", "10_Plugins", "20_TokenCollections", "50_RFPs", "80_DAO"].map((d) => `deploy/${d}`),
       verify: {
         etherscan: {

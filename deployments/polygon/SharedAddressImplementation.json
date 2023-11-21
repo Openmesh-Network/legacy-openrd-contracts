@@ -1,0 +1,952 @@
+{
+  "address": "0x2c253283a14c55C12C77931A8bf7E3CdC0f9D3C8",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "AccessDenied",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "dao",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "where",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "who",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "permissionId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "DaoUnauthorized",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotWearingHat",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "previousAdmin",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "newAdmin",
+          "type": "address"
+        }
+      ],
+      "name": "AdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "beacon",
+          "type": "address"
+        }
+      ],
+      "name": "BeaconUpgraded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "nonce",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "hat",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct IDAO.Action[]",
+          "name": "actions",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "Execution",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "hat",
+          "type": "uint256"
+        }
+      ],
+      "name": "FullAccessGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "hat",
+          "type": "uint256"
+        }
+      ],
+      "name": "FullAccessRevoked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "hat",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "zone",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes4",
+          "name": "functionSelector",
+          "type": "bytes4"
+        }
+      ],
+      "name": "FullFunctionAccessGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "hat",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "zone",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes4",
+          "name": "functionSelector",
+          "type": "bytes4"
+        }
+      ],
+      "name": "FullFunctionAccessRevoked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "hat",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "zone",
+          "type": "address"
+        }
+      ],
+      "name": "FullZoneAccessGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "hat",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "zone",
+          "type": "address"
+        }
+      ],
+      "name": "FullZoneAccessRevoked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "version",
+          "type": "uint8"
+        }
+      ],
+      "name": "Initialized",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "implementation",
+          "type": "address"
+        }
+      ],
+      "name": "Upgraded",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "UPGRADE_PLUGIN_PERMISSION_ID",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_hat",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "internalType": "struct IDAO.Action[]",
+          "name": "_actions",
+          "type": "tuple[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_failureMap",
+          "type": "uint256"
+        }
+      ],
+      "name": "asDAO",
+      "outputs": [
+        {
+          "internalType": "bytes[]",
+          "name": "returnValueBytes",
+          "type": "bytes[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "failureMap",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "dao",
+      "outputs": [
+        {
+          "internalType": "contract IDAO",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_hat",
+          "type": "uint256"
+        }
+      ],
+      "name": "grantFullAccess",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_hat",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_zone",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes4",
+          "name": "_function",
+          "type": "bytes4"
+        }
+      ],
+      "name": "grantFullFunctionAccess",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_hat",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_zone",
+          "type": "address"
+        }
+      ],
+      "name": "grantFullZoneAccess",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_hat",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "internalType": "struct IDAO.Action[]",
+          "name": "_actions",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "hasAccess",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "implementation",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IDAO",
+          "name": "_dao",
+          "type": "address"
+        },
+        {
+          "internalType": "contract IHats",
+          "name": "_hats",
+          "type": "address"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "pluginType",
+      "outputs": [
+        {
+          "internalType": "enum IPlugin.PluginType",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "proxiableUUID",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_hat",
+          "type": "uint256"
+        }
+      ],
+      "name": "revokeFullAccess",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_hat",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_zone",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes4",
+          "name": "_function",
+          "type": "bytes4"
+        }
+      ],
+      "name": "revokeFullFunctionAccess",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_hat",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_zone",
+          "type": "address"
+        }
+      ],
+      "name": "revokeFullZoneAccess",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "_interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newImplementation",
+          "type": "address"
+        }
+      ],
+      "name": "upgradeTo",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newImplementation",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "upgradeToAndCall",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ],
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "caac9a9c3726f07114d89693afed9504",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"AccessDenied\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"dao\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"where\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"who\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"permissionId\",\"type\":\"bytes32\"}],\"name\":\"DaoUnauthorized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotWearingHat\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"previousAdmin\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAdmin\",\"type\":\"address\"}],\"name\":\"AdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"beacon\",\"type\":\"address\"}],\"name\":\"BeaconUpgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"hat\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"indexed\":false,\"internalType\":\"struct IDAO.Action[]\",\"name\":\"actions\",\"type\":\"tuple[]\"}],\"name\":\"Execution\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"hat\",\"type\":\"uint256\"}],\"name\":\"FullAccessGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"hat\",\"type\":\"uint256\"}],\"name\":\"FullAccessRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"hat\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"functionSelector\",\"type\":\"bytes4\"}],\"name\":\"FullFunctionAccessGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"hat\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"functionSelector\",\"type\":\"bytes4\"}],\"name\":\"FullFunctionAccessRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"hat\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\"}],\"name\":\"FullZoneAccessGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"hat\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\"}],\"name\":\"FullZoneAccessRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_PLUGIN_PERMISSION_ID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_hat\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"internalType\":\"struct IDAO.Action[]\",\"name\":\"_actions\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256\",\"name\":\"_failureMap\",\"type\":\"uint256\"}],\"name\":\"asDAO\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"returnValueBytes\",\"type\":\"bytes[]\"},{\"internalType\":\"uint256\",\"name\":\"failureMap\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"dao\",\"outputs\":[{\"internalType\":\"contract IDAO\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_hat\",\"type\":\"uint256\"}],\"name\":\"grantFullAccess\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_hat\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_zone\",\"type\":\"address\"},{\"internalType\":\"bytes4\",\"name\":\"_function\",\"type\":\"bytes4\"}],\"name\":\"grantFullFunctionAccess\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_hat\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_zone\",\"type\":\"address\"}],\"name\":\"grantFullZoneAccess\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_hat\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"internalType\":\"struct IDAO.Action[]\",\"name\":\"_actions\",\"type\":\"tuple[]\"}],\"name\":\"hasAccess\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IDAO\",\"name\":\"_dao\",\"type\":\"address\"},{\"internalType\":\"contract IHats\",\"name\":\"_hats\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pluginType\",\"outputs\":[{\"internalType\":\"enum IPlugin.PluginType\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_hat\",\"type\":\"uint256\"}],\"name\":\"revokeFullAccess\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_hat\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_zone\",\"type\":\"address\"},{\"internalType\":\"bytes4\",\"name\":\"_function\",\"type\":\"bytes4\"}],\"name\":\"revokeFullFunctionAccess\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_hat\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_zone\",\"type\":\"address\"}],\"name\":\"revokeFullZoneAccess\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"}],\"name\":\"upgradeTo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"errors\":{\"DaoUnauthorized(address,address,address,bytes32)\":[{\"params\":{\"dao\":\"The associated DAO.\",\"permissionId\":\"The permission identifier.\",\"where\":\"The context in which the authorization reverted.\",\"who\":\"The address (EOA or contract) missing the permission.\"}}]},\"kind\":\"dev\",\"methods\":{\"asDAO(uint256,(address,uint256,bytes)[],uint256)\":{\"params\":{\"_actions\":\"The actions to execute.\",\"_failureMap\":\"Which actions are allowed to fail without reverting the whole transaction.\",\"_hat\":\"The hat to use for validations the actions are allowed.\"}},\"dao()\":{\"returns\":{\"_0\":\"The DAO contract.\"}},\"grantFullAccess(uint256)\":{\"params\":{\"_hat\":\"The hat that is granted the permission.\"}},\"grantFullFunctionAccess(uint256,address,bytes4)\":{\"params\":{\"_function\":\"The function of the smart contract.\",\"_hat\":\"The hat that is granted the permission.\",\"_zone\":\"The address of the smart contract.\"}},\"grantFullZoneAccess(uint256,address)\":{\"params\":{\"_hat\":\"The hat that is granted the permission.\",\"_zone\":\"The address of the smart contract.\"}},\"hasAccess(uint256,(address,uint256,bytes)[])\":{\"details\":\"Only a single hat means that a user holding multiple hats might need to split their actions into one batch per hat.\",\"params\":{\"_actions\":\"The actions to check.\",\"_hat\":\"The hat to check with.\"}},\"implementation()\":{\"returns\":{\"_0\":\"The address of the implementation contract.\"}},\"initialize(address,address)\":{\"params\":{\"_dao\":\"The dao where this plugin is installed.\",\"_hats\":\"The deployment of Hats Protocol to use.\"}},\"proxiableUUID()\":{\"details\":\"Implementation of the ERC1822 {proxiableUUID} function. This returns the storage slot used by the implementation. It is used to validate the implementation's compatibility when performing an upgrade. IMPORTANT: A proxy pointing at a proxiable contract should not be considered proxiable itself, because this risks bricking a proxy that upgrades to it, by delegating to itself until out of gas. Thus it is critical that this function revert if invoked through a proxy. This is guaranteed by the `notDelegated` modifier.\"},\"revokeFullAccess(uint256)\":{\"params\":{\"_hat\":\"The hat that is granted the permission.\"}},\"revokeFullFunctionAccess(uint256,address,bytes4)\":{\"params\":{\"_function\":\"The function of the smart contract.\",\"_hat\":\"The hat that is granted the permission.\",\"_zone\":\"The address of the smart contract.\"}},\"revokeFullZoneAccess(uint256,address)\":{\"params\":{\"_hat\":\"The hat that is granted the permission.\",\"_zone\":\"The address of the smart contract.\"}},\"supportsInterface(bytes4)\":{\"params\":{\"_interfaceId\":\"The ID of the interface.\"},\"returns\":{\"_0\":\"Returns `true` if the interface is supported.\"}},\"upgradeTo(address)\":{\"custom:oz-upgrades-unsafe-allow-reachable\":\"delegatecall\",\"details\":\"Upgrade the implementation of the proxy to `newImplementation`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event.\"},\"upgradeToAndCall(address,bytes)\":{\"custom:oz-upgrades-unsafe-allow-reachable\":\"delegatecall\",\"details\":\"Upgrade the implementation of the proxy to `newImplementation`, and subsequently execute the function call encoded in `data`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event.\"}},\"stateVariables\":{\"__gap\":{\"details\":\"This empty reserved space is put in place to allow future versions to add new variables without shifting down storage in the inheritance chain. https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps\"}},\"version\":1},\"userdoc\":{\"errors\":{\"DaoUnauthorized(address,address,address,bytes32)\":[{\"notice\":\"Thrown if a call is unauthorized in the associated DAO.\"}]},\"kind\":\"user\",\"methods\":{\"UPGRADE_PLUGIN_PERMISSION_ID()\":{\"notice\":\"The ID of the permission required to call the `_authorizeUpgrade` function.\"},\"asDAO(uint256,(address,uint256,bytes)[],uint256)\":{\"notice\":\"Executes a list of actions as the DAO.\"},\"dao()\":{\"notice\":\"Returns the DAO contract.\"},\"grantFullAccess(uint256)\":{\"notice\":\"Grants a hat the permission to do any action.\"},\"grantFullFunctionAccess(uint256,address,bytes4)\":{\"notice\":\"Grants a hat the permission to call one function of one smart contract.\"},\"grantFullZoneAccess(uint256,address)\":{\"notice\":\"Grants a hat the permission to call all functions of one smart contract.\"},\"hasAccess(uint256,(address,uint256,bytes)[])\":{\"notice\":\"Verifies if a hat is allowed to execute a list of actions.\"},\"implementation()\":{\"notice\":\"Returns the address of the implementation contract in the [proxy storage slot](https://eips.ethereum.org/EIPS/eip-1967) slot the [UUPS proxy](https://eips.ethereum.org/EIPS/eip-1822) is pointing to.\"},\"initialize(address,address)\":{\"notice\":\"Initialize the TaskDisputes plugin.\"},\"pluginType()\":{\"notice\":\"Returns the plugin's type\"},\"revokeFullAccess(uint256)\":{\"notice\":\"Revokes a hat the permission to do any action.\"},\"revokeFullFunctionAccess(uint256,address,bytes4)\":{\"notice\":\"Revokes a hat the permission to call one function of one smart contract.\"},\"revokeFullZoneAccess(uint256,address)\":{\"notice\":\"Revokes a hat the permission to call all functions of one smart contract.\"},\"supportsInterface(bytes4)\":{\"notice\":\"Checks if an interface is supported by this or its parent contract.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/DAO/SharedAddress/SharedAddress.sol\":\"SharedAddress\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@aragon/osx/core/dao/IDAO.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-3.0-or-later\\n\\npragma solidity ^0.8.8;\\n\\n/// @title IDAO\\n/// @author Aragon Association - 2022-2023\\n/// @notice The interface required for DAOs within the Aragon App DAO framework.\\ninterface IDAO {\\n    /// @notice The action struct to be consumed by the DAO's `execute` function resulting in an external call.\\n    /// @param to The address to call.\\n    /// @param value The native token value to be sent with the call.\\n    /// @param data The bytes-encoded function selector and calldata for the call.\\n    struct Action {\\n        address to;\\n        uint256 value;\\n        bytes data;\\n    }\\n\\n    /// @notice Checks if an address has permission on a contract via a permission identifier and considers if `ANY_ADDRESS` was used in the granting process.\\n    /// @param _where The address of the contract.\\n    /// @param _who The address of a EOA or contract to give the permissions.\\n    /// @param _permissionId The permission identifier.\\n    /// @param _data The optional data passed to the `PermissionCondition` registered.\\n    /// @return Returns true if the address has permission, false if not.\\n    function hasPermission(\\n        address _where,\\n        address _who,\\n        bytes32 _permissionId,\\n        bytes memory _data\\n    ) external view returns (bool);\\n\\n    /// @notice Updates the DAO metadata (e.g., an IPFS hash).\\n    /// @param _metadata The IPFS hash of the new metadata object.\\n    function setMetadata(bytes calldata _metadata) external;\\n\\n    /// @notice Emitted when the DAO metadata is updated.\\n    /// @param metadata The IPFS hash of the new metadata object.\\n    event MetadataSet(bytes metadata);\\n\\n    /// @notice Executes a list of actions. If a zero allow-failure map is provided, a failing action reverts the entire execution. If a non-zero allow-failure map is provided, allowed actions can fail without the entire call being reverted.\\n    /// @param _callId The ID of the call. The definition of the value of `callId` is up to the calling contract and can be used, e.g., as a nonce.\\n    /// @param _actions The array of actions.\\n    /// @param _allowFailureMap A bitmap allowing execution to succeed, even if individual actions might revert. If the bit at index `i` is 1, the execution succeeds even if the `i`th action reverts. A failure map value of 0 requires every action to not revert.\\n    /// @return The array of results obtained from the executed actions in `bytes`.\\n    /// @return The resulting failure map containing the actions have actually failed.\\n    function execute(\\n        bytes32 _callId,\\n        Action[] memory _actions,\\n        uint256 _allowFailureMap\\n    ) external returns (bytes[] memory, uint256);\\n\\n    /// @notice Emitted when a proposal is executed.\\n    /// @param actor The address of the caller.\\n    /// @param callId The ID of the call.\\n    /// @param actions The array of actions executed.\\n    /// @param allowFailureMap The allow failure map encoding which actions are allowed to fail.\\n    /// @param failureMap The failure map encoding which actions have failed.\\n    /// @param execResults The array with the results of the executed actions.\\n    /// @dev The value of `callId` is defined by the component/contract calling the execute function. A `Plugin` implementation can use it, for example, as a nonce.\\n    event Executed(\\n        address indexed actor,\\n        bytes32 callId,\\n        Action[] actions,\\n        uint256 allowFailureMap,\\n        uint256 failureMap,\\n        bytes[] execResults\\n    );\\n\\n    /// @notice Emitted when a standard callback is registered.\\n    /// @param interfaceId The ID of the interface.\\n    /// @param callbackSelector The selector of the callback function.\\n    /// @param magicNumber The magic number to be registered for the callback function selector.\\n    event StandardCallbackRegistered(\\n        bytes4 interfaceId,\\n        bytes4 callbackSelector,\\n        bytes4 magicNumber\\n    );\\n\\n    /// @notice Deposits (native) tokens to the DAO contract with a reference string.\\n    /// @param _token The address of the token or address(0) in case of the native token.\\n    /// @param _amount The amount of tokens to deposit.\\n    /// @param _reference The reference describing the deposit reason.\\n    function deposit(address _token, uint256 _amount, string calldata _reference) external payable;\\n\\n    /// @notice Emitted when a token deposit has been made to the DAO.\\n    /// @param sender The address of the sender.\\n    /// @param token The address of the deposited token.\\n    /// @param amount The amount of tokens deposited.\\n    /// @param _reference The reference describing the deposit reason.\\n    event Deposited(\\n        address indexed sender,\\n        address indexed token,\\n        uint256 amount,\\n        string _reference\\n    );\\n\\n    /// @notice Emitted when a native token deposit has been made to the DAO.\\n    /// @dev This event is intended to be emitted in the `receive` function and is therefore bound by the gas limitations for `send`/`transfer` calls introduced by [ERC-2929](https://eips.ethereum.org/EIPS/eip-2929).\\n    /// @param sender The address of the sender.\\n    /// @param amount The amount of native tokens deposited.\\n    event NativeTokenDeposited(address sender, uint256 amount);\\n\\n    /// @notice Setter for the trusted forwarder verifying the meta transaction.\\n    /// @param _trustedForwarder The trusted forwarder address.\\n    function setTrustedForwarder(address _trustedForwarder) external;\\n\\n    /// @notice Getter for the trusted forwarder verifying the meta transaction.\\n    /// @return The trusted forwarder address.\\n    function getTrustedForwarder() external view returns (address);\\n\\n    /// @notice Emitted when a new TrustedForwarder is set on the DAO.\\n    /// @param forwarder the new forwarder address.\\n    event TrustedForwarderSet(address forwarder);\\n\\n    /// @notice Setter for the [ERC-1271](https://eips.ethereum.org/EIPS/eip-1271) signature validator contract.\\n    /// @param _signatureValidator The address of the signature validator.\\n    function setSignatureValidator(address _signatureValidator) external;\\n\\n    /// @notice Emitted when the signature validator address is updated.\\n    /// @param signatureValidator The address of the signature validator.\\n    event SignatureValidatorSet(address signatureValidator);\\n\\n    /// @notice Checks whether a signature is valid for the provided hash by forwarding the call to the set [ERC-1271](https://eips.ethereum.org/EIPS/eip-1271) signature validator contract.\\n    /// @param _hash The hash of the data to be signed.\\n    /// @param _signature The signature byte array associated with `_hash`.\\n    /// @return Returns the `bytes4` magic value `0x1626ba7e` if the signature is valid.\\n    function isValidSignature(bytes32 _hash, bytes memory _signature) external returns (bytes4);\\n\\n    /// @notice Registers an ERC standard having a callback by registering its [ERC-165](https://eips.ethereum.org/EIPS/eip-165) interface ID and callback function signature.\\n    /// @param _interfaceId The ID of the interface.\\n    /// @param _callbackSelector The selector of the callback function.\\n    /// @param _magicNumber The magic number to be registered for the function signature.\\n    function registerStandardCallback(\\n        bytes4 _interfaceId,\\n        bytes4 _callbackSelector,\\n        bytes4 _magicNumber\\n    ) external;\\n}\\n\",\"keccak256\":\"0x3876d62c73312234c1e2ab4e75cdac2783a6688c3445a67a15b767cd98e01f80\",\"license\":\"AGPL-3.0-or-later\"},\"@aragon/osx/core/plugin/IPlugin.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-3.0-or-later\\n\\npragma solidity ^0.8.8;\\n\\n/// @title IPlugin\\n/// @author Aragon Association - 2022-2023\\n/// @notice An interface defining the traits of a plugin.\\ninterface IPlugin {\\n    enum PluginType {\\n        UUPS,\\n        Cloneable,\\n        Constructable\\n    }\\n\\n    /// @notice Returns the plugin's type\\n    function pluginType() external view returns (PluginType);\\n}\\n\",\"keccak256\":\"0xcdb72c04ca35478e4d786fbbe12cf0e6de7d76aa0510028432312697f42c7355\",\"license\":\"AGPL-3.0-or-later\"},\"@aragon/osx/core/plugin/PluginUUPSUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-3.0-or-later\\n\\npragma solidity ^0.8.8;\\n\\nimport {UUPSUpgradeable} from \\\"@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol\\\";\\nimport {IERC1822ProxiableUpgradeable} from \\\"@openzeppelin/contracts-upgradeable/interfaces/draft-IERC1822Upgradeable.sol\\\";\\nimport {ERC165Upgradeable} from \\\"@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol\\\";\\n\\nimport {IDAO} from \\\"../dao/IDAO.sol\\\";\\nimport {DaoAuthorizableUpgradeable} from \\\"./dao-authorizable/DaoAuthorizableUpgradeable.sol\\\";\\nimport {IPlugin} from \\\"./IPlugin.sol\\\";\\n\\n/// @title PluginUUPSUpgradeable\\n/// @author Aragon Association - 2022-2023\\n/// @notice An abstract, upgradeable contract to inherit from when creating a plugin being deployed via the UUPS pattern (see [ERC-1822](https://eips.ethereum.org/EIPS/eip-1822)).\\nabstract contract PluginUUPSUpgradeable is\\n    IPlugin,\\n    ERC165Upgradeable,\\n    UUPSUpgradeable,\\n    DaoAuthorizableUpgradeable\\n{\\n    // NOTE: When adding new state variables to the contract, the size of `_gap` has to be adapted below as well.\\n\\n    /// @notice Disables the initializers on the implementation contract to prevent it from being left uninitialized.\\n    constructor() {\\n        _disableInitializers();\\n    }\\n\\n    /// @inheritdoc IPlugin\\n    function pluginType() public pure override returns (PluginType) {\\n        return PluginType.UUPS;\\n    }\\n\\n    /// @notice The ID of the permission required to call the `_authorizeUpgrade` function.\\n    bytes32 public constant UPGRADE_PLUGIN_PERMISSION_ID = keccak256(\\\"UPGRADE_PLUGIN_PERMISSION\\\");\\n\\n    /// @notice Initializes the plugin by storing the associated DAO.\\n    /// @param _dao The DAO contract.\\n    function __PluginUUPSUpgradeable_init(IDAO _dao) internal virtual onlyInitializing {\\n        __DaoAuthorizableUpgradeable_init(_dao);\\n    }\\n\\n    /// @notice Checks if an interface is supported by this or its parent contract.\\n    /// @param _interfaceId The ID of the interface.\\n    /// @return Returns `true` if the interface is supported.\\n    function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {\\n        return\\n            _interfaceId == type(IPlugin).interfaceId ||\\n            _interfaceId == type(IERC1822ProxiableUpgradeable).interfaceId ||\\n            super.supportsInterface(_interfaceId);\\n    }\\n\\n    /// @notice Returns the address of the implementation contract in the [proxy storage slot](https://eips.ethereum.org/EIPS/eip-1967) slot the [UUPS proxy](https://eips.ethereum.org/EIPS/eip-1822) is pointing to.\\n    /// @return The address of the implementation contract.\\n    function implementation() public view returns (address) {\\n        return _getImplementation();\\n    }\\n\\n    /// @notice Internal method authorizing the upgrade of the contract via the [upgradeability mechanism for UUPS proxies](https://docs.openzeppelin.com/contracts/4.x/api/proxy#UUPSUpgradeable) (see [ERC-1822](https://eips.ethereum.org/EIPS/eip-1822)).\\n    /// @dev The caller must have the `UPGRADE_PLUGIN_PERMISSION_ID` permission.\\n    function _authorizeUpgrade(\\n        address\\n    ) internal virtual override auth(UPGRADE_PLUGIN_PERMISSION_ID) {}\\n\\n    /// @notice This empty reserved space is put in place to allow future versions to add new variables without shifting down storage in the inheritance chain (see [OpenZeppelin's guide about storage gaps](https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps)).\\n    uint256[50] private __gap;\\n}\\n\",\"keccak256\":\"0x5b12df9d646c59629dbaeb0a70df476a867a82887f5ef7d8b35697c01fcb45f3\",\"license\":\"AGPL-3.0-or-later\"},\"@aragon/osx/core/plugin/dao-authorizable/DaoAuthorizableUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-3.0-or-later\\n\\npragma solidity ^0.8.8;\\n\\nimport {ContextUpgradeable} from \\\"@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol\\\";\\n\\nimport {IDAO} from \\\"../../dao/IDAO.sol\\\";\\nimport {_auth} from \\\"../../utils/auth.sol\\\";\\n\\n/// @title DaoAuthorizableUpgradeable\\n/// @author Aragon Association - 2022-2023\\n/// @notice An abstract contract providing a meta-transaction compatible modifier for upgradeable or cloneable contracts to authorize function calls through an associated DAO.\\n/// @dev Make sure to call `__DaoAuthorizableUpgradeable_init` during initialization of the inheriting contract.\\nabstract contract DaoAuthorizableUpgradeable is ContextUpgradeable {\\n    /// @notice The associated DAO managing the permissions of inheriting contracts.\\n    IDAO private dao_;\\n\\n    /// @notice Initializes the contract by setting the associated DAO.\\n    /// @param _dao The associated DAO address.\\n    function __DaoAuthorizableUpgradeable_init(IDAO _dao) internal onlyInitializing {\\n        dao_ = _dao;\\n    }\\n\\n    /// @notice Returns the DAO contract.\\n    /// @return The DAO contract.\\n    function dao() public view returns (IDAO) {\\n        return dao_;\\n    }\\n\\n    /// @notice A modifier to make functions on inheriting contracts authorized. Permissions to call the function are checked through the associated DAO's permission manager.\\n    /// @param _permissionId The permission identifier required to call the method this modifier is applied to.\\n    modifier auth(bytes32 _permissionId) {\\n        _auth(dao_, address(this), _msgSender(), _permissionId, _msgData());\\n        _;\\n    }\\n\\n    /// @notice This empty reserved space is put in place to allow future versions to add new variables without shifting down storage in the inheritance chain (see [OpenZeppelin's guide about storage gaps](https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps)).\\n    uint256[49] private __gap;\\n}\\n\",\"keccak256\":\"0xd21dcde806070ad8f62acc81d986e517edb5a60ebdff8419660763018f7895e8\",\"license\":\"AGPL-3.0-or-later\"},\"@aragon/osx/core/utils/auth.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-3.0-or-later\\n\\npragma solidity ^0.8.8;\\n\\nimport {IDAO} from \\\"../dao/IDAO.sol\\\";\\n\\n/// @notice Thrown if a call is unauthorized in the associated DAO.\\n/// @param dao The associated DAO.\\n/// @param where The context in which the authorization reverted.\\n/// @param who The address (EOA or contract) missing the permission.\\n/// @param permissionId The permission identifier.\\nerror DaoUnauthorized(address dao, address where, address who, bytes32 permissionId);\\n\\n/// @notice A free function checking if a caller is granted permissions on a target contract via a permission identifier that redirects the approval to a `PermissionCondition` if this was specified in the setup.\\n/// @param _where The address of the target contract for which `who` receives permission.\\n/// @param _who The address (EOA or contract) owning the permission.\\n/// @param _permissionId The permission identifier.\\n/// @param _data The optional data passed to the `PermissionCondition` registered.\\nfunction _auth(\\n    IDAO _dao,\\n    address _where,\\n    address _who,\\n    bytes32 _permissionId,\\n    bytes calldata _data\\n) view {\\n    if (!_dao.hasPermission(_where, _who, _permissionId, _data))\\n        revert DaoUnauthorized({\\n            dao: address(_dao),\\n            where: _where,\\n            who: _who,\\n            permissionId: _permissionId\\n        });\\n}\\n\",\"keccak256\":\"0x1c9cf22583c8b5a08c6d2c02a68d9f05e58900a9bb27efa3b30abca2ecfabfe4\",\"license\":\"AGPL-3.0-or-later\"},\"@openzeppelin/contracts-upgradeable/interfaces/IERC1967Upgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (interfaces/IERC1967.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev ERC-1967: Proxy Storage Slots. This interface contains the events defined in the ERC.\\n *\\n * _Available since v4.8.3._\\n */\\ninterface IERC1967Upgradeable {\\n    /**\\n     * @dev Emitted when the implementation is upgraded.\\n     */\\n    event Upgraded(address indexed implementation);\\n\\n    /**\\n     * @dev Emitted when the admin account has changed.\\n     */\\n    event AdminChanged(address previousAdmin, address newAdmin);\\n\\n    /**\\n     * @dev Emitted when the beacon is changed.\\n     */\\n    event BeaconUpgraded(address indexed beacon);\\n}\\n\",\"keccak256\":\"0x47d6e06872b12e72c79d1b5eb55842f860b5fb1207b2317c2358d2766b950a7b\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/interfaces/draft-IERC1822Upgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.5.0) (interfaces/draft-IERC1822.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev ERC1822: Universal Upgradeable Proxy Standard (UUPS) documents a method for upgradeability through a simplified\\n * proxy whose upgrades are fully controlled by the current implementation.\\n */\\ninterface IERC1822ProxiableUpgradeable {\\n    /**\\n     * @dev Returns the storage slot that the proxiable contract assumes is being used to store the implementation\\n     * address.\\n     *\\n     * IMPORTANT: A proxy pointing at a proxiable contract should not be considered proxiable itself, because this risks\\n     * bricking a proxy that upgrades to it, by delegating to itself until out of gas. Thus it is critical that this\\n     * function revert if invoked through a proxy.\\n     */\\n    function proxiableUUID() external view returns (bytes32);\\n}\\n\",\"keccak256\":\"0x77c89f893e403efc6929ba842b7ccf6534d4ffe03afe31670b4a528c0ad78c0f\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (proxy/ERC1967/ERC1967Upgrade.sol)\\n\\npragma solidity ^0.8.2;\\n\\nimport \\\"../beacon/IBeaconUpgradeable.sol\\\";\\nimport \\\"../../interfaces/IERC1967Upgradeable.sol\\\";\\nimport \\\"../../interfaces/draft-IERC1822Upgradeable.sol\\\";\\nimport \\\"../../utils/AddressUpgradeable.sol\\\";\\nimport \\\"../../utils/StorageSlotUpgradeable.sol\\\";\\nimport \\\"../utils/Initializable.sol\\\";\\n\\n/**\\n * @dev This abstract contract provides getters and event emitting update functions for\\n * https://eips.ethereum.org/EIPS/eip-1967[EIP1967] slots.\\n *\\n * _Available since v4.1._\\n */\\nabstract contract ERC1967UpgradeUpgradeable is Initializable, IERC1967Upgradeable {\\n    function __ERC1967Upgrade_init() internal onlyInitializing {\\n    }\\n\\n    function __ERC1967Upgrade_init_unchained() internal onlyInitializing {\\n    }\\n    // This is the keccak-256 hash of \\\"eip1967.proxy.rollback\\\" subtracted by 1\\n    bytes32 private constant _ROLLBACK_SLOT = 0x4910fdfa16fed3260ed0e7147f7cc6da11a60208b5b9406d12a635614ffd9143;\\n\\n    /**\\n     * @dev Storage slot with the address of the current implementation.\\n     * This is the keccak-256 hash of \\\"eip1967.proxy.implementation\\\" subtracted by 1, and is\\n     * validated in the constructor.\\n     */\\n    bytes32 internal constant _IMPLEMENTATION_SLOT = 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;\\n\\n    /**\\n     * @dev Returns the current implementation address.\\n     */\\n    function _getImplementation() internal view returns (address) {\\n        return StorageSlotUpgradeable.getAddressSlot(_IMPLEMENTATION_SLOT).value;\\n    }\\n\\n    /**\\n     * @dev Stores a new address in the EIP1967 implementation slot.\\n     */\\n    function _setImplementation(address newImplementation) private {\\n        require(AddressUpgradeable.isContract(newImplementation), \\\"ERC1967: new implementation is not a contract\\\");\\n        StorageSlotUpgradeable.getAddressSlot(_IMPLEMENTATION_SLOT).value = newImplementation;\\n    }\\n\\n    /**\\n     * @dev Perform implementation upgrade\\n     *\\n     * Emits an {Upgraded} event.\\n     */\\n    function _upgradeTo(address newImplementation) internal {\\n        _setImplementation(newImplementation);\\n        emit Upgraded(newImplementation);\\n    }\\n\\n    /**\\n     * @dev Perform implementation upgrade with additional setup call.\\n     *\\n     * Emits an {Upgraded} event.\\n     */\\n    function _upgradeToAndCall(address newImplementation, bytes memory data, bool forceCall) internal {\\n        _upgradeTo(newImplementation);\\n        if (data.length > 0 || forceCall) {\\n            AddressUpgradeable.functionDelegateCall(newImplementation, data);\\n        }\\n    }\\n\\n    /**\\n     * @dev Perform implementation upgrade with security checks for UUPS proxies, and additional setup call.\\n     *\\n     * Emits an {Upgraded} event.\\n     */\\n    function _upgradeToAndCallUUPS(address newImplementation, bytes memory data, bool forceCall) internal {\\n        // Upgrades from old implementations will perform a rollback test. This test requires the new\\n        // implementation to upgrade back to the old, non-ERC1822 compliant, implementation. Removing\\n        // this special case will break upgrade paths from old UUPS implementation to new ones.\\n        if (StorageSlotUpgradeable.getBooleanSlot(_ROLLBACK_SLOT).value) {\\n            _setImplementation(newImplementation);\\n        } else {\\n            try IERC1822ProxiableUpgradeable(newImplementation).proxiableUUID() returns (bytes32 slot) {\\n                require(slot == _IMPLEMENTATION_SLOT, \\\"ERC1967Upgrade: unsupported proxiableUUID\\\");\\n            } catch {\\n                revert(\\\"ERC1967Upgrade: new implementation is not UUPS\\\");\\n            }\\n            _upgradeToAndCall(newImplementation, data, forceCall);\\n        }\\n    }\\n\\n    /**\\n     * @dev Storage slot with the admin of the contract.\\n     * This is the keccak-256 hash of \\\"eip1967.proxy.admin\\\" subtracted by 1, and is\\n     * validated in the constructor.\\n     */\\n    bytes32 internal constant _ADMIN_SLOT = 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103;\\n\\n    /**\\n     * @dev Returns the current admin.\\n     */\\n    function _getAdmin() internal view returns (address) {\\n        return StorageSlotUpgradeable.getAddressSlot(_ADMIN_SLOT).value;\\n    }\\n\\n    /**\\n     * @dev Stores a new address in the EIP1967 admin slot.\\n     */\\n    function _setAdmin(address newAdmin) private {\\n        require(newAdmin != address(0), \\\"ERC1967: new admin is the zero address\\\");\\n        StorageSlotUpgradeable.getAddressSlot(_ADMIN_SLOT).value = newAdmin;\\n    }\\n\\n    /**\\n     * @dev Changes the admin of the proxy.\\n     *\\n     * Emits an {AdminChanged} event.\\n     */\\n    function _changeAdmin(address newAdmin) internal {\\n        emit AdminChanged(_getAdmin(), newAdmin);\\n        _setAdmin(newAdmin);\\n    }\\n\\n    /**\\n     * @dev The storage slot of the UpgradeableBeacon contract which defines the implementation for this proxy.\\n     * This is bytes32(uint256(keccak256('eip1967.proxy.beacon')) - 1)) and is validated in the constructor.\\n     */\\n    bytes32 internal constant _BEACON_SLOT = 0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50;\\n\\n    /**\\n     * @dev Returns the current beacon.\\n     */\\n    function _getBeacon() internal view returns (address) {\\n        return StorageSlotUpgradeable.getAddressSlot(_BEACON_SLOT).value;\\n    }\\n\\n    /**\\n     * @dev Stores a new beacon in the EIP1967 beacon slot.\\n     */\\n    function _setBeacon(address newBeacon) private {\\n        require(AddressUpgradeable.isContract(newBeacon), \\\"ERC1967: new beacon is not a contract\\\");\\n        require(\\n            AddressUpgradeable.isContract(IBeaconUpgradeable(newBeacon).implementation()),\\n            \\\"ERC1967: beacon implementation is not a contract\\\"\\n        );\\n        StorageSlotUpgradeable.getAddressSlot(_BEACON_SLOT).value = newBeacon;\\n    }\\n\\n    /**\\n     * @dev Perform beacon upgrade with additional setup call. Note: This upgrades the address of the beacon, it does\\n     * not upgrade the implementation contained in the beacon (see {UpgradeableBeacon-_setImplementation} for that).\\n     *\\n     * Emits a {BeaconUpgraded} event.\\n     */\\n    function _upgradeBeaconToAndCall(address newBeacon, bytes memory data, bool forceCall) internal {\\n        _setBeacon(newBeacon);\\n        emit BeaconUpgraded(newBeacon);\\n        if (data.length > 0 || forceCall) {\\n            AddressUpgradeable.functionDelegateCall(IBeaconUpgradeable(newBeacon).implementation(), data);\\n        }\\n    }\\n\\n    /**\\n     * @dev This empty reserved space is put in place to allow future versions to add new\\n     * variables without shifting down storage in the inheritance chain.\\n     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps\\n     */\\n    uint256[50] private __gap;\\n}\\n\",\"keccak256\":\"0x584ebdf9c1118a7c773f98788e3f3ede01982bdf8932aa06f5acc7d54876e161\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/proxy/beacon/IBeaconUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (proxy/beacon/IBeacon.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev This is the interface that {BeaconProxy} expects of its beacon.\\n */\\ninterface IBeaconUpgradeable {\\n    /**\\n     * @dev Must return an address that can be used as a delegate call target.\\n     *\\n     * {BeaconProxy} will check that this address is a contract.\\n     */\\n    function implementation() external view returns (address);\\n}\\n\",\"keccak256\":\"0x24b86ac8c005b8c654fbf6ac34a5a4f61580d7273541e83e013e89d66fbf0908\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (proxy/utils/Initializable.sol)\\n\\npragma solidity ^0.8.2;\\n\\nimport \\\"../../utils/AddressUpgradeable.sol\\\";\\n\\n/**\\n * @dev This is a base contract to aid in writing upgradeable contracts, or any kind of contract that will be deployed\\n * behind a proxy. Since proxied contracts do not make use of a constructor, it's common to move constructor logic to an\\n * external initializer function, usually called `initialize`. It then becomes necessary to protect this initializer\\n * function so it can only be called once. The {initializer} modifier provided by this contract will have this effect.\\n *\\n * The initialization functions use a version number. Once a version number is used, it is consumed and cannot be\\n * reused. This mechanism prevents re-execution of each \\\"step\\\" but allows the creation of new initialization steps in\\n * case an upgrade adds a module that needs to be initialized.\\n *\\n * For example:\\n *\\n * [.hljs-theme-light.nopadding]\\n * ```solidity\\n * contract MyToken is ERC20Upgradeable {\\n *     function initialize() initializer public {\\n *         __ERC20_init(\\\"MyToken\\\", \\\"MTK\\\");\\n *     }\\n * }\\n *\\n * contract MyTokenV2 is MyToken, ERC20PermitUpgradeable {\\n *     function initializeV2() reinitializer(2) public {\\n *         __ERC20Permit_init(\\\"MyToken\\\");\\n *     }\\n * }\\n * ```\\n *\\n * TIP: To avoid leaving the proxy in an uninitialized state, the initializer function should be called as early as\\n * possible by providing the encoded function call as the `_data` argument to {ERC1967Proxy-constructor}.\\n *\\n * CAUTION: When used with inheritance, manual care must be taken to not invoke a parent initializer twice, or to ensure\\n * that all initializers are idempotent. This is not verified automatically as constructors are by Solidity.\\n *\\n * [CAUTION]\\n * ====\\n * Avoid leaving a contract uninitialized.\\n *\\n * An uninitialized contract can be taken over by an attacker. This applies to both a proxy and its implementation\\n * contract, which may impact the proxy. To prevent the implementation contract from being used, you should invoke\\n * the {_disableInitializers} function in the constructor to automatically lock it when it is deployed:\\n *\\n * [.hljs-theme-light.nopadding]\\n * ```\\n * /// @custom:oz-upgrades-unsafe-allow constructor\\n * constructor() {\\n *     _disableInitializers();\\n * }\\n * ```\\n * ====\\n */\\nabstract contract Initializable {\\n    /**\\n     * @dev Indicates that the contract has been initialized.\\n     * @custom:oz-retyped-from bool\\n     */\\n    uint8 private _initialized;\\n\\n    /**\\n     * @dev Indicates that the contract is in the process of being initialized.\\n     */\\n    bool private _initializing;\\n\\n    /**\\n     * @dev Triggered when the contract has been initialized or reinitialized.\\n     */\\n    event Initialized(uint8 version);\\n\\n    /**\\n     * @dev A modifier that defines a protected initializer function that can be invoked at most once. In its scope,\\n     * `onlyInitializing` functions can be used to initialize parent contracts.\\n     *\\n     * Similar to `reinitializer(1)`, except that functions marked with `initializer` can be nested in the context of a\\n     * constructor.\\n     *\\n     * Emits an {Initialized} event.\\n     */\\n    modifier initializer() {\\n        bool isTopLevelCall = !_initializing;\\n        require(\\n            (isTopLevelCall && _initialized < 1) || (!AddressUpgradeable.isContract(address(this)) && _initialized == 1),\\n            \\\"Initializable: contract is already initialized\\\"\\n        );\\n        _initialized = 1;\\n        if (isTopLevelCall) {\\n            _initializing = true;\\n        }\\n        _;\\n        if (isTopLevelCall) {\\n            _initializing = false;\\n            emit Initialized(1);\\n        }\\n    }\\n\\n    /**\\n     * @dev A modifier that defines a protected reinitializer function that can be invoked at most once, and only if the\\n     * contract hasn't been initialized to a greater version before. In its scope, `onlyInitializing` functions can be\\n     * used to initialize parent contracts.\\n     *\\n     * A reinitializer may be used after the original initialization step. This is essential to configure modules that\\n     * are added through upgrades and that require initialization.\\n     *\\n     * When `version` is 1, this modifier is similar to `initializer`, except that functions marked with `reinitializer`\\n     * cannot be nested. If one is invoked in the context of another, execution will revert.\\n     *\\n     * Note that versions can jump in increments greater than 1; this implies that if multiple reinitializers coexist in\\n     * a contract, executing them in the right order is up to the developer or operator.\\n     *\\n     * WARNING: setting the version to 255 will prevent any future reinitialization.\\n     *\\n     * Emits an {Initialized} event.\\n     */\\n    modifier reinitializer(uint8 version) {\\n        require(!_initializing && _initialized < version, \\\"Initializable: contract is already initialized\\\");\\n        _initialized = version;\\n        _initializing = true;\\n        _;\\n        _initializing = false;\\n        emit Initialized(version);\\n    }\\n\\n    /**\\n     * @dev Modifier to protect an initialization function so that it can only be invoked by functions with the\\n     * {initializer} and {reinitializer} modifiers, directly or indirectly.\\n     */\\n    modifier onlyInitializing() {\\n        require(_initializing, \\\"Initializable: contract is not initializing\\\");\\n        _;\\n    }\\n\\n    /**\\n     * @dev Locks the contract, preventing any future reinitialization. This cannot be part of an initializer call.\\n     * Calling this in the constructor of a contract will prevent that contract from being initialized or reinitialized\\n     * to any version. It is recommended to use this to lock implementation contracts that are designed to be called\\n     * through proxies.\\n     *\\n     * Emits an {Initialized} event the first time it is successfully executed.\\n     */\\n    function _disableInitializers() internal virtual {\\n        require(!_initializing, \\\"Initializable: contract is initializing\\\");\\n        if (_initialized != type(uint8).max) {\\n            _initialized = type(uint8).max;\\n            emit Initialized(type(uint8).max);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the highest version that has been initialized. See {reinitializer}.\\n     */\\n    function _getInitializedVersion() internal view returns (uint8) {\\n        return _initialized;\\n    }\\n\\n    /**\\n     * @dev Returns `true` if the contract is currently initializing. See {onlyInitializing}.\\n     */\\n    function _isInitializing() internal view returns (bool) {\\n        return _initializing;\\n    }\\n}\\n\",\"keccak256\":\"0x89be10e757d242e9b18d5a32c9fbe2019f6d63052bbe46397a430a1d60d7f794\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (proxy/utils/UUPSUpgradeable.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"../../interfaces/draft-IERC1822Upgradeable.sol\\\";\\nimport \\\"../ERC1967/ERC1967UpgradeUpgradeable.sol\\\";\\nimport \\\"./Initializable.sol\\\";\\n\\n/**\\n * @dev An upgradeability mechanism designed for UUPS proxies. The functions included here can perform an upgrade of an\\n * {ERC1967Proxy}, when this contract is set as the implementation behind such a proxy.\\n *\\n * A security mechanism ensures that an upgrade does not turn off upgradeability accidentally, although this risk is\\n * reinstated if the upgrade retains upgradeability but removes the security mechanism, e.g. by replacing\\n * `UUPSUpgradeable` with a custom implementation of upgrades.\\n *\\n * The {_authorizeUpgrade} function must be overridden to include access restriction to the upgrade mechanism.\\n *\\n * _Available since v4.1._\\n */\\nabstract contract UUPSUpgradeable is Initializable, IERC1822ProxiableUpgradeable, ERC1967UpgradeUpgradeable {\\n    function __UUPSUpgradeable_init() internal onlyInitializing {\\n    }\\n\\n    function __UUPSUpgradeable_init_unchained() internal onlyInitializing {\\n    }\\n    /// @custom:oz-upgrades-unsafe-allow state-variable-immutable state-variable-assignment\\n    address private immutable __self = address(this);\\n\\n    /**\\n     * @dev Check that the execution is being performed through a delegatecall call and that the execution context is\\n     * a proxy contract with an implementation (as defined in ERC1967) pointing to self. This should only be the case\\n     * for UUPS and transparent proxies that are using the current contract as their implementation. Execution of a\\n     * function through ERC1167 minimal proxies (clones) would not normally pass this test, but is not guaranteed to\\n     * fail.\\n     */\\n    modifier onlyProxy() {\\n        require(address(this) != __self, \\\"Function must be called through delegatecall\\\");\\n        require(_getImplementation() == __self, \\\"Function must be called through active proxy\\\");\\n        _;\\n    }\\n\\n    /**\\n     * @dev Check that the execution is not being performed through a delegate call. This allows a function to be\\n     * callable on the implementing contract but not through proxies.\\n     */\\n    modifier notDelegated() {\\n        require(address(this) == __self, \\\"UUPSUpgradeable: must not be called through delegatecall\\\");\\n        _;\\n    }\\n\\n    /**\\n     * @dev Implementation of the ERC1822 {proxiableUUID} function. This returns the storage slot used by the\\n     * implementation. It is used to validate the implementation's compatibility when performing an upgrade.\\n     *\\n     * IMPORTANT: A proxy pointing at a proxiable contract should not be considered proxiable itself, because this risks\\n     * bricking a proxy that upgrades to it, by delegating to itself until out of gas. Thus it is critical that this\\n     * function revert if invoked through a proxy. This is guaranteed by the `notDelegated` modifier.\\n     */\\n    function proxiableUUID() external view virtual override notDelegated returns (bytes32) {\\n        return _IMPLEMENTATION_SLOT;\\n    }\\n\\n    /**\\n     * @dev Upgrade the implementation of the proxy to `newImplementation`.\\n     *\\n     * Calls {_authorizeUpgrade}.\\n     *\\n     * Emits an {Upgraded} event.\\n     *\\n     * @custom:oz-upgrades-unsafe-allow-reachable delegatecall\\n     */\\n    function upgradeTo(address newImplementation) public virtual onlyProxy {\\n        _authorizeUpgrade(newImplementation);\\n        _upgradeToAndCallUUPS(newImplementation, new bytes(0), false);\\n    }\\n\\n    /**\\n     * @dev Upgrade the implementation of the proxy to `newImplementation`, and subsequently execute the function call\\n     * encoded in `data`.\\n     *\\n     * Calls {_authorizeUpgrade}.\\n     *\\n     * Emits an {Upgraded} event.\\n     *\\n     * @custom:oz-upgrades-unsafe-allow-reachable delegatecall\\n     */\\n    function upgradeToAndCall(address newImplementation, bytes memory data) public payable virtual onlyProxy {\\n        _authorizeUpgrade(newImplementation);\\n        _upgradeToAndCallUUPS(newImplementation, data, true);\\n    }\\n\\n    /**\\n     * @dev Function that should revert when `msg.sender` is not authorized to upgrade the contract. Called by\\n     * {upgradeTo} and {upgradeToAndCall}.\\n     *\\n     * Normally, this function will use an xref:access.adoc[access control] modifier such as {Ownable-onlyOwner}.\\n     *\\n     * ```solidity\\n     * function _authorizeUpgrade(address) internal override onlyOwner {}\\n     * ```\\n     */\\n    function _authorizeUpgrade(address newImplementation) internal virtual;\\n\\n    /**\\n     * @dev This empty reserved space is put in place to allow future versions to add new\\n     * variables without shifting down storage in the inheritance chain.\\n     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps\\n     */\\n    uint256[50] private __gap;\\n}\\n\",\"keccak256\":\"0xb607cb94c27e89750f5ae2ccebcb94e654e926f6125f4fd4c6262c89875118ad\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (utils/Address.sol)\\n\\npragma solidity ^0.8.1;\\n\\n/**\\n * @dev Collection of functions related to the address type\\n */\\nlibrary AddressUpgradeable {\\n    /**\\n     * @dev Returns true if `account` is a contract.\\n     *\\n     * [IMPORTANT]\\n     * ====\\n     * It is unsafe to assume that an address for which this function returns\\n     * false is an externally-owned account (EOA) and not a contract.\\n     *\\n     * Among others, `isContract` will return false for the following\\n     * types of addresses:\\n     *\\n     *  - an externally-owned account\\n     *  - a contract in construction\\n     *  - an address where a contract will be created\\n     *  - an address where a contract lived, but was destroyed\\n     *\\n     * Furthermore, `isContract` will also return true if the target contract within\\n     * the same transaction is already scheduled for destruction by `SELFDESTRUCT`,\\n     * which only has an effect at the end of a transaction.\\n     * ====\\n     *\\n     * [IMPORTANT]\\n     * ====\\n     * You shouldn't rely on `isContract` to protect against flash loan attacks!\\n     *\\n     * Preventing calls from contracts is highly discouraged. It breaks composability, breaks support for smart wallets\\n     * like Gnosis Safe, and does not provide security since it can be circumvented by calling from a contract\\n     * constructor.\\n     * ====\\n     */\\n    function isContract(address account) internal view returns (bool) {\\n        // This method relies on extcodesize/address.code.length, which returns 0\\n        // for contracts in construction, since the code is only stored at the end\\n        // of the constructor execution.\\n\\n        return account.code.length > 0;\\n    }\\n\\n    /**\\n     * @dev Replacement for Solidity's `transfer`: sends `amount` wei to\\n     * `recipient`, forwarding all available gas and reverting on errors.\\n     *\\n     * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost\\n     * of certain opcodes, possibly making contracts go over the 2300 gas limit\\n     * imposed by `transfer`, making them unable to receive funds via\\n     * `transfer`. {sendValue} removes this limitation.\\n     *\\n     * https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/[Learn more].\\n     *\\n     * IMPORTANT: because control is transferred to `recipient`, care must be\\n     * taken to not create reentrancy vulnerabilities. Consider using\\n     * {ReentrancyGuard} or the\\n     * https://solidity.readthedocs.io/en/v0.8.0/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].\\n     */\\n    function sendValue(address payable recipient, uint256 amount) internal {\\n        require(address(this).balance >= amount, \\\"Address: insufficient balance\\\");\\n\\n        (bool success, ) = recipient.call{value: amount}(\\\"\\\");\\n        require(success, \\\"Address: unable to send value, recipient may have reverted\\\");\\n    }\\n\\n    /**\\n     * @dev Performs a Solidity function call using a low level `call`. A\\n     * plain `call` is an unsafe replacement for a function call: use this\\n     * function instead.\\n     *\\n     * If `target` reverts with a revert reason, it is bubbled up by this\\n     * function (like regular Solidity function calls).\\n     *\\n     * Returns the raw returned data. To convert to the expected return value,\\n     * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].\\n     *\\n     * Requirements:\\n     *\\n     * - `target` must be a contract.\\n     * - calling `target` with `data` must not revert.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCall(address target, bytes memory data) internal returns (bytes memory) {\\n        return functionCallWithValue(target, data, 0, \\\"Address: low-level call failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`], but with\\n     * `errorMessage` as a fallback revert reason when `target` reverts.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCall(\\n        address target,\\n        bytes memory data,\\n        string memory errorMessage\\n    ) internal returns (bytes memory) {\\n        return functionCallWithValue(target, data, 0, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],\\n     * but also transferring `value` wei to `target`.\\n     *\\n     * Requirements:\\n     *\\n     * - the calling contract must have an ETH balance of at least `value`.\\n     * - the called Solidity function must be `payable`.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {\\n        return functionCallWithValue(target, data, value, \\\"Address: low-level call with value failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCallWithValue-address-bytes-uint256-}[`functionCallWithValue`], but\\n     * with `errorMessage` as a fallback revert reason when `target` reverts.\\n     *\\n     * _Available since v3.1._\\n     */\\n    function functionCallWithValue(\\n        address target,\\n        bytes memory data,\\n        uint256 value,\\n        string memory errorMessage\\n    ) internal returns (bytes memory) {\\n        require(address(this).balance >= value, \\\"Address: insufficient balance for call\\\");\\n        (bool success, bytes memory returndata) = target.call{value: value}(data);\\n        return verifyCallResultFromTarget(target, success, returndata, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],\\n     * but performing a static call.\\n     *\\n     * _Available since v3.3._\\n     */\\n    function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {\\n        return functionStaticCall(target, data, \\\"Address: low-level static call failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],\\n     * but performing a static call.\\n     *\\n     * _Available since v3.3._\\n     */\\n    function functionStaticCall(\\n        address target,\\n        bytes memory data,\\n        string memory errorMessage\\n    ) internal view returns (bytes memory) {\\n        (bool success, bytes memory returndata) = target.staticcall(data);\\n        return verifyCallResultFromTarget(target, success, returndata, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],\\n     * but performing a delegate call.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function functionDelegateCall(address target, bytes memory data) internal returns (bytes memory) {\\n        return functionDelegateCall(target, data, \\\"Address: low-level delegate call failed\\\");\\n    }\\n\\n    /**\\n     * @dev Same as {xref-Address-functionCall-address-bytes-string-}[`functionCall`],\\n     * but performing a delegate call.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function functionDelegateCall(\\n        address target,\\n        bytes memory data,\\n        string memory errorMessage\\n    ) internal returns (bytes memory) {\\n        (bool success, bytes memory returndata) = target.delegatecall(data);\\n        return verifyCallResultFromTarget(target, success, returndata, errorMessage);\\n    }\\n\\n    /**\\n     * @dev Tool to verify that a low level call to smart-contract was successful, and revert (either by bubbling\\n     * the revert reason or using the provided one) in case of unsuccessful call or if target was not a contract.\\n     *\\n     * _Available since v4.8._\\n     */\\n    function verifyCallResultFromTarget(\\n        address target,\\n        bool success,\\n        bytes memory returndata,\\n        string memory errorMessage\\n    ) internal view returns (bytes memory) {\\n        if (success) {\\n            if (returndata.length == 0) {\\n                // only check isContract if the call was successful and the return data is empty\\n                // otherwise we already know that it was a contract\\n                require(isContract(target), \\\"Address: call to non-contract\\\");\\n            }\\n            return returndata;\\n        } else {\\n            _revert(returndata, errorMessage);\\n        }\\n    }\\n\\n    /**\\n     * @dev Tool to verify that a low level call was successful, and revert if it wasn't, either by bubbling the\\n     * revert reason or using the provided one.\\n     *\\n     * _Available since v4.3._\\n     */\\n    function verifyCallResult(\\n        bool success,\\n        bytes memory returndata,\\n        string memory errorMessage\\n    ) internal pure returns (bytes memory) {\\n        if (success) {\\n            return returndata;\\n        } else {\\n            _revert(returndata, errorMessage);\\n        }\\n    }\\n\\n    function _revert(bytes memory returndata, string memory errorMessage) private pure {\\n        // Look for revert reason and bubble it up if present\\n        if (returndata.length > 0) {\\n            // The easiest way to bubble the revert reason is using memory via assembly\\n            /// @solidity memory-safe-assembly\\n            assembly {\\n                let returndata_size := mload(returndata)\\n                revert(add(32, returndata), returndata_size)\\n            }\\n        } else {\\n            revert(errorMessage);\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x9c80f545915582e63fe206c6ce27cbe85a86fc10b9cd2a0e8c9488fb7c2ee422\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Context.sol)\\n\\npragma solidity ^0.8.0;\\nimport \\\"../proxy/utils/Initializable.sol\\\";\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract ContextUpgradeable is Initializable {\\n    function __Context_init() internal onlyInitializing {\\n    }\\n\\n    function __Context_init_unchained() internal onlyInitializing {\\n    }\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n\\n    /**\\n     * @dev This empty reserved space is put in place to allow future versions to add new\\n     * variables without shifting down storage in the inheritance chain.\\n     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps\\n     */\\n    uint256[50] private __gap;\\n}\\n\",\"keccak256\":\"0x963ea7f0b48b032eef72fe3a7582edf78408d6f834115b9feadd673a4d5bd149\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (utils/StorageSlot.sol)\\n// This file was procedurally generated from scripts/generate/templates/StorageSlot.js.\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Library for reading and writing primitive types to specific storage slots.\\n *\\n * Storage slots are often used to avoid storage conflict when dealing with upgradeable contracts.\\n * This library helps with reading and writing to such slots without the need for inline assembly.\\n *\\n * The functions in this library return Slot structs that contain a `value` member that can be used to read or write.\\n *\\n * Example usage to set ERC1967 implementation slot:\\n * ```solidity\\n * contract ERC1967 {\\n *     bytes32 internal constant _IMPLEMENTATION_SLOT = 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;\\n *\\n *     function _getImplementation() internal view returns (address) {\\n *         return StorageSlot.getAddressSlot(_IMPLEMENTATION_SLOT).value;\\n *     }\\n *\\n *     function _setImplementation(address newImplementation) internal {\\n *         require(Address.isContract(newImplementation), \\\"ERC1967: new implementation is not a contract\\\");\\n *         StorageSlot.getAddressSlot(_IMPLEMENTATION_SLOT).value = newImplementation;\\n *     }\\n * }\\n * ```\\n *\\n * _Available since v4.1 for `address`, `bool`, `bytes32`, `uint256`._\\n * _Available since v4.9 for `string`, `bytes`._\\n */\\nlibrary StorageSlotUpgradeable {\\n    struct AddressSlot {\\n        address value;\\n    }\\n\\n    struct BooleanSlot {\\n        bool value;\\n    }\\n\\n    struct Bytes32Slot {\\n        bytes32 value;\\n    }\\n\\n    struct Uint256Slot {\\n        uint256 value;\\n    }\\n\\n    struct StringSlot {\\n        string value;\\n    }\\n\\n    struct BytesSlot {\\n        bytes value;\\n    }\\n\\n    /**\\n     * @dev Returns an `AddressSlot` with member `value` located at `slot`.\\n     */\\n    function getAddressSlot(bytes32 slot) internal pure returns (AddressSlot storage r) {\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            r.slot := slot\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns an `BooleanSlot` with member `value` located at `slot`.\\n     */\\n    function getBooleanSlot(bytes32 slot) internal pure returns (BooleanSlot storage r) {\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            r.slot := slot\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns an `Bytes32Slot` with member `value` located at `slot`.\\n     */\\n    function getBytes32Slot(bytes32 slot) internal pure returns (Bytes32Slot storage r) {\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            r.slot := slot\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns an `Uint256Slot` with member `value` located at `slot`.\\n     */\\n    function getUint256Slot(bytes32 slot) internal pure returns (Uint256Slot storage r) {\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            r.slot := slot\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns an `StringSlot` with member `value` located at `slot`.\\n     */\\n    function getStringSlot(bytes32 slot) internal pure returns (StringSlot storage r) {\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            r.slot := slot\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns an `StringSlot` representation of the string storage pointer `store`.\\n     */\\n    function getStringSlot(string storage store) internal pure returns (StringSlot storage r) {\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            r.slot := store.slot\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns an `BytesSlot` with member `value` located at `slot`.\\n     */\\n    function getBytesSlot(bytes32 slot) internal pure returns (BytesSlot storage r) {\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            r.slot := slot\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns an `BytesSlot` representation of the bytes storage pointer `store`.\\n     */\\n    function getBytesSlot(bytes storage store) internal pure returns (BytesSlot storage r) {\\n        /// @solidity memory-safe-assembly\\n        assembly {\\n            r.slot := store.slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x07ac95acad040f1fb1f6120dd0aa5f702db69446e95f82613721879d30de0908\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/introspection/ERC165.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"./IERC165Upgradeable.sol\\\";\\nimport \\\"../../proxy/utils/Initializable.sol\\\";\\n\\n/**\\n * @dev Implementation of the {IERC165} interface.\\n *\\n * Contracts that want to implement ERC165 should inherit from this contract and override {supportsInterface} to check\\n * for the additional interface id that will be supported. For example:\\n *\\n * ```solidity\\n * function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {\\n *     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId);\\n * }\\n * ```\\n *\\n * Alternatively, {ERC165Storage} provides an easier to use but more expensive implementation.\\n */\\nabstract contract ERC165Upgradeable is Initializable, IERC165Upgradeable {\\n    function __ERC165_init() internal onlyInitializing {\\n    }\\n\\n    function __ERC165_init_unchained() internal onlyInitializing {\\n    }\\n    /**\\n     * @dev See {IERC165-supportsInterface}.\\n     */\\n    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {\\n        return interfaceId == type(IERC165Upgradeable).interfaceId;\\n    }\\n\\n    /**\\n     * @dev This empty reserved space is put in place to allow future versions to add new\\n     * variables without shifting down storage in the inheritance chain.\\n     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps\\n     */\\n    uint256[50] private __gap;\\n}\\n\",\"keccak256\":\"0x9a3b990bd56d139df3e454a9edf1c64668530b5a77fc32eb063bc206f958274a\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/introspection/IERC165.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC165 standard, as defined in the\\n * https://eips.ethereum.org/EIPS/eip-165[EIP].\\n *\\n * Implementers can declare support of contract interfaces, which can then be\\n * queried by others ({ERC165Checker}).\\n *\\n * For an implementation, see {ERC165}.\\n */\\ninterface IERC165Upgradeable {\\n    /**\\n     * @dev Returns true if this contract implements the interface defined by\\n     * `interfaceId`. See the corresponding\\n     * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section]\\n     * to learn more about how these ids are created.\\n     *\\n     * This function call must use less than 30 000 gas.\\n     */\\n    function supportsInterface(bytes4 interfaceId) external view returns (bool);\\n}\\n\",\"keccak256\":\"0xc6cef87559d0aeffdf0a99803de655938a7779ec0a3cd5d4383483ad85565a09\",\"license\":\"MIT\"},\"contracts/DAO/SharedAddress/ISharedAddress.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.0;\\r\\n\\r\\nimport {IDAO} from \\\"@aragon/osx/core/dao/IDAO.sol\\\";\\r\\n\\r\\nbytes32 constant GRANT_ACCESS_PERMISSION_ID = keccak256(\\r\\n    \\\"GRANT_ACCESS_PERMISSION\\\"\\r\\n);\\r\\nbytes32 constant REVOKE_ACCESS_PERMISSION_ID = keccak256(\\r\\n    \\\"REVOKE_ACCESS_PERMISSION\\\"\\r\\n);\\r\\n\\r\\ninterface ISharedAddress {\\r\\n    error NotWearingHat();\\r\\n    error AccessDenied();\\r\\n\\r\\n    event Execution(\\r\\n        uint256 indexed nonce,\\r\\n        address indexed sender,\\r\\n        uint256 hat,\\r\\n        IDAO.Action[] actions\\r\\n    );\\r\\n\\r\\n    event FullAccessGranted(uint256 indexed hat);\\r\\n    event FullZoneAccessGranted(uint256 indexed hat, address zone);\\r\\n    event FullFunctionAccessGranted(\\r\\n        uint256 indexed hat,\\r\\n        address zone,\\r\\n        bytes4 functionSelector\\r\\n    );\\r\\n\\r\\n    event FullAccessRevoked(uint256 indexed hat);\\r\\n    event FullZoneAccessRevoked(uint256 indexed hat, address zone);\\r\\n    event FullFunctionAccessRevoked(\\r\\n        uint256 indexed hat,\\r\\n        address zone,\\r\\n        bytes4 functionSelector\\r\\n    );\\r\\n\\r\\n    /// @notice Verifies if a hat is allowed to execute a list of actions.\\r\\n    /// @param _hat The hat to check with.\\r\\n    /// @param _actions The actions to check.\\r\\n    /// @dev Only a single hat means that a user holding multiple hats might need to split their actions into one batch per hat.\\r\\n    function hasAccess(\\r\\n        uint256 _hat,\\r\\n        IDAO.Action[] calldata _actions\\r\\n    ) external view returns (bool);\\r\\n\\r\\n    /// @notice Executes a list of actions as the DAO.\\r\\n    /// @param _hat The hat to use for validations the actions are allowed.\\r\\n    /// @param _actions The actions to execute.\\r\\n    /// @param _failureMap Which actions are allowed to fail without reverting the whole transaction.\\r\\n    function asDAO(\\r\\n        uint256 _hat,\\r\\n        IDAO.Action[] calldata _actions,\\r\\n        uint256 _failureMap\\r\\n    ) external returns (bytes[] memory, uint256);\\r\\n\\r\\n    /// @notice Grants a hat the permission to do any action.\\r\\n    /// @param _hat The hat that is granted the permission.\\r\\n    function grantFullAccess(uint256 _hat) external;\\r\\n\\r\\n    /// @notice Grants a hat the permission to call all functions of one smart contract.\\r\\n    /// @param _hat The hat that is granted the permission.\\r\\n    /// @param _zone The address of the smart contract.\\r\\n    function grantFullZoneAccess(uint256 _hat, address _zone) external;\\r\\n\\r\\n    /// @notice Grants a hat the permission to call one function of one smart contract.\\r\\n    /// @param _hat The hat that is granted the permission.\\r\\n    /// @param _zone The address of the smart contract.\\r\\n    /// @param _function The function of the smart contract.\\r\\n    function grantFullFunctionAccess(\\r\\n        uint256 _hat,\\r\\n        address _zone,\\r\\n        bytes4 _function\\r\\n    ) external;\\r\\n\\r\\n    /// @notice Revokes a hat the permission to do any action.\\r\\n    /// @param _hat The hat that is granted the permission.\\r\\n    function revokeFullAccess(uint256 _hat) external;\\r\\n\\r\\n    /// @notice Revokes a hat the permission to call all functions of one smart contract.\\r\\n    /// @param _hat The hat that is granted the permission.\\r\\n    /// @param _zone The address of the smart contract.\\r\\n    function revokeFullZoneAccess(uint256 _hat, address _zone) external;\\r\\n\\r\\n    /// @notice Revokes a hat the permission to call one function of one smart contract.\\r\\n    /// @param _hat The hat that is granted the permission.\\r\\n    /// @param _zone The address of the smart contract.\\r\\n    /// @param _function The function of the smart contract.\\r\\n    function revokeFullFunctionAccess(\\r\\n        uint256 _hat,\\r\\n        address _zone,\\r\\n        bytes4 _function\\r\\n    ) external;\\r\\n}\\r\\n\",\"keccak256\":\"0x643c07dec95151e31a7068e3236bce796c7ab1bba2846997c712bd00af45b3d0\",\"license\":\"MIT\"},\"contracts/DAO/SharedAddress/SharedAddress.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity 0.8.17; // For verification, the setup contract (deployer) is fixed on 0.8.17\\r\\n\\r\\nimport {PluginUUPSUpgradeable} from \\\"@aragon/osx/core/plugin/PluginUUPSUpgradeable.sol\\\";\\r\\nimport {IHats} from \\\"../../Deps/hats-protocol/Interfaces/IHats.sol\\\";\\r\\nimport {ISharedAddress, IDAO, GRANT_ACCESS_PERMISSION_ID, REVOKE_ACCESS_PERMISSION_ID} from \\\"./ISharedAddress.sol\\\";\\r\\n\\r\\ncontract SharedAddress is PluginUUPSUpgradeable, ISharedAddress {\\r\\n    uint256 private daoNonce;\\r\\n    IHats private hats; // Should work for any ERC-1155 collection though\\r\\n    mapping(uint256 => bool) private fullAccess;\\r\\n    mapping(address => mapping(uint256 => bool)) private fullZoneAccess;\\r\\n    mapping(uint256 => mapping(uint256 => bool)) private fullFunctionAccess;\\r\\n\\r\\n    modifier wearingHat(uint256 _hat) {\\r\\n        if (hats.balanceOf(msg.sender, _hat) == 0) {\\r\\n            revert NotWearingHat();\\r\\n        }\\r\\n        _;\\r\\n    }\\r\\n\\r\\n    /// @notice Initialize the TaskDisputes plugin.\\r\\n    /// @param _dao The dao where this plugin is installed.\\r\\n    /// @param _hats The deployment of Hats Protocol to use.\\r\\n    function initialize(IDAO _dao, IHats _hats) external initializer {\\r\\n        __PluginUUPSUpgradeable_init(_dao);\\r\\n        hats = _hats;\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc PluginUUPSUpgradeable\\r\\n    function supportsInterface(\\r\\n        bytes4 _interfaceId\\r\\n    ) public view virtual override returns (bool) {\\r\\n        return\\r\\n            _interfaceId == type(ISharedAddress).interfaceId ||\\r\\n            super.supportsInterface(_interfaceId);\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ISharedAddress\\r\\n    function hasAccess(\\r\\n        uint256 _hat,\\r\\n        IDAO.Action[] calldata _actions\\r\\n    ) public view returns (bool) {\\r\\n        if (!fullAccess[_hat]) {\\r\\n            for (uint i; i < _actions.length; ) {\\r\\n                if (!_hasAccess(_hat, _actions[i])) {\\r\\n                    return false;\\r\\n                }\\r\\n\\r\\n                unchecked {\\r\\n                    ++i;\\r\\n                }\\r\\n            }\\r\\n        }\\r\\n        return true;\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ISharedAddress\\r\\n    function asDAO(\\r\\n        uint256 _hat,\\r\\n        IDAO.Action[] calldata _actions,\\r\\n        uint256 _failureMap\\r\\n    )\\r\\n        external\\r\\n        wearingHat(_hat)\\r\\n        returns (bytes[] memory returnValueBytes, uint256 failureMap)\\r\\n    {\\r\\n        if (!hasAccess(_hat, _actions)) {\\r\\n            revert AccessDenied();\\r\\n        }\\r\\n\\r\\n        (returnValueBytes, failureMap) = dao().execute(\\r\\n            bytes32(daoNonce),\\r\\n            _actions,\\r\\n            _failureMap\\r\\n        );\\r\\n        emit Execution(daoNonce, msg.sender, _hat, _actions);\\r\\n        ++daoNonce;\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ISharedAddress\\r\\n    function grantFullAccess(\\r\\n        uint256 _hat\\r\\n    ) external auth(GRANT_ACCESS_PERMISSION_ID) {\\r\\n        fullAccess[_hat] = true;\\r\\n        emit FullAccessGranted(_hat);\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ISharedAddress\\r\\n    function grantFullZoneAccess(\\r\\n        uint256 _hat,\\r\\n        address _zone\\r\\n    ) external auth(GRANT_ACCESS_PERMISSION_ID) {\\r\\n        fullZoneAccess[_zone][_hat] = true;\\r\\n        emit FullZoneAccessGranted(_hat, _zone);\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ISharedAddress\\r\\n    function grantFullFunctionAccess(\\r\\n        uint256 _hat,\\r\\n        address _zone,\\r\\n        bytes4 _function\\r\\n    ) external auth(GRANT_ACCESS_PERMISSION_ID) {\\r\\n        fullFunctionAccess[_functionId(_zone, _function)][_hat] = true;\\r\\n        emit FullFunctionAccessGranted(_hat, _zone, _function);\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ISharedAddress\\r\\n    function revokeFullAccess(\\r\\n        uint256 _hat\\r\\n    ) external auth(REVOKE_ACCESS_PERMISSION_ID) {\\r\\n        fullAccess[_hat] = false;\\r\\n        emit FullAccessRevoked(_hat);\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ISharedAddress\\r\\n    function revokeFullZoneAccess(\\r\\n        uint256 _hat,\\r\\n        address _zone\\r\\n    ) external auth(REVOKE_ACCESS_PERMISSION_ID) {\\r\\n        fullZoneAccess[_zone][_hat] = false;\\r\\n        emit FullZoneAccessRevoked(_hat, _zone);\\r\\n    }\\r\\n\\r\\n    /// @inheritdoc ISharedAddress\\r\\n    function revokeFullFunctionAccess(\\r\\n        uint256 _hat,\\r\\n        address _zone,\\r\\n        bytes4 _function\\r\\n    ) external auth(REVOKE_ACCESS_PERMISSION_ID) {\\r\\n        fullFunctionAccess[_functionId(_zone, _function)][_hat] = false;\\r\\n        emit FullFunctionAccessRevoked(_hat, _zone, _function);\\r\\n    }\\r\\n\\r\\n    function _hasAccess(\\r\\n        uint256 _hat,\\r\\n        IDAO.Action calldata _action\\r\\n    ) internal view returns (bool) {\\r\\n        return\\r\\n            fullZoneAccess[_action.to][_hat] ||\\r\\n            fullFunctionAccess[_functionId(_action.to, bytes4(_action.data))][\\r\\n                _hat\\r\\n            ];\\r\\n    }\\r\\n\\r\\n    // address + function selector\\r\\n    function _functionId(\\r\\n        address _zone,\\r\\n        bytes4 _function\\r\\n    ) internal pure returns (uint256) {\\r\\n        return (uint160(bytes20(_zone)) << 32) + uint32(_function);\\r\\n    }\\r\\n\\r\\n    /// @dev This empty reserved space is put in place to allow future versions to add new\\r\\n    /// variables without shifting down storage in the inheritance chain.\\r\\n    /// https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps\\r\\n    uint256[50] private __gap;\\r\\n}\\r\\n\",\"keccak256\":\"0x694e584ac1131de947535e1e9e2d1dbeff9083cf29e8c113c1184d285e0a9764\",\"license\":\"MIT\"},\"contracts/Deps/hats-protocol/Interfaces/HatsErrors.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-3.0\\n// Copyright (C) 2023 Haberdasher Labs\\n//\\n// This program is free software: you can redistribute it and/or modify\\n// it under the terms of the GNU Affero General Public License as published by\\n// the Free Software Foundation, either version 3 of the License, or\\n// (at your option) any later version.\\n//\\n// This program is distributed in the hope that it will be useful,\\n// but WITHOUT ANY WARRANTY; without even the implied warranty of\\n// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\\n// GNU Affero General Public License for more details.\\n//\\n// You should have received a copy of the GNU Affero General Public License\\n// along with this program.  If not, see <https://www.gnu.org/licenses/>.\\n\\npragma solidity >=0.8.13;\\n\\ninterface HatsErrors {\\n    /// @notice Emitted when `user` is attempting to perform an action on `hatId` but is not wearing one of `hatId`'s admin hats\\n    /// @dev Can be equivalent to `NotHatWearer(buildHatId(hatId))`, such as when emitted by `approveLinkTopHatToTree` or `relinkTopHatToTree`\\n    error NotAdmin(address user, uint256 hatId);\\n\\n    /// @notice Emitted when attempting to perform an action as or for an account that is not a wearer of a given hat\\n    error NotHatWearer();\\n\\n    /// @notice Emitted when attempting to perform an action that requires being either an admin or wearer of a given hat\\n    error NotAdminOrWearer();\\n\\n    /// @notice Emitted when attempting to mint `hatId` but `hatId`'s maxSupply has been reached\\n    error AllHatsWorn(uint256 hatId);\\n\\n    /// @notice Emitted when attempting to create a hat with a level 14 hat as its admin\\n    error MaxLevelsReached();\\n\\n    /// @notice Emitted when an attempted hat id has empty intermediate level(s)\\n    error InvalidHatId();\\n\\n    /// @notice Emitted when attempting to mint `hatId` to a `wearer` who is already wearing the hat\\n    error AlreadyWearingHat(address wearer, uint256 hatId);\\n\\n    /// @notice Emitted when attempting to mint a non-existant hat\\n    error HatDoesNotExist(uint256 hatId);\\n\\n    /// @notice Emmitted when attempting to mint or transfer a hat that is not active\\n    error HatNotActive();\\n\\n    /// @notice Emitted when attempting to mint or transfer a hat to an ineligible wearer\\n    error NotEligible();\\n\\n    /// @notice Emitted when attempting to check or set a hat's status from an account that is not that hat's toggle module\\n    error NotHatsToggle();\\n\\n    /// @notice Emitted when attempting to check or set a hat wearer's status from an account that is not that hat's eligibility module\\n    error NotHatsEligibility();\\n\\n    /// @notice Emitted when array arguments to a batch function have mismatching lengths\\n    error BatchArrayLengthMismatch();\\n\\n    /// @notice Emitted when attempting to mutate or transfer an immutable hat\\n    error Immutable();\\n\\n    /// @notice Emitted when attempting to change a hat's maxSupply to a value lower than its current supply\\n    error NewMaxSupplyTooLow();\\n\\n    /// @notice Emitted when attempting to link a tophat to a new admin for which the tophat serves as an admin\\n    error CircularLinkage();\\n\\n    /// @notice Emitted when attempting to link or relink a tophat to a separate tree\\n    error CrossTreeLinkage();\\n\\n    /// @notice Emitted when attempting to link a tophat without a request\\n    error LinkageNotRequested();\\n\\n    /// @notice Emitted when attempting to unlink a tophat that does not have a wearer\\n    /// @dev This ensures that unlinking never results in a bricked tophat\\n    error InvalidUnlink();\\n\\n    /// @notice Emmited when attempting to change a hat's eligibility or toggle module to the zero address\\n    error ZeroAddress();\\n\\n    /// @notice Emmitted when attempting to change a hat's details or imageURI to a string with over 7000 bytes (~characters)\\n    /// @dev This protects against a DOS attack where an admin iteratively extend's a hat's details or imageURI\\n    ///      to be so long that reading it exceeds the block gas limit, breaking `uri()` and `viewHat()`\\n    error StringTooLong();\\n}\\n\",\"keccak256\":\"0x81b0056b7bed86eabc07c0e4a9655c586ddb8e6c128320593669b76efd5a08de\",\"license\":\"AGPL-3.0\"},\"contracts/Deps/hats-protocol/Interfaces/HatsEvents.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-3.0\\n// Copyright (C) 2023 Haberdasher Labs\\n//\\n// This program is free software: you can redistribute it and/or modify\\n// it under the terms of the GNU Affero General Public License as published by\\n// the Free Software Foundation, either version 3 of the License, or\\n// (at your option) any later version.\\n//\\n// This program is distributed in the hope that it will be useful,\\n// but WITHOUT ANY WARRANTY; without even the implied warranty of\\n// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\\n// GNU Affero General Public License for more details.\\n//\\n// You should have received a copy of the GNU Affero General Public License\\n// along with this program.  If not, see <https://www.gnu.org/licenses/>.\\n\\npragma solidity >=0.8.13;\\n\\ninterface HatsEvents {\\n    /// @notice Emitted when a new hat is created\\n    /// @param id The id for the new hat\\n    /// @param details A description of the Hat\\n    /// @param maxSupply The total instances of the Hat that can be worn at once\\n    /// @param eligibility The address that can report on the Hat wearer's status\\n    /// @param toggle The address that can deactivate the Hat\\n    /// @param mutable_ Whether the hat's properties are changeable after creation\\n    /// @param imageURI The image uri for this hat and the fallback for its\\n    event HatCreated(\\n        uint256 id,\\n        string details,\\n        uint32 maxSupply,\\n        address eligibility,\\n        address toggle,\\n        bool mutable_,\\n        string imageURI\\n    );\\n\\n    /// @notice Emitted when a hat wearer's standing is updated\\n    /// @dev Eligibility is excluded since the source of truth for eligibility is the eligibility module and may change without a transaction\\n    /// @param hatId The id of the wearer's hat\\n    /// @param wearer The wearer's address\\n    /// @param wearerStanding Whether the wearer is in good standing for the hat\\n    event WearerStandingChanged(uint256 hatId, address wearer, bool wearerStanding);\\n\\n    /// @notice Emitted when a hat's status is updated\\n    /// @param hatId The id of the hat\\n    /// @param newStatus Whether the hat is active\\n    event HatStatusChanged(uint256 hatId, bool newStatus);\\n\\n    /// @notice Emitted when a hat's details are updated\\n    /// @param hatId The id of the hat\\n    /// @param newDetails The updated details\\n    event HatDetailsChanged(uint256 hatId, string newDetails);\\n\\n    /// @notice Emitted when a hat's eligibility module is updated\\n    /// @param hatId The id of the hat\\n    /// @param newEligibility The updated eligibiliy module\\n    event HatEligibilityChanged(uint256 hatId, address newEligibility);\\n\\n    /// @notice Emitted when a hat's toggle module is updated\\n    /// @param hatId The id of the hat\\n    /// @param newToggle The updated toggle module\\n    event HatToggleChanged(uint256 hatId, address newToggle);\\n\\n    /// @notice Emitted when a hat's mutability is updated\\n    /// @param hatId The id of the hat\\n    event HatMutabilityChanged(uint256 hatId);\\n\\n    /// @notice Emitted when a hat's maximum supply is updated\\n    /// @param hatId The id of the hat\\n    /// @param newMaxSupply The updated max supply\\n    event HatMaxSupplyChanged(uint256 hatId, uint32 newMaxSupply);\\n\\n    /// @notice Emitted when a hat's image URI is updated\\n    /// @param hatId The id of the hat\\n    /// @param newImageURI The updated image URI\\n    event HatImageURIChanged(uint256 hatId, string newImageURI);\\n\\n    /// @notice Emitted when a tophat linkage is requested by its admin\\n    /// @param domain The domain of the tree tophat to link\\n    /// @param newAdmin The tophat's would-be admin in the parent tree\\n    event TopHatLinkRequested(uint32 domain, uint256 newAdmin);\\n\\n    /// @notice Emitted when a tophat is linked to a another tree\\n    /// @param domain The domain of the newly-linked tophat\\n    /// @param newAdmin The tophat's new admin in the parent tree\\n    event TopHatLinked(uint32 domain, uint256 newAdmin);\\n}\\n\",\"keccak256\":\"0x97c1376d240b6d0a8a1f2bb16e072e50e2bc66731a04fe5f573e9c855ff05bbd\",\"license\":\"AGPL-3.0\"},\"contracts/Deps/hats-protocol/Interfaces/IHats.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-3.0\\n// Copyright (C) 2023 Haberdasher Labs\\n//\\n// This program is free software: you can redistribute it and/or modify\\n// it under the terms of the GNU Affero General Public License as published by\\n// the Free Software Foundation, either version 3 of the License, or\\n// (at your option) any later version.\\n//\\n// This program is distributed in the hope that it will be useful,\\n// but WITHOUT ANY WARRANTY; without even the implied warranty of\\n// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\\n// GNU Affero General Public License for more details.\\n//\\n// You should have received a copy of the GNU Affero General Public License\\n// along with this program.  If not, see <https://www.gnu.org/licenses/>.\\n\\npragma solidity >=0.8.13;\\n\\nimport \\\"./IHatsIdUtilities.sol\\\";\\nimport \\\"./HatsErrors.sol\\\";\\nimport \\\"./HatsEvents.sol\\\";\\n\\ninterface IHats is IHatsIdUtilities, HatsErrors, HatsEvents {\\n    function mintTopHat(address _target, string memory _details, string memory _imageURI)\\n        external\\n        returns (uint256 topHatId);\\n\\n    function createHat(\\n        uint256 _admin,\\n        string calldata _details,\\n        uint32 _maxSupply,\\n        address _eligibility,\\n        address _toggle,\\n        bool _mutable,\\n        string calldata _imageURI\\n    ) external returns (uint256 newHatId);\\n\\n    function batchCreateHats(\\n        uint256[] calldata _admins,\\n        string[] calldata _details,\\n        uint32[] calldata _maxSupplies,\\n        address[] memory _eligibilityModules,\\n        address[] memory _toggleModules,\\n        bool[] calldata _mutables,\\n        string[] calldata _imageURIs\\n    ) external returns (bool success);\\n\\n    function getNextId(uint256 _admin) external view returns (uint256 nextId);\\n\\n    function mintHat(uint256 _hatId, address _wearer) external returns (bool success);\\n\\n    function batchMintHats(uint256[] calldata _hatIds, address[] calldata _wearers) external returns (bool success);\\n\\n    function setHatStatus(uint256 _hatId, bool _newStatus) external returns (bool toggled);\\n\\n    function checkHatStatus(uint256 _hatId) external returns (bool toggled);\\n\\n    function setHatWearerStatus(uint256 _hatId, address _wearer, bool _eligible, bool _standing)\\n        external\\n        returns (bool updated);\\n\\n    function checkHatWearerStatus(uint256 _hatId, address _wearer) external returns (bool updated);\\n\\n    function renounceHat(uint256 _hatId) external;\\n\\n    function transferHat(uint256 _hatId, address _from, address _to) external;\\n\\n    /*//////////////////////////////////////////////////////////////\\n                              HATS ADMIN FUNCTIONS\\n    //////////////////////////////////////////////////////////////*/\\n\\n    function makeHatImmutable(uint256 _hatId) external;\\n\\n    function changeHatDetails(uint256 _hatId, string memory _newDetails) external;\\n\\n    function changeHatEligibility(uint256 _hatId, address _newEligibility) external;\\n\\n    function changeHatToggle(uint256 _hatId, address _newToggle) external;\\n\\n    function changeHatImageURI(uint256 _hatId, string memory _newImageURI) external;\\n\\n    function changeHatMaxSupply(uint256 _hatId, uint32 _newMaxSupply) external;\\n\\n    function requestLinkTopHatToTree(uint32 _topHatId, uint256 _newAdminHat) external;\\n\\n    function approveLinkTopHatToTree(\\n        uint32 _topHatId,\\n        uint256 _newAdminHat,\\n        address _eligibility,\\n        address _toggle,\\n        string calldata _details,\\n        string calldata _imageURI\\n    ) external;\\n\\n    function unlinkTopHatFromTree(uint32 _topHatId, address _wearer) external;\\n\\n    function relinkTopHatWithinTree(\\n        uint32 _topHatDomain,\\n        uint256 _newAdminHat,\\n        address _eligibility,\\n        address _toggle,\\n        string calldata _details,\\n        string calldata _imageURI\\n    ) external;\\n\\n    /*//////////////////////////////////////////////////////////////\\n                              VIEW FUNCTIONS\\n    //////////////////////////////////////////////////////////////*/\\n\\n    function viewHat(uint256 _hatId)\\n        external\\n        view\\n        returns (\\n            string memory details,\\n            uint32 maxSupply,\\n            uint32 supply,\\n            address eligibility,\\n            address toggle,\\n            string memory imageURI,\\n            uint16 lastHatId,\\n            bool mutable_,\\n            bool active\\n        );\\n\\n    function isWearerOfHat(address _user, uint256 _hatId) external view returns (bool isWearer);\\n\\n    function isAdminOfHat(address _user, uint256 _hatId) external view returns (bool isAdmin);\\n\\n    function isInGoodStanding(address _wearer, uint256 _hatId) external view returns (bool standing);\\n\\n    function isEligible(address _wearer, uint256 _hatId) external view returns (bool eligible);\\n\\n    function getHatEligibilityModule(uint256 _hatId) external view returns (address eligibility);\\n\\n    function getHatToggleModule(uint256 _hatId) external view returns (address toggle);\\n\\n    function getHatMaxSupply(uint256 _hatId) external view returns (uint32 maxSupply);\\n\\n    function hatSupply(uint256 _hatId) external view returns (uint32 supply);\\n\\n    function getImageURIForHat(uint256 _hatId) external view returns (string memory _uri);\\n\\n    function balanceOf(address wearer, uint256 hatId) external view returns (uint256 balance);\\n\\n    function balanceOfBatch(address[] calldata _wearers, uint256[] calldata _hatIds)\\n        external\\n        view\\n        returns (uint256[] memory);\\n\\n    function uri(uint256 id) external view returns (string memory _uri);\\n}\\n\",\"keccak256\":\"0xed6cfa1f09e397fcc563d59dbc9d2c6a72708aeefab31239dc6b90b1b34e12c6\",\"license\":\"AGPL-3.0\"},\"contracts/Deps/hats-protocol/Interfaces/IHatsIdUtilities.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-3.0\\n// Copyright (C) 2023 Haberdasher Labs\\n//\\n// This program is free software: you can redistribute it and/or modify\\n// it under the terms of the GNU Affero General Public License as published by\\n// the Free Software Foundation, either version 3 of the License, or\\n// (at your option) any later version.\\n//\\n// This program is distributed in the hope that it will be useful,\\n// but WITHOUT ANY WARRANTY; without even the implied warranty of\\n// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\\n// GNU Affero General Public License for more details.\\n//\\n// You should have received a copy of the GNU Affero General Public License\\n// along with this program.  If not, see <https://www.gnu.org/licenses/>.\\n\\npragma solidity >=0.8.13;\\n\\ninterface IHatsIdUtilities {\\n    function buildHatId(uint256 _admin, uint16 _newHat) external pure returns (uint256 id);\\n\\n    function getHatLevel(uint256 _hatId) external view returns (uint32 level);\\n\\n    function getLocalHatLevel(uint256 _hatId) external pure returns (uint32 level);\\n\\n    function isTopHat(uint256 _hatId) external view returns (bool _topHat);\\n\\n    function isLocalTopHat(uint256 _hatId) external pure returns (bool _localTopHat);\\n\\n    function isValidHatId(uint256 _hatId) external view returns (bool validHatId);\\n\\n    function getAdminAtLevel(uint256 _hatId, uint32 _level) external view returns (uint256 admin);\\n\\n    function getAdminAtLocalLevel(uint256 _hatId, uint32 _level) external pure returns (uint256 admin);\\n\\n    function getTopHatDomain(uint256 _hatId) external view returns (uint32 domain);\\n\\n    function getTippyTopHatDomain(uint32 _topHatDomain) external view returns (uint32 domain);\\n\\n    function noCircularLinkage(uint32 _topHatDomain, uint256 _linkedAdmin) external view returns (bool notCircular);\\n\\n    function sameTippyTopHatDomain(uint32 _topHatDomain, uint256 _newAdminHat)\\n        external\\n        view\\n        returns (bool sameDomain);\\n}\\n\",\"keccak256\":\"0x0dbb8501132b065d60c08ea6aa530bd99b0ddfc3e16f58056f59b9bc13a824ac\",\"license\":\"AGPL-3.0\"}},\"version\":1}",
+  "bytecode": "0x60a06040523060805234801561001457600080fd5b5061001d610022565b6100e1565b600054610100900460ff161561008e5760405162461bcd60e51b815260206004820152602760248201527f496e697469616c697a61626c653a20636f6e747261637420697320696e697469604482015266616c697a696e6760c81b606482015260840160405180910390fd5b60005460ff908116146100df576000805460ff191660ff9081179091556040519081527f7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb38474024989060200160405180910390a15b565b608051611c7d610118600039600081816106e60152818161072f015281816108e70152818161092701526109a30152611c7d6000f3fe6080604052600436106100fe5760003560e01c8063485cc955116100955780639dabd764116100645780639dabd764146102a1578063b8903d89146102c1578063c9c4bfca146102e1578063e41c2d8d14610315578063f4101c671461033557600080fd5b8063485cc955146102365780634f1ef2861461025657806352d1902d146102695780635c60da1b1461028c57600080fd5b80632dc24134116100d15780632dc24134146101a85780633659cfe6146101c85780634162169f146101e857806341de68301461021a57600080fd5b806301ffc9a714610103578063069c5e8d146101385780630b8a64501461015a57806320e2783914610188575b600080fd5b34801561010f57600080fd5b5061012361011e366004611333565b610355565b60405190151581526020015b60405180910390f35b34801561014457600080fd5b50610158610153366004611363565b610380565b005b34801561016657600080fd5b5061017a6101753660046113ed565b610445565b60405161012f929190611490565b34801561019457600080fd5b506101236101a33660046114f9565b6105ec565b3480156101b457600080fd5b506101586101c3366004611545565b61065e565b3480156101d457600080fd5b506101586101e336600461155e565b6106dc565b3480156101f457600080fd5b5060c9546001600160a01b03165b6040516001600160a01b03909116815260200161012f565b34801561022657600080fd5b50600060405161012f919061157b565b34801561024257600080fd5b506101586102513660046115a3565b6107ad565b61015861026436600461164b565b6108dd565b34801561027557600080fd5b5061027e610996565b60405190815260200161012f565b34801561029857600080fd5b50610202610a49565b3480156102ad57600080fd5b506101586102bc366004611545565b610a58565b3480156102cd57600080fd5b506101586102dc3660046116de565b610ad3565b3480156102ed57600080fd5b5061027e7f821b6e3a557148015a918c89e5d092e878a69854a2d1a410635f771bd5a8a3f581565b34801561032157600080fd5b506101586103303660046116de565b610b74565b34801561034157600080fd5b50610158610350366004611363565b610c09565b60006001600160e01b03198216633501d8d760e01b148061037a575061037a82610cbb565b92915050565b60c9547fa8cad758485c709fbef15b6c8181d7555030d4a6a792ec9a7f4ffc02518e480f906103be906001600160a01b031630335b84600036610d0b565b600061013160006103cf8686610dc7565b8152602001908152602001600020600086815260200190815260200160002060006101000a81548160ff021916908315150217905550837f15bea7b81f47ba7035fab9481499d29e2aa255a5842ace04ec00a7c6da38e4f48484604051610437929190611703565b60405180910390a250505050565b61012e54604051627eeac760e11b81523360048201526024810186905260609160009187916001600160a01b03169062fdd58e90604401602060405180830381865afa158015610499573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104bd9190611726565b6000036104dd576040516369bd554b60e11b815260040160405180910390fd5b6104e88787876105ec565b61050557604051634ca8886760e01b815260040160405180910390fd5b60c95461012d546040516331c6fcc960e21b81526001600160a01b039092169163c71bf3249161053d918a908a908a90600401611840565b6000604051808303816000875af115801561055c573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052610584919081019061186b565b61012d5460405192955090935033917f8d906c1994971d36bd94a687b5a1bfca93307dedd913c9d4fa523fae80ee13bf906105c4908b908b908b90611971565b60405180910390a361012d600081546105dc906119aa565b9091555091969095509350505050565b600083815261012f602052604081205460ff166106535760005b828110156106515761063b85858584818110610624576106246119c3565b905060200281019061063691906119d9565b610df8565b610649576000915050610657565b600101610606565b505b5060015b9392505050565b60c9547f0209bc221846239f7e72f2c3d8d76e43901cbe3d7184b510d07dc7a1e9a02cd890610697906001600160a01b031630336103b5565b600082815261012f6020526040808220805460ff191660011790555183917fd122250fdf1a727060408d59d6d7811685b43abfc384fd67c34003705b877d6f91a25050565b6001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016300361072d5760405162461bcd60e51b8152600401610724906119f9565b60405180910390fd5b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031661075f610e93565b6001600160a01b0316146107855760405162461bcd60e51b815260040161072490611a45565b61078e81610eaf565b604080516000808252602082019092526107aa91839190610ee8565b50565b600054610100900460ff16158080156107cd5750600054600160ff909116105b806107e75750303b1580156107e7575060005460ff166001145b61084a5760405162461bcd60e51b815260206004820152602e60248201527f496e697469616c697a61626c653a20636f6e747261637420697320616c72656160448201526d191e481a5b9a5d1a585b1a5e995960921b6064820152608401610724565b6000805460ff19166001179055801561086d576000805461ff0019166101001790555b61087683611053565b61012e80546001600160a01b0319166001600160a01b03841617905580156108d8576000805461ff0019169055604051600181527f7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb38474024989060200160405180910390a15b505050565b6001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001630036109255760405162461bcd60e51b8152600401610724906119f9565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316610957610e93565b6001600160a01b03161461097d5760405162461bcd60e51b815260040161072490611a45565b61098682610eaf565b61099282826001610ee8565b5050565b6000306001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001614610a365760405162461bcd60e51b815260206004820152603860248201527f555550535570677261646561626c653a206d757374206e6f742062652063616c60448201527f6c6564207468726f7567682064656c656761746563616c6c00000000000000006064820152608401610724565b50600080516020611c0183398151915290565b6000610a53610e93565b905090565b60c9547fa8cad758485c709fbef15b6c8181d7555030d4a6a792ec9a7f4ffc02518e480f90610a91906001600160a01b031630336103b5565b600082815261012f6020526040808220805460ff191690555183917ff64d06794594aa02e14643f9394456dca6a0c076b656ccd4ca3792e153c17b3e91a25050565b60c9547f0209bc221846239f7e72f2c3d8d76e43901cbe3d7184b510d07dc7a1e9a02cd890610b0c906001600160a01b031630336103b5565b6001600160a01b038216600081815261013060209081526040808320878452825291829020805460ff19166001179055905191825284917f97c137d334f84a6ae66fafd836d2966b45685a691f0562a39863e01226b608b391015b60405180910390a2505050565b60c9547fa8cad758485c709fbef15b6c8181d7555030d4a6a792ec9a7f4ffc02518e480f90610bad906001600160a01b031630336103b5565b6001600160a01b038216600081815261013060209081526040808320878452825291829020805460ff19169055905191825284917f9fd34b26eeb07850dbb0fa057aff705db3355c3c110bccb75ddbed74996b3ab99101610b67565b60c9547f0209bc221846239f7e72f2c3d8d76e43901cbe3d7184b510d07dc7a1e9a02cd890610c42906001600160a01b031630336103b5565b60016101316000610c538686610dc7565b8152602001908152602001600020600086815260200190815260200160002060006101000a81548160ff021916908315150217905550837f4999cb37d8023ac329c37f14b385a8d28e1bbd4a6ba00e0bc1b3b574e4d1aee58484604051610437929190611703565b60006001600160e01b0319821663041de68360e41b1480610cec57506001600160e01b031982166352d1902d60e01b145b8061037a57506301ffc9a760e01b6001600160e01b031983161461037a565b604051637ef7c88360e11b81526001600160a01b0387169063fdef910690610d3f9088908890889088908890600401611a91565b602060405180830381865afa158015610d5c573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610d809190611ad0565b610dbf57604051630cb6f8ed60e21b81526001600160a01b03808816600483015280871660248301528516604482015260648101849052608401610724565b505050505050565b6000610de860e083901c640100000000600160c01b03602086901b16611af2565b6001600160a01b03169392505050565b600061013081610e0b602085018561155e565b6001600160a01b031681526020808201929092526040908101600090812086825290925290205460ff168061065757506101316000610e6b610e50602086018661155e565b610e5d6040870187611b19565b610e6691611b60565b610dc7565b81526020808201929092526040908101600090812086825290925290205460ff169392505050565b600080516020611c01833981519152546001600160a01b031690565b60c9547f821b6e3a557148015a918c89e5d092e878a69854a2d1a410635f771bd5a8a3f590610992906001600160a01b031630336103b5565b7f4910fdfa16fed3260ed0e7147f7cc6da11a60208b5b9406d12a635614ffd91435460ff1615610f1b576108d883611083565b826001600160a01b03166352d1902d6040518163ffffffff1660e01b8152600401602060405180830381865afa925050508015610f75575060408051601f3d908101601f19168201909252610f7291810190611726565b60015b610fd85760405162461bcd60e51b815260206004820152602e60248201527f45524331393637557067726164653a206e657720696d706c656d656e7461746960448201526d6f6e206973206e6f74205555505360901b6064820152608401610724565b600080516020611c0183398151915281146110475760405162461bcd60e51b815260206004820152602960248201527f45524331393637557067726164653a20756e737570706f727465642070726f786044820152681a58589b195555525160ba1b6064820152608401610724565b506108d883838361111f565b600054610100900460ff1661107a5760405162461bcd60e51b815260040161072490611b90565b6107aa8161114a565b6001600160a01b0381163b6110f05760405162461bcd60e51b815260206004820152602d60248201527f455243313936373a206e657720696d706c656d656e746174696f6e206973206e60448201526c1bdd08184818dbdb9d1c9858dd609a1b6064820152608401610724565b600080516020611c0183398151915280546001600160a01b0319166001600160a01b0392909216919091179055565b61112883611193565b6000825111806111355750805b156108d85761114483836111d3565b50505050565b600054610100900460ff166111715760405162461bcd60e51b815260040161072490611b90565b60c980546001600160a01b0319166001600160a01b0392909216919091179055565b61119c81611083565b6040516001600160a01b038216907fbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b90600090a250565b60606106578383604051806060016040528060278152602001611c21602791396060600080856001600160a01b0316856040516112109190611bdb565b600060405180830381855af49150503d806000811461124b576040519150601f19603f3d011682016040523d82523d6000602084013e611250565b606091505b50915091506112618683838761126b565b9695505050505050565b606083156112da5782516000036112d3576001600160a01b0385163b6112d35760405162461bcd60e51b815260206004820152601d60248201527f416464726573733a2063616c6c20746f206e6f6e2d636f6e74726163740000006044820152606401610724565b50816112e4565b6112e483836112ec565b949350505050565b8151156112fc5781518083602001fd5b8060405162461bcd60e51b81526004016107249190611bed565b80356001600160e01b03198116811461132e57600080fd5b919050565b60006020828403121561134557600080fd5b61065782611316565b6001600160a01b03811681146107aa57600080fd5b60008060006060848603121561137857600080fd5b83359250602084013561138a8161134e565b915061139860408501611316565b90509250925092565b60008083601f8401126113b357600080fd5b50813567ffffffffffffffff8111156113cb57600080fd5b6020830191508360208260051b85010111156113e657600080fd5b9250929050565b6000806000806060858703121561140357600080fd5b84359350602085013567ffffffffffffffff81111561142157600080fd5b61142d878288016113a1565b9598909750949560400135949350505050565b60005b8381101561145b578181015183820152602001611443565b50506000910152565b6000815180845261147c816020860160208601611440565b601f01601f19169290920160200192915050565b6000604082016040835280855180835260608501915060608160051b8601019250602080880160005b838110156114e757605f198887030185526114d5868351611464565b955093820193908201906001016114b9565b50509490940194909452949350505050565b60008060006040848603121561150e57600080fd5b83359250602084013567ffffffffffffffff81111561152c57600080fd5b611538868287016113a1565b9497909650939450505050565b60006020828403121561155757600080fd5b5035919050565b60006020828403121561157057600080fd5b81356106578161134e565b602081016003831061159d57634e487b7160e01b600052602160045260246000fd5b91905290565b600080604083850312156115b657600080fd5b82356115c18161134e565b915060208301356115d18161134e565b809150509250929050565b634e487b7160e01b600052604160045260246000fd5b604051601f8201601f1916810167ffffffffffffffff8111828210171561161b5761161b6115dc565b604052919050565b600067ffffffffffffffff82111561163d5761163d6115dc565b50601f01601f191660200190565b6000806040838503121561165e57600080fd5b82356116698161134e565b9150602083013567ffffffffffffffff81111561168557600080fd5b8301601f8101851361169657600080fd5b80356116a96116a482611623565b6115f2565b8181528660208385010111156116be57600080fd5b816020840160208301376000602083830101528093505050509250929050565b600080604083850312156116f157600080fd5b8235915060208301356115d18161134e565b6001600160a01b039290921682526001600160e01b031916602082015260400190565b60006020828403121561173857600080fd5b5051919050565b81835281816020850137506000828201602090810191909152601f909101601f19169091010190565b81835260006020808501808196508560051b810191508460005b878110156118335782840389528135605e198836030181126117a357600080fd5b8701606081356117b28161134e565b6001600160a01b03168652818701358787015260408083013536849003601e190181126117de57600080fd5b90920187810192903567ffffffffffffffff8111156117fc57600080fd5b80360384131561180b57600080fd5b828289015261181d838901828661173f565b9c89019c97505050928601925050600101611782565b5091979650505050505050565b84815260606020820152600061185a606083018587611768565b905082604083015295945050505050565b600080604080848603121561187f57600080fd5b835167ffffffffffffffff8082111561189757600080fd5b818601915086601f8301126118ab57600080fd5b81516020828211156118bf576118bf6115dc565b8160051b6118ce8282016115f2565b928352848101820192828101908b8511156118e857600080fd5b83870192505b8483101561195d578251868111156119065760008081fd5b8701603f81018d136119185760008081fd5b848101516119286116a482611623565b8181528e8b83850101111561193d5760008081fd5b61194c828883018d8601611440565b8452505091830191908301906118ee565b9990920151989a9899505050505050505050565b83815260406020820152600061198b604083018486611768565b95945050505050565b634e487b7160e01b600052601160045260246000fd5b6000600182016119bc576119bc611994565b5060010190565b634e487b7160e01b600052603260045260246000fd5b60008235605e198336030181126119ef57600080fd5b9190910192915050565b6020808252602c908201527f46756e6374696f6e206d7573742062652063616c6c6564207468726f7567682060408201526b19195b1959d85d1958d85b1b60a21b606082015260800190565b6020808252602c908201527f46756e6374696f6e206d7573742062652063616c6c6564207468726f7567682060408201526b6163746976652070726f787960a01b606082015260800190565b6001600160a01b0386811682528516602082015260408101849052608060608201819052600090611ac5908301848661173f565b979650505050505050565b600060208284031215611ae257600080fd5b8151801515811461065757600080fd5b6001600160a01b03818116838216019080821115611b1257611b12611994565b5092915050565b6000808335601e19843603018112611b3057600080fd5b83018035915067ffffffffffffffff821115611b4b57600080fd5b6020019150368190038213156113e657600080fd5b6001600160e01b03198135818116916004851015611b885780818660040360031b1b83161692505b505092915050565b6020808252602b908201527f496e697469616c697a61626c653a20636f6e7472616374206973206e6f74206960408201526a6e697469616c697a696e6760a81b606082015260800190565b600082516119ef818460208701611440565b602081526000610657602083018461146456fe360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc416464726573733a206c6f772d6c6576656c2064656c65676174652063616c6c206661696c6564a26469706673582212202a30ffdc0b0452761898a145e9ceb7a16bb245d343ac2f141458fcf3bf839a9164736f6c63430008110033",
+  "deployedBytecode": "0x6080604052600436106100fe5760003560e01c8063485cc955116100955780639dabd764116100645780639dabd764146102a1578063b8903d89146102c1578063c9c4bfca146102e1578063e41c2d8d14610315578063f4101c671461033557600080fd5b8063485cc955146102365780634f1ef2861461025657806352d1902d146102695780635c60da1b1461028c57600080fd5b80632dc24134116100d15780632dc24134146101a85780633659cfe6146101c85780634162169f146101e857806341de68301461021a57600080fd5b806301ffc9a714610103578063069c5e8d146101385780630b8a64501461015a57806320e2783914610188575b600080fd5b34801561010f57600080fd5b5061012361011e366004611333565b610355565b60405190151581526020015b60405180910390f35b34801561014457600080fd5b50610158610153366004611363565b610380565b005b34801561016657600080fd5b5061017a6101753660046113ed565b610445565b60405161012f929190611490565b34801561019457600080fd5b506101236101a33660046114f9565b6105ec565b3480156101b457600080fd5b506101586101c3366004611545565b61065e565b3480156101d457600080fd5b506101586101e336600461155e565b6106dc565b3480156101f457600080fd5b5060c9546001600160a01b03165b6040516001600160a01b03909116815260200161012f565b34801561022657600080fd5b50600060405161012f919061157b565b34801561024257600080fd5b506101586102513660046115a3565b6107ad565b61015861026436600461164b565b6108dd565b34801561027557600080fd5b5061027e610996565b60405190815260200161012f565b34801561029857600080fd5b50610202610a49565b3480156102ad57600080fd5b506101586102bc366004611545565b610a58565b3480156102cd57600080fd5b506101586102dc3660046116de565b610ad3565b3480156102ed57600080fd5b5061027e7f821b6e3a557148015a918c89e5d092e878a69854a2d1a410635f771bd5a8a3f581565b34801561032157600080fd5b506101586103303660046116de565b610b74565b34801561034157600080fd5b50610158610350366004611363565b610c09565b60006001600160e01b03198216633501d8d760e01b148061037a575061037a82610cbb565b92915050565b60c9547fa8cad758485c709fbef15b6c8181d7555030d4a6a792ec9a7f4ffc02518e480f906103be906001600160a01b031630335b84600036610d0b565b600061013160006103cf8686610dc7565b8152602001908152602001600020600086815260200190815260200160002060006101000a81548160ff021916908315150217905550837f15bea7b81f47ba7035fab9481499d29e2aa255a5842ace04ec00a7c6da38e4f48484604051610437929190611703565b60405180910390a250505050565b61012e54604051627eeac760e11b81523360048201526024810186905260609160009187916001600160a01b03169062fdd58e90604401602060405180830381865afa158015610499573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104bd9190611726565b6000036104dd576040516369bd554b60e11b815260040160405180910390fd5b6104e88787876105ec565b61050557604051634ca8886760e01b815260040160405180910390fd5b60c95461012d546040516331c6fcc960e21b81526001600160a01b039092169163c71bf3249161053d918a908a908a90600401611840565b6000604051808303816000875af115801561055c573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052610584919081019061186b565b61012d5460405192955090935033917f8d906c1994971d36bd94a687b5a1bfca93307dedd913c9d4fa523fae80ee13bf906105c4908b908b908b90611971565b60405180910390a361012d600081546105dc906119aa565b9091555091969095509350505050565b600083815261012f602052604081205460ff166106535760005b828110156106515761063b85858584818110610624576106246119c3565b905060200281019061063691906119d9565b610df8565b610649576000915050610657565b600101610606565b505b5060015b9392505050565b60c9547f0209bc221846239f7e72f2c3d8d76e43901cbe3d7184b510d07dc7a1e9a02cd890610697906001600160a01b031630336103b5565b600082815261012f6020526040808220805460ff191660011790555183917fd122250fdf1a727060408d59d6d7811685b43abfc384fd67c34003705b877d6f91a25050565b6001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016300361072d5760405162461bcd60e51b8152600401610724906119f9565b60405180910390fd5b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031661075f610e93565b6001600160a01b0316146107855760405162461bcd60e51b815260040161072490611a45565b61078e81610eaf565b604080516000808252602082019092526107aa91839190610ee8565b50565b600054610100900460ff16158080156107cd5750600054600160ff909116105b806107e75750303b1580156107e7575060005460ff166001145b61084a5760405162461bcd60e51b815260206004820152602e60248201527f496e697469616c697a61626c653a20636f6e747261637420697320616c72656160448201526d191e481a5b9a5d1a585b1a5e995960921b6064820152608401610724565b6000805460ff19166001179055801561086d576000805461ff0019166101001790555b61087683611053565b61012e80546001600160a01b0319166001600160a01b03841617905580156108d8576000805461ff0019169055604051600181527f7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb38474024989060200160405180910390a15b505050565b6001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001630036109255760405162461bcd60e51b8152600401610724906119f9565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316610957610e93565b6001600160a01b03161461097d5760405162461bcd60e51b815260040161072490611a45565b61098682610eaf565b61099282826001610ee8565b5050565b6000306001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001614610a365760405162461bcd60e51b815260206004820152603860248201527f555550535570677261646561626c653a206d757374206e6f742062652063616c60448201527f6c6564207468726f7567682064656c656761746563616c6c00000000000000006064820152608401610724565b50600080516020611c0183398151915290565b6000610a53610e93565b905090565b60c9547fa8cad758485c709fbef15b6c8181d7555030d4a6a792ec9a7f4ffc02518e480f90610a91906001600160a01b031630336103b5565b600082815261012f6020526040808220805460ff191690555183917ff64d06794594aa02e14643f9394456dca6a0c076b656ccd4ca3792e153c17b3e91a25050565b60c9547f0209bc221846239f7e72f2c3d8d76e43901cbe3d7184b510d07dc7a1e9a02cd890610b0c906001600160a01b031630336103b5565b6001600160a01b038216600081815261013060209081526040808320878452825291829020805460ff19166001179055905191825284917f97c137d334f84a6ae66fafd836d2966b45685a691f0562a39863e01226b608b391015b60405180910390a2505050565b60c9547fa8cad758485c709fbef15b6c8181d7555030d4a6a792ec9a7f4ffc02518e480f90610bad906001600160a01b031630336103b5565b6001600160a01b038216600081815261013060209081526040808320878452825291829020805460ff19169055905191825284917f9fd34b26eeb07850dbb0fa057aff705db3355c3c110bccb75ddbed74996b3ab99101610b67565b60c9547f0209bc221846239f7e72f2c3d8d76e43901cbe3d7184b510d07dc7a1e9a02cd890610c42906001600160a01b031630336103b5565b60016101316000610c538686610dc7565b8152602001908152602001600020600086815260200190815260200160002060006101000a81548160ff021916908315150217905550837f4999cb37d8023ac329c37f14b385a8d28e1bbd4a6ba00e0bc1b3b574e4d1aee58484604051610437929190611703565b60006001600160e01b0319821663041de68360e41b1480610cec57506001600160e01b031982166352d1902d60e01b145b8061037a57506301ffc9a760e01b6001600160e01b031983161461037a565b604051637ef7c88360e11b81526001600160a01b0387169063fdef910690610d3f9088908890889088908890600401611a91565b602060405180830381865afa158015610d5c573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610d809190611ad0565b610dbf57604051630cb6f8ed60e21b81526001600160a01b03808816600483015280871660248301528516604482015260648101849052608401610724565b505050505050565b6000610de860e083901c640100000000600160c01b03602086901b16611af2565b6001600160a01b03169392505050565b600061013081610e0b602085018561155e565b6001600160a01b031681526020808201929092526040908101600090812086825290925290205460ff168061065757506101316000610e6b610e50602086018661155e565b610e5d6040870187611b19565b610e6691611b60565b610dc7565b81526020808201929092526040908101600090812086825290925290205460ff169392505050565b600080516020611c01833981519152546001600160a01b031690565b60c9547f821b6e3a557148015a918c89e5d092e878a69854a2d1a410635f771bd5a8a3f590610992906001600160a01b031630336103b5565b7f4910fdfa16fed3260ed0e7147f7cc6da11a60208b5b9406d12a635614ffd91435460ff1615610f1b576108d883611083565b826001600160a01b03166352d1902d6040518163ffffffff1660e01b8152600401602060405180830381865afa925050508015610f75575060408051601f3d908101601f19168201909252610f7291810190611726565b60015b610fd85760405162461bcd60e51b815260206004820152602e60248201527f45524331393637557067726164653a206e657720696d706c656d656e7461746960448201526d6f6e206973206e6f74205555505360901b6064820152608401610724565b600080516020611c0183398151915281146110475760405162461bcd60e51b815260206004820152602960248201527f45524331393637557067726164653a20756e737570706f727465642070726f786044820152681a58589b195555525160ba1b6064820152608401610724565b506108d883838361111f565b600054610100900460ff1661107a5760405162461bcd60e51b815260040161072490611b90565b6107aa8161114a565b6001600160a01b0381163b6110f05760405162461bcd60e51b815260206004820152602d60248201527f455243313936373a206e657720696d706c656d656e746174696f6e206973206e60448201526c1bdd08184818dbdb9d1c9858dd609a1b6064820152608401610724565b600080516020611c0183398151915280546001600160a01b0319166001600160a01b0392909216919091179055565b61112883611193565b6000825111806111355750805b156108d85761114483836111d3565b50505050565b600054610100900460ff166111715760405162461bcd60e51b815260040161072490611b90565b60c980546001600160a01b0319166001600160a01b0392909216919091179055565b61119c81611083565b6040516001600160a01b038216907fbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b90600090a250565b60606106578383604051806060016040528060278152602001611c21602791396060600080856001600160a01b0316856040516112109190611bdb565b600060405180830381855af49150503d806000811461124b576040519150601f19603f3d011682016040523d82523d6000602084013e611250565b606091505b50915091506112618683838761126b565b9695505050505050565b606083156112da5782516000036112d3576001600160a01b0385163b6112d35760405162461bcd60e51b815260206004820152601d60248201527f416464726573733a2063616c6c20746f206e6f6e2d636f6e74726163740000006044820152606401610724565b50816112e4565b6112e483836112ec565b949350505050565b8151156112fc5781518083602001fd5b8060405162461bcd60e51b81526004016107249190611bed565b80356001600160e01b03198116811461132e57600080fd5b919050565b60006020828403121561134557600080fd5b61065782611316565b6001600160a01b03811681146107aa57600080fd5b60008060006060848603121561137857600080fd5b83359250602084013561138a8161134e565b915061139860408501611316565b90509250925092565b60008083601f8401126113b357600080fd5b50813567ffffffffffffffff8111156113cb57600080fd5b6020830191508360208260051b85010111156113e657600080fd5b9250929050565b6000806000806060858703121561140357600080fd5b84359350602085013567ffffffffffffffff81111561142157600080fd5b61142d878288016113a1565b9598909750949560400135949350505050565b60005b8381101561145b578181015183820152602001611443565b50506000910152565b6000815180845261147c816020860160208601611440565b601f01601f19169290920160200192915050565b6000604082016040835280855180835260608501915060608160051b8601019250602080880160005b838110156114e757605f198887030185526114d5868351611464565b955093820193908201906001016114b9565b50509490940194909452949350505050565b60008060006040848603121561150e57600080fd5b83359250602084013567ffffffffffffffff81111561152c57600080fd5b611538868287016113a1565b9497909650939450505050565b60006020828403121561155757600080fd5b5035919050565b60006020828403121561157057600080fd5b81356106578161134e565b602081016003831061159d57634e487b7160e01b600052602160045260246000fd5b91905290565b600080604083850312156115b657600080fd5b82356115c18161134e565b915060208301356115d18161134e565b809150509250929050565b634e487b7160e01b600052604160045260246000fd5b604051601f8201601f1916810167ffffffffffffffff8111828210171561161b5761161b6115dc565b604052919050565b600067ffffffffffffffff82111561163d5761163d6115dc565b50601f01601f191660200190565b6000806040838503121561165e57600080fd5b82356116698161134e565b9150602083013567ffffffffffffffff81111561168557600080fd5b8301601f8101851361169657600080fd5b80356116a96116a482611623565b6115f2565b8181528660208385010111156116be57600080fd5b816020840160208301376000602083830101528093505050509250929050565b600080604083850312156116f157600080fd5b8235915060208301356115d18161134e565b6001600160a01b039290921682526001600160e01b031916602082015260400190565b60006020828403121561173857600080fd5b5051919050565b81835281816020850137506000828201602090810191909152601f909101601f19169091010190565b81835260006020808501808196508560051b810191508460005b878110156118335782840389528135605e198836030181126117a357600080fd5b8701606081356117b28161134e565b6001600160a01b03168652818701358787015260408083013536849003601e190181126117de57600080fd5b90920187810192903567ffffffffffffffff8111156117fc57600080fd5b80360384131561180b57600080fd5b828289015261181d838901828661173f565b9c89019c97505050928601925050600101611782565b5091979650505050505050565b84815260606020820152600061185a606083018587611768565b905082604083015295945050505050565b600080604080848603121561187f57600080fd5b835167ffffffffffffffff8082111561189757600080fd5b818601915086601f8301126118ab57600080fd5b81516020828211156118bf576118bf6115dc565b8160051b6118ce8282016115f2565b928352848101820192828101908b8511156118e857600080fd5b83870192505b8483101561195d578251868111156119065760008081fd5b8701603f81018d136119185760008081fd5b848101516119286116a482611623565b8181528e8b83850101111561193d5760008081fd5b61194c828883018d8601611440565b8452505091830191908301906118ee565b9990920151989a9899505050505050505050565b83815260406020820152600061198b604083018486611768565b95945050505050565b634e487b7160e01b600052601160045260246000fd5b6000600182016119bc576119bc611994565b5060010190565b634e487b7160e01b600052603260045260246000fd5b60008235605e198336030181126119ef57600080fd5b9190910192915050565b6020808252602c908201527f46756e6374696f6e206d7573742062652063616c6c6564207468726f7567682060408201526b19195b1959d85d1958d85b1b60a21b606082015260800190565b6020808252602c908201527f46756e6374696f6e206d7573742062652063616c6c6564207468726f7567682060408201526b6163746976652070726f787960a01b606082015260800190565b6001600160a01b0386811682528516602082015260408101849052608060608201819052600090611ac5908301848661173f565b979650505050505050565b600060208284031215611ae257600080fd5b8151801515811461065757600080fd5b6001600160a01b03818116838216019080821115611b1257611b12611994565b5092915050565b6000808335601e19843603018112611b3057600080fd5b83018035915067ffffffffffffffff821115611b4b57600080fd5b6020019150368190038213156113e657600080fd5b6001600160e01b03198135818116916004851015611b885780818660040360031b1b83161692505b505092915050565b6020808252602b908201527f496e697469616c697a61626c653a20636f6e7472616374206973206e6f74206960408201526a6e697469616c697a696e6760a81b606082015260800190565b600082516119ef818460208701611440565b602081526000610657602083018461146456fe360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc416464726573733a206c6f772d6c6576656c2064656c65676174652063616c6c206661696c6564a26469706673582212202a30ffdc0b0452761898a145e9ceb7a16bb245d343ac2f141458fcf3bf839a9164736f6c63430008110033",
+  "devdoc": {
+    "errors": {
+      "DaoUnauthorized(address,address,address,bytes32)": [
+        {
+          "params": {
+            "dao": "The associated DAO.",
+            "permissionId": "The permission identifier.",
+            "where": "The context in which the authorization reverted.",
+            "who": "The address (EOA or contract) missing the permission."
+          }
+        }
+      ]
+    },
+    "kind": "dev",
+    "methods": {
+      "asDAO(uint256,(address,uint256,bytes)[],uint256)": {
+        "params": {
+          "_actions": "The actions to execute.",
+          "_failureMap": "Which actions are allowed to fail without reverting the whole transaction.",
+          "_hat": "The hat to use for validations the actions are allowed."
+        }
+      },
+      "dao()": {
+        "returns": {
+          "_0": "The DAO contract."
+        }
+      },
+      "grantFullAccess(uint256)": {
+        "params": {
+          "_hat": "The hat that is granted the permission."
+        }
+      },
+      "grantFullFunctionAccess(uint256,address,bytes4)": {
+        "params": {
+          "_function": "The function of the smart contract.",
+          "_hat": "The hat that is granted the permission.",
+          "_zone": "The address of the smart contract."
+        }
+      },
+      "grantFullZoneAccess(uint256,address)": {
+        "params": {
+          "_hat": "The hat that is granted the permission.",
+          "_zone": "The address of the smart contract."
+        }
+      },
+      "hasAccess(uint256,(address,uint256,bytes)[])": {
+        "details": "Only a single hat means that a user holding multiple hats might need to split their actions into one batch per hat.",
+        "params": {
+          "_actions": "The actions to check.",
+          "_hat": "The hat to check with."
+        }
+      },
+      "implementation()": {
+        "returns": {
+          "_0": "The address of the implementation contract."
+        }
+      },
+      "initialize(address,address)": {
+        "params": {
+          "_dao": "The dao where this plugin is installed.",
+          "_hats": "The deployment of Hats Protocol to use."
+        }
+      },
+      "proxiableUUID()": {
+        "details": "Implementation of the ERC1822 {proxiableUUID} function. This returns the storage slot used by the implementation. It is used to validate the implementation's compatibility when performing an upgrade. IMPORTANT: A proxy pointing at a proxiable contract should not be considered proxiable itself, because this risks bricking a proxy that upgrades to it, by delegating to itself until out of gas. Thus it is critical that this function revert if invoked through a proxy. This is guaranteed by the `notDelegated` modifier."
+      },
+      "revokeFullAccess(uint256)": {
+        "params": {
+          "_hat": "The hat that is granted the permission."
+        }
+      },
+      "revokeFullFunctionAccess(uint256,address,bytes4)": {
+        "params": {
+          "_function": "The function of the smart contract.",
+          "_hat": "The hat that is granted the permission.",
+          "_zone": "The address of the smart contract."
+        }
+      },
+      "revokeFullZoneAccess(uint256,address)": {
+        "params": {
+          "_hat": "The hat that is granted the permission.",
+          "_zone": "The address of the smart contract."
+        }
+      },
+      "supportsInterface(bytes4)": {
+        "params": {
+          "_interfaceId": "The ID of the interface."
+        },
+        "returns": {
+          "_0": "Returns `true` if the interface is supported."
+        }
+      },
+      "upgradeTo(address)": {
+        "custom:oz-upgrades-unsafe-allow-reachable": "delegatecall",
+        "details": "Upgrade the implementation of the proxy to `newImplementation`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event."
+      },
+      "upgradeToAndCall(address,bytes)": {
+        "custom:oz-upgrades-unsafe-allow-reachable": "delegatecall",
+        "details": "Upgrade the implementation of the proxy to `newImplementation`, and subsequently execute the function call encoded in `data`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event."
+      }
+    },
+    "stateVariables": {
+      "__gap": {
+        "details": "This empty reserved space is put in place to allow future versions to add new variables without shifting down storage in the inheritance chain. https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps"
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "errors": {
+      "DaoUnauthorized(address,address,address,bytes32)": [
+        {
+          "notice": "Thrown if a call is unauthorized in the associated DAO."
+        }
+      ]
+    },
+    "kind": "user",
+    "methods": {
+      "UPGRADE_PLUGIN_PERMISSION_ID()": {
+        "notice": "The ID of the permission required to call the `_authorizeUpgrade` function."
+      },
+      "asDAO(uint256,(address,uint256,bytes)[],uint256)": {
+        "notice": "Executes a list of actions as the DAO."
+      },
+      "dao()": {
+        "notice": "Returns the DAO contract."
+      },
+      "grantFullAccess(uint256)": {
+        "notice": "Grants a hat the permission to do any action."
+      },
+      "grantFullFunctionAccess(uint256,address,bytes4)": {
+        "notice": "Grants a hat the permission to call one function of one smart contract."
+      },
+      "grantFullZoneAccess(uint256,address)": {
+        "notice": "Grants a hat the permission to call all functions of one smart contract."
+      },
+      "hasAccess(uint256,(address,uint256,bytes)[])": {
+        "notice": "Verifies if a hat is allowed to execute a list of actions."
+      },
+      "implementation()": {
+        "notice": "Returns the address of the implementation contract in the [proxy storage slot](https://eips.ethereum.org/EIPS/eip-1967) slot the [UUPS proxy](https://eips.ethereum.org/EIPS/eip-1822) is pointing to."
+      },
+      "initialize(address,address)": {
+        "notice": "Initialize the TaskDisputes plugin."
+      },
+      "pluginType()": {
+        "notice": "Returns the plugin's type"
+      },
+      "revokeFullAccess(uint256)": {
+        "notice": "Revokes a hat the permission to do any action."
+      },
+      "revokeFullFunctionAccess(uint256,address,bytes4)": {
+        "notice": "Revokes a hat the permission to call one function of one smart contract."
+      },
+      "revokeFullZoneAccess(uint256,address)": {
+        "notice": "Revokes a hat the permission to call all functions of one smart contract."
+      },
+      "supportsInterface(bytes4)": {
+        "notice": "Checks if an interface is supported by this or its parent contract."
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 10330,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "_initialized",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_uint8"
+      },
+      {
+        "astId": 10333,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "_initializing",
+        "offset": 1,
+        "slot": "0",
+        "type": "t_bool"
+      },
+      {
+        "astId": 16361,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "__gap",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_array(t_uint256)50_storage"
+      },
+      {
+        "astId": 10312,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "__gap",
+        "offset": 0,
+        "slot": "51",
+        "type": "t_array(t_uint256)50_storage"
+      },
+      {
+        "astId": 10627,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "__gap",
+        "offset": 0,
+        "slot": "101",
+        "type": "t_array(t_uint256)50_storage"
+      },
+      {
+        "astId": 14989,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "__gap",
+        "offset": 0,
+        "slot": "151",
+        "type": "t_array(t_uint256)50_storage"
+      },
+      {
+        "astId": 2043,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "dao_",
+        "offset": 0,
+        "slot": "201",
+        "type": "t_contract(IDAO)1013"
+      },
+      {
+        "astId": 2092,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "__gap",
+        "offset": 0,
+        "slot": "202",
+        "type": "t_array(t_uint256)49_storage"
+      },
+      {
+        "astId": 2027,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "__gap",
+        "offset": 0,
+        "slot": "251",
+        "type": "t_array(t_uint256)50_storage"
+      },
+      {
+        "astId": 20439,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "daoNonce",
+        "offset": 0,
+        "slot": "301",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 20442,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "hats",
+        "offset": 0,
+        "slot": "302",
+        "type": "t_contract(IHats)25525"
+      },
+      {
+        "astId": 20446,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "fullAccess",
+        "offset": 0,
+        "slot": "303",
+        "type": "t_mapping(t_uint256,t_bool)"
+      },
+      {
+        "astId": 20452,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "fullZoneAccess",
+        "offset": 0,
+        "slot": "304",
+        "type": "t_mapping(t_address,t_mapping(t_uint256,t_bool))"
+      },
+      {
+        "astId": 20458,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "fullFunctionAccess",
+        "offset": 0,
+        "slot": "305",
+        "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_bool))"
+      },
+      {
+        "astId": 20837,
+        "contract": "contracts/DAO/SharedAddress/SharedAddress.sol:SharedAddress",
+        "label": "__gap",
+        "offset": 0,
+        "slot": "306",
+        "type": "t_array(t_uint256)50_storage"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_uint256)49_storage": {
+        "base": "t_uint256",
+        "encoding": "inplace",
+        "label": "uint256[49]",
+        "numberOfBytes": "1568"
+      },
+      "t_array(t_uint256)50_storage": {
+        "base": "t_uint256",
+        "encoding": "inplace",
+        "label": "uint256[50]",
+        "numberOfBytes": "1600"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_contract(IDAO)1013": {
+        "encoding": "inplace",
+        "label": "contract IDAO",
+        "numberOfBytes": "20"
+      },
+      "t_contract(IHats)25525": {
+        "encoding": "inplace",
+        "label": "contract IHats",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_address,t_mapping(t_uint256,t_bool))": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => mapping(uint256 => bool))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_uint256,t_bool)"
+      },
+      "t_mapping(t_uint256,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_mapping(t_uint256,t_mapping(t_uint256,t_bool))": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => mapping(uint256 => bool))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_uint256,t_bool)"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      },
+      "t_uint8": {
+        "encoding": "inplace",
+        "label": "uint8",
+        "numberOfBytes": "1"
+      }
+    }
+  }
+}
