@@ -1,5 +1,5 @@
 import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
-import { ethers, getUnnamedAccounts } from "hardhat";
+import { ethers, getNamedAccounts, getUnnamedAccounts } from "hardhat";
 import { ERC20, VerifiedContributorStaking } from "../../typechain-types";
 import { expect } from "chai";
 import { getVerifiedContributor } from "./00_VerifiedContributor";
@@ -99,6 +99,24 @@ describe("Verified Contributor Staking", function () {
     await time.increaseTo((await receipt.getBlock()).timestamp + firstClaimSeconds - 1); // 1 second will be added by the transaction itself
     await staking.Staking.claim(staking.tokenId);
     await time.increaseTo((await receipt.getBlock()).timestamp + firstClaimSeconds + secondClaimSeconds - 1); // 1 second will be added by the transaction itself
+    await staking.Staking.claim(staking.tokenId);
+
+    expect(await staking.RewardToken.balanceOf(staking.contributor)).to.be.equal(expectedReward);
+  });
+
+  it("should generate the right amount of reward after ending staking after 1 year and claiming 1 month later", async function () {
+    const staking = await loadFixture(getStaking);
+    const { deployer } = await getNamedAccounts();
+    const rewardRate = await staking.Staking.tokensPerSecond();
+    const rewardSeconds = 365 * days;
+    const claimSeconds = rewardSeconds + 30 * days;
+    const expectedReward = BigInt(rewardSeconds) * rewardRate;
+
+    const tx = await staking.Staking.stake(staking.tokenId);
+    const receipt = await tx.wait();
+    if (!receipt) throw new Error("Receipt null");
+    await staking.Staking.connect(await ethers.getSigner(deployer)).setStakingEnd((await receipt.getBlock()).timestamp + rewardSeconds);
+    await time.increaseTo((await receipt.getBlock()).timestamp + claimSeconds - 1); // 1 second will be added by the transaction itself
     await staking.Staking.claim(staking.tokenId);
 
     expect(await staking.RewardToken.balanceOf(staking.contributor)).to.be.equal(expectedReward);

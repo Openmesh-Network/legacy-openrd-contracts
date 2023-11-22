@@ -2,13 +2,15 @@
 pragma solidity ^0.8.0;
 
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 import {IERC20MintBurnable} from "./IERC20MintBurnable.sol";
 
-contract VerifiedContributorStaking {
+contract VerifiedContributorStaking is Ownable {
+    uint256 public immutable tokensPerSecond;
     IERC20MintBurnable public immutable rewardToken;
     IERC721 public immutable stakeNFT;
-    uint256 public immutable tokensPerSecond;
+    uint64 internal stakingOver = type(uint64).max;
 
     mapping(uint256 => uint64) private lastClaim;
 
@@ -62,6 +64,17 @@ contract VerifiedContributorStaking {
         if (lastClaimSeconds == 0) {
             revert NFTNotStaked();
         }
+
+        if (currentSeconds > stakingOver) {
+            if (lastClaimSeconds < stakingOver) {
+                // Staking is over && havent claimed remaining tokens up until end date yet
+                return (stakingOver - lastClaimSeconds) * tokensPerSecond;
+            } else {
+                // Staking is over && all leftover have been claimed
+                return 0;
+            }
+        }
+
         return (currentSeconds - lastClaimSeconds) * tokensPerSecond;
     }
 
@@ -72,6 +85,13 @@ contract VerifiedContributorStaking {
         _claim(_tokenId);
 
         lastClaim[_tokenId] = _toUint64(block.timestamp);
+    }
+
+    /// Set enddate for rewards. No new rewards are stacked up after this date.
+    /// @param _stakingOver The enddate.
+    /// @notice Rewards stacked up until this date can still be claimed.
+    function setStakingEnd(uint64 _stakingOver) external onlyOwner {
+        stakingOver = _stakingOver;
     }
 
     /// Safecast uint256 to uint64.
