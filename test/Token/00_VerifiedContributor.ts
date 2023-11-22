@@ -55,7 +55,9 @@ describe("Verified Contributor", function () {
     const id = 123;
 
     const tx = NFT.connect(await ethers.getSigner(to)).mint(to, id);
-    await expect(tx).to.be.revertedWith("Ownable: caller is not the owner");
+    await expect(tx).to.be.revertedWith(
+      `AccessControl: account ${to.toLocaleLowerCase()} is missing role 0xfdf81848136595c31bb5f76217767372bc4bf906663038eb38381131ea27ecba`
+    );
   });
 
   it("should be burnable by the any wallet", async function () {
@@ -66,7 +68,9 @@ describe("Verified Contributor", function () {
 
     await NFT.mint(to, id);
     const tx = NFT.connect(await ethers.getSigner(to)).burn(id);
-    await expect(tx).to.be.revertedWith("Ownable: caller is not the owner");
+    await expect(tx).to.be.revertedWith(
+      `AccessControl: account ${to.toLowerCase()} is missing role 0x04c6a47ae7910ef8b295215a97e8495a9eaf57b7b05bfd8bf951edb3fd4a16a3`
+    );
   });
 
   it("should not be transferable by the owner", async function () {

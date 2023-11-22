@@ -16,7 +16,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const staking = await deployments.get("Staking");
 
   await deployments.execute(
-    "OPEN",
+    "ERC20",
     {
       from: deployer,
     },
@@ -27,4 +27,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 export default func;
 func.tags = ["Staking"];
-func.dependencies = ["StakingDeploy", "OPEN"];
+func.dependencies = ["StakingDeploy", "ERC20"];

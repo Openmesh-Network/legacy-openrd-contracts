@@ -165,4 +165,13 @@ describe("Verified Contributor Staking", function () {
 
     await expect(tx).to.be.revertedWithCustomError(staking.Staking, "NotYourNFT");
   });
+
+  it("should not allow ending the staking in the past", async function () {
+    const staking = await loadFixture(getStaking);
+    const { deployer } = await getNamedAccounts();
+
+    const tx = staking.Staking.connect(await ethers.getSigner(deployer)).setStakingEnd(await time.latest());
+
+    await expect(tx).to.be.revertedWithCustomError(staking.Staking, "StakingEndMustBeInTheFuture");
+  });
 });

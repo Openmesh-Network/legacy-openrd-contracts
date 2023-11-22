@@ -17,6 +17,7 @@ contract VerifiedContributorStaking is Ownable {
     error NotYourNFT();
     error NFTAlreadyStaked();
     error NFTNotStaked();
+    error StakingEndMustBeInTheFuture();
     error Overflow();
 
     constructor(
@@ -91,6 +92,10 @@ contract VerifiedContributorStaking is Ownable {
     /// @param _stakingOver The enddate.
     /// @notice Rewards stacked up until this date can still be claimed.
     function setStakingEnd(uint64 _stakingOver) external onlyOwner {
+        if (block.timestamp > _stakingOver) {
+            revert StakingEndMustBeInTheFuture();
+        }
+
         stakingOver = _stakingOver;
     }
 
