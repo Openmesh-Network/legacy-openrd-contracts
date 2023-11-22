@@ -9,7 +9,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const rewardToken = await deployments.get("OPEN");
   const stakeNFT = await deployments.get("NFT");
-  const tokensPerSecond = Gwei(386); // ~1 OPEN a month (1.000512)
+  const tokensPerSecond = Gwei(3858024); // ~10_000 OPEN every 30 days (9999.998208)
 
   const deployResult = await deployments.deploy("Staking", {
     from: deployer,

@@ -103,4 +103,48 @@ describe("Verified Contributor Staking", function () {
 
     expect(await staking.RewardToken.balanceOf(staking.contributor)).to.be.equal(expectedReward);
   });
+
+  it("should not allow staking twice", async function () {
+    const staking = await loadFixture(getStaking);
+
+    await staking.Staking.stake(staking.tokenId);
+    const tx = staking.Staking.stake(staking.tokenId);
+
+    await expect(tx).to.be.revertedWithCustomError(staking.Staking, "NFTAlreadyStaked");
+  });
+
+  it("should not allow staking by non-owner", async function () {
+    const staking = await loadFixture(getStaking);
+    const notOwner = (await getUnnamedAccounts())[1];
+
+    const tx = staking.Staking.connect(await ethers.getSigner(notOwner)).stake(staking.tokenId);
+
+    await expect(tx).to.be.revertedWithCustomError(staking.Staking, "NotYourNFT");
+  });
+
+  it("should not allow claiming without staking", async function () {
+    const staking = await loadFixture(getStaking);
+
+    const tx = staking.Staking.claim(staking.tokenId);
+
+    await expect(tx).to.be.revertedWithCustomError(staking.Staking, "NFTNotStaked");
+  });
+
+  it("should not allow unstaking without staking", async function () {
+    const staking = await loadFixture(getStaking);
+
+    const tx = staking.Staking.unstake(staking.tokenId);
+
+    await expect(tx).to.be.revertedWithCustomError(staking.Staking, "NFTNotStaked");
+  });
+
+  it("should not allow unstaking by non-owner", async function () {
+    const staking = await loadFixture(getStaking);
+    const notOwner = (await getUnnamedAccounts())[1];
+
+    await staking.Staking.stake(staking.tokenId);
+    const tx = staking.Staking.connect(await ethers.getSigner(notOwner)).unstake(staking.tokenId);
+
+    await expect(tx).to.be.revertedWithCustomError(staking.Staking, "NotYourNFT");
+  });
 });
