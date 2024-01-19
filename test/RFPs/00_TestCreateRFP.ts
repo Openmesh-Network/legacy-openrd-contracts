@@ -15,6 +15,7 @@ interface CreateRFPSettings {
   nativeBudget?: bigint;
   creator?: string;
   tasksManager?: string;
+  disputeManager?: string;
   manager?: string;
   projectRepresentative?: string;
 }
@@ -26,12 +27,13 @@ export async function createRFP(settings: CreateRFPSettings) {
   const nativeBudget = settings.nativeBudget ?? Wei(0);
   const creator = settings.creator ?? manager;
   const tasksManager = settings.tasksManager ?? manager;
+  const disputeManager = settings.disputeManager ?? (await deployments.get("dispute_dao")).address
   const rfpsManager = settings.manager ?? manager;
   const projectRepresentative = settings.projectRepresentative ?? executor;
   const RFPsCreator = (await ethers.getContract("RFPs", creator)) as RFPs;
   const RFPsManager = (await ethers.getContract("RFPs", rfpsManager)) as RFPs;
   const RFPsProject = (await ethers.getContract("RFPs", projectRepresentative)) as RFPs;
-  const tx = await RFPsCreator.createRFP(metadata, deadline, budget, tasksManager, rfpsManager, { value: nativeBudget });
+  const tx = await RFPsCreator.createRFP(metadata, deadline, budget, tasksManager, disputeManager, rfpsManager, { value: nativeBudget });
   const receipt = await tx.wait();
   const RFPCreationEvents = getEventsFromLogs(receipt?.logs, RFPsManager.interface, "RFPCreated");
   const rfpId = RFPCreationEvents[0].args.rfpId;

@@ -10,7 +10,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const deployResult = await deployments.deploy("Tasks", {
     from: deployer,
-    args: [deployer, deployer],
+    args: [deployer],
   });
 
   const Tasks = (await ethers.getContractAt("Tasks", deployResult.address)) as any as Tasks;

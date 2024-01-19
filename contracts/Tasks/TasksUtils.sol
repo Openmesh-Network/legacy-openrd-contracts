@@ -7,55 +7,43 @@ import {Escrow, TasksEnsure} from "./TasksEnsure.sol";
   Higher level functions to allow the Tasks file to be more readable.
 */
 abstract contract TasksUtils is TasksEnsure {
-    function _toOffchainTask(
-        Task storage task
-    ) internal view returns (OffChainTask memory offchainTask) {
+    function _toOffchainTask(Task storage task) internal view returns (OffChainTask memory offchainTask) {
         offchainTask.metadata = task.metadata;
         offchainTask.deadline = task.deadline;
         offchainTask.executorApplication = task.executorApplication;
         offchainTask.creator = task.creator;
         offchainTask.manager = task.manager;
+        offchainTask.disputeManager = task.disputeManager;
         offchainTask.state = task.state;
         offchainTask.escrow = task.escrow;
         offchainTask.nativeBudget = task.nativeBudget;
 
         offchainTask.budget = new ERC20Transfer[](task.budgetCount);
-        for (uint8 i; i < offchainTask.budget.length; ) {
+        for (uint8 i; i < offchainTask.budget.length;) {
             offchainTask.budget[i] = task.budget[i];
             unchecked {
                 ++i;
             }
         }
 
-        offchainTask.applications = new OffChainApplication[](
-            task.applicationCount
-        );
-        for (uint8 i; i < offchainTask.applications.length; ) {
+        offchainTask.applications = new OffChainApplication[](task.applicationCount);
+        for (uint8 i; i < offchainTask.applications.length;) {
             Application storage application = task.applications[i];
             offchainTask.applications[i].metadata = application.metadata;
             offchainTask.applications[i].applicant = application.applicant;
             offchainTask.applications[i].accepted = application.accepted;
 
-            offchainTask.applications[i].reward = new Reward[](
-                application.rewardCount
-            );
-            for (uint8 j; j < offchainTask.applications[i].reward.length; ) {
+            offchainTask.applications[i].reward = new Reward[](application.rewardCount);
+            for (uint8 j; j < offchainTask.applications[i].reward.length;) {
                 offchainTask.applications[i].reward[j] = application.reward[j];
                 unchecked {
                     ++j;
                 }
             }
-            offchainTask.applications[i].nativeReward = new NativeReward[](
-                application.nativeRewardCount
-            );
 
-            for (
-                uint8 j;
-                j < offchainTask.applications[i].nativeReward.length;
-
-            ) {
-                offchainTask.applications[i].nativeReward[j] = application
-                    .nativeReward[j];
+            offchainTask.applications[i].nativeReward = new NativeReward[](application.nativeRewardCount);
+            for (uint8 j; j < offchainTask.applications[i].nativeReward.length;) {
+                offchainTask.applications[i].nativeReward[j] = application.nativeReward[j];
                 unchecked {
                     ++j;
                 }
@@ -66,17 +54,15 @@ abstract contract TasksUtils is TasksEnsure {
         }
 
         offchainTask.submissions = new Submission[](task.submissionCount);
-        for (uint8 i; i < offchainTask.submissions.length; ) {
+        for (uint8 i; i < offchainTask.submissions.length;) {
             offchainTask.submissions[i] = task.submissions[i];
             unchecked {
                 ++i;
             }
         }
 
-        offchainTask.cancelTaskRequests = new CancelTaskRequest[](
-            task.cancelTaskRequestCount
-        );
-        for (uint8 i; i < offchainTask.cancelTaskRequests.length; ) {
+        offchainTask.cancelTaskRequests = new CancelTaskRequest[](task.cancelTaskRequestCount);
+        for (uint8 i; i < offchainTask.cancelTaskRequests.length;) {
             offchainTask.cancelTaskRequests[i] = task.cancelTaskRequests[i];
             unchecked {
                 ++i;
@@ -96,7 +82,7 @@ abstract contract TasksUtils is TasksEnsure {
             uint8 j;
             ERC20Transfer memory erc20Transfer = task.budget[0];
             uint256 needed;
-            for (uint8 i; i < _length; ) {
+            for (uint8 i; i < _length;) {
                 unchecked {
                     needed += _reward[i].amount;
                 }
@@ -105,15 +91,10 @@ abstract contract TasksUtils is TasksEnsure {
                     if (needed > erc20Transfer.amount) {
                         // Existing budget in escrow doesnt cover the needed reward
                         erc20Transfer.tokenContract.transferFrom(
-                            msg.sender,
-                            address(task.escrow),
-                            needed - erc20Transfer.amount
+                            msg.sender, address(task.escrow), needed - erc20Transfer.amount
                         );
 
-                        uint256 got = erc20Transfer.tokenContract.balanceOf(
-                            address(task.escrow)
-                        );
-
+                        uint256 got = erc20Transfer.tokenContract.balanceOf(address(task.escrow));
                         if (got < needed) {
                             // Apparently there is a tax / fee on the token transfer
                             revert ManualBudgetIncreaseNeeded();
@@ -137,7 +118,7 @@ abstract contract TasksUtils is TasksEnsure {
 
         if (_nativeLength != 0) {
             uint256 nativeNeeded;
-            for (uint8 i; i < _nativeLength; ) {
+            for (uint8 i; i < _nativeLength;) {
                 nativeNeeded += _nativeReward[i].amount;
                 unchecked {
                     ++i;
@@ -151,9 +132,7 @@ abstract contract TasksUtils is TasksEnsure {
                     }
                 }
 
-                (bool success, ) = address(task.escrow).call{value: msg.value}(
-                    ""
-                );
+                (bool success,) = address(task.escrow).call{value: msg.value}("");
                 if (!success) {
                     revert NativeTransferFailed();
                 }
@@ -177,7 +156,7 @@ abstract contract TasksUtils is TasksEnsure {
             uint8 j;
             ERC20Transfer memory erc20Transfer = task.budget[0];
             uint256 alreadyReserved;
-            for (uint8 i; i < uint8(_reward.length); ) {
+            for (uint8 i; i < uint8(_reward.length);) {
                 unchecked {
                     alreadyReserved += _reward[i].amount;
                 }
@@ -204,7 +183,7 @@ abstract contract TasksUtils is TasksEnsure {
         if (_nativeReward.length != 0) {
             application.nativeRewardCount = _toUint8(_nativeReward.length);
             uint256 nativeReserved;
-            for (uint8 i; i < uint8(_nativeReward.length); ) {
+            for (uint8 i; i < uint8(_nativeReward.length);) {
                 unchecked {
                     nativeReserved += _nativeReward[i].amount;
                 }
@@ -223,9 +202,7 @@ abstract contract TasksUtils is TasksEnsure {
     }
 
     function _payoutTask(Task storage task) internal {
-        Application storage executor = task.applications[
-            task.executorApplication
-        ];
+        Application storage executor = task.applications[task.executorApplication];
         address creator = task.creator;
         Escrow escrow = task.escrow;
 
@@ -234,15 +211,11 @@ abstract contract TasksUtils is TasksEnsure {
         if (rewardCount != 0) {
             uint8 j;
             uint8 budgetCount = task.budgetCount;
-            for (uint8 i; i < budgetCount; ) {
+            for (uint8 i; i < budgetCount;) {
                 ERC20Transfer memory erc20Transfer = task.budget[i];
                 while (j < rewardCount) {
                     Reward memory reward = executor.reward[j];
-                    escrow.transfer(
-                        erc20Transfer.tokenContract,
-                        reward.to,
-                        reward.amount
-                    );
+                    escrow.transfer(erc20Transfer.tokenContract, reward.to, reward.amount);
 
                     unchecked {
                         erc20Transfer.amount -= reward.amount;
@@ -256,11 +229,7 @@ abstract contract TasksUtils is TasksEnsure {
 
                 // Gas optimization
                 if (erc20Transfer.amount != 0) {
-                    escrow.transfer(
-                        erc20Transfer.tokenContract,
-                        creator,
-                        erc20Transfer.amount
-                    );
+                    escrow.transfer(erc20Transfer.tokenContract, creator, erc20Transfer.amount);
                 }
 
                 unchecked {
@@ -273,11 +242,8 @@ abstract contract TasksUtils is TasksEnsure {
         uint8 nativeRewardCount = executor.nativeRewardCount;
         if (nativeRewardCount != 0) {
             uint96 paidOut;
-            for (uint8 i; i < nativeRewardCount; ) {
-                escrow.transferNative(
-                    payable(executor.nativeReward[i].to),
-                    executor.nativeReward[i].amount
-                );
+            for (uint8 i; i < nativeRewardCount;) {
+                escrow.transferNative(payable(executor.nativeReward[i].to), executor.nativeReward[i].amount);
                 unchecked {
                     paidOut += executor.nativeReward[i].amount;
                 }
@@ -290,10 +256,7 @@ abstract contract TasksUtils is TasksEnsure {
             // Gas optimzation
             if (paidOut < task.nativeBudget) {
                 unchecked {
-                    escrow.transferNative(
-                        payable(task.creator),
-                        task.nativeBudget - paidOut
-                    );
+                    escrow.transferNative(payable(task.creator), task.nativeBudget - paidOut);
                 }
             }
         }
@@ -307,13 +270,9 @@ abstract contract TasksUtils is TasksEnsure {
 
         uint8 budgetCount = task.budgetCount;
         if (budgetCount != 0) {
-            for (uint8 i; i < budgetCount; ) {
+            for (uint8 i; i < budgetCount;) {
                 ERC20Transfer memory erc20Transfer = task.budget[i];
-                escrow.transfer(
-                    erc20Transfer.tokenContract,
-                    creator,
-                    erc20Transfer.amount
-                );
+                escrow.transfer(erc20Transfer.tokenContract, creator, erc20Transfer.amount);
 
                 unchecked {
                     ++i;
@@ -334,9 +293,7 @@ abstract contract TasksUtils is TasksEnsure {
         uint88[] calldata _partialReward,
         uint96[] calldata _partialNativeReward
     ) internal {
-        Application storage executor = task.applications[
-            task.executorApplication
-        ];
+        Application storage executor = task.applications[task.executorApplication];
         Escrow escrow = task.escrow;
 
         // Gas optimzation
@@ -344,7 +301,7 @@ abstract contract TasksUtils is TasksEnsure {
         if (rewardCount != 0) {
             uint8 j;
             uint8 budgetCount = task.budgetCount;
-            for (uint8 i; i < budgetCount; ) {
+            for (uint8 i; i < budgetCount;) {
                 ERC20Transfer memory erc20Transfer = task.budget[i];
                 while (j < rewardCount) {
                     Reward memory reward = executor.reward[j];
@@ -352,17 +309,10 @@ abstract contract TasksUtils is TasksEnsure {
                         revert PartialRewardAboveFullReward();
                     }
 
-                    escrow.transfer(
-                        erc20Transfer.tokenContract,
-                        reward.to,
-                        _partialReward[j]
-                    );
+                    escrow.transfer(erc20Transfer.tokenContract, reward.to, _partialReward[j]);
 
                     unchecked {
-                        executor.reward[j].amount =
-                            reward.amount -
-                            _partialReward[j];
-
+                        executor.reward[j].amount = reward.amount - _partialReward[j];
                         ++j;
                     }
 
@@ -371,9 +321,7 @@ abstract contract TasksUtils is TasksEnsure {
                     }
                 }
 
-                task.budget[i].amount = _toUint96(
-                    erc20Transfer.tokenContract.balanceOf(address(escrow))
-                );
+                task.budget[i].amount = _toUint96(erc20Transfer.tokenContract.balanceOf(address(escrow)));
 
                 unchecked {
                     ++i;
@@ -384,15 +332,12 @@ abstract contract TasksUtils is TasksEnsure {
         // Gas optimzation
         uint8 nativeRewardCount = executor.nativeRewardCount;
         if (nativeRewardCount != 0) {
-            for (uint8 i; i < nativeRewardCount; ) {
+            for (uint8 i; i < nativeRewardCount;) {
                 if (_partialNativeReward[i] > executor.nativeReward[i].amount) {
                     revert PartialRewardAboveFullReward();
                 }
 
-                escrow.transferNative(
-                    payable(executor.nativeReward[i].to),
-                    _partialNativeReward[i]
-                );
+                escrow.transferNative(payable(executor.nativeReward[i].to), _partialNativeReward[i]);
 
                 unchecked {
                     executor.nativeReward[i].amount -= _partialNativeReward[i];
@@ -412,18 +357,9 @@ abstract contract TasksUtils is TasksEnsure {
         assembly {
             // Cleans the upper 96 bits of the `implementation` word, then packs the first 3 bytes
             // of the `implementation` address with the bytecode before the address.
-            mstore(
-                0x00,
-                or(
-                    shr(0xe8, shl(0x60, implementation)),
-                    0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000
-                )
-            )
+            mstore(0x00, or(shr(0xe8, shl(0x60, implementation)), 0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000))
             // Packs the remaining 17 bytes of `implementation` with the bytecode after the address.
-            mstore(
-                0x20,
-                or(shl(0x78, implementation), 0x5af43d82803e903d91602b57fd5bf3)
-            )
+            mstore(0x20, or(shl(0x78, implementation), 0x5af43d82803e903d91602b57fd5bf3))
             instance := create(0, 0x09, 0x37)
         }
         if (instance == address(0)) {
@@ -432,10 +368,7 @@ abstract contract TasksUtils is TasksEnsure {
     }
 
     // From: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Strings.sol
-    function equal(
-        string memory a,
-        string memory b
-    ) internal pure returns (bool) {
+    function equal(string memory a, string memory b) internal pure returns (bool) {
         return keccak256(bytes(a)) == keccak256(bytes(b));
     }
 }

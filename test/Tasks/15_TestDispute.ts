@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { ethers, getNamedAccounts, getUnnamedAccounts } from "hardhat";
+import { ethers, getUnnamedAccounts } from "hardhat";
 import { getTask } from "../../utils/taskHelper";
 import {
   createBudgetTaskWithExecutorAndSubmissionFixture,
@@ -85,14 +85,6 @@ describe("Disputes", function () {
     expect(taskInfo.state).to.be.equal(TaskState.Closed);
   });
 
-  it("should be possible to transfer dispute management", async function () {
-    const task = await loadFixture(createTakenTaskWithSubmissionFixture);
-    const { deployer } = await getNamedAccounts();
-    const TasksDipsuteDAO = await asDepartment<Tasks>(task.TasksManager, "dispute");
-    await TasksDipsuteDAO.transferDisputeManagement(deployer);
-    expect(await TasksDipsuteDAO.disputeManager()).to.be.equal(deployer);
-  });
-
   //Check for exploits
   it("should not be allowed on a task id that does not exist", async function () {
     const task = await loadFixture(createTakenTaskWithSubmissionFixture);
@@ -127,12 +119,5 @@ describe("Disputes", function () {
     const tasks = task.TasksExecutor.connect(await ethers.getSigner(accounts[0]));
     const tx = tasks.completeByDispute(task.taskId, [], []);
     await expect(tx).to.be.revertedWithCustomError(tasks, "NotDisputeManager");
-  });
-
-  it("should be possible for others to transfer dispute management", async function () {
-    const task = await loadFixture(createTakenTaskWithSubmissionFixture);
-    const { deployer } = await getNamedAccounts();
-    const tx = task.TasksManager.transferDisputeManagement(deployer);
-    await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "NotDisputeManager");
   });
 });

@@ -24,6 +24,7 @@ interface IRFPs {
         uint96 nativeBudget,
         address creator,
         address tasksManager,
+        address disputeManager,
         address manager
     );
     event ProjectSubmitted(
@@ -35,11 +36,7 @@ interface IRFPs {
         ITasks.Reward[] reward,
         ITasks.NativeReward[] nativeReward
     );
-    event ProjectAccepted(
-        uint256 indexed rfpId,
-        uint16 projectId,
-        uint256 taskId
-    );
+    event ProjectAccepted(uint256 indexed rfpId, uint16 projectId, uint256 taskId);
     event RFPEmptied(uint256 indexed rfpId);
 
     /// @notice A container for a RFP project.
@@ -76,6 +73,7 @@ interface IRFPs {
     /// @param nativeBudget Maximum native currency reward available for projects of the RFP.
     /// @param creator Who has created the RFP.
     /// @param tasksManager Who has the permission to manage the OpenR&D tasks.
+    /// @param disputeManager Who has the permission to manage disputes on the OpenR&D tasks.
     /// @param manager Who has the permission to manage the RFP.
     /// @param projects Projects that want to be funded by the RFP.
     struct RFP {
@@ -88,6 +86,8 @@ interface IRFPs {
         address creator;
         // Storage block seperator
         address tasksManager;
+        // Storage block seperator
+        address disputeManager;
         // Storage block seperator
         address manager;
         uint8 budgetCount;
@@ -104,6 +104,7 @@ interface IRFPs {
         uint96 nativeBudget;
         address creator;
         address tasksManager;
+        address disputeManager;
         address manager;
         IERC20[] budget;
         OffchainProject[] projects;
@@ -118,9 +119,7 @@ interface IRFPs {
 
     /// @notice Retrieves multiple RFPs.
     /// @param _rfpIds Ids of the RFPs.
-    function getRFPs(
-        uint256[] calldata _rfpIds
-    ) external view returns (OffChainRFP[] memory);
+    function getRFPs(uint256[] calldata _rfpIds) external view returns (OffChainRFP[] memory);
 
     /// @notice Create a new RFP.
     /// @param _metadata Metadata of the RFP. (IPFS hash)
@@ -134,6 +133,7 @@ interface IRFPs {
         uint64 _deadline,
         ITasks.ERC20Transfer[] calldata _budget,
         address _tasksManager,
+        address _disputeManager,
         address _manager
     ) external payable returns (uint256 rfpId);
 

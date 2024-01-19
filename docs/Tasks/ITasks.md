@@ -138,7 +138,7 @@ Create a submission.
 ### createTask
 
 ```solidity
-function createTask(string _metadata, uint64 _deadline, ITasks.ERC20Transfer[] _budget, address _manager, ITasks.PreapprovedApplication[] _preapprove) external payable returns (uint256 taskId)
+function createTask(string _metadata, uint64 _deadline, ITasks.ERC20Transfer[] _budget, address _manager, ITasks.PreapprovedApplication[] _preapprove, address _disputeManager) external payable returns (uint256 taskId)
 ```
 
 
@@ -154,6 +154,7 @@ function createTask(string _metadata, uint64 _deadline, ITasks.ERC20Transfer[] _
 | _budget | ITasks.ERC20Transfer[] | undefined |
 | _manager | address | undefined |
 | _preapprove | ITasks.PreapprovedApplication[] | undefined |
+| _disputeManager | address | undefined |
 
 #### Returns
 
@@ -344,22 +345,6 @@ Retrieves the current amount of created tasks.
 | Name | Type | Description |
 |---|---|---|
 | _0 | uint256 | undefined |
-
-### transferDisputeManagement
-
-```solidity
-function transferDisputeManagement(address _newManager) external nonpayable
-```
-
-Allows the dispute manager to appoint a new dispute manager.
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _newManager | address | The new dispute manager. |
 
 ### transferManagement
 
@@ -632,7 +617,7 @@ event TaskCompleted(uint256 indexed taskId, enum ITasks.TaskCompletion source)
 ### TaskCreated
 
 ```solidity
-event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITasks.ERC20Transfer[] budget, uint96 nativeBudget, address creator, address manager)
+event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITasks.ERC20Transfer[] budget, uint96 nativeBudget, address creator, address manager, address disputeManager)
 ```
 
 
@@ -650,6 +635,7 @@ event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITas
 | nativeBudget  | uint96 | undefined |
 | creator  | address | undefined |
 | manager  | address | undefined |
+| disputeManager  | address | undefined |
 
 ### TaskTaken
 
@@ -764,6 +750,17 @@ error ManualBudgetIncreaseNeeded()
 
 ```solidity
 error NativeTransferFailed()
+```
+
+
+
+
+
+
+### NotDisputeManager
+
+```solidity
+error NotDisputeManager()
 ```
 
 

@@ -30,7 +30,7 @@ Accept project to be funnded by the RFP.
 ### createRFP
 
 ```solidity
-function createRFP(string _metadata, uint64 _deadline, ITasks.ERC20Transfer[] _budget, address _tasksManager, address _manager) external payable returns (uint256 rfpId)
+function createRFP(string _metadata, uint64 _deadline, ITasks.ERC20Transfer[] _budget, address _tasksManager, address _disputeManager, address _manager) external payable returns (uint256 rfpId)
 ```
 
 
@@ -45,6 +45,7 @@ function createRFP(string _metadata, uint64 _deadline, ITasks.ERC20Transfer[] _b
 | _deadline | uint64 | undefined |
 | _budget | ITasks.ERC20Transfer[] | undefined |
 | _tasksManager | address | undefined |
+| _disputeManager | address | undefined |
 | _manager | address | undefined |
 
 #### Returns
@@ -220,7 +221,7 @@ event ProjectSubmitted(uint256 indexed rfpId, uint16 projectId, string metadata,
 ### RFPCreated
 
 ```solidity
-event RFPCreated(uint256 indexed rfpId, string metadata, uint64 deadline, ITasks.ERC20Transfer[] budget, uint96 nativeBudget, address creator, address tasksManager, address manager)
+event RFPCreated(uint256 indexed rfpId, string metadata, uint64 deadline, ITasks.ERC20Transfer[] budget, uint96 nativeBudget, address creator, address tasksManager, address disputeManager, address manager)
 ```
 
 
@@ -238,6 +239,7 @@ event RFPCreated(uint256 indexed rfpId, string metadata, uint64 deadline, ITasks
 | nativeBudget  | uint96 | undefined |
 | creator  | address | undefined |
 | tasksManager  | address | undefined |
+| disputeManager  | address | undefined |
 | manager  | address | undefined |
 
 ### RFPEmptied

@@ -17,6 +17,7 @@ interface ITasks {
 
     error NotManager();
     error NotExecutor();
+    error NotDisputeManager();
 
     error RewardAboveBudget();
     error RewardDoesntEndWithNextToken();
@@ -46,56 +47,29 @@ interface ITasks {
         ERC20Transfer[] budget,
         uint96 nativeBudget,
         address creator,
-        address manager
+        address manager,
+        address disputeManager
     );
     event ApplicationCreated(
-        uint256 indexed taskId,
-        uint16 applicationId,
-        string metadata,
-        Reward[] reward,
-        NativeReward[] nativeReward
+        uint256 indexed taskId, uint16 applicationId, string metadata, Reward[] reward, NativeReward[] nativeReward
     );
     event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId);
     event TaskTaken(uint256 indexed taskId, uint16 applicationId);
-    event SubmissionCreated(
-        uint256 indexed taskId,
-        uint8 submissionId,
-        string metadata
-    );
+    event SubmissionCreated(uint256 indexed taskId, uint8 submissionId, string metadata);
     event SubmissionReviewed(
-        uint256 indexed taskId,
-        uint8 submissionId,
-        SubmissionJudgement judgement,
-        string feedback
+        uint256 indexed taskId, uint8 submissionId, SubmissionJudgement judgement, string feedback
     );
     event TaskCompleted(uint256 indexed taskId, TaskCompletion source);
 
-    event CancelTaskRequested(
-        uint256 indexed taskId,
-        uint8 requestId,
-        string explanation
-    );
+    event CancelTaskRequested(uint256 indexed taskId, uint8 requestId, string explanation);
     event TaskCancelled(uint256 indexed taskId);
-    event RequestAccepted(
-        uint256 indexed taskId,
-        RequestType requestType,
-        uint8 requestId
-    );
-    event RequestExecuted(
-        uint256 indexed taskId,
-        RequestType requestType,
-        uint8 requestId,
-        address by
-    );
+    event RequestAccepted(uint256 indexed taskId, RequestType requestType, uint8 requestId);
+    event RequestExecuted(uint256 indexed taskId, RequestType requestType, uint8 requestId, address by);
 
     event DeadlineChanged(uint256 indexed taskId, uint64 newDeadline);
     event BudgetChanged(uint256 indexed taskId); // Quite expensive to transfer budget into a datastructure to emit
     event MetadataChanged(uint256 indexed taskId, string newMetadata);
-    event PartialPayment(
-        uint256 indexed taskId,
-        uint88[] partialReward,
-        uint96[] partialNativeReward
-    );
+    event PartialPayment(uint256 indexed taskId, uint88[] partialReward, uint96[] partialNativeReward);
     event NewManager(uint256 indexed taskId, address manager);
 
     /// @notice A container for ERC20 transfer information.
@@ -162,6 +136,7 @@ interface ITasks {
         Accepted,
         Rejected
     }
+
     /// @notice A container for a task submission.
     /// @param metadata Metadata of the submission. (IPFS hash)
     /// @param judgement Judgement cast on the submission.
@@ -172,9 +147,7 @@ interface ITasks {
         SubmissionJudgement judgement;
     }
 
-    enum RequestType {
-        CancelTask
-    }
+    enum RequestType {CancelTask}
 
     /// @notice A container for shared request information.
     /// @param accepted If the request was accepted.
@@ -197,12 +170,15 @@ interface ITasks {
         Taken,
         Closed
     }
+
     /// @notice A container for task-related information.
     /// @param metadata Metadata of the task. (IPFS hash)
     /// @param deadline Block timestamp at which the task expires if not completed.
+    /// @param escrow The address of the escrow which holds the budget funds.
     /// @param budget Maximum ERC20 rewards that can be earned by completing the task.
     /// @param nativeBudget Maximum native currency reward that can be earned by completing the task.
     /// @param creator Who has created the task.
+    /// @param disputeManager Who has the permission to complete the task without the managers approval.
     /// @param manager Who has the permission to manage the task.
     /// @param state Current state the task is in.
     /// @param applications Applications to take the job.
@@ -216,6 +192,8 @@ interface ITasks {
         // Storage block seperator
         uint96 nativeBudget;
         address creator;
+        // Storage block seperator
+        address disputeManager;
         // Storage block seperator
         address manager;
         TaskState state;
@@ -237,6 +215,7 @@ interface ITasks {
         uint16 executorApplication;
         address creator;
         address manager;
+        address disputeManager;
         TaskState state;
         Escrow escrow;
         uint96 nativeBudget;
@@ -256,28 +235,27 @@ interface ITasks {
 
     /// @notice Retrieves all task information by id.
     /// @param _taskId Id of the task.
-    function getTask(
-        uint256 _taskId
-    ) external view returns (OffChainTask memory);
+    function getTask(uint256 _taskId) external view returns (OffChainTask memory);
 
     /// @notice Retrieves multiple tasks.
     /// @param _taskIds Ids of the tasks.
-    function getTasks(
-        uint256[] calldata _taskIds
-    ) external view returns (OffChainTask[] memory);
+    function getTasks(uint256[] calldata _taskIds) external view returns (OffChainTask[] memory);
 
     /// @notice Create a new task.
     /// @param _metadata Metadata of the task. (IPFS hash)
     /// @param _deadline Block timestamp at which the task expires if not completed.
     /// @param _budget Maximum ERC20 rewards that can be earned by completing the task.
     /// @param _manager Who will manage the task (become the manager).
+    /// @param _preapprove List of addresses (with reward) that are able to take the task without creating an application themselves.
+    /// @param _disputeManager Who will manage the disputes (handle situations where the manager and executor are in disagreement).
     /// @return taskId Id of the newly created task.
     function createTask(
         string calldata _metadata,
         uint64 _deadline,
         ERC20Transfer[] calldata _budget,
         address _manager,
-        PreapprovedApplication[] calldata _preapprove
+        PreapprovedApplication[] calldata _preapprove,
+        address _disputeManager
     ) external payable returns (uint256 taskId);
 
     /// @notice Apply to take the task.
@@ -296,10 +274,7 @@ interface ITasks {
     /// @notice Accept application to allow them to take the task.
     /// @param _taskId Id of the task.
     /// @param _applicationIds Indexes of the applications to accept.
-    function acceptApplications(
-        uint256 _taskId,
-        uint16[] calldata _applicationIds
-    ) external payable;
+    function acceptApplications(uint256 _taskId, uint16[] calldata _applicationIds) external payable;
 
     /// @notice Take the task after your application has been accepted.
     /// @param _taskId Id of the task.
@@ -310,10 +285,7 @@ interface ITasks {
     /// @param _taskId Id of the task.
     /// @param _metadata Metadata of the submission. (IPFS hash)
     /// @return submissionId Id of the newly created submission.
-    function createSubmission(
-        uint256 _taskId,
-        string calldata _metadata
-    ) external returns (uint8 submissionId);
+    function createSubmission(uint256 _taskId, string calldata _metadata) external returns (uint8 submissionId);
 
     /// @notice Review a submission.
     /// @param _taskId Id of the task.
@@ -331,32 +303,20 @@ interface ITasks {
     /// @param _taskId Id of the task.
     /// @param _explanation Why the task was cancelled. (IPFS hash)
     /// @return cancelTaskRequestId Id of the newly created request for task cancellation.
-    function cancelTask(
-        uint256 _taskId,
-        string calldata _explanation
-    ) external returns (uint8 cancelTaskRequestId);
+    function cancelTask(uint256 _taskId, string calldata _explanation) external returns (uint8 cancelTaskRequestId);
 
     /// @notice Accepts a request, executing the proposed action.
     /// @param _taskId Id of the task.
     /// @param _requestType What kind of request it is.
     /// @param _requestId Id of the request.
     /// @param _execute If the request should also be executed in this transaction.
-    function acceptRequest(
-        uint256 _taskId,
-        RequestType _requestType,
-        uint8 _requestId,
-        bool _execute
-    ) external;
+    function acceptRequest(uint256 _taskId, RequestType _requestType, uint8 _requestId, bool _execute) external;
 
     /// @notice Exectued an accepted request, allows anyone to pay for the gas costs of the execution.
     /// @param _taskId Id of the task.
     /// @param _requestType What kind of request it is.
     /// @param _requestId Id of the request.
-    function executeRequest(
-        uint256 _taskId,
-        RequestType _requestType,
-        uint8 _requestId
-    ) external;
+    function executeRequest(uint256 _taskId, RequestType _requestType, uint8 _requestId) external;
 
     /// @notice Extend the deadline of a task.
     /// @param _taskId Id of the task.
@@ -367,19 +327,13 @@ interface ITasks {
     /// @param _taskId Id of the task.
     /// @param _increase How much to increase each tokens amount by.
     /// @dev Any attached native reward will also be used to increase the budget.
-    function increaseBudget(
-        uint256 _taskId,
-        uint96[] calldata _increase
-    ) external payable;
+    function increaseBudget(uint256 _taskId, uint96[] calldata _increase) external payable;
 
     /// @notice Edit the metadata of a task.
     /// @param _taskId Id of the task.
     /// @param _newMetadata New metadata of the task.
     /// @dev This metadata update might change the task completely. Show a warning to people who applied before the change.
-    function editMetadata(
-        uint256 _taskId,
-        string calldata _newMetadata
-    ) external;
+    function editMetadata(uint256 _taskId, string calldata _newMetadata) external;
 
     /// @notice Completes the task through dispute resolution.
     /// @param _taskId Id of the task.
@@ -391,20 +345,13 @@ interface ITasks {
         uint96[] calldata _partialNativeReward
     ) external;
 
-    /// @notice Allows the dispute manager to appoint a new dispute manager.
-    /// @param _newManager The new dispute manager.
-    function transferDisputeManagement(address _newManager) external;
-
     /// @notice Releases a part of the reward to the executor without marking the task as complete.
     /// @param _taskId Id of the task.
     /// @param _partialReward How much of each ERC20 reward should be paid out.
     /// @param _partialNativeReward How much of each native reward should be paid out.
     /// @dev Will fetch balanceOf to set the budget afterwards, can be used in case funds where sent manually to increase the budget.
-    function partialPayment(
-        uint256 _taskId,
-        uint88[] calldata _partialReward,
-        uint96[] calldata _partialNativeReward
-    ) external;
+    function partialPayment(uint256 _taskId, uint88[] calldata _partialReward, uint96[] calldata _partialNativeReward)
+        external;
 
     /// @notice Transfers the manager role to a different address.
     /// @param _taskId Id of the task.

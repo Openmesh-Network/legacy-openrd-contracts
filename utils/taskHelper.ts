@@ -1,6 +1,6 @@
 import { FromBlockchainDate, ToBlockchainDate, days, now } from "./timeUnits";
 import { ITasks, Tasks } from "../typechain-types";
-import { ContractTransactionReceipt, ContractTransactionResponse, Signer, BigNumberish } from "ethers";
+import { ContractTransactionReceipt, ContractTransactionResponse, Signer } from "ethers";
 import {
   Application,
   ApplicationMetadata,
@@ -20,6 +20,7 @@ import {
 import { asyncMap, getEventsFromLogs } from "./utils";
 import { addToIpfs, getFromIpfs } from "./ipfsHelper";
 import { Wei } from "./ethersUnits";
+import { deployments } from "hardhat";
 
 // Helper to interact with the tasks contract
 
@@ -35,6 +36,7 @@ export interface CreateTaskSettings {
     reward?: Reward[];
     nativeReward?: NativeReward[];
   }[];
+  disputeManager?: string;
 }
 export async function createTaskTransaction(settings: CreateTaskSettings): Promise<ContractTransactionResponse> {
   const metadata: TaskMetadata = {
@@ -54,7 +56,8 @@ export async function createTaskTransaction(settings: CreateTaskSettings): Promi
       nativeReward: p.nativeReward ?? [],
     };
   });
-  return settings.tasks.createTask(metadataHash, deadline, budget, manager, preapproved, { value: nativeBudget });
+  const disputeManager = settings.disputeManager ?? (await deployments.get("dispute_dao")).address;
+  return settings.tasks.createTask(metadataHash, deadline, budget, manager, preapproved, disputeManager, { value: nativeBudget },);
 }
 
 export interface CreateTaskResult {

@@ -29,19 +29,15 @@ contract RFPs is IRFPs {
     }
 
     /// @inheritdoc IRFPs
-    function getRFP(
-        uint256 _rfpId
-    ) public view returns (OffChainRFP memory offchainRFP) {
+    function getRFP(uint256 _rfpId) public view returns (OffChainRFP memory offchainRFP) {
         RFP storage rfp = _getRFP(_rfpId);
         offchainRFP = _toOffchainRFP(rfp);
     }
 
     /// @inheritdoc IRFPs
-    function getRFPs(
-        uint256[] memory _rfpIds
-    ) public view returns (OffChainRFP[] memory) {
+    function getRFPs(uint256[] memory _rfpIds) public view returns (OffChainRFP[] memory) {
         OffChainRFP[] memory offchainRFPs = new OffChainRFP[](_rfpIds.length);
-        for (uint i; i < _rfpIds.length; ) {
+        for (uint256 i; i < _rfpIds.length;) {
             offchainRFPs[i] = getRFP(_rfpIds[i]);
 
             unchecked {
@@ -57,6 +53,7 @@ contract RFPs is IRFPs {
         uint64 _deadline,
         ITasks.ERC20Transfer[] calldata _budget,
         address _tasksManager,
+        address _disputeManager,
         address _manager
     ) external payable returns (uint256 rfpId) {
         rfpId = rfpCounter++;
@@ -72,12 +69,8 @@ contract RFPs is IRFPs {
             rfp.nativeBudget = _toUint96(msg.value);
         }
         rfp.budgetCount = _toUint8(_budget.length);
-        for (uint8 i; i < uint8(_budget.length); ) {
-            _budget[i].tokenContract.transferFrom(
-                msg.sender,
-                address(escrow),
-                _budget[i].amount
-            );
+        for (uint8 i; i < uint8(_budget.length);) {
+            _budget[i].tokenContract.transferFrom(msg.sender, address(escrow), _budget[i].amount);
             // use balanceOf in case there is a fee asoosiated with the transfer
             rfp.budget[i] = _budget[i].tokenContract;
             unchecked {
@@ -87,6 +80,7 @@ contract RFPs is IRFPs {
 
         rfp.manager = _manager;
         rfp.tasksManager = _tasksManager;
+        rfp.disputeManager = _disputeManager;
         rfp.creator = msg.sender;
 
         emit RFPCreated(
@@ -97,6 +91,7 @@ contract RFPs is IRFPs {
             _toUint96(msg.value),
             msg.sender,
             _tasksManager,
+            _disputeManager,
             _manager
         );
     }
@@ -130,7 +125,7 @@ contract RFPs is IRFPs {
         // Gas optimization
         if (_reward.length != 0) {
             project.rewardCount = _toUint8(_reward.length);
-            for (uint8 i; i < uint8(_reward.length); ) {
+            for (uint8 i; i < uint8(_reward.length);) {
                 project.reward[i] = _reward[i];
                 unchecked {
                     ++i;
@@ -141,7 +136,7 @@ contract RFPs is IRFPs {
         // Gas optimization
         if (_nativeReward.length != 0) {
             project.nativeRewardCount = _toUint8(_nativeReward.length);
-            for (uint8 i; i < uint8(_nativeReward.length); ) {
+            for (uint8 i; i < uint8(_nativeReward.length);) {
                 project.nativeReward[i] = _nativeReward[i];
                 unchecked {
                     ++i;
@@ -151,15 +146,7 @@ contract RFPs is IRFPs {
 
         projectId = rfp.projectCount++;
 
-        emit ProjectSubmitted(
-            _rfpId,
-            projectId,
-            _metadata,
-            msg.sender,
-            _deadline,
-            _reward,
-            _nativeReward
-        );
+        emit ProjectSubmitted(_rfpId, projectId, _metadata, msg.sender, _deadline, _reward, _nativeReward);
     }
 
     /// @inheritdoc IRFPs
@@ -182,44 +169,39 @@ contract RFPs is IRFPs {
             revert ProjectAlreadyAccepted();
         }
 
-        ITasks.ERC20Transfer[] memory taskBudget = new ITasks.ERC20Transfer[](
-            rfp.budgetCount
-        );
-        ITasks.Reward[] memory taskReward = new ITasks.Reward[](
-            project.rewardCount
-        );
-        uint8 j;
-        for (uint8 i; i < taskBudget.length; ) {
-            IERC20 erc20 = rfp.budget[i];
-            uint96 projectBudget;
-            while (j < taskReward.length) {
-                taskReward[j] = project.reward[j];
-                projectBudget += taskReward[j].amount;
+        ITasks.ERC20Transfer[] memory taskBudget = new ITasks.ERC20Transfer[](rfp.budgetCount);
+        ITasks.Reward[] memory taskReward = new ITasks.Reward[](project.rewardCount);
+        {
+            uint8 j;
+            for (uint8 i; i < taskBudget.length;) {
+                IERC20 erc20 = rfp.budget[i];
+                uint96 projectBudget;
+                while (j < taskReward.length) {
+                    taskReward[j] = project.reward[j];
+                    projectBudget += taskReward[j].amount;
+
+                    unchecked {
+                        ++j;
+                    }
+
+                    if (taskReward[j - 1].nextToken) {
+                        break;
+                    }
+                }
+
+                taskBudget[i] = ITasks.ERC20Transfer(erc20, projectBudget);
+                rfp.escrow.transfer(erc20, address(this), projectBudget);
+                erc20.approve(address(tasks), projectBudget);
 
                 unchecked {
-                    ++j;
+                    ++i;
                 }
-
-                if (taskReward[j - 1].nextToken) {
-                    break;
-                }
-            }
-
-            taskBudget[i] = ITasks.ERC20Transfer(erc20, projectBudget);
-            rfp.escrow.transfer(erc20, address(this), projectBudget);
-            erc20.approve(address(tasks), projectBudget);
-
-            unchecked {
-                ++i;
             }
         }
 
         uint96 taskNativeBudget;
-        ITasks.NativeReward[]
-            memory taskNativeReward = new ITasks.NativeReward[](
-                project.nativeRewardCount
-            );
-        for (uint8 i; i < taskNativeReward.length; ) {
+        ITasks.NativeReward[] memory taskNativeReward = new ITasks.NativeReward[](project.nativeRewardCount);
+        for (uint8 i; i < taskNativeReward.length;) {
             taskNativeReward[i] = project.nativeReward[i];
             taskNativeBudget += taskNativeReward[i].amount;
 
@@ -229,20 +211,11 @@ contract RFPs is IRFPs {
         }
         rfp.escrow.transferNative(payable(address(this)), taskNativeBudget);
 
-        ITasks.PreapprovedApplication[]
-            memory preapproved = new ITasks.PreapprovedApplication[](1);
-        preapproved[0] = ITasks.PreapprovedApplication(
-            project.representative,
-            taskReward,
-            taskNativeReward
-        );
+        ITasks.PreapprovedApplication[] memory preapproved = new ITasks.PreapprovedApplication[](1);
+        preapproved[0] = ITasks.PreapprovedApplication(project.representative, taskReward, taskNativeReward);
 
         uint256 taskId = tasks.createTask{value: taskNativeBudget}(
-            project.metadata,
-            project.deadline,
-            taskBudget,
-            rfp.tasksManager,
-            preapproved
+            project.metadata, project.deadline, taskBudget, rfp.tasksManager, preapproved, rfp.disputeManager
         );
         project.accepted = true;
         emit ProjectAccepted(_rfpId, _projectId, taskId);
@@ -258,24 +231,17 @@ contract RFPs is IRFPs {
         }
 
         uint8 budgetCount = rfp.budgetCount;
-        for (uint8 i; i < budgetCount; ) {
+        for (uint8 i; i < budgetCount;) {
             IERC20 erc20 = rfp.budget[i];
 
-            rfp.escrow.transfer(
-                erc20,
-                rfp.creator,
-                erc20.balanceOf(address(rfp.escrow))
-            );
+            rfp.escrow.transfer(erc20, rfp.creator, erc20.balanceOf(address(rfp.escrow)));
 
             unchecked {
                 ++i;
             }
         }
 
-        rfp.escrow.transferNative(
-            payable(rfp.creator),
-            address(rfp.escrow).balance
-        );
+        rfp.escrow.transferNative(payable(rfp.creator), address(rfp.escrow).balance);
 
         emit RFPEmptied(_rfpId);
     }
@@ -288,9 +254,7 @@ contract RFPs is IRFPs {
         rfp = rfps[_rfpId];
     }
 
-    function _toOffchainRFP(
-        RFP storage rfp
-    ) internal view returns (OffChainRFP memory offchainRFP) {
+    function _toOffchainRFP(RFP storage rfp) internal view returns (OffChainRFP memory offchainRFP) {
         offchainRFP.metadata = rfp.metadata;
         offchainRFP.deadline = rfp.deadline;
         offchainRFP.creator = rfp.creator;
@@ -300,7 +264,7 @@ contract RFPs is IRFPs {
         offchainRFP.nativeBudget = rfp.nativeBudget;
 
         offchainRFP.budget = new IERC20[](rfp.budgetCount);
-        for (uint8 i; i < offchainRFP.budget.length; ) {
+        for (uint8 i; i < offchainRFP.budget.length;) {
             offchainRFP.budget[i] = rfp.budget[i];
             unchecked {
                 ++i;
@@ -308,30 +272,24 @@ contract RFPs is IRFPs {
         }
 
         offchainRFP.projects = new OffchainProject[](rfp.projectCount);
-        for (uint8 i; i < offchainRFP.projects.length; ) {
+        for (uint8 i; i < offchainRFP.projects.length;) {
             Project storage project = rfp.projects[i];
             offchainRFP.projects[i].metadata = project.metadata;
             offchainRFP.projects[i].deadline = project.deadline;
             offchainRFP.projects[i].representative = project.representative;
             offchainRFP.projects[i].accepted = project.accepted;
 
-            offchainRFP.projects[i].reward = new ITasks.Reward[](
-                project.rewardCount
-            );
-            for (uint8 j; j < offchainRFP.projects[i].reward.length; ) {
+            offchainRFP.projects[i].reward = new ITasks.Reward[](project.rewardCount);
+            for (uint8 j; j < offchainRFP.projects[i].reward.length;) {
                 offchainRFP.projects[i].reward[j] = project.reward[j];
                 unchecked {
                     ++j;
                 }
             }
-            offchainRFP.projects[i].nativeReward = new ITasks.NativeReward[](
-                project.nativeRewardCount
-            );
+            offchainRFP.projects[i].nativeReward = new ITasks.NativeReward[](project.nativeRewardCount);
 
-            for (uint8 j; j < offchainRFP.projects[i].nativeReward.length; ) {
-                offchainRFP.projects[i].nativeReward[j] = project.nativeReward[
-                    j
-                ];
+            for (uint8 j; j < offchainRFP.projects[i].nativeReward.length;) {
+                offchainRFP.projects[i].nativeReward[j] = project.nativeReward[j];
                 unchecked {
                     ++j;
                 }
@@ -348,18 +306,9 @@ contract RFPs is IRFPs {
         assembly {
             // Cleans the upper 96 bits of the `implementation` word, then packs the first 3 bytes
             // of the `implementation` address with the bytecode before the address.
-            mstore(
-                0x00,
-                or(
-                    shr(0xe8, shl(0x60, implementation)),
-                    0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000
-                )
-            )
+            mstore(0x00, or(shr(0xe8, shl(0x60, implementation)), 0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000))
             // Packs the remaining 17 bytes of `implementation` with the bytecode after the address.
-            mstore(
-                0x20,
-                or(shl(0x78, implementation), 0x5af43d82803e903d91602b57fd5bf3)
-            )
+            mstore(0x20, or(shl(0x78, implementation), 0x5af43d82803e903d91602b57fd5bf3))
             instance := create(0, 0x09, 0x37)
         }
         if (instance == address(0)) {
