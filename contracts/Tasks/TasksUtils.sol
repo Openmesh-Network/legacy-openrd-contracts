@@ -3,10 +3,15 @@ pragma solidity ^0.8.0;
 
 import {Escrow, TasksEnsure} from "./TasksEnsure.sol";
 
+import {IERC20} from "./ITasks.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
 /*
   Higher level functions to allow the Tasks file to be more readable.
 */
 abstract contract TasksUtils is TasksEnsure {
+    using SafeERC20 for IERC20;
+
     function _toOffchainTask(Task storage task) internal view returns (OffChainTask memory offchainTask) {
         offchainTask.metadata = task.metadata;
         offchainTask.deadline = task.deadline;
@@ -90,7 +95,7 @@ abstract contract TasksUtils is TasksEnsure {
                 if (_reward[i].nextToken) {
                     if (needed > erc20Transfer.amount) {
                         // Existing budget in escrow doesnt cover the needed reward
-                        erc20Transfer.tokenContract.transferFrom(
+                        erc20Transfer.tokenContract.safeTransferFrom(
                             msg.sender, address(task.escrow), needed - erc20Transfer.amount
                         );
 

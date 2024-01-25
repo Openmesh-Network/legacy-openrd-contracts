@@ -1,18 +1,21 @@
-import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
-import "solidity-coverage";
-import "hardhat-gas-reporter";
-import "hardhat-deploy";
-import "hardhat-deploy-ethers";
-import "@typechain/hardhat";
-import "@nomicfoundation/hardhat-ethers";
-import "@primitivefi/hardhat-dodoc";
+import { HardhatUserConfig } from "hardhat/config"
 
-import { config as dotEnvConfig } from "dotenv";
-dotEnvConfig();
+import "@nomicfoundation/hardhat-toolbox"
+import "solidity-coverage"
+import "hardhat-gas-reporter"
+import "hardhat-deploy"
+import "hardhat-deploy-ethers"
+import "@typechain/hardhat"
+import "@nomicfoundation/hardhat-ethers"
+import "@primitivefi/hardhat-dodoc"
 
-const fakePrivKey = "0000000000000000000000000000000000000000000000000000000000000000";
-const useFrame = process.env.USE_FRAME === "y";
+import { config as dotEnvConfig } from "dotenv"
+
+dotEnvConfig()
+
+const fakePrivKey =
+  "0000000000000000000000000000000000000000000000000000000000000000"
+const useFrame = process.env.USE_FRAME === "y"
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -36,13 +39,32 @@ const config: HardhatUserConfig = {
           },
         },
       },
+      {
+        // USDT Mock
+        version: "0.4.18",
+        settings: {
+          optimizer: {
+            enabled: false,
+            runs: 0,
+          },
+        },
+      },
     ],
   },
   networks: {
     mumbai: {
       accounts: useFrame ? "remote" : [process.env.PRIV_KEY ?? fakePrivKey],
-      url: useFrame ? "http://127.0.0.1:1248" : process.env.RPC_MUMBAI ?? "https://rpc.ankr.com/polygon_mumbai",
-      deploy: ["00_Tasks", "02_Hats", "10_Plugins", "20_TokenCollections", "50_RFPs", "80_DAO"].map((d) => `deploy/${d}`), // Hats is not on Polygon Mumbai
+      url: useFrame
+        ? "http://127.0.0.1:1248"
+        : process.env.RPC_MUMBAI ?? "https://rpc.ankr.com/polygon_mumbai",
+      deploy: [
+        "00_Tasks",
+        "02_Hats",
+        "10_Plugins",
+        "20_TokenCollections",
+        "50_RFPs",
+        "80_DAO",
+      ].map((d) => `deploy/${d}`), // Hats is not on Polygon Mumbai
       verify: {
         etherscan: {
           apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",
@@ -51,8 +73,16 @@ const config: HardhatUserConfig = {
     },
     polygon: {
       accounts: useFrame ? "remote" : [process.env.PRIV_KEY ?? fakePrivKey],
-      url: useFrame ? "http://127.0.0.1:1248" : process.env.RPC_POLYGON ?? "https://rpc.ankr.com/polygon",
-      deploy: ["00_Tasks", "10_Plugins", "20_TokenCollections", "50_RFPs", "80_DAO"].map((d) => `deploy/${d}`),
+      url: useFrame
+        ? "http://127.0.0.1:1248"
+        : process.env.RPC_POLYGON ?? "https://rpc.ankr.com/polygon",
+      deploy: [
+        "00_Tasks",
+        "10_Plugins",
+        "20_TokenCollections",
+        "50_RFPs",
+        "80_DAO",
+      ].map((d) => `deploy/${d}`),
       verify: {
         etherscan: {
           apiKey: process.env.X_POLYGONSCAN_API_KEY ?? "",
@@ -104,8 +134,17 @@ const config: HardhatUserConfig = {
   dodoc: {
     runOnCompile: true,
     freshOutput: true,
-    include: ["TokenListGovernance", "TaskDrafts", "Tasks", "Escrow", "TaskDisputes", "SharedAddress", "SubDAO", "RFPs"],
+    include: [
+      "TokenListGovernance",
+      "TaskDrafts",
+      "Tasks",
+      "Escrow",
+      "TaskDisputes",
+      "SharedAddress",
+      "SubDAO",
+      "RFPs",
+    ],
   },
-};
+}
 
-export default config;
+export default config

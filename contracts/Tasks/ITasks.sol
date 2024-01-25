@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {Escrow} from "../Escrow.sol";
+import {Escrow, IERC20} from "../Escrow.sol";
 
 interface ITasks {
     error InvalidTimestamp();

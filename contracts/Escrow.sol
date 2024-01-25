@@ -2,8 +2,11 @@
 pragma solidity ^0.8.0;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract Escrow {
+    using SafeERC20 for IERC20;
+
     error AlreadyInitialized();
     error NotOwner();
 
@@ -32,7 +35,7 @@ contract Escrow {
             revert NotOwner();
         }
 
-        token.transfer(to, amount);
+        token.safeTransfer(to, amount);
     }
 
     /// @notice Transfers a certain amount of native currency to a given address. Can only be called by the owner.

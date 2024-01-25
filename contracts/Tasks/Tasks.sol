@@ -2,9 +2,11 @@
 pragma solidity ^0.8.0;
 
 import {ITasks, IERC20, Escrow} from "./ITasks.sol";
-import {TasksUtils} from "./TasksUtils.sol";
+import {TasksUtils, SafeERC20} from "./TasksUtils.sol";
 
 contract Tasks is TasksUtils {
+    using SafeERC20 for IERC20;
+
     /// @notice The incremental ID for tasks.
     uint256 private taskCounter;
 
@@ -77,7 +79,7 @@ contract Tasks is TasksUtils {
         }
         task.budgetCount = _toUint8(_budget.length);
         for (uint8 i; i < uint8(_budget.length);) {
-            _budget[i].tokenContract.transferFrom(msg.sender, address(escrow), _budget[i].amount);
+            _budget[i].tokenContract.safeTransferFrom(msg.sender, address(escrow), _budget[i].amount);
             // use balanceOf in case there is a fee asoosiated with the transfer
             task.budget[i] =
                 ERC20Transfer(_budget[i].tokenContract, _toUint96(_budget[i].tokenContract.balanceOf(address(escrow))));
@@ -354,7 +356,7 @@ contract Tasks is TasksUtils {
 
         for (uint8 i; i < uint8(_increase.length);) {
             ERC20Transfer storage transfer = task.budget[i];
-            transfer.tokenContract.transferFrom(msg.sender, address(task.escrow), _increase[i]);
+            transfer.tokenContract.safeTransferFrom(msg.sender, address(task.escrow), _increase[i]);
             // Use balanceOf as there could be a fee in transferFrom
 
             transfer.amount = _toUint96(transfer.tokenContract.balanceOf(address(task.escrow)));
