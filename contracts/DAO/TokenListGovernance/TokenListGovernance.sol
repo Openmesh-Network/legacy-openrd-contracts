@@ -21,8 +21,7 @@ contract TokenListGovernance is
     using SafeCastUpgradeable for uint256;
 
     /// @notice The ID of the permission required to call the `addMembers` and `removeMembers` functions.
-    bytes32 public constant UPDATE_MEMBERS_PERMISSION_ID =
-        keccak256("UPDATE_MEMBERS_PERMISSION");
+    bytes32 public constant UPDATE_MEMBERS_PERMISSION_ID = keccak256("UPDATE_MEMBERS_PERMISSION");
 
     /// @notice Initializes the component.
     /// @dev This method is required to support [ERC-1822](https://eips.ethereum.org/EIPS/eip-1822).
@@ -44,32 +43,39 @@ contract TokenListGovernance is
     /// @notice Checks if this or the parent contract supports an interface by its ID.
     /// @param _interfaceId The ID of the interface.
     /// @return Returns `true` if the interface is supported.
-    function supportsInterface(
-        bytes4 _interfaceId
-    ) public view virtual override returns (bool) {
-        return
-            _interfaceId == type(ITokenListGovernance).interfaceId ||
-            super.supportsInterface(_interfaceId);
+    function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
+        return _interfaceId == type(ITokenListGovernance).interfaceId || super.supportsInterface(_interfaceId);
     }
 
     /// @inheritdoc ITokenListGovernance
-    function addMembers(
-        uint256[] calldata _members
-    ) external auth(UPDATE_MEMBERS_PERMISSION_ID) {
+    function addMembers(uint256[] calldata _members) external auth(UPDATE_MEMBERS_PERMISSION_ID) {
         _addTokens(_members);
     }
 
     /// @inheritdoc ITokenListGovernance
-    function removeMembers(
-        uint256[] calldata _members
-    ) external auth(UPDATE_MEMBERS_PERMISSION_ID) {
+    function removeMembers(uint256[] calldata _members) external auth(UPDATE_MEMBERS_PERMISSION_ID) {
+        _removeTokens(_members);
+    }
+
+    /// @inheritdoc ITokenListGovernance
+    function removeBurned(uint256[] calldata _members) external {
+        for (uint256 i; i < _members.length;) {
+            try tokenCollection.ownerOf(_members[i]) returns (address owner) {
+                if (owner != address(0)) {
+                    revert TokenNotBurned(_members[i]);
+                }
+            } catch {}
+
+            unchecked {
+                ++i;
+            }
+        }
+
         _removeTokens(_members);
     }
 
     /// @inheritdoc TokenMajorityVotingBase
-    function totalVotingPower(
-        uint256 _blockNumber
-    ) public view override returns (uint256) {
+    function totalVotingPower(uint256 _blockNumber) public view override returns (uint256) {
         return tokenlistLengthAtBlock(_blockNumber);
     }
 
@@ -80,18 +86,8 @@ contract TokenListGovernance is
         uint256 _allowFailureMap,
         uint64 _startDate,
         uint64 _endDate
-    )
-        external
-        auth(PLUGIN_PROPOSAL_PERMISSION_ID)
-        returns (uint256 proposalId)
-    {
-        proposalId = _createProposalBase(
-            _metadata,
-            _actions,
-            _allowFailureMap,
-            _startDate,
-            _endDate
-        );
+    ) external auth(PLUGIN_PROPOSAL_PERMISSION_ID) returns (uint256 proposalId) {
+        proposalId = _createProposalBase(_metadata, _actions, _allowFailureMap, _startDate, _endDate);
     }
 
     /// @inheritdoc TokenMajorityVotingBase
@@ -113,13 +109,7 @@ contract TokenListGovernance is
             revert ProposalCreationForbidden(_tokenId);
         }
 
-        proposalId = _createProposalBase(
-            _metadata,
-            _actions,
-            _allowFailureMap,
-            _startDate,
-            _endDate
-        );
+        proposalId = _createProposalBase(_metadata, _actions, _allowFailureMap, _startDate, _endDate);
 
         if (_voteOption != VoteOption.None) {
             vote(proposalId, _voteOption, _tryEarlyExecution, _tokenId);
@@ -162,17 +152,14 @@ contract TokenListGovernance is
         proposal_.parameters.snapshotBlock = snapshotBlock;
         proposal_.parameters.votingMode = votingMode();
         proposal_.parameters.supportThreshold = supportThreshold();
-        proposal_.parameters.minVotingPower = _applyRatioCeiled(
-            totalVotingPower(snapshotBlock),
-            minParticipation()
-        );
+        proposal_.parameters.minVotingPower = _applyRatioCeiled(totalVotingPower(snapshotBlock), minParticipation());
 
         // Reduce costs
         if (_allowFailureMap != 0) {
             proposal_.allowFailureMap = _allowFailureMap;
         }
 
-        for (uint256 i; i < _actions.length; ) {
+        for (uint256 i; i < _actions.length;) {
             proposal_.actions.push(_actions[i]);
             unchecked {
                 ++i;
@@ -181,12 +168,10 @@ contract TokenListGovernance is
     }
 
     /// @inheritdoc TokenMajorityVotingBase
-    function _vote(
-        uint256 _proposalId,
-        VoteOption _voteOption,
-        uint256 _voter,
-        bool _tryEarlyExecution
-    ) internal override {
+    function _vote(uint256 _proposalId, VoteOption _voteOption, uint256 _voter, bool _tryEarlyExecution)
+        internal
+        override
+    {
         Proposal storage proposal_ = proposals[_proposalId];
 
         VoteOption state = proposal_.voters[_voter];
@@ -211,12 +196,7 @@ contract TokenListGovernance is
 
         proposal_.voters[_voter] = _voteOption;
 
-        emit VoteCast({
-            proposalId: _proposalId,
-            voter: _voter,
-            voteOption: _voteOption,
-            votingPower: 1
-        });
+        emit VoteCast({proposalId: _proposalId, voter: _voter, voteOption: _voteOption, votingPower: 1});
 
         if (_tryEarlyExecution && _canExecute(_proposalId)) {
             _execute(_proposalId);
@@ -224,11 +204,12 @@ contract TokenListGovernance is
     }
 
     /// @inheritdoc TokenMajorityVotingBase
-    function _canVote(
-        uint256 _proposalId,
-        uint256 _account,
-        VoteOption _voteOption
-    ) internal view override returns (bool) {
+    function _canVote(uint256 _proposalId, uint256 _account, VoteOption _voteOption)
+        internal
+        view
+        override
+        returns (bool)
+    {
         Proposal storage proposal_ = proposals[_proposalId];
 
         // The proposal vote hasn't started or has already ended.
@@ -248,8 +229,8 @@ contract TokenListGovernance is
 
         // The voter has already voted but vote replacement is not allowed.
         if (
-            proposal_.voters[_account] != VoteOption.None &&
-            proposal_.parameters.votingMode != VotingMode.VoteReplacement
+            proposal_.voters[_account] != VoteOption.None
+                && proposal_.parameters.votingMode != VotingMode.VoteReplacement
         ) {
             return false;
         }

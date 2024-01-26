@@ -75,7 +75,7 @@ Adds new members to the token list.
 
 | Name | Type | Description |
 |---|---|---|
-| _members | uint256[] | The Members of members to be added. |
+| _members | uint256[] | The tokens to be added. |
 
 ### canExecute
 
@@ -532,6 +532,22 @@ function proxiableUUID() external view returns (bytes32)
 |---|---|---|
 | _0 | bytes32 | undefined |
 
+### removeBurned
+
+```solidity
+function removeBurned(uint256[] _members) external nonpayable
+```
+
+Removes burned tokens from the token list.
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _members | uint256[] | The bruned token to be removed. |
+
 ### removeMembers
 
 ```solidity
@@ -546,7 +562,7 @@ Removes existing members from the token list.
 
 | Name | Type | Description |
 |---|---|---|
-| _members | uint256[] | The Members of the members to be removed. |
+| _members | uint256[] | The tokens to be removed. |
 
 ### supportThreshold
 
@@ -1080,6 +1096,22 @@ Thrown if a ratio value exceeds the maximal value of `10**6`.
 |---|---|---|
 | limit | uint256 | The maximal value. |
 | actual | uint256 | The actual value. |
+
+### TokenNotBurned
+
+```solidity
+error TokenNotBurned(uint256 id)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| id | uint256 | undefined |
 
 ### TokenNotOwnedBySender
 

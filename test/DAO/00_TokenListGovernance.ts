@@ -79,4 +79,15 @@ describe("Token List Governance", function () {
     const end = now() + 2 * days;
     await expect(dao.TokenListGovernance.createProposal(metadata, actions, 0, start, end, 0, false, 5)).to.not.be.reverted;
   });
+
+  it("reverts when trying to remove not burned NFT", async function () {
+    const dao = await loadFixture(getDAO);
+    await dao.NFT.mint(dao.deployer, 0);
+    await expect(dao.TokenListGovernance.removeBurned([0])).to.be.revertedWithCustomError(dao.TokenListGovernance, "TokenNotBurned");
+  });
+
+  it("allow when trying to remove burned NFT", async function () {
+    const dao = await loadFixture(getDAO);
+    await expect(dao.TokenListGovernance.removeBurned([0])).to.not.be.reverted;
+  });
 });

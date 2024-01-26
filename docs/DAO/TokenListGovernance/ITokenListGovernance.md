@@ -24,7 +24,23 @@ Adds new members to the token list.
 
 | Name | Type | Description |
 |---|---|---|
-| _members | uint256[] | The Members of members to be added. |
+| _members | uint256[] | The tokens to be added. |
+
+### removeBurned
+
+```solidity
+function removeBurned(uint256[] _members) external nonpayable
+```
+
+Removes burned tokens from the token list.
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _members | uint256[] | The bruned token to be removed. |
 
 ### removeMembers
 
@@ -40,8 +56,27 @@ Removes existing members from the token list.
 
 | Name | Type | Description |
 |---|---|---|
-| _members | uint256[] | The Members of the members to be removed. |
+| _members | uint256[] | The tokens to be removed. |
 
 
+
+
+## Errors
+
+### TokenNotBurned
+
+```solidity
+error TokenNotBurned(uint256 id)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| id | uint256 | undefined |
 
 
