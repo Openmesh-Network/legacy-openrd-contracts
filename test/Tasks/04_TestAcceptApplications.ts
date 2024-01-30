@@ -182,7 +182,7 @@ describe("Accept Applications", function () {
     await expect(tx).to.be.revertedWithCustomError(tasks, "NotManager");
   });
 
-  it("should increase if reward more than budget", async function () {
+  it("should revert if reward more than budget", async function () {
     const task = await loadFixture(createBudgetTaskFixture);
     const taskInfoBefore = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
     const increase = Wei(1);
@@ -200,33 +200,11 @@ describe("Accept Applications", function () {
       reward: reward,
       nativeReward: nativeReward,
     });
-    await acceptApplications({
-      tasks: task.TasksManager,
-      taskId: task.taskId,
-      applications: [BigInt(0)],
-      value: increase,
-    });
-    const taskInfo = await getTask({ tasks: task.TasksExecutor, taskId: task.taskId });
-    expect(taskInfo.budget[0].amount).to.be.equal(taskInfoBefore.budget[0].amount + increase);
-    expect(taskInfo.nativeBudget).to.be.equal(taskInfoBefore.nativeBudget + increase);
-    expect(await ERC20.balanceOf(task.manager)).to.be.be.equal(BigInt(0));
-  });
-
-  it("should revert with not enough native currency attached", async function () {
-    const task = await loadFixture(createBudgetTaskFixture);
-    const increase = Wei(1);
-    const nativeReward = [{ to: task.executor, amount: task.nativeBudget + increase }];
-    await applyForTask({
-      tasks: task.TasksExecutor,
-      taskId: task.taskId,
-      nativeReward: nativeReward,
-    });
     const tx = acceptApplications({
       tasks: task.TasksManager,
       taskId: task.taskId,
       applications: [BigInt(0)],
-      value: increase - Wei(1),
     });
-    await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "IncorrectAmountOfNativeCurrencyAttached");
+    await expect(tx).to.be.revertedWithCustomError(task.TasksManager, "RewardAboveBudget");
   });
 });

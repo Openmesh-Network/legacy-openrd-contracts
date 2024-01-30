@@ -40,7 +40,7 @@ contract Tasks is TasksUtils {
     }
 
     /// @inheritdoc ITasks
-    function getTasks(uint256[] memory _taskIds) public view returns (OffChainTask[] memory) {
+    function getTasks(uint256[] memory _taskIds) external view returns (OffChainTask[] memory) {
         OffChainTask[] memory offchainTasks = new OffChainTask[](_taskIds.length);
         for (uint256 i; i < _taskIds.length;) {
             offchainTasks[i] = getTask(_taskIds[i]);
@@ -61,30 +61,37 @@ contract Tasks is TasksUtils {
         PreapprovedApplication[] calldata _preapprove,
         address _disputeManager
     ) external payable returns (uint256 taskId) {
-        _ensureValidTimestamp(_deadline);
-        _ensureValidAddress(_manager);
-
         _ensureNotDisabled();
         taskId = taskCounter++;
 
         Task storage task = tasks[taskId];
         task.metadata = _metadata;
         task.deadline = _deadline;
-        Escrow escrow = Escrow(payable(clone(escrowImplementation)));
-        escrow.__Escrow_init{value: msg.value}();
-        task.escrow = escrow;
-        // Gas optimization
-        if (msg.value != 0) {
-            task.nativeBudget = _toUint96(msg.value);
-        }
-        task.budgetCount = _toUint8(_budget.length);
-        for (uint8 i; i < uint8(_budget.length);) {
-            _budget[i].tokenContract.safeTransferFrom(msg.sender, address(escrow), _budget[i].amount);
-            // use balanceOf in case there is a fee asoosiated with the transfer
-            task.budget[i] =
-                ERC20Transfer(_budget[i].tokenContract, _toUint96(_budget[i].tokenContract.balanceOf(address(escrow))));
-            unchecked {
-                ++i;
+        {
+            Escrow escrow = Escrow(payable(clone(escrowImplementation)));
+            escrow.__Escrow_init{value: msg.value}();
+            task.escrow = escrow;
+
+            // Gas optimization
+            if (msg.value != 0) {
+                task.nativeBudget = _toUint96(msg.value);
+            }
+            // Gas optimization
+            if (_budget.length != 0) {
+                task.budgetCount = _toUint8(_budget.length);
+                for (uint8 i; i < uint8(_budget.length);) {
+                    // Please mind that this external user specified "token contract" could be used for reentrancies. As all funds are held in seperate escrows (this contract has none), this should not be an issue.
+                    // Possible "attack": create an application, accept it and take the task inside the safeTransferFrom call, the preapproved application can be used to overwrite the reward (although limited by the budget).
+                    // This all happens in a single transaction, which means realistically the proposer could achieve the same result anyhow.
+                    _budget[i].tokenContract.safeTransferFrom(msg.sender, address(escrow), _budget[i].amount);
+                    // use balanceOf in case there is a fee assosiated with the transfer
+                    task.budget[i] = ERC20Transfer(
+                        _budget[i].tokenContract, _toUint96(_budget[i].tokenContract.balanceOf(address(escrow)))
+                    );
+                    unchecked {
+                        ++i;
+                    }
+                }
             }
         }
 
@@ -102,9 +109,9 @@ contract Tasks is TasksUtils {
         );
 
         // Gas optimization
-        if (_preapprove.length > 0) {
-            task.applicationCount = _toUint16(_preapprove.length);
-            for (uint16 i; i < uint16(_preapprove.length);) {
+        if (_preapprove.length != 0) {
+            task.applicationCount = _toUint32(_preapprove.length);
+            for (uint32 i; i < uint32(_preapprove.length);) {
                 Application storage application = task.applications[i];
                 application.applicant = _preapprove[i].applicant;
                 application.accepted = true;
@@ -128,7 +135,7 @@ contract Tasks is TasksUtils {
         string calldata _metadata,
         Reward[] calldata _reward,
         NativeReward[] calldata _nativeReward
-    ) external returns (uint16 applicationId) {
+    ) external returns (uint32 applicationId) {
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsOpen(task);
@@ -166,7 +173,7 @@ contract Tasks is TasksUtils {
     }
 
     /// @inheritdoc ITasks
-    function acceptApplications(uint256 _taskId, uint16[] calldata _applicationIds) external payable {
+    function acceptApplications(uint256 _taskId, uint32[] calldata _applicationIds) external {
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsOpen(task);
@@ -176,17 +183,15 @@ contract Tasks is TasksUtils {
             _ensureApplicationExists(task, _applicationIds[i]);
 
             Application storage application = task.applications[_applicationIds[i]];
-            application.accepted = true;
-            bool budgetIncreased = _increaseBudgetToReward(
+            _ensureRewardBellowBudget(
                 task,
                 application.rewardCount,
-                application.reward,
                 application.nativeRewardCount,
+                application.reward,
                 application.nativeReward
             );
-            if (budgetIncreased) {
-                emit BudgetChanged(_taskId);
-            }
+            application.accepted = true;
+
             emit ApplicationAccepted(_taskId, _applicationIds[i]);
 
             unchecked {
@@ -196,7 +201,7 @@ contract Tasks is TasksUtils {
     }
 
     /// @inheritdoc ITasks
-    function takeTask(uint256 _taskId, uint16 _applicationId) external {
+    function takeTask(uint256 _taskId, uint32 _applicationId) external {
         _ensureNotDisabled();
         Task storage task = _getTask(_taskId);
         _ensureTaskIsOpen(task);
@@ -273,7 +278,7 @@ contract Tasks is TasksUtils {
             // Task is taken and deadline has not past
             CancelTaskRequest storage request = task.cancelTaskRequests[task.cancelTaskRequestCount];
             request.explanation = _explanation;
-            cancelTaskRequestId = task.cancelTaskRequestCount++;
+            cancelTaskRequestId = task.cancelTaskRequestCount++; // Will overflow if it would be max (guarantees max means no request)
 
             emit CancelTaskRequested(_taskId, cancelTaskRequestId, _explanation);
         }
@@ -292,16 +297,17 @@ contract Tasks is TasksUtils {
 
             CancelTaskRequest storage cancelTaskRequest = task.cancelTaskRequests[_requestId];
             _ensureRequestNotAccepted(cancelTaskRequest.request);
+            cancelTaskRequest.request.accepted = true;
 
             if (_execute) {
                 // use executeRequest in the body instead? (more gas due to all the checks, but less code duplication)
                 _refundCreator(task);
+
                 emit TaskCancelled(_taskId);
-
                 cancelTaskRequest.request.executed = true;
-            }
 
-            cancelTaskRequest.request.accepted = true;
+                emit RequestExecuted(_taskId, _requestType, _requestId, msg.sender);
+            }
         }
 
         emit RequestAccepted(_taskId, _requestType, _requestId);
@@ -338,9 +344,6 @@ contract Tasks is TasksUtils {
 
         _ensureTaskNotClosed(task);
 
-        if (_extension == 0) {
-            revert PointlessOperation();
-        }
         task.deadline += _extension;
 
         emit DeadlineChanged(_taskId, task.deadline);
@@ -354,22 +357,8 @@ contract Tasks is TasksUtils {
 
         _ensureTaskIsOpen(task);
 
-        for (uint8 i; i < uint8(_increase.length);) {
-            ERC20Transfer storage transfer = task.budget[i];
-            transfer.tokenContract.safeTransferFrom(msg.sender, address(task.escrow), _increase[i]);
-            // Use balanceOf as there could be a fee in transferFrom
-
-            transfer.amount = _toUint96(transfer.tokenContract.balanceOf(address(task.escrow)));
-
-            unchecked {
-                ++i;
-            }
-        }
-
-        // Gas optimization
-        if (msg.value != 0) {
-            task.nativeBudget = _toUint96(task.nativeBudget + msg.value);
-        }
+        _increaseBudget(task, _increase);
+        _increaseNativeBudget(task);
 
         emit BudgetChanged(_taskId);
     }
@@ -382,10 +371,8 @@ contract Tasks is TasksUtils {
 
         _ensureTaskIsOpen(task);
 
-        if (equal(task.metadata, _newMetadata)) {
-            revert PointlessOperation();
-        }
         task.metadata = _newMetadata;
+
         emit MetadataChanged(_taskId, _newMetadata);
     }
 
@@ -419,6 +406,7 @@ contract Tasks is TasksUtils {
         _ensureTaskIsTaken(task);
 
         _payoutTaskPartially(task, _partialReward, _partialNativeReward);
+
         emit BudgetChanged(_taskId);
         emit PartialPayment(_taskId, _partialReward, _partialNativeReward);
     }
@@ -432,6 +420,7 @@ contract Tasks is TasksUtils {
         _ensureTaskNotClosed(task);
 
         task.manager = _newManager;
+
         emit NewManager(_taskId, _newManager);
     }
 
@@ -440,8 +429,8 @@ contract Tasks is TasksUtils {
         disabler = address(0);
     }
 
-    // Ideally you are able to transfer it to the new contract, but that requires addition to the escrow contract
-    // I prefer this, so the escrow contract keeps being basic (both for security and clone costs)
+    // Ideally you are able to transfer the task to a new contract, but that requires adding this to the escrow contract.
+    // I prefer this, to keep the escrow contract as simple as possible.
     function refund(uint256 _taskId) external {
         _ensureDisabled();
         Task storage task = _getTask(_taskId);

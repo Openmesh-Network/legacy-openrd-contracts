@@ -57,7 +57,7 @@ export async function createTaskTransaction(settings: CreateTaskSettings): Promi
     };
   });
   const disputeManager = settings.disputeManager ?? (await deployments.get("dispute_dao")).address;
-  return settings.tasks.createTask(metadataHash, deadline, budget, manager, preapproved, disputeManager, { value: nativeBudget },);
+  return settings.tasks.createTask(metadataHash, deadline, budget, manager, preapproved, disputeManager, { value: nativeBudget });
 }
 
 export interface CreateTaskResult {
@@ -145,12 +145,9 @@ export interface AcceptApplicationsSettings {
   tasks: Tasks;
   taskId: bigint;
   applications: bigint[];
-  value?: bigint;
 }
 export async function acceptApplications(settings: AcceptApplicationsSettings) {
-  return settings.tasks.acceptApplications(settings.taskId, settings.applications, {
-    value: settings.value,
-  });
+  return settings.tasks.acceptApplications(settings.taskId, settings.applications);
 }
 
 export interface TakeTaskSettings {

@@ -4,10 +4,6 @@ pragma solidity ^0.8.0;
 import {Escrow, IERC20} from "../Escrow.sol";
 
 interface ITasks {
-    error InvalidTimestamp();
-    error InvalidAddress();
-    error PointlessOperation();
-
     error TaskDoesNotExist();
     error TaskNotOpen();
     error TaskNotTaken();
@@ -20,7 +16,7 @@ interface ITasks {
 
     error RewardAboveBudget();
     error RewardDoesntEndWithNextToken();
-    error IncorrectAmountOfNativeCurrencyAttached();
+    error NotEnoughNativeCurrencyAttached();
     error ApplicationDoesNotExist();
     error NotYourApplication();
     error ApplicationNotAccepted();
@@ -39,6 +35,7 @@ interface ITasks {
     error NativeTransferFailed();
     error ERC1167FailedCreateClone();
 
+    // The budget here repesents the call of the funder to the escrow, the actual value in the escrow (actual budget) might differ in case of transfer fees / rewards.
     event TaskCreated(
         uint256 indexed taskId,
         string metadata,
@@ -50,20 +47,24 @@ interface ITasks {
         address disputeManager
     );
     event ApplicationCreated(
-        uint256 indexed taskId, uint16 applicationId, string metadata, Reward[] reward, NativeReward[] nativeReward
+        uint256 indexed taskId,
+        uint32 indexed applicationId,
+        string metadata,
+        Reward[] reward,
+        NativeReward[] nativeReward
     );
-    event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId);
-    event TaskTaken(uint256 indexed taskId, uint16 applicationId);
-    event SubmissionCreated(uint256 indexed taskId, uint8 submissionId, string metadata);
+    event ApplicationAccepted(uint256 indexed taskId, uint32 indexed applicationId);
+    event TaskTaken(uint256 indexed taskId, uint32 indexed applicationId);
+    event SubmissionCreated(uint256 indexed taskId, uint8 indexed submissionId, string metadata);
     event SubmissionReviewed(
-        uint256 indexed taskId, uint8 submissionId, SubmissionJudgement judgement, string feedback
+        uint256 indexed taskId, uint8 indexed submissionId, SubmissionJudgement judgement, string feedback
     );
     event TaskCompleted(uint256 indexed taskId, TaskCompletion source);
 
-    event CancelTaskRequested(uint256 indexed taskId, uint8 requestId, string explanation);
+    event CancelTaskRequested(uint256 indexed taskId, uint8 indexed requestId, string explanation);
     event TaskCancelled(uint256 indexed taskId);
-    event RequestAccepted(uint256 indexed taskId, RequestType requestType, uint8 requestId);
-    event RequestExecuted(uint256 indexed taskId, RequestType requestType, uint8 requestId, address by);
+    event RequestAccepted(uint256 indexed taskId, RequestType indexed requestType, uint8 indexed requestId);
+    event RequestExecuted(uint256 indexed taskId, RequestType indexed requestType, uint8 indexed requestId, address by);
 
     event DeadlineChanged(uint256 indexed taskId, uint64 newDeadline);
     event BudgetChanged(uint256 indexed taskId); // Quite expensive to transfer budget into a datastructure to emit
@@ -73,7 +74,7 @@ interface ITasks {
 
     /// @notice A container for ERC20 transfer information.
     /// @param tokenContract ERC20 token to transfer.
-    /// @param amount How much of this token should be transfered.
+    /// @param amount How much of this token should be transfered. uint96 to keep struct packed into a single uint256.
     struct ERC20Transfer {
         IERC20 tokenContract;
         uint96 amount;
@@ -84,7 +85,7 @@ interface ITasks {
     /// @dev IERC20 (address) is a lot of storage, rather just keep those only in budget.
     /// @notice nextToken should always be true for the last entry
     /// @param to Whom this token should be transfered to.
-    /// @param amount How much of this token should be transfered.
+    /// @param amount How much of this token should be transfered. uint88 to keep struct packed into a single uint256.
     struct Reward {
         bool nextToken;
         address to;
@@ -93,7 +94,7 @@ interface ITasks {
 
     /// @notice A container for a native reward payout.
     /// @param to Whom the native reward should be transfered to.
-    /// @param amount How much native reward should be transfered.
+    /// @param amount How much native reward should be transfered. uint96 to keep struct packed into a single uint256.
     struct NativeReward {
         address to;
         uint96 amount;
@@ -107,10 +108,12 @@ interface ITasks {
     /// @param nativeReward How much native currency the applicant wants for completion.
     struct Application {
         string metadata;
+        // Storage block seperator
         address applicant;
         bool accepted;
         uint8 rewardCount;
         uint8 nativeRewardCount;
+        // Storage block seperator
         mapping(uint8 => Reward) reward;
         mapping(uint8 => NativeReward) nativeReward;
     }
@@ -123,7 +126,7 @@ interface ITasks {
         NativeReward[] nativeReward;
     }
 
-    /// @notice For approving people on task creation (they are not required to make an application)
+    /// @notice For approving people on task creation (they are not required to make an application).
     struct PreapprovedApplication {
         address applicant;
         Reward[] reward;
@@ -146,6 +149,7 @@ interface ITasks {
         SubmissionJudgement judgement;
     }
 
+    // This is for future expansion of the request system
     enum RequestType {CancelTask}
 
     /// @notice A container for shared request information.
@@ -196,14 +200,14 @@ interface ITasks {
         // Storage block seperator
         address manager;
         TaskState state;
-        uint16 executorApplication;
+        uint32 executorApplication;
         uint8 budgetCount;
-        uint16 applicationCount;
+        uint32 applicationCount;
         uint8 submissionCount;
         uint8 cancelTaskRequestCount;
         // Storage block seperator
         mapping(uint8 => ERC20Transfer) budget;
-        mapping(uint16 => Application) applications;
+        mapping(uint32 => Application) applications;
         mapping(uint8 => Submission) submissions;
         mapping(uint8 => CancelTaskRequest) cancelTaskRequests;
     }
@@ -211,7 +215,7 @@ interface ITasks {
     struct OffChainTask {
         string metadata;
         uint64 deadline;
-        uint16 executorApplication;
+        uint32 executorApplication;
         address creator;
         address manager;
         address disputeManager;
@@ -236,17 +240,17 @@ interface ITasks {
     /// @param _taskId Id of the task.
     function getTask(uint256 _taskId) external view returns (OffChainTask memory);
 
-    /// @notice Retrieves multiple tasks.
+    /// @notice Retrieves multiple tasks in a single call.
     /// @param _taskIds Ids of the tasks.
     function getTasks(uint256[] calldata _taskIds) external view returns (OffChainTask[] memory);
 
     /// @notice Create a new task.
     /// @param _metadata Metadata of the task. (IPFS hash)
     /// @param _deadline Block timestamp at which the task expires if not completed.
-    /// @param _budget Maximum ERC20 rewards that can be earned by completing the task.
     /// @param _manager Who will manage the task (become the manager).
-    /// @param _preapprove List of addresses (with reward) that are able to take the task without creating an application themselves.
     /// @param _disputeManager Who will manage the disputes (handle situations where the manager and executor are in disagreement).
+    /// @param _budget Maximum ERC20 rewards that can be earned by completing the task.
+    /// @param _preapprove List of addresses (with reward) that are able to take the task without creating an application themselves.
     /// @return taskId Id of the newly created task.
     function createTask(
         string calldata _metadata,
@@ -268,17 +272,18 @@ interface ITasks {
         string calldata _metadata,
         Reward[] calldata _reward,
         NativeReward[] calldata _nativeReward
-    ) external returns (uint16 applicationId);
+    ) external returns (uint32 applicationId);
 
     /// @notice Accept application to allow them to take the task.
     /// @param _taskId Id of the task.
     /// @param _applicationIds Indexes of the applications to accept.
-    function acceptApplications(uint256 _taskId, uint16[] calldata _applicationIds) external payable;
+    /// @dev Will revert if applicant reward is higher than the budget. increaseBudget should be called beforehand.
+    function acceptApplications(uint256 _taskId, uint32[] calldata _applicationIds) external;
 
     /// @notice Take the task after your application has been accepted.
     /// @param _taskId Id of the task.
     /// @param _applicationId Index of application you made that has been accepted.
-    function takeTask(uint256 _taskId, uint16 _applicationId) external;
+    function takeTask(uint256 _taskId, uint32 _applicationId) external;
 
     /// @notice Create a submission.
     /// @param _taskId Id of the task.
@@ -348,7 +353,7 @@ interface ITasks {
     /// @param _taskId Id of the task.
     /// @param _partialReward How much of each ERC20 reward should be paid out.
     /// @param _partialNativeReward How much of each native reward should be paid out.
-    /// @dev Will fetch balanceOf to set the budget afterwards, can be used in case funds where sent manually to increase the budget.
+    /// @dev Will fetch balanceOf to set the budget afterwards, can be used in case funds where sent manually to the escrow to sync the budget.
     function partialPayment(uint256 _taskId, uint88[] calldata _partialReward, uint96[] calldata _partialNativeReward)
         external;
 

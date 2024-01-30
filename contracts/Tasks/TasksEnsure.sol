@@ -26,20 +26,20 @@ abstract contract TasksEnsure is ITasks {
     }
 
     function _ensureSenderIsManager(Task storage task) internal view {
-        if (task.manager != msg.sender) {
+        if (msg.sender != task.manager) {
             revert NotManager();
         }
     }
 
     function _ensureSenderIsDisputeManager(Task storage task) internal view {
-        if (task.disputeManager != msg.sender) {
+        if (msg.sender != task.disputeManager) {
             revert NotDisputeManager();
         }
     }
 
-    ///@dev Should only be called is the task is not open!
+    /// @dev Should only be called if the task is not open!
     function _ensureSenderIsExecutor(Task storage task) internal view {
-        if (task.applications[task.executorApplication].applicant != msg.sender) {
+        if (msg.sender != task.applications[task.executorApplication].applicant) {
             revert NotExecutor();
         }
     }
@@ -52,14 +52,14 @@ abstract contract TasksEnsure is ITasks {
         }
     }
 
-    function _ensureApplicationExists(Task storage task, uint16 _applicationId) internal view {
+    function _ensureApplicationExists(Task storage task, uint32 _applicationId) internal view {
         if (_applicationId >= task.applicationCount) {
             revert ApplicationDoesNotExist();
         }
     }
 
     function _ensureSenderIsApplicant(Application storage application) internal view {
-        if (application.applicant != msg.sender) {
+        if (msg.sender != application.applicant) {
             revert NotYourApplication();
         }
     }
@@ -112,18 +112,6 @@ abstract contract TasksEnsure is ITasks {
         }
     }
 
-    function _ensureValidTimestamp(uint64 timestamp) internal pure {
-        if (timestamp == 0) {
-            revert InvalidTimestamp();
-        }
-    }
-
-    function _ensureValidAddress(address addr) internal pure {
-        if (addr == address(0)) {
-            revert InvalidAddress();
-        }
-    }
-
     function _toUint8(uint256 value) internal pure returns (uint8) {
         if (value > type(uint8).max) {
             revert Overflow();
@@ -131,11 +119,11 @@ abstract contract TasksEnsure is ITasks {
         return uint8(value);
     }
 
-    function _toUint16(uint256 value) internal pure returns (uint16) {
-        if (value > type(uint16).max) {
+    function _toUint32(uint256 value) internal pure returns (uint32) {
+        if (value > type(uint32).max) {
             revert Overflow();
         }
-        return uint16(value);
+        return uint32(value);
     }
 
     function _toUint96(uint256 value) internal pure returns (uint96) {

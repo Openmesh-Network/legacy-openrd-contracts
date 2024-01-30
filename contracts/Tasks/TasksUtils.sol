@@ -75,13 +75,13 @@ abstract contract TasksUtils is TasksEnsure {
         }
     }
 
-    function _increaseBudgetToReward(
+    function _ensureRewardBellowBudget(
         Task storage task,
         uint8 _length,
-        mapping(uint8 => Reward) storage _reward,
         uint8 _nativeLength,
+        mapping(uint8 => Reward) storage _reward,
         mapping(uint8 => NativeReward) storage _nativeReward
-    ) internal returns (bool increasedBudget) {
+    ) internal view {
         // Gas optimzation
         if (_length != 0) {
             uint8 j;
@@ -94,19 +94,7 @@ abstract contract TasksUtils is TasksEnsure {
 
                 if (_reward[i].nextToken) {
                     if (needed > erc20Transfer.amount) {
-                        // Existing budget in escrow doesnt cover the needed reward
-                        erc20Transfer.tokenContract.safeTransferFrom(
-                            msg.sender, address(task.escrow), needed - erc20Transfer.amount
-                        );
-
-                        uint256 got = erc20Transfer.tokenContract.balanceOf(address(task.escrow));
-                        if (got < needed) {
-                            // Apparently there is a tax / fee on the token transfer
-                            revert ManualBudgetIncreaseNeeded();
-                        }
-
-                        task.budget[j].amount = _toUint96(got);
-                        increasedBudget = true;
+                        revert RewardAboveBudget();
                     }
 
                     needed = 0;
@@ -121,33 +109,26 @@ abstract contract TasksUtils is TasksEnsure {
             }
         }
 
+        // Gas optimzation
         if (_nativeLength != 0) {
-            uint256 nativeNeeded;
+            uint256 needed;
             for (uint8 i; i < _nativeLength;) {
-                nativeNeeded += _nativeReward[i].amount;
+                unchecked {
+                    needed += _nativeReward[i].amount;
+                }
+
                 unchecked {
                     ++i;
                 }
             }
 
-            if (nativeNeeded > task.nativeBudget) {
-                unchecked {
-                    if (msg.value != nativeNeeded - task.nativeBudget) {
-                        revert IncorrectAmountOfNativeCurrencyAttached();
-                    }
-                }
-
-                (bool success,) = address(task.escrow).call{value: msg.value}("");
-                if (!success) {
-                    revert NativeTransferFailed();
-                }
-
-                task.nativeBudget = _toUint96(nativeNeeded);
-                increasedBudget = true;
+            if (needed > task.nativeBudget) {
+                revert RewardAboveBudget();
             }
         }
     }
 
+    // In addition to _ensureRewardBellowBudget also sets the storage (and works with calldata arrays)
     function _setRewardBellowBudget(
         Task storage task,
         Application storage application,
@@ -160,19 +141,20 @@ abstract contract TasksUtils is TasksEnsure {
 
             uint8 j;
             ERC20Transfer memory erc20Transfer = task.budget[0];
-            uint256 alreadyReserved;
+            uint256 needed;
             for (uint8 i; i < uint8(_reward.length);) {
                 unchecked {
-                    alreadyReserved += _reward[i].amount;
+                    needed += _reward[i].amount;
                 }
 
                 application.reward[i] = _reward[i];
 
                 if (_reward[i].nextToken) {
-                    if (alreadyReserved > erc20Transfer.amount) {
+                    if (needed > erc20Transfer.amount) {
                         revert RewardAboveBudget();
                     }
-                    alreadyReserved = 0;
+
+                    needed = 0;
                     unchecked {
                         erc20Transfer = task.budget[++j];
                     }
@@ -187,22 +169,51 @@ abstract contract TasksUtils is TasksEnsure {
         // Gas optimzation
         if (_nativeReward.length != 0) {
             application.nativeRewardCount = _toUint8(_nativeReward.length);
-            uint256 nativeReserved;
+
+            uint256 needed;
             for (uint8 i; i < uint8(_nativeReward.length);) {
                 unchecked {
-                    nativeReserved += _nativeReward[i].amount;
+                    needed += _nativeReward[i].amount;
                 }
 
                 application.nativeReward[i] = _nativeReward[i];
-
                 unchecked {
                     ++i;
                 }
             }
 
-            if (nativeReserved > task.nativeBudget) {
+            if (needed > task.nativeBudget) {
                 revert RewardAboveBudget();
             }
+        }
+    }
+
+    function _increaseBudget(Task storage task, uint96[] calldata _increase) internal {
+        for (uint8 i; i < uint8(_increase.length);) {
+            // Gas optimzation
+            if (_increase[i] != 0) {
+                ERC20Transfer storage transfer = task.budget[i];
+                transfer.tokenContract.safeTransferFrom(msg.sender, address(task.escrow), _increase[i]);
+                // Use balanceOf as there could be a fee in transferFrom
+
+                transfer.amount = _toUint96(transfer.tokenContract.balanceOf(address(task.escrow)));
+            }
+
+            unchecked {
+                ++i;
+            }
+        }
+    }
+
+    function _increaseNativeBudget(Task storage task) internal {
+        // Gas optimzation
+        if (msg.value != 0) {
+            (bool success,) = address(task.escrow).call{value: msg.value}("");
+            if (!success) {
+                revert NativeTransferFailed();
+            }
+
+            task.nativeBudget = _toUint96(task.nativeBudget + msg.value);
         }
     }
 
@@ -370,10 +381,5 @@ abstract contract TasksUtils is TasksEnsure {
         if (instance == address(0)) {
             revert ERC1167FailedCreateClone();
         }
-    }
-
-    // From: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Strings.sol
-    function equal(string memory a, string memory b) internal pure returns (bool) {
-        return keccak256(bytes(a)) == keccak256(bytes(b));
     }
 }

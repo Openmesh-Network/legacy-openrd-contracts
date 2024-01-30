@@ -13,19 +13,19 @@
 ### acceptApplications
 
 ```solidity
-function acceptApplications(uint256 _taskId, uint16[] _applicationIds) external payable
+function acceptApplications(uint256 _taskId, uint32[] _applicationIds) external nonpayable
 ```
 
 Accept application to allow them to take the task.
 
-
+*Will revert if applicant reward is higher than the budget. increaseBudget should be called beforehand.*
 
 #### Parameters
 
 | Name | Type | Description |
 |---|---|---|
 | _taskId | uint256 | Id of the task. |
-| _applicationIds | uint16[] | Indexes of the applications to accept. |
+| _applicationIds | uint32[] | Indexes of the applications to accept. |
 
 ### acceptRequest
 
@@ -49,7 +49,7 @@ Accepts a request, executing the proposed action.
 ### applyForTask
 
 ```solidity
-function applyForTask(uint256 _taskId, string _metadata, ITasks.Reward[] _reward, ITasks.NativeReward[] _nativeReward) external nonpayable returns (uint16 applicationId)
+function applyForTask(uint256 _taskId, string _metadata, ITasks.Reward[] _reward, ITasks.NativeReward[] _nativeReward) external nonpayable returns (uint32 applicationId)
 ```
 
 
@@ -69,7 +69,7 @@ function applyForTask(uint256 _taskId, string _metadata, ITasks.Reward[] _reward
 
 | Name | Type | Description |
 |---|---|---|
-| applicationId | uint16 | undefined |
+| applicationId | uint32 | undefined |
 
 ### cancelTask
 
@@ -270,7 +270,7 @@ Retrieves all task information by id.
 function getTasks(uint256[] _taskIds) external view returns (struct ITasks.OffChainTask[])
 ```
 
-Retrieves multiple tasks.
+Retrieves multiple tasks in a single call.
 
 
 
@@ -311,7 +311,7 @@ function partialPayment(uint256 _taskId, uint88[] _partialReward, uint96[] _part
 
 Releases a part of the reward to the executor without marking the task as complete.
 
-*Will fetch balanceOf to set the budget afterwards, can be used in case funds where sent manually to increase the budget.*
+*Will fetch balanceOf to set the budget afterwards, can be used in case funds where sent manually to the escrow to sync the budget.*
 
 #### Parameters
 
@@ -359,7 +359,7 @@ Review a submission.
 ### takeTask
 
 ```solidity
-function takeTask(uint256 _taskId, uint16 _applicationId) external nonpayable
+function takeTask(uint256 _taskId, uint32 _applicationId) external nonpayable
 ```
 
 Take the task after your application has been accepted.
@@ -371,7 +371,7 @@ Take the task after your application has been accepted.
 | Name | Type | Description |
 |---|---|---|
 | _taskId | uint256 | Id of the task. |
-| _applicationId | uint16 | Index of application you made that has been accepted. |
+| _applicationId | uint32 | Index of application you made that has been accepted. |
 
 ### taskCount
 
@@ -414,7 +414,7 @@ Transfers the manager role to a different address.
 ### ApplicationAccepted
 
 ```solidity
-event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId)
+event ApplicationAccepted(uint256 indexed taskId, uint32 indexed applicationId)
 ```
 
 
@@ -426,12 +426,12 @@ event ApplicationAccepted(uint256 indexed taskId, uint16 applicationId)
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| applicationId  | uint16 | undefined |
+| applicationId `indexed` | uint32 | undefined |
 
 ### ApplicationCreated
 
 ```solidity
-event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string metadata, ITasks.Reward[] reward, ITasks.NativeReward[] nativeReward)
+event ApplicationCreated(uint256 indexed taskId, uint32 indexed applicationId, string metadata, ITasks.Reward[] reward, ITasks.NativeReward[] nativeReward)
 ```
 
 
@@ -443,7 +443,7 @@ event ApplicationCreated(uint256 indexed taskId, uint16 applicationId, string me
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| applicationId  | uint16 | undefined |
+| applicationId `indexed` | uint32 | undefined |
 | metadata  | string | undefined |
 | reward  | ITasks.Reward[] | undefined |
 | nativeReward  | ITasks.NativeReward[] | undefined |
@@ -467,7 +467,7 @@ event BudgetChanged(uint256 indexed taskId)
 ### CancelTaskRequested
 
 ```solidity
-event CancelTaskRequested(uint256 indexed taskId, uint8 requestId, string explanation)
+event CancelTaskRequested(uint256 indexed taskId, uint8 indexed requestId, string explanation)
 ```
 
 
@@ -479,7 +479,7 @@ event CancelTaskRequested(uint256 indexed taskId, uint8 requestId, string explan
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| requestId  | uint8 | undefined |
+| requestId `indexed` | uint8 | undefined |
 | explanation  | string | undefined |
 
 ### DeadlineChanged
@@ -554,7 +554,7 @@ event PartialPayment(uint256 indexed taskId, uint88[] partialReward, uint96[] pa
 ### RequestAccepted
 
 ```solidity
-event RequestAccepted(uint256 indexed taskId, enum ITasks.RequestType requestType, uint8 requestId)
+event RequestAccepted(uint256 indexed taskId, enum ITasks.RequestType indexed requestType, uint8 indexed requestId)
 ```
 
 
@@ -566,13 +566,13 @@ event RequestAccepted(uint256 indexed taskId, enum ITasks.RequestType requestTyp
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| requestType  | enum ITasks.RequestType | undefined |
-| requestId  | uint8 | undefined |
+| requestType `indexed` | enum ITasks.RequestType | undefined |
+| requestId `indexed` | uint8 | undefined |
 
 ### RequestExecuted
 
 ```solidity
-event RequestExecuted(uint256 indexed taskId, enum ITasks.RequestType requestType, uint8 requestId, address by)
+event RequestExecuted(uint256 indexed taskId, enum ITasks.RequestType indexed requestType, uint8 indexed requestId, address by)
 ```
 
 
@@ -584,14 +584,14 @@ event RequestExecuted(uint256 indexed taskId, enum ITasks.RequestType requestTyp
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| requestType  | enum ITasks.RequestType | undefined |
-| requestId  | uint8 | undefined |
+| requestType `indexed` | enum ITasks.RequestType | undefined |
+| requestId `indexed` | uint8 | undefined |
 | by  | address | undefined |
 
 ### SubmissionCreated
 
 ```solidity
-event SubmissionCreated(uint256 indexed taskId, uint8 submissionId, string metadata)
+event SubmissionCreated(uint256 indexed taskId, uint8 indexed submissionId, string metadata)
 ```
 
 
@@ -603,13 +603,13 @@ event SubmissionCreated(uint256 indexed taskId, uint8 submissionId, string metad
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| submissionId  | uint8 | undefined |
+| submissionId `indexed` | uint8 | undefined |
 | metadata  | string | undefined |
 
 ### SubmissionReviewed
 
 ```solidity
-event SubmissionReviewed(uint256 indexed taskId, uint8 submissionId, enum ITasks.SubmissionJudgement judgement, string feedback)
+event SubmissionReviewed(uint256 indexed taskId, uint8 indexed submissionId, enum ITasks.SubmissionJudgement judgement, string feedback)
 ```
 
 
@@ -621,7 +621,7 @@ event SubmissionReviewed(uint256 indexed taskId, uint8 submissionId, enum ITasks
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| submissionId  | uint8 | undefined |
+| submissionId `indexed` | uint8 | undefined |
 | judgement  | enum ITasks.SubmissionJudgement | undefined |
 | feedback  | string | undefined |
 
@@ -684,7 +684,7 @@ event TaskCreated(uint256 indexed taskId, string metadata, uint64 deadline, ITas
 ### TaskTaken
 
 ```solidity
-event TaskTaken(uint256 indexed taskId, uint16 applicationId)
+event TaskTaken(uint256 indexed taskId, uint32 indexed applicationId)
 ```
 
 
@@ -696,7 +696,7 @@ event TaskTaken(uint256 indexed taskId, uint16 applicationId)
 | Name | Type | Description |
 |---|---|---|
 | taskId `indexed` | uint256 | undefined |
-| applicationId  | uint16 | undefined |
+| applicationId `indexed` | uint32 | undefined |
 
 
 
@@ -739,39 +739,6 @@ error Disabled()
 
 ```solidity
 error ERC1167FailedCreateClone()
-```
-
-
-
-
-
-
-### IncorrectAmountOfNativeCurrencyAttached
-
-```solidity
-error IncorrectAmountOfNativeCurrencyAttached()
-```
-
-
-
-
-
-
-### InvalidAddress
-
-```solidity
-error InvalidAddress()
-```
-
-
-
-
-
-
-### InvalidTimestamp
-
-```solidity
-error InvalidTimestamp()
 ```
 
 
@@ -845,6 +812,17 @@ error NotDisputeManager()
 
 
 
+### NotEnoughNativeCurrencyAttached
+
+```solidity
+error NotEnoughNativeCurrencyAttached()
+```
+
+
+
+
+
+
 ### NotExecutor
 
 ```solidity
@@ -893,17 +871,6 @@ error Overflow()
 
 ```solidity
 error PartialRewardAboveFullReward()
-```
-
-
-
-
-
-
-### PointlessOperation
-
-```solidity
-error PointlessOperation()
 ```
 
 
